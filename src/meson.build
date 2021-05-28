@@ -73,7 +73,7 @@ libpanel_static_dep = declare_dependency(
   include_directories: libpanel_include_directories,
 )
 
-libpanel = shared_library('panel-@0@'.format(ABI_MAJOR), libpanel_sources,
+libpanel = shared_library('panel-@0@'.format(ABI_MAJOR),
            dependencies: libpanel_deps + [libpanel_static_dep],
                 install: true,
   gnu_symbol_visibility: 'hidden',
