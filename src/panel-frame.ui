@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PanelFrame" parent="GtkWidget">
+    <child>
+      <object class="GtkBox" id="box">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkStackSwitcher" id="switcher">
+            <property name="stack">stack</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="stack">
+            <property name="hexpand">true</property>
+            <property name="vexpand">true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

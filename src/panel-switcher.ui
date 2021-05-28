@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PanelSwitcher" parent="GtkWidget">
+    <child>
+      <object class="GtkBox" id="box">
+        <property name="orientation">horizontal</property>
+        <style>
+          <class name="linked"/>
+        </style>
+        <child>
+          <object class="GtkRevealer" id="start_revealer">
+            <property name="transition-type">slide-right</property>
+            <property name="reveal-child">true</property>
+            <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
+            <child>
+              <object class="GtkToggleButton" id="start_button">
+                <property name="icon-name">dock-left-symbolic</property>
+                <property name="width-request">60</property>
+                <child>
+                  <object class="GtkDropControllerMotion">
+                    <signal name="enter" handler="drag_enter_cb"/>
+                    <signal name="leave" handler="drag_leave_cb"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="top_revealer">
+            <property name="transition-type">slide-right</property>
+            <property name="reveal-child">true</property>
+            <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
+            <child>
+              <object class="GtkToggleButton" id="top_button">
+                <property name="icon-name">dock-top-symbolic</property>
+                <property name="width-request">60</property>
+                <child>
+                  <object class="GtkDropControllerMotion">
+                    <signal name="enter" handler="drag_enter_cb"/>
+                    <signal name="leave" handler="drag_leave_cb"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="bottom_revealer">
+            <property name="transition-type">slide-right</property>
+            <property name="reveal-child">true</property>
+            <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
+            <child>
+              <object class="GtkToggleButton" id="bottom_button">
+                <property name="icon-name">dock-bottom-symbolic</property>
+                <property name="width-request">60</property>
+                <child>
+                  <object class="GtkDropControllerMotion">
+                    <signal name="enter" handler="drag_enter_cb"/>
+                    <signal name="leave" handler="drag_leave_cb"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="end_revealer">
+            <property name="transition-type">slide-right</property>
+            <property name="reveal-child">true</property>
+            <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
+            <child>
+              <object class="GtkToggleButton" id="end_button">
+                <property name="icon-name">dock-right-symbolic</property>
+                <property name="width-request">60</property>
+                <child>
+                  <object class="GtkDropControllerMotion">
+                    <signal name="enter" handler="drag_enter_cb"/>
+                    <signal name="leave" handler="drag_leave_cb"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
