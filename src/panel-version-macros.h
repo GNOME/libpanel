@@ -38,10 +38,10 @@
 # define PANEL_UNAVAILABLE(maj,min) G_UNAVAILABLE(maj,min) _PANEL_EXTERN
 #endif
 
-#define PANEL_VERSION_1_0 (G_ENCODE_VERSION (1, 0))
+#define PANEL_VERSION_4_0 (G_ENCODE_VERSION (4, 0))
 
 #if (PANEL_MINOR_VERSION == 99)
-# define PANEL_VERSION_CUR_STABLE (G_ENCODE_VERSION (PANEL_MAJOR_VERSION + 1, 0))
+# define PANEL_VERSION_CUR_STABLE (G_ENCODE_VERSION (PANEL_MAJOR_VERSION + 4, 0))
 #elif (PANEL_MINOR_VERSION % 2)
 # define PANEL_VERSION_CUR_STABLE (G_ENCODE_VERSION (PANEL_MAJOR_VERSION, PANEL_MINOR_VERSION + 1))
 #else
@@ -49,7 +49,7 @@
 #endif
 
 #if (PANEL_MINOR_VERSION == 99)
-# define PANEL_VERSION_PREV_STABLE (G_ENCODE_VERSION (PANEL_MAJOR_VERSION + 1, 0))
+# define PANEL_VERSION_PREV_STABLE (G_ENCODE_VERSION (PANEL_MAJOR_VERSION + 4, 0))
 #elif (PANEL_MINOR_VERSION % 2)
 # define PANEL_VERSION_PREV_STABLE (G_ENCODE_VERSION (PANEL_MAJOR_VERSION, PANEL_MINOR_VERSION - 1))
 #else
@@ -63,7 +63,7 @@
  * the libpanel.h header.
  *
  * The definition should be one of the predefined Drafting version
- * macros: %PANEL_VERSION_1_0, ...
+ * macros: %PANEL_VERSION_4_0, ...
  *
  * This macro defines the lower bound for the Drafting API to use.
  *
@@ -82,7 +82,7 @@
  * the libpanel.h header.
 
  * The definition should be one of the predefined Drafting version
- * macros: %PANEL_VERSION_1_0, %PANEL_VERSION_1_2,...
+ * macros: %PANEL_VERSION_4_0, %PANEL_VERSION_4_2,...
  *
  * This macro defines the upper bound for the Drafting API to use.
  *
@@ -101,23 +101,23 @@
 #if PANEL_VERSION_MAX_ALLOWED < PANEL_VERSION_MIN_REQUIRED
 #error "PANEL_VERSION_MAX_ALLOWED must be >= PANEL_VERSION_MIN_REQUIRED"
 #endif
-#if PANEL_VERSION_MIN_REQUIRED < PANEL_VERSION_1_0
-#error "PANEL_VERSION_MIN_REQUIRED must be >= PANEL_VERSION_1_0"
+#if PANEL_VERSION_MIN_REQUIRED < PANEL_VERSION_4_0
+#error "PANEL_VERSION_MIN_REQUIRED must be >= PANEL_VERSION_4_0"
 #endif
 
 #define PANEL_AVAILABLE_IN_ALL                  _PANEL_EXTERN
 
-#if PANEL_VERSION_MIN_REQUIRED >= PANEL_VERSION_1_0
-# define PANEL_DEPRECATED_IN_1_0                PANEL_DEPRECATED
-# define PANEL_DEPRECATED_IN_1_0_FOR(f)         PANEL_DEPRECATED_FOR(f)
+#if PANEL_VERSION_MIN_REQUIRED >= PANEL_VERSION_4_0
+# define PANEL_DEPRECATED_IN_4_0                PANEL_DEPRECATED
+# define PANEL_DEPRECATED_IN_4_0_FOR(f)         PANEL_DEPRECATED_FOR(f)
 #else
-# define PANEL_DEPRECATED_IN_1_0                _PANEL_EXTERN
-# define PANEL_DEPRECATED_IN_1_0_FOR(f)         _PANEL_EXTERN
+# define PANEL_DEPRECATED_IN_4_0                _PANEL_EXTERN
+# define PANEL_DEPRECATED_IN_4_0_FOR(f)         _PANEL_EXTERN
 #endif
 
-#if PANEL_VERSION_MAX_ALLOWED < PANEL_VERSION_1_0
-# define PANEL_AVAILABLE_IN_1_0                 PANEL_UNAVAILABLE(1, 0)
+#if PANEL_VERSION_MAX_ALLOWED < PANEL_VERSION_4_0
+# define PANEL_AVAILABLE_IN_4_0                 PANEL_UNAVAILABLE(4, 0)
 #else
-# define PANEL_AVAILABLE_IN_1_0                 _PANEL_EXTERN
+# define PANEL_AVAILABLE_IN_4_0                 _PANEL_EXTERN
 #endif
 
