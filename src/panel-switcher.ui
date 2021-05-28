@@ -14,7 +14,7 @@
             <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
             <child>
               <object class="GtkToggleButton" id="start_button">
-                <property name="icon-name">dock-left-symbolic</property>
+                <property name="icon-name">panel-left-symbolic</property>
                 <property name="width-request">60</property>
                 <child>
                   <object class="GtkDropControllerMotion">
@@ -33,7 +33,7 @@
             <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
             <child>
               <object class="GtkToggleButton" id="top_button">
-                <property name="icon-name">dock-top-symbolic</property>
+                <property name="icon-name">panel-top-symbolic</property>
                 <property name="width-request">60</property>
                 <child>
                   <object class="GtkDropControllerMotion">
@@ -52,7 +52,7 @@
             <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
             <child>
               <object class="GtkToggleButton" id="bottom_button">
-                <property name="icon-name">dock-bottom-symbolic</property>
+                <property name="icon-name">panel-bottom-symbolic</property>
                 <property name="width-request">60</property>
                 <child>
                   <object class="GtkDropControllerMotion">
@@ -71,7 +71,7 @@
             <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
             <child>
               <object class="GtkToggleButton" id="end_button">
-                <property name="icon-name">dock-right-symbolic</property>
+                <property name="icon-name">panel-right-symbolic</property>
                 <property name="width-request">60</property>
                 <child>
                   <object class="GtkDropControllerMotion">
