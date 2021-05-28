@@ -143,12 +143,12 @@ if get_option('default_library') != 'static'
   if host_machine.system() == 'windows'
     config_h.set('DLL_EXPORT', true)
     if cc.get_id() == 'msvc'
-      config_h.set('_DRAFT_EXTERN', '__declspec(dllexport) extern')
+      config_h.set('_PANEL_EXTERN', '__declspec(dllexport) extern')
     elif cc.has_argument('-fvisibility=hidden')
-      config_h.set('_DRAFT_EXTERN', '__attribute__((visibility("default"))) __declspec(dllexport) extern')
+      config_h.set('_PANEL_EXTERN', '__attribute__((visibility("default"))) __declspec(dllexport) extern')
     endif
   elif cc.has_argument('-fvisibility=hidden')
-    config_h.set('_DRAFT_EXTERN', '__attribute__((visibility("default"))) extern')
+    config_h.set('_PANEL_EXTERN', '__attribute__((visibility("default"))) extern')
   endif
 endif
 
