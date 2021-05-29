@@ -101,7 +101,7 @@ libpanel_pc = pkgconfig.generate(libpanel,
   description: 'Panel library for GTK 4',
      requires: libpanel_pkg_reqs,
       version: meson.project_version(),
-      subdirs: 'panel-@0@'.format(ABI_MAJOR),
+      subdirs: 'libpanel-@0@'.format(ABI_MAJOR),
   install_dir: pkgconfigdir,
 )
 
