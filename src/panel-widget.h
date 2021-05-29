@@ -42,21 +42,21 @@ PANEL_AVAILABLE_IN_ALL
 GtkWidget  *panel_widget_get_child       (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_child       (PanelWidget *self,
-                                              GtkWidget      *child);
+                                          GtkWidget   *child);
 PANEL_AVAILABLE_IN_ALL
 const char *panel_widget_get_title       (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_title       (PanelWidget *self,
-                                              const char     *title);
+                                          const char  *title);
 PANEL_AVAILABLE_IN_ALL
 const char *panel_widget_get_icon_name   (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_icon_name   (PanelWidget *self,
-                                              const char     *icon_name);
+                                          const char  *icon_name);
 PANEL_AVAILABLE_IN_ALL
 gboolean    panel_widget_get_reorderable (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_reorderable (PanelWidget *self,
-                                              gboolean        reorderable);
+                                          gboolean     reorderable);
 
 G_END_DECLS

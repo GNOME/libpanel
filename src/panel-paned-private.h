@@ -30,13 +30,13 @@ G_DECLARE_FINAL_TYPE (PanelPaned, panel_paned, PANEL, PANED, GtkWidget)
 
 GtkWidget *panel_paned_new     (void);
 void       panel_paned_append  (PanelPaned *self,
-                                     GtkWidget      *child);
+                                GtkWidget  *child);
 void       panel_paned_prepend (PanelPaned *self,
-                                     GtkWidget      *child);
+                                GtkWidget  *child);
 void       panel_paned_insert  (PanelPaned *self,
-                                     int             position,
-                                     GtkWidget      *child);
+                                int         position,
+                                GtkWidget  *child);
 void       panel_paned_remove  (PanelPaned *self,
-                                     GtkWidget      *child);
+                                GtkWidget  *child);
 
 G_END_DECLS

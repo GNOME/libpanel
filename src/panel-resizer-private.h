@@ -31,11 +31,11 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (PanelResizer, panel_resizer, PANEL, RESIZER, GtkWidget)
 
 GtkWidget         *panel_resizer_new          (PanelDockPosition  position);
-PanelDockPosition  panel_resizer_get_position (PanelResizer  *self);
-void               panel_resizer_set_position (PanelResizer  *self,
-                                                    PanelDockPosition  position);
-GtkWidget         *panel_resizer_get_child    (PanelResizer  *self);
-void               panel_resizer_set_child    (PanelResizer  *self,
-                                                    GtkWidget         *child);
+PanelDockPosition  panel_resizer_get_position (PanelResizer      *self);
+void               panel_resizer_set_position (PanelResizer      *self,
+                                               PanelDockPosition  position);
+GtkWidget         *panel_resizer_get_child    (PanelResizer      *self);
+void               panel_resizer_set_child    (PanelResizer      *self,
+                                               GtkWidget         *child);
 
 G_END_DECLS

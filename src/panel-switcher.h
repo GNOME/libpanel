@@ -38,6 +38,6 @@ PANEL_AVAILABLE_IN_ALL
 PanelDock *panel_switcher_get_dock (PanelSwitcher *self);
 PANEL_AVAILABLE_IN_ALL
 void       panel_switcher_set_dock (PanelSwitcher *self,
-                                         PanelDock         *dock);
+                                    PanelDock     *dock);
 
 G_END_DECLS
