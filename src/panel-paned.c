@@ -116,6 +116,101 @@ panel_paned_measure (GtkWidget      *widget,
 }
 
 static void
+panel_paned_size_allocate_horizontal (PanelPaned       *self,
+                                      GtkRequestedSize *reqs,
+                                      guint             n_children,
+                                      int               width,
+                                      int               height)
+{
+  guint i;
+  int x = 0;
+
+  g_assert (PANEL_IS_PANED (self));
+
+  i = 0;
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      int child_min;
+      int child_nat;
+
+      gtk_widget_measure (child,
+                          GTK_ORIENTATION_HORIZONTAL,
+                          height,
+                          &child_min, &child_nat,
+                          NULL, NULL);
+
+      reqs[i].minimum_size = child_min;
+      reqs[i].natural_size = child_nat;
+
+      width -= child_min;
+
+      i++;
+    }
+
+  width = gtk_distribute_natural_allocation (width, n_children, reqs);
+
+  if (width)
+    g_print ("More width to expand\n");
+
+  i = 0;
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      GtkAllocation alloc;
+
+      alloc.x = x;
+      alloc.y = 0;
+      alloc.width = reqs[i].natural_size;
+      alloc.height = height;
+
+      gtk_widget_size_allocate (child, &alloc, -1);
+
+      x += alloc.width;
+    }
+}
+
+static void
+panel_paned_size_allocate_vertical (PanelPaned       *self,
+                                    GtkRequestedSize *reqs,
+                                    guint             n_children,
+                                    int               width,
+                                    int               height)
+{
+  g_assert (PANEL_IS_PANED (self));
+
+}
+
+static void
+panel_paned_size_allocate (GtkWidget *widget,
+                           int        width,
+                           int        height,
+                           int        baseline)
+{
+  PanelPaned *self = (PanelPaned *)widget;
+  GtkRequestedSize *reqs;
+  guint n_children = 0;
+
+  g_assert (PANEL_IS_PANED (self));
+
+  GTK_WIDGET_CLASS (panel_paned_parent_class)->size_allocate (widget, width, height, baseline);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    n_children++;
+
+  reqs = g_newa (GtkRequestedSize, n_children);
+
+  if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+    panel_paned_size_allocate_horizontal (self, reqs, n_children, width, height);
+  else
+    panel_paned_size_allocate_vertical (self, reqs, n_children, width, height);
+}
+
+static void
 panel_paned_dispose (GObject *object)
 {
   PanelPaned *self = (PanelPaned *)object;
@@ -181,6 +276,7 @@ panel_paned_class_init (PanelPanedClass *klass)
   object_class->set_property = panel_paned_set_property;
 
   widget_class->measure = panel_paned_measure;
+  widget_class->size_allocate = panel_paned_size_allocate;
 
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
