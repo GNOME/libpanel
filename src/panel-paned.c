@@ -87,6 +87,35 @@ panel_paned_set_orientation (PanelPaned     *self,
 }
 
 static void
+panel_paned_measure (GtkWidget      *widget,
+                     GtkOrientation  orientation,
+                     int             for_size,
+                     int            *minimum,
+                     int            *natural,
+                     int            *minimum_baseline,
+                     int            *natural_baseline)
+{
+  g_assert (PANEL_IS_PANED (widget));
+
+  *minimum = 0;
+  *natural = 0;
+  *minimum_baseline = -1;
+  *natural_baseline = -1;
+
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      int child_min, child_nat;
+
+      gtk_widget_measure (child, orientation, for_size, &child_min, &child_nat, NULL, NULL);
+
+      *minimum += child_min;
+      *natural += child_nat;
+    }
+}
+
+static void
 panel_paned_dispose (GObject *object)
 {
   PanelPaned *self = (PanelPaned *)object;
@@ -150,6 +179,8 @@ panel_paned_class_init (PanelPanedClass *klass)
   object_class->dispose = panel_paned_dispose;
   object_class->get_property = panel_paned_get_property;
   object_class->set_property = panel_paned_set_property;
+
+  widget_class->measure = panel_paned_measure;
 
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
