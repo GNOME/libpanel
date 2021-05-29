@@ -139,9 +139,9 @@ panel_switcher_dispose (GObject *object)
 
 static void
 panel_switcher_get_property (GObject    *object,
-                                  guint       prop_id,
-                                  GValue     *value,
-                                  GParamSpec *pspec)
+                             guint       prop_id,
+                             GValue     *value,
+                             GParamSpec *pspec)
 {
   PanelSwitcher *self = PANEL_SWITCHER (object);
 
@@ -158,9 +158,9 @@ panel_switcher_get_property (GObject    *object,
 
 static void
 panel_switcher_set_property (GObject      *object,
-                                  guint         prop_id,
-                                  const GValue *value,
-                                  GParamSpec   *pspec)
+                             guint         prop_id,
+                             const GValue *value,
+                             GParamSpec   *pspec)
 {
   PanelSwitcher *self = PANEL_SWITCHER (object);
 
@@ -235,8 +235,8 @@ panel_switcher_get_dock (PanelSwitcher *self)
 
 static void
 panel_switcher_notify_can_reveal_cb (PanelDock   *dock,
-                                          GParamSpec  *pspec,
-                                          GtkRevealer *revealer)
+                                     GParamSpec  *pspec,
+                                     GtkRevealer *revealer)
 {
   g_auto(GValue) value = G_VALUE_INIT;
 
@@ -260,7 +260,7 @@ panel_switcher_notify_can_reveal_cb (PanelDock   *dock,
 
 void
 panel_switcher_set_dock (PanelSwitcher *self,
-                              PanelDock         *dock)
+                         PanelDock     *dock)
 {
   g_return_if_fail (PANEL_IS_SWITCHER (self));
   g_return_if_fail (!dock || PANEL_IS_DOCK (dock));

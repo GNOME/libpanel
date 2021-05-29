@@ -35,8 +35,8 @@ G_DEFINE_TYPE (PanelHandle, panel_handle, GTK_TYPE_WIDGET)
 
 static gboolean
 panel_handle_contains (GtkWidget *widget,
-                            double     x,
-                            double     y)
+                       double     x,
+                       double     y)
 {
   PanelHandle *self = (PanelHandle *)widget;
   graphene_rect_t area;
@@ -108,8 +108,8 @@ panel_handle_init (PanelHandle *self)
 }
 
 static void
-panel_handle_set_position (PanelHandle   *self,
-                                PanelDockPosition  position)
+panel_handle_set_position (PanelHandle       *self,
+                           PanelDockPosition  position)
 {
   g_return_if_fail (PANEL_IS_HANDLE (self));
 

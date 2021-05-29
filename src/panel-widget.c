@@ -71,9 +71,9 @@ panel_widget_dispose (GObject *object)
 
 static void
 panel_widget_get_property (GObject    *object,
-                               guint       prop_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
+                           guint       prop_id,
+                           GValue     *value,
+                           GParamSpec *pspec)
 {
   PanelWidget *self = PANEL_WIDGET (object);
 
@@ -102,9 +102,9 @@ panel_widget_get_property (GObject    *object,
 
 static void
 panel_widget_set_property (GObject      *object,
-                               guint         prop_id,
-                               const GValue *value,
-                               GParamSpec   *pspec)
+                           guint         prop_id,
+                           const GValue *value,
+                           GParamSpec   *pspec)
 {
   PanelWidget *self = PANEL_WIDGET (object);
 
@@ -195,7 +195,7 @@ panel_widget_get_icon_name (PanelWidget *self)
 
 void
 panel_widget_set_icon_name (PanelWidget *self,
-                                const char     *icon_name)
+                            const char  *icon_name)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
@@ -221,7 +221,7 @@ panel_widget_get_title (PanelWidget *self)
 
 void
 panel_widget_set_title (PanelWidget *self,
-                            const char     *title)
+                        const char  *title)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
@@ -255,7 +255,7 @@ panel_widget_get_child (PanelWidget *self)
 
 void
 panel_widget_set_child (PanelWidget *self,
-                            GtkWidget      *child)
+                        GtkWidget   *child)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
@@ -283,7 +283,7 @@ panel_widget_get_reorderable (PanelWidget *self)
 
 void
 panel_widget_set_reorderable (PanelWidget *self,
-                                  gboolean        reorderable)
+                              gboolean     reorderable)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 

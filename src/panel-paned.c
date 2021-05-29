@@ -54,8 +54,8 @@ panel_paned_new (void)
 }
 
 static void
-panel_paned_set_orientation (PanelPaned *self,
-                                  GtkOrientation  orientation)
+panel_paned_set_orientation (PanelPaned     *self,
+                             GtkOrientation  orientation)
 {
   PanelDockPosition dockpos;
 
@@ -105,9 +105,9 @@ panel_paned_dispose (GObject *object)
 
 static void
 panel_paned_get_property (GObject    *object,
-                               guint       prop_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
+                          guint       prop_id,
+                          GValue     *value,
+                          GParamSpec *pspec)
 {
   PanelPaned *self = PANEL_PANED (object);
 
@@ -124,9 +124,9 @@ panel_paned_get_property (GObject    *object,
 
 static void
 panel_paned_set_property (GObject      *object,
-                               guint         prop_id,
-                               const GValue *value,
-                               GParamSpec   *pspec)
+                          guint         prop_id,
+                          const GValue *value,
+                          GParamSpec   *pspec)
 {
   PanelPaned *self = PANEL_PANED (object);
 
@@ -164,7 +164,7 @@ panel_paned_init (PanelPaned *self)
 
 void
 panel_paned_remove (PanelPaned *self,
-                         GtkWidget      *child)
+                    GtkWidget  *child)
 {
   g_return_if_fail (PANEL_IS_PANED (self));
   g_return_if_fail (GTK_IS_WIDGET (child));
@@ -174,8 +174,8 @@ panel_paned_remove (PanelPaned *self,
 
 void
 panel_paned_insert (PanelPaned *self,
-                         int             position,
-                         GtkWidget      *child)
+                    int         position,
+                    GtkWidget  *child)
 {
   PanelDockPosition dockpos;
   GtkWidget *resizer;
@@ -211,14 +211,14 @@ panel_paned_insert (PanelPaned *self,
 
 void
 panel_paned_append (PanelPaned *self,
-                         GtkWidget      *child)
+                    GtkWidget  *child)
 {
   panel_paned_insert (self, -1, child);
 }
 
 void
 panel_paned_prepend (PanelPaned *self,
-                          GtkWidget      *child)
+                     GtkWidget  *child)
 {
   panel_paned_insert (self, 0, child);
 }

@@ -29,7 +29,7 @@ struct _PanelResizer
 {
   GtkWidget          parent_instance;
 
-  PanelHandle   *handle;
+  PanelHandle       *handle;
   GtkWidget         *child;
 
   double             drag_orig_size;
@@ -49,10 +49,10 @@ enum {
 static GParamSpec *properties [N_PROPS];
 
 static void
-panel_resizer_drag_begin_cb (PanelResizer *self,
-                                  double            start_x,
-                                  double            start_y,
-                                  GtkGestureDrag   *drag)
+panel_resizer_drag_begin_cb (PanelResizer   *self,
+                             double          start_x,
+                             double          start_y,
+                             GtkGestureDrag *drag)
 {
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
@@ -102,10 +102,10 @@ start_drag:
 }
 
 static void
-panel_resizer_drag_update_cb (PanelResizer *self,
-                                   double            offset_x,
-                                   double            offset_y,
-                                   GtkGestureDrag   *drag)
+panel_resizer_drag_update_cb (PanelResizer   *self,
+                              double          offset_x,
+                              double          offset_y,
+                              GtkGestureDrag *drag)
 {
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
@@ -123,10 +123,10 @@ panel_resizer_drag_update_cb (PanelResizer *self,
 }
 
 static void
-panel_resizer_drag_end_cb (PanelResizer *self,
-                                double            offset_x,
-                                double            offset_y,
-                                GtkGestureDrag   *drag)
+panel_resizer_drag_end_cb (PanelResizer   *self,
+                           double          offset_x,
+                           double          offset_y,
+                           GtkGestureDrag *drag)
 {
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
@@ -151,12 +151,12 @@ panel_resizer_new (PanelDockPosition position)
 
 static void
 panel_resizer_measure (GtkWidget      *widget,
-                            GtkOrientation  orientation,
-                            int             for_size,
-                            int            *minimum,
-                            int            *natural,
-                            int            *minimum_baseline,
-                            int            *natural_baseline)
+                       GtkOrientation  orientation,
+                       int             for_size,
+                       int            *minimum,
+                       int            *natural,
+                       int            *minimum_baseline,
+                       int            *natural_baseline)
 {
   PanelResizer *self = (PanelResizer *)widget;
 
@@ -191,9 +191,9 @@ panel_resizer_measure (GtkWidget      *widget,
 
 static void
 panel_resizer_size_allocate (GtkWidget *widget,
-                                  int        width,
-                                  int        height,
-                                  int        baseline)
+                             int        width,
+                             int        height,
+                             int        baseline)
 {
   PanelResizer *self = (PanelResizer *)widget;
   GtkOrientation orientation;
@@ -295,9 +295,9 @@ panel_resizer_dispose (GObject *object)
 
 static void
 panel_resizer_get_property (GObject    *object,
-                                 guint       prop_id,
-                                 GValue     *value,
-                                 GParamSpec *pspec)
+                            guint       prop_id,
+                            GValue     *value,
+                            GParamSpec *pspec)
 {
   PanelResizer *self = PANEL_RESIZER (object);
 
@@ -314,9 +314,9 @@ panel_resizer_get_property (GObject    *object,
 
 static void
 panel_resizer_set_property (GObject      *object,
-                                 guint         prop_id,
-                                 const GValue *value,
-                                 GParamSpec   *pspec)
+                            guint         prop_id,
+                            const GValue *value,
+                            GParamSpec   *pspec)
 {
   PanelResizer *self = PANEL_RESIZER (object);
 
@@ -397,7 +397,7 @@ panel_resizer_get_child (PanelResizer *self)
 
 void
 panel_resizer_set_child (PanelResizer *self,
-                              GtkWidget        *child)
+                         GtkWidget    *child)
 {
   g_return_if_fail (PANEL_IS_RESIZER (self));
   g_return_if_fail (!child || GTK_IS_WIDGET (child));
@@ -439,8 +439,8 @@ panel_resizer_get_position (PanelResizer *self)
 }
 
 void
-panel_resizer_set_position (PanelResizer  *self,
-                                 PanelDockPosition  position)
+panel_resizer_set_position (PanelResizer      *self,
+                            PanelDockPosition  position)
 {
   g_return_if_fail (PANEL_IS_RESIZER (self));
 

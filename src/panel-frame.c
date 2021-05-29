@@ -54,9 +54,9 @@ panel_frame_new (void)
 }
 
 static void
-panel_frame_notify_value_cb (PanelFrame *self,
-                                  GParamSpec     *pspec,
-                                  GtkDropTarget  *drop_target)
+panel_frame_notify_value_cb (PanelFrame    *self,
+                             GParamSpec    *pspec,
+                             GtkDropTarget *drop_target)
 {
   const GValue *value;
   PanelWidget *panel;
@@ -74,9 +74,9 @@ panel_frame_notify_value_cb (PanelFrame *self,
 }
 
 static gboolean
-panel_frame_drop_accept_cb (PanelFrame *self,
-                                 GdkDrop        *drop,
-                                 GtkDropTarget  *drop_target)
+panel_frame_drop_accept_cb (PanelFrame    *self,
+                            GdkDrop       *drop,
+                            GtkDropTarget *drop_target)
 {
   g_assert (PANEL_IS_FRAME (self));
   g_assert (GDK_IS_DROP (drop));
@@ -86,11 +86,11 @@ panel_frame_drop_accept_cb (PanelFrame *self,
 }
 
 static gboolean
-panel_frame_drop_cb (PanelFrame *self,
-                          const GValue   *value,
-                          double          x,
-                          double          y,
-                          GtkDropTarget  *drop_target)
+panel_frame_drop_cb (PanelFrame    *self,
+                     const GValue  *value,
+                     double         x,
+                     double         y,
+                     GtkDropTarget *drop_target)
 {
   PanelWidget *panel;
   GtkWidget *frame;
@@ -117,10 +117,10 @@ panel_frame_drop_cb (PanelFrame *self,
 }
 
 static GdkContentProvider *
-panel_frame_drag_prepare_cb (PanelFrame *self,
-                                  double          x,
-                                  double          y,
-                                  GtkDragSource  *source)
+panel_frame_drag_prepare_cb (PanelFrame    *self,
+                             double         x,
+                             double         y,
+                             GtkDragSource *source)
 {
   GtkStackPage *page = NULL;
   GListModel *pages;
@@ -159,9 +159,9 @@ panel_frame_drag_prepare_cb (PanelFrame *self,
 }
 
 static void
-panel_frame_drag_begin_cb (PanelFrame *self,
-                                GdkDrag        *drag,
-                                GtkDragSource  *source)
+panel_frame_drag_begin_cb (PanelFrame    *self,
+                           GdkDrag       *drag,
+                           GtkDragSource *source)
 {
   g_autoptr(GdkPaintable) paintable = NULL;
   GtkWidget *dock;
@@ -178,10 +178,10 @@ panel_frame_drag_begin_cb (PanelFrame *self,
 }
 
 static void
-panel_frame_drag_end_cb (PanelFrame *self,
-                              GdkDrag        *drag,
-                              gboolean        delete_data,
-                              GtkDragSource  *source)
+panel_frame_drag_end_cb (PanelFrame    *self,
+                         GdkDrag       *drag,
+                         gboolean       delete_data,
+                         GtkDragSource *source)
 {
   GtkWidget *dock;
 
@@ -197,10 +197,10 @@ panel_frame_drag_end_cb (PanelFrame *self,
 
 static void
 panel_frame_items_changed_cb (PanelFrame *self,
-                                   guint           position,
-                                   guint           removed,
-                                   guint           added,
-                                   GListModel     *model)
+                              guint       position,
+                              guint       removed,
+                              guint       added,
+                              GListModel *model)
 {
   GtkOrientation orientation;
   gboolean hexpand;
@@ -234,9 +234,9 @@ panel_frame_dispose (GObject *object)
 
 static void
 panel_frame_get_property (GObject    *object,
-                               guint       prop_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
+                          guint       prop_id,
+                          GValue     *value,
+                          GParamSpec *pspec)
 {
   PanelFrame *self = PANEL_FRAME (object);
 
@@ -257,9 +257,9 @@ panel_frame_get_property (GObject    *object,
 
 static void
 panel_frame_set_property (GObject      *object,
-                               guint         prop_id,
-                               const GValue *value,
-                               GParamSpec   *pspec)
+                          guint         prop_id,
+                          const GValue *value,
+                          GParamSpec   *pspec)
 {
   PanelFrame *self = PANEL_FRAME (object);
 
@@ -378,8 +378,8 @@ panel_frame_init (PanelFrame *self)
 }
 
 void
-panel_frame_add (PanelFrame *self,
-                      PanelWidget *panel)
+panel_frame_add (PanelFrame  *self,
+                 PanelWidget *panel)
 {
   GtkStackPage *page;
   gboolean empty;
@@ -400,8 +400,8 @@ panel_frame_add (PanelFrame *self,
 }
 
 void
-panel_frame_remove (PanelFrame *self,
-                         PanelWidget *panel)
+panel_frame_remove (PanelFrame  *self,
+                    PanelWidget *panel)
 {
   GtkWidget *new_child;
 
