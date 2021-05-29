@@ -34,6 +34,7 @@ libpanel_headers = [
   'panel-init.h',
   'panel-dock.h',
   'panel-switcher.h',
+  'panel-version-macros.h',
   'panel-widget.h',
 ]
 
