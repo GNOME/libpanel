@@ -13,7 +13,7 @@ panelswitcher box.linked revealer:last-child button {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
-panelwitcher box.linked revealer:not(:first-child):not(:last-child) button {
+panelswitcher box.linked revealer:not(:first-child):not(:last-child) button {
   border-radius: 0px;
   border-right-width: 0px;
 }
