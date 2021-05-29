@@ -26,18 +26,36 @@
 #include "panel-switcher.h"
 #include "panel-widget.h"
 
+static GtkCssProvider *css_provider;
+
 void
 panel_init (void)
 {
+  if (css_provider)
+    return;
+
   g_resources_register (panel_get_resource ());
 
   g_type_ensure (PANEL_TYPE_DOCK);
   g_type_ensure (PANEL_TYPE_WIDGET);
   g_type_ensure (PANEL_TYPE_SWITCHER);
+
+  css_provider = gtk_css_provider_new ();
+  gtk_css_provider_load_from_resource (css_provider, "/org/gnome/libpanel/stylesheet.css");
+  gtk_style_context_add_provider_for_display (gdk_display_get_default (),
+                                              GTK_STYLE_PROVIDER (css_provider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION-1);
 }
 
 void
 panel_finalize (void)
 {
+  if (!css_provider)
+    return;
+
+  gtk_style_context_remove_provider_for_display (gdk_display_get_default (),
+                                                 GTK_STYLE_PROVIDER (css_provider));
+  g_clear_object (&css_provider);
+
   g_resources_unregister (panel_get_resource ());
 }
