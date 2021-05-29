@@ -89,6 +89,17 @@ panel_paned_set_orientation (PanelPaned *self,
 static void
 panel_paned_dispose (GObject *object)
 {
+  PanelPaned *self = (PanelPaned *)object;
+  GtkWidget *child;
+
+  child = gtk_widget_get_first_child (GTK_WIDGET (self));
+  while (child)
+    {
+      GtkWidget *next = gtk_widget_get_next_sibling (child);
+      gtk_widget_unparent (child);
+      child = next;
+    }
+
   G_OBJECT_CLASS (panel_paned_parent_class)->dispose (object);
 }
 
