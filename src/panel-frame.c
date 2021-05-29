@@ -304,7 +304,7 @@ panel_frame_class_init (PanelFrameClass *klass)
 
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
-  gtk_widget_class_set_css_name (widget_class, "dockframe");
+  gtk_widget_class_set_css_name (widget_class, "panelframe");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame.ui");
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);

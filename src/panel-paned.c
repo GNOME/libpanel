@@ -142,7 +142,7 @@ panel_paned_class_init (PanelPanedClass *klass)
 
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
-  gtk_widget_class_set_css_name (widget_class, "dockpaned");
+  gtk_widget_class_set_css_name (widget_class, "panelpaned");
 }
 
 static void

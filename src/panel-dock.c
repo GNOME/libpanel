@@ -248,7 +248,7 @@ panel_dock_class_init (PanelDockClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_css_name (widget_class, "dock");
+  gtk_widget_class_set_css_name (widget_class, "paneldock");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
 }
 

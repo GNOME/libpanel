@@ -172,7 +172,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
-  gtk_widget_class_set_css_name (widget_class, "dockpanel");
+  gtk_widget_class_set_css_name (widget_class, "panelwidget");
 }
 
 static void

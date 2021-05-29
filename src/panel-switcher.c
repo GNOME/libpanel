@@ -196,7 +196,7 @@ panel_switcher_class_init (PanelSwitcherClass *klass)
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-switcher.ui");
-  gtk_widget_class_set_css_name (widget_class, "dockswitcher");
+  gtk_widget_class_set_css_name (widget_class, "panelswitcher");
   gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, box);
   gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, start_button);
   gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, end_button);
