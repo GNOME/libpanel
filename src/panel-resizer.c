@@ -283,6 +283,25 @@ panel_resizer_size_allocate (GtkWidget *widget,
 }
 
 static void
+panel_resizer_compute_expand (GtkWidget *widget,
+                              gboolean  *hexpand,
+                              gboolean  *vexpand)
+{
+  PanelResizer *self = PANEL_RESIZER (widget);
+
+  if (self->child != NULL)
+    {
+      *hexpand = gtk_widget_compute_expand (self->child, GTK_ORIENTATION_HORIZONTAL);
+      *vexpand = gtk_widget_compute_expand (self->child, GTK_ORIENTATION_VERTICAL);
+    }
+  else
+    {
+      *hexpand = FALSE;
+      *vexpand = FALSE;
+    }
+}
+
+static void
 panel_resizer_dispose (GObject *object)
 {
   PanelResizer *self = (PanelResizer *)object;
@@ -341,6 +360,7 @@ panel_resizer_class_init (PanelResizerClass *klass)
   object_class->get_property = panel_resizer_get_property;
   object_class->set_property = panel_resizer_set_property;
 
+  widget_class->compute_expand = panel_resizer_compute_expand;
   widget_class->measure = panel_resizer_measure;
   widget_class->size_allocate = panel_resizer_size_allocate;
 
