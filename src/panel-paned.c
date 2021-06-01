@@ -79,8 +79,9 @@ panel_paned_set_orientation (PanelPaned     *self,
        child != NULL;
        child = gtk_widget_get_prev_sibling (child))
     {
-      if (PANEL_IS_RESIZER (child))
-        panel_resizer_set_position (PANEL_RESIZER (child), dockpos);
+      g_assert (PANEL_IS_RESIZER (child));
+
+      panel_resizer_set_position (PANEL_RESIZER (child), dockpos);
     }
 
   _panel_dock_update_orientation (GTK_WIDGET (self), self->orientation);
