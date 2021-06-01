@@ -54,6 +54,9 @@ panel_resizer_drag_begin_cb (PanelResizer   *self,
                              double          start_y,
                              GtkGestureDrag *drag)
 {
+  GtkAllocation child_alloc;
+  GtkAllocation handle_alloc;
+
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
 
@@ -94,11 +97,14 @@ panel_resizer_drag_begin_cb (PanelResizer   *self,
 
 start_drag:
 
+  gtk_widget_get_allocation (self->child, &child_alloc);
+  gtk_widget_get_allocation (GTK_WIDGET (self->handle), &handle_alloc);
+
   if (self->position == PANEL_DOCK_POSITION_START ||
       self->position == PANEL_DOCK_POSITION_END)
-    self->drag_orig_size = gtk_widget_get_width (GTK_WIDGET (self->child));
+    self->drag_orig_size = child_alloc.width + handle_alloc.width;
   else
-    self->drag_orig_size = gtk_widget_get_height (GTK_WIDGET (self->child));
+    self->drag_orig_size = child_alloc.height + handle_alloc.height;
 }
 
 static void
@@ -132,7 +138,6 @@ panel_resizer_drag_end_cb (PanelResizer   *self,
   g_assert (GTK_IS_GESTURE_DRAG (drag));
 }
 
-
 GtkWidget *
 panel_resizer_new (PanelDockPosition position)
 {
@@ -162,30 +167,37 @@ panel_resizer_measure (GtkWidget      *widget,
 
   g_assert (PANEL_IS_RESIZER (self));
 
+  *minimum = 0;
+  *natural = 0;
   *minimum_baseline = -1;
   *natural_baseline = -1;
 
-  gtk_widget_measure (GTK_WIDGET (self->handle),
-                      orientation,
-                      for_size,
-                      minimum, natural,
-                      NULL, NULL);
-
   if (self->child != NULL)
-    {
-      int child_min, child_nat;
+    gtk_widget_measure (self->child,
+                        orientation,
+                        for_size,
+                        minimum, natural,
+                        NULL, NULL);
 
-      gtk_widget_measure (self->child,
-                          orientation,
-                          for_size,
-                          &child_min, &child_nat,
+  if ((orientation == GTK_ORIENTATION_HORIZONTAL &&
+       (self->position == PANEL_DOCK_POSITION_START ||
+        self->position == PANEL_DOCK_POSITION_END)) ||
+      (orientation == GTK_ORIENTATION_VERTICAL &&
+       (self->position == PANEL_DOCK_POSITION_TOP ||
+        self->position == PANEL_DOCK_POSITION_BOTTOM)))
+    {
+      int handle_min, handle_nat;
+
+      if (self->drag_position > *minimum)
+        *natural = self->drag_position;
+
+      gtk_widget_measure (GTK_WIDGET (self->handle),
+                          orientation, for_size,
+                          &handle_min, &handle_nat,
                           NULL, NULL);
 
-      if (self->drag_position > child_min)
-        child_nat = self->drag_position;
-
-      *minimum += child_min;
-      *natural += child_nat;
+      *minimum += handle_min;
+      *natural += handle_nat;
     }
 }
 
