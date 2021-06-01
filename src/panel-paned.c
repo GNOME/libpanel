@@ -340,10 +340,17 @@ void
 panel_paned_remove (PanelPaned *self,
                     GtkWidget  *child)
 {
+  GtkWidget *parent;
+
   g_return_if_fail (PANEL_IS_PANED (self));
   g_return_if_fail (GTK_IS_WIDGET (child));
-  g_return_if_fail (gtk_widget_get_parent (child) == GTK_WIDGET (self));
 
+  parent = gtk_widget_get_parent (child);
+
+  g_return_if_fail (parent != NULL &&
+                    gtk_widget_get_parent (parent) == GTK_WIDGET (self));
+
+  gtk_widget_unparent (GTK_WIDGET (parent));
 }
 
 void
