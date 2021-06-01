@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include <string.h>
+
 #include "panel-dock-private.h"
 #include "panel-paned-private.h"
 #include "panel-resizer-private.h"
@@ -69,9 +71,9 @@ panel_paned_set_orientation (PanelPaned     *self,
   self->orientation = orientation;
 
   if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-    dockpos = PANEL_DOCK_POSITION_END;
+    dockpos = PANEL_DOCK_POSITION_START;
   else
-    dockpos = PANEL_DOCK_POSITION_BOTTOM;
+    dockpos = PANEL_DOCK_POSITION_TOP;
 
   for (GtkWidget *child = gtk_widget_get_last_child (GTK_WIDGET (self));
        child != NULL;
@@ -95,7 +97,9 @@ panel_paned_measure (GtkWidget      *widget,
                      int            *minimum_baseline,
                      int            *natural_baseline)
 {
-  g_assert (PANEL_IS_PANED (widget));
+  PanelPaned *self = (PanelPaned *)widget;
+
+  g_assert (PANEL_IS_PANED (self));
 
   *minimum = 0;
   *natural = 0;
@@ -110,78 +114,37 @@ panel_paned_measure (GtkWidget      *widget,
 
       gtk_widget_measure (child, orientation, for_size, &child_min, &child_nat, NULL, NULL);
 
-      *minimum += child_min;
-      *natural += child_nat;
+      if (orientation == self->orientation)
+        {
+          *minimum += child_min;
+          *natural += child_nat;
+        }
+      else
+        {
+          *minimum = MAX (*minimum, child_min);
+          *natural = MAX (*natural, child_nat);
+        }
     }
 }
 
-static void
-panel_paned_size_allocate_horizontal (PanelPaned       *self,
-                                      GtkRequestedSize *reqs,
-                                      guint             n_children,
-                                      int               width,
-                                      int               height)
+static inline guint
+panel_paned_get_n_children (PanelPaned *self)
 {
-  guint i;
-  int x = 0;
-
-  g_assert (PANEL_IS_PANED (self));
-
-  i = 0;
+  guint count = 0;
   for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
        child != NULL;
        child = gtk_widget_get_next_sibling (child))
-    {
-      int child_min;
-      int child_nat;
-
-      gtk_widget_measure (child,
-                          GTK_ORIENTATION_HORIZONTAL,
-                          height,
-                          &child_min, &child_nat,
-                          NULL, NULL);
-
-      reqs[i].minimum_size = child_min;
-      reqs[i].natural_size = child_nat;
-
-      width -= child_min;
-
-      i++;
-    }
-
-  width = gtk_distribute_natural_allocation (width, n_children, reqs);
-
-  if (width)
-    g_print ("More width to expand\n");
-
-  i = 0;
-  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
-       child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    {
-      GtkAllocation alloc;
-
-      alloc.x = x;
-      alloc.y = 0;
-      alloc.width = reqs[i].natural_size;
-      alloc.height = height;
-
-      gtk_widget_size_allocate (child, &alloc, -1);
-
-      x += alloc.width;
-    }
+    count++;
+  return count;
 }
 
-static void
-panel_paned_size_allocate_vertical (PanelPaned       *self,
-                                    GtkRequestedSize *reqs,
-                                    guint             n_children,
-                                    int               width,
-                                    int               height)
+typedef struct
 {
-  g_assert (PANEL_IS_PANED (self));
-
-}
+  GtkWidget      *widget;
+  GtkRequisition  min_request;
+  GtkRequisition  nat_request;
+  GtkAllocation   alloc;
+} ChildAllocation;
 
 static void
 panel_paned_size_allocate (GtkWidget *widget,
@@ -190,24 +153,108 @@ panel_paned_size_allocate (GtkWidget *widget,
                            int        baseline)
 {
   PanelPaned *self = (PanelPaned *)widget;
-  GtkRequestedSize *reqs;
+  ChildAllocation *allocs;
+  GtkOrientation orientation;
   guint n_children = 0;
+  guint i;
+  int extra_width = width;
+  int extra_height = height;
+  int x, y;
 
   g_assert (PANEL_IS_PANED (self));
 
   GTK_WIDGET_CLASS (panel_paned_parent_class)->size_allocate (widget, width, height, baseline);
 
-  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
+  n_children = panel_paned_get_n_children (self);
+  allocs = g_newa (ChildAllocation, n_children);
+  memset (allocs, 0, sizeof *allocs * n_children);
+
+  i = 0;
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
        child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    n_children++;
+       child = gtk_widget_get_next_sibling (child), i++)
+    {
+      ChildAllocation *child_alloc = &allocs[i];
 
-  reqs = g_newa (GtkRequestedSize, n_children);
+      if (!gtk_widget_get_visible (child))
+        continue;
 
-  if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-    panel_paned_size_allocate_horizontal (self, reqs, n_children, width, height);
-  else
-    panel_paned_size_allocate_vertical (self, reqs, n_children, width, height);
+      gtk_widget_measure (child, GTK_ORIENTATION_HORIZONTAL, height,
+                          &child_alloc->min_request.width,
+                          &child_alloc->nat_request.width,
+                          NULL, NULL);
+      gtk_widget_measure (child, GTK_ORIENTATION_VERTICAL, width,
+                          &child_alloc->min_request.height,
+                          &child_alloc->nat_request.height,
+                          NULL, NULL);
+
+      child_alloc->alloc.width = child_alloc->min_request.width;
+      child_alloc->alloc.height = child_alloc->min_request.height;
+
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          extra_width -= child_alloc->alloc.width;
+          child_alloc->alloc.height = height;
+        }
+      else
+        {
+          extra_height -= child_alloc->alloc.height;
+          child_alloc->alloc.width = width;
+        }
+    }
+
+  i = 0;
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child), i++)
+    {
+      ChildAllocation *child_alloc = &allocs[i];
+
+      if (extra_width <= 0)
+        break;
+
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          int taken = MIN (extra_width, child_alloc->nat_request.width - child_alloc->alloc.width);
+
+          if (taken > 0)
+            {
+              child_alloc->alloc.width += taken;
+              extra_width -= taken;
+            }
+        }
+      else
+        {
+          int taken = MIN (extra_height, child_alloc->nat_request.height - child_alloc->alloc.height);
+
+          if (taken > 0)
+            {
+              child_alloc->alloc.height += taken;
+              extra_height -= taken;
+            }
+        }
+    }
+
+  i = 0;
+  x = 0;
+  y = 0;
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child), i++)
+    {
+      ChildAllocation *child_alloc = &allocs[i];
+
+      child_alloc->alloc.x = x;
+      child_alloc->alloc.y = y;
+
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        x += child_alloc->alloc.width;
+      else
+        y += child_alloc->alloc.height;
+
+      gtk_widget_size_allocate (child, &child_alloc->alloc, -1);
+    }
 }
 
 static void
@@ -312,9 +359,9 @@ panel_paned_insert (PanelPaned *self,
   g_return_if_fail (gtk_widget_get_parent (child) == NULL);
 
   if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-    dockpos = PANEL_DOCK_POSITION_END;
+    dockpos = PANEL_DOCK_POSITION_START;
   else
-    dockpos = PANEL_DOCK_POSITION_BOTTOM;
+    dockpos = PANEL_DOCK_POSITION_TOP;
 
   resizer = panel_resizer_new (dockpos);
   panel_resizer_set_child (PANEL_RESIZER (resizer), child);
