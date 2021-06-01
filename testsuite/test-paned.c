@@ -27,6 +27,8 @@ main (int argc,
 
       if (i == 2)
         gtk_widget_set_hexpand (button, TRUE);
+
+      g_signal_connect_swapped (button, "clicked", G_CALLBACK (panel_paned_remove), paned);
     }
 
   g_signal_connect_swapped (window, "close-request", G_CALLBACK (g_main_loop_quit), main_loop);
