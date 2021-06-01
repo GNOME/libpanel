@@ -470,7 +470,7 @@ panel_resizer_set_position (PanelResizer      *self,
 
       self->position = position;
 
-      if (child != NULL)
+      if (GTK_IS_ORIENTABLE (child))
         {
           if (self->position == PANEL_DOCK_POSITION_START ||
               self->position == PANEL_DOCK_POSITION_END)
