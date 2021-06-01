@@ -107,7 +107,7 @@ panel_handle_init (PanelHandle *self)
   gtk_widget_set_parent (GTK_WIDGET (self->separator), GTK_WIDGET (self));
 }
 
-static void
+void
 panel_handle_set_position (PanelHandle       *self,
                            PanelDockPosition  position)
 {
