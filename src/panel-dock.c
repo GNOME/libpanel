@@ -24,6 +24,8 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-paned-private.h"
+#include "panel-resizer-private.h"
 #include "panel-widget.h"
 
 typedef struct
@@ -337,6 +339,28 @@ get_or_create_dock_child (PanelDock         *self,
   return child;
 }
 
+static GtkWidget *
+find_first_frame (GtkWidget *parent)
+{
+  for (GtkWidget *child = gtk_widget_get_first_child (parent);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (PANEL_IS_FRAME (child))
+        return child;
+
+      if (PANEL_IS_RESIZER (child))
+        {
+          GtkWidget *resizer_child = panel_resizer_get_child (PANEL_RESIZER (child));
+
+          if (PANEL_IS_FRAME (resizer_child))
+            return resizer_child;
+        }
+    }
+
+  return NULL;
+}
+
 static void
 panel_dock_add_child (GtkBuildable *buildable,
                       GtkBuilder   *builder,
@@ -396,12 +420,19 @@ panel_dock_add_child (GtkBuildable *buildable,
 
       if (position != PANEL_DOCK_POSITION_CENTER && PANEL_IS_WIDGET (object))
         {
-          GtkWidget *frame = panel_dock_child_get_child (PANEL_DOCK_CHILD (dock_child));
+          GtkWidget *paned = panel_dock_child_get_child (PANEL_DOCK_CHILD (dock_child));
+          GtkWidget *frame;
 
-          if (frame == NULL)
+          if (paned == NULL)
+            {
+              paned = panel_paned_new ();
+              panel_dock_child_set_child (PANEL_DOCK_CHILD (dock_child), paned);
+            }
+
+          if (!(frame = find_first_frame (paned)))
             {
               frame = panel_frame_new ();
-              panel_dock_child_set_child (PANEL_DOCK_CHILD (dock_child), frame);
+              panel_paned_append (PANEL_PANED (paned), frame);
             }
 
           panel_frame_add (PANEL_FRAME (frame), PANEL_WIDGET (object));
