@@ -467,19 +467,20 @@ panel_resizer_set_position (PanelResizer      *self,
   if (position != self->position)
     {
       GtkWidget *child = panel_resizer_get_child (self);
+      GtkOrientation orientation;
 
       self->position = position;
 
+      if (self->position == PANEL_DOCK_POSITION_START ||
+          self->position == PANEL_DOCK_POSITION_END)
+        orientation = GTK_ORIENTATION_HORIZONTAL;
+      else
+        orientation = GTK_ORIENTATION_VERTICAL;
+
       if (GTK_IS_ORIENTABLE (child))
-        {
-          if (self->position == PANEL_DOCK_POSITION_START ||
-              self->position == PANEL_DOCK_POSITION_END)
-            gtk_orientable_set_orientation (GTK_ORIENTABLE (child),
-                                            GTK_ORIENTATION_VERTICAL);
-          else
-            gtk_orientable_set_orientation (GTK_ORIENTABLE (child),
-                                            GTK_ORIENTATION_HORIZONTAL);
-        }
+        gtk_orientable_set_orientation (GTK_ORIENTABLE (child), orientation);
+
+      panel_handle_set_position (self->handle, position);
 
       gtk_widget_queue_resize (GTK_WIDGET (self));
     }
