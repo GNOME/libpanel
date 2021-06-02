@@ -502,3 +502,24 @@ panel_paned_get_n_children (PanelPaned *self)
 
   return count;
 }
+
+GtkWidget *
+panel_paned_get_nth_child (PanelPaned *self,
+                           guint       nth)
+{
+  g_return_val_if_fail (PANEL_IS_PANED (self), NULL);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      g_assert (PANEL_IS_RESIZER (child));
+
+      if (nth == 0)
+        return panel_resizer_get_child (PANEL_RESIZER (child));
+
+      nth--;
+    }
+
+  return NULL;
+}

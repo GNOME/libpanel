@@ -42,5 +42,7 @@ void       panel_paned_insert_after   (PanelPaned *self,
 void       panel_paned_remove         (PanelPaned *self,
                                        GtkWidget  *child);
 guint      panel_paned_get_n_children (PanelPaned *self);
+GtkWidget *panel_paned_get_nth_child  (PanelPaned *self,
+                                       guint       nth);
 
 G_END_DECLS
