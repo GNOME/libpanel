@@ -260,7 +260,7 @@ panel_frame_drag_begin_cb (PanelFrame    *self,
   gtk_drag_source_set_icon (source, paintable, 0, 0);
 
   if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_begin_drag (PANEL_DOCK (dock));
+    _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
 }
 
 static void
@@ -275,10 +275,10 @@ panel_frame_drag_end_cb (PanelFrame    *self,
   g_assert (GDK_IS_DRAG (drag));
   g_assert (PANEL_IS_FRAME (self));
 
-  self->drag_panel = NULL;
-
   if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_end_drag (PANEL_DOCK (dock));
+    _panel_dock_end_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+
+  self->drag_panel = NULL;
 }
 
 static void

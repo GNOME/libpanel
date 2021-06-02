@@ -23,6 +23,7 @@
 #include <gtk/gtk.h>
 
 #include "panel-version-macros.h"
+#include "panel-widget.h"
 
 G_BEGIN_DECLS
 
@@ -43,6 +44,11 @@ G_DECLARE_DERIVABLE_TYPE (PanelDock, panel_dock, PANEL, DOCK, GtkWidget)
 struct _PanelDockClass
 {
   GtkWidgetClass parent_class;
+
+  void (*panel_drag_begin) (PanelDock   *self,
+                            PanelWidget *widget);
+  void (*panel_drag_end)   (PanelDock   *self,
+                            PanelWidget *widget);
 };
 
 PANEL_AVAILABLE_IN_ALL

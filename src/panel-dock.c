@@ -56,7 +56,14 @@ enum {
   N_PROPS
 };
 
+enum {
+  PANEL_DRAG_BEGIN,
+  PANEL_DRAG_END,
+  N_SIGNALS
+};
+
 static GParamSpec *properties [N_PROPS];
+static guint signals [N_SIGNALS];
 
 GtkWidget *
 panel_dock_new (void)
@@ -249,6 +256,37 @@ panel_dock_class_init (PanelDockClass *klass)
                           (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
+
+  /**
+   * PanelDock::panel-drag-begin:
+   * @self: a #PanelDock
+   * @panel: a #PanelWidget
+   *
+   * This signal is emitted when dragging of a panel begins.
+   */
+  signals [PANEL_DRAG_BEGIN] =
+    g_signal_new ("panel-drag-begin",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (PanelDockClass, panel_drag_begin),
+                  NULL, NULL, NULL,
+                  G_TYPE_NONE, 1, PANEL_TYPE_WIDGET);
+
+  /**
+   * PanelDock::panel-drag-end:
+   * @self: a #PanelDock
+   * @panel: a #PanelWidget
+   *
+   * This signal is emitted when dragging of a panel either
+   * completes or was cancelled.
+   */
+  signals [PANEL_DRAG_END] =
+    g_signal_new ("panel-drag-end",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (PanelDockClass, panel_drag_end),
+                  NULL, NULL, NULL,
+                  G_TYPE_NONE, 1, PANEL_TYPE_WIDGET);
 
   gtk_widget_class_set_css_name (widget_class, "paneldock");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
@@ -630,17 +668,23 @@ panel_dock_get_can_reveal_end (PanelDock *self)
 }
 
 void
-_panel_dock_begin_drag (PanelDock *self)
+_panel_dock_begin_drag (PanelDock   *self,
+                        PanelWidget *panel)
 {
   g_return_if_fail (PANEL_IS_DOCK (self));
+  g_return_if_fail (PANEL_IS_WIDGET (panel));
 
+  g_signal_emit (self, signals [PANEL_DRAG_BEGIN], 0, panel);
 }
 
 void
-_panel_dock_end_drag (PanelDock *self)
+_panel_dock_end_drag (PanelDock   *self,
+                      PanelWidget *panel)
 {
   g_return_if_fail (PANEL_IS_DOCK (self));
+  g_return_if_fail (PANEL_IS_WIDGET (panel));
 
+  g_signal_emit (self, signals [PANEL_DRAG_END], 0, panel);
 }
 
 void
