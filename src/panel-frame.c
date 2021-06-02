@@ -24,6 +24,7 @@
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
 #include "panel-paned-private.h"
+#include "panel-scaler-private.h"
 #include "panel-widget.h"
 
 struct _PanelFrame
@@ -255,9 +256,44 @@ panel_frame_drag_begin_cb (PanelFrame    *self,
   g_assert (PANEL_IS_FRAME (self));
   g_assert (GTK_IS_DRAG_SOURCE (source));
   g_assert (GDK_IS_DRAG (drag));
+  g_assert (PANEL_IS_WIDGET (self->drag_panel));
 
-  paintable = gtk_widget_paintable_new (self->drag_panel);
-  gtk_drag_source_set_icon (source, paintable, 0, 0);
+  if ((paintable = gtk_widget_paintable_new (self->drag_panel)))
+    {
+      int width = gdk_paintable_get_intrinsic_width (paintable);
+      int height = gdk_paintable_get_intrinsic_height (paintable);
+
+      /* Scale the paintable if it is too large */
+      if (width > 250 || height > 250)
+        {
+          g_autoptr(GdkPaintable) unscaled = g_steal_pointer (&paintable);
+          int widget_scale = gtk_widget_get_scale_factor (GTK_WIDGET (self));
+          double scale;
+
+          if (height > width)
+            scale = 250.0 / width * widget_scale;
+          else
+            scale = 250.0 / height * widget_scale;
+
+          paintable = panel_scaler_new (unscaled, scale);
+        }
+    }
+  else
+    {
+      GtkIconTheme *icon_theme;
+      const char *icon_name;
+      int scale;
+
+      icon_theme = gtk_icon_theme_get_for_display (gtk_widget_get_display (GTK_WIDGET (self)));
+      icon_name = panel_widget_get_icon_name (PANEL_WIDGET (self->drag_panel));
+      scale = gtk_widget_get_scale_factor (GTK_WIDGET (self));
+
+      if (icon_name)
+        paintable = GDK_PAINTABLE (gtk_icon_theme_lookup_icon (icon_theme, icon_name, NULL, 32, scale, GTK_TEXT_DIR_NONE,  0));
+    }
+
+  if (paintable != NULL)
+    gtk_drag_source_set_icon (source, paintable, 0, 0);
 
   if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
     _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
