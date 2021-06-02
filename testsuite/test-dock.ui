@@ -55,6 +55,11 @@
             </property>
           </object>
         </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label">center</property>
+          </object>
+        </child>
       </object>
     </child>
   </object>
