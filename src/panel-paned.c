@@ -225,8 +225,8 @@ panel_paned_size_allocate (GtkWidget *widget,
     {
       ChildAllocation *child_alloc = &allocs[i];
 
-      if (extra_width <= 0)
-        break;
+      if (!gtk_widget_get_visible (child))
+        continue;
 
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
         {
@@ -248,6 +248,30 @@ panel_paned_size_allocate (GtkWidget *widget,
               extra_height -= taken;
             }
         }
+    }
+
+  i = n_children;
+  for (GtkWidget *child = gtk_widget_get_last_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_prev_sibling (child), i--)
+    {
+      ChildAllocation *child_alloc = &allocs[i-1];
+
+      if (!gtk_widget_get_visible (child))
+        continue;
+
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          child_alloc->alloc.width += extra_width;
+          extra_width = 0;
+        }
+      else
+        {
+          child_alloc->alloc.height += extra_height;
+          extra_height = 0;
+        }
+
+      break;
     }
 
   i = 0;
