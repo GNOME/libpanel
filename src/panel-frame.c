@@ -194,6 +194,7 @@ panel_frame_drop_cb (PanelFrame    *self,
 
   panel_frame_remove (PANEL_FRAME (frame), panel);
   panel_frame_add (target, panel);
+  panel_frame_set_visible_child (target, panel);
 
   if (panel_frame_get_empty (PANEL_FRAME (frame)) &&
       panel_paned_get_n_children (PANEL_PANED (src_paned)) > 1)
