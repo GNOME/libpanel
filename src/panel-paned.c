@@ -471,3 +471,35 @@ panel_paned_prepend (PanelPaned *self,
 {
   panel_paned_insert (self, 0, child);
 }
+
+void
+panel_paned_insert_after (PanelPaned *self,
+                          GtkWidget  *child,
+                          GtkWidget  *sibling)
+{
+  int position = 0;
+
+  g_return_if_fail (PANEL_IS_PANED (self));
+  g_return_if_fail (GTK_IS_WIDGET (child));
+  g_return_if_fail (!sibling || GTK_IS_WIDGET (sibling));
+
+  if (sibling == NULL)
+    {
+      panel_paned_prepend (self, child);
+      return;
+    }
+
+  /* TODO: We should reverse insert() to call this */
+
+  for (GtkWidget *ancestor = gtk_widget_get_first_child (GTK_WIDGET (self));
+       ancestor != NULL;
+       ancestor = gtk_widget_get_next_sibling (ancestor))
+    {
+      position++;
+
+      if (gtk_widget_is_ancestor (child, ancestor))
+        break;
+    }
+
+  panel_paned_insert (self, position, child);
+}
