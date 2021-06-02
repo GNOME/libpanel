@@ -26,12 +26,15 @@
 #include "panel-resizer-private.h"
 #include "panel-widget.h"
 
+#define MIN_SIZE_DURING_DRAG 32
+
 struct _PanelDockChild
 {
   GtkWidget          parent_instance;
   GtkRevealer       *revealer;
-  PanelResizer  *resizer;
+  PanelResizer      *resizer;
   PanelDockPosition  position : 3;
+  guint              dragging : 1;
 };
 
 G_DEFINE_TYPE (PanelDockChild, panel_dock_child, GTK_TYPE_WIDGET)
@@ -310,4 +313,40 @@ panel_dock_child_get_empty (PanelDockChild *self)
     return panel_frame_get_empty (PANEL_FRAME (child));
 
   return FALSE;
+}
+
+gboolean
+panel_dock_child_get_dragging (PanelDockChild *self)
+{
+  g_return_val_if_fail (PANEL_IS_DOCK_CHILD (self), FALSE);
+
+  return self->dragging;
+}
+
+void
+panel_dock_child_set_dragging (PanelDockChild *self,
+                               gboolean        dragging)
+{
+  GtkWidget *child;
+
+  g_return_if_fail (PANEL_IS_DOCK_CHILD (self));
+
+  self->dragging = !!dragging;
+
+  child = panel_dock_child_get_child (self);
+
+  if (PANEL_IS_PANED (child))
+    {
+      if (dragging)
+        {
+          if (gtk_orientable_get_orientation (GTK_ORIENTABLE (child)) == GTK_ORIENTATION_HORIZONTAL)
+            gtk_widget_set_size_request (child, -1, MIN_SIZE_DURING_DRAG);
+          else
+            gtk_widget_set_size_request (child, MIN_SIZE_DURING_DRAG, -1);
+        }
+      else
+        {
+          gtk_widget_set_size_request (child, -1, -1);
+        }
+    }
 }

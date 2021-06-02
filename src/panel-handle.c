@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-dock-child-private.h"
 #include "panel-handle-private.h"
 
 #define EXTRA_SIZE 8
@@ -39,9 +40,15 @@ panel_handle_contains (GtkWidget *widget,
                        double     y)
 {
   PanelHandle *self = (PanelHandle *)widget;
+  GtkWidget *dock_child;
   graphene_rect_t area;
 
   g_assert (PANEL_IS_HANDLE (self));
+
+  /* Ignore when dragging */
+  if ((dock_child = gtk_widget_get_ancestor (widget, PANEL_TYPE_DOCK_CHILD)) &&
+      panel_dock_child_get_dragging (PANEL_DOCK_CHILD (dock_child)))
+    return FALSE;
 
   if (!gtk_widget_compute_bounds (GTK_WIDGET (self->separator),
                                   GTK_WIDGET (self),

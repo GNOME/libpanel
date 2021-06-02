@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-dock-child-private.h"
 #include "panel-handle-private.h"
 #include "panel-frame-private.h"
 #include "panel-resizer-private.h"
@@ -57,9 +58,14 @@ panel_resizer_drag_begin_cb (PanelResizer   *self,
 {
   GtkAllocation child_alloc;
   GtkAllocation handle_alloc;
+  GtkWidget *dock_child;
 
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
+
+  if ((dock_child = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK_CHILD)) &&
+      panel_dock_child_get_dragging (PANEL_DOCK_CHILD (dock_child)))
+    goto deny_sequence;
 
   if (self->child != NULL)
     {
@@ -91,6 +97,7 @@ panel_resizer_drag_begin_cb (PanelResizer   *self,
         }
     }
 
+deny_sequence:
   gtk_gesture_set_state (GTK_GESTURE (drag),
                          GTK_EVENT_SEQUENCE_DENIED);
 

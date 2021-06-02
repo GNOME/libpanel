@@ -39,5 +39,8 @@ gboolean           panel_dock_child_get_reveal_child (PanelDockChild    *self);
 void               panel_dock_child_set_reveal_child (PanelDockChild    *self,
                                                       gboolean           reveal_child);
 gboolean           panel_dock_child_get_empty        (PanelDockChild    *self);
+gboolean           panel_dock_child_get_dragging     (PanelDockChild    *self);
+void               panel_dock_child_set_dragging     (PanelDockChild    *self,
+                                                      gboolean           dragging);
 
 G_END_DECLS

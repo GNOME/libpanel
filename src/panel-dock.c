@@ -71,6 +71,45 @@ panel_dock_new (void)
   return g_object_new (PANEL_TYPE_DOCK, NULL);
 }
 
+static void
+get_grid_positions (PanelDockPosition  position,
+                    int               *left,
+                    int               *top,
+                    int               *width,
+                    int               *height,
+                    GtkOrientation    *orientation)
+{
+
+  switch (position)
+    {
+    case PANEL_DOCK_POSITION_START:
+      *left = 0, *top = 0, *width = 1, *height = 3;
+      *orientation = GTK_ORIENTATION_VERTICAL;
+      break;
+
+    case PANEL_DOCK_POSITION_END:
+      *left = 2, *top = 0, *width = 1, *height = 3;
+      *orientation = GTK_ORIENTATION_VERTICAL;
+      break;
+
+    case PANEL_DOCK_POSITION_TOP:
+      *left = 1, *top = 0, *width = 1, *height = 1;
+      *orientation = GTK_ORIENTATION_HORIZONTAL;
+      break;
+
+    case PANEL_DOCK_POSITION_BOTTOM:
+      *left = 1, *top = 2, *width = 1, *height = 1;
+      *orientation = GTK_ORIENTATION_HORIZONTAL;
+      break;
+
+    default:
+    case PANEL_DOCK_POSITION_CENTER:
+      *left = 1, *top = 1, *width = 1, *height = 1;
+      *orientation = GTK_ORIENTATION_HORIZONTAL;
+      break;
+    }
+}
+
 static gboolean
 set_reveal (PanelDock         *self,
             PanelDockPosition  position,
@@ -425,35 +464,30 @@ panel_dock_add_child (GtkBuildable *buildable,
   if (g_strcmp0 (type, "start") == 0)
     {
       position = PANEL_DOCK_POSITION_START;
-      left = 0, top = 0, width = 1, height = 3;
       reveal = priv->reveal_start;
-      orientation = GTK_ORIENTATION_VERTICAL;
     }
   else if (g_strcmp0 (type, "end") == 0)
     {
       position = PANEL_DOCK_POSITION_END;
-      left = 2, top = 0, width = 1, height = 3;
       reveal = priv->reveal_end;
-      orientation = GTK_ORIENTATION_VERTICAL;
     }
   else if (g_strcmp0 (type, "top") == 0)
     {
       position = PANEL_DOCK_POSITION_TOP;
-      left = 1, top = 0, width = 1, height = 1;
       reveal = priv->reveal_top;
     }
   else if (g_strcmp0 (type, "bottom") == 0)
     {
       position = PANEL_DOCK_POSITION_BOTTOM;
-      left = 1, top = 2, width = 1, height = 1;
       reveal = priv->reveal_bottom;
     }
   else
     {
       position = PANEL_DOCK_POSITION_CENTER;
-      left = 1, top = 1, width = 1, height = 1;
       reveal = TRUE;
     }
+
+  get_grid_positions (position, &left, &top, &width, &height, &orientation);
 
   if (!PANEL_IS_DOCK_CHILD (object))
     {
@@ -667,12 +701,64 @@ panel_dock_get_can_reveal_end (PanelDock *self)
   return panel_dock_get_can_reveal (self, PANEL_DOCK_POSITION_END);
 }
 
+static void
+prepare_for_drag (PanelDock         *self,
+                  PanelDockPosition  position)
+{
+  GtkWidget *child;
+  GtkWidget *paned;
+
+  g_assert (PANEL_IS_DOCK (self));
+
+  if (!(child = panel_dock_get_child_at_position (self, position)))
+    {
+      GtkOrientation orientation;
+      int left, top, width, height;
+
+      /* TODO: If policy allows it, we can create this child immediately */
+
+      get_grid_positions (position, &left, &top, &width, &height, &orientation);
+      child = get_or_create_dock_child (self, position, left, top, width, height);
+      paned = panel_dock_child_get_child (PANEL_DOCK_CHILD (child));
+
+      if (paned == NULL)
+        {
+          paned = panel_paned_new ();
+          gtk_orientable_set_orientation (GTK_ORIENTABLE (paned), orientation);
+          panel_dock_child_set_child (PANEL_DOCK_CHILD (child), paned);
+        }
+    }
+
+  panel_dock_child_set_dragging (PANEL_DOCK_CHILD (child), TRUE);
+}
+
+static void
+unprepare_from_drag (PanelDock         *self,
+                     PanelDockPosition  position)
+{
+  GtkWidget *child;
+
+  g_assert (PANEL_IS_DOCK (self));
+
+  if ((child = panel_dock_get_child_at_position (self, position)))
+    panel_dock_child_set_dragging (PANEL_DOCK_CHILD (child), FALSE);
+}
+
 void
 _panel_dock_begin_drag (PanelDock   *self,
                         PanelWidget *panel)
 {
   g_return_if_fail (PANEL_IS_DOCK (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
+
+  /* For each of the edges that policy does not prohibit it,
+   * make sure that there is a child there that we can expand
+   * if necessary.
+   */
+  prepare_for_drag (self, PANEL_DOCK_POSITION_START);
+  prepare_for_drag (self, PANEL_DOCK_POSITION_END);
+  prepare_for_drag (self, PANEL_DOCK_POSITION_TOP);
+  prepare_for_drag (self, PANEL_DOCK_POSITION_BOTTOM);
 
   g_signal_emit (self, signals [PANEL_DRAG_BEGIN], 0, panel);
 }
@@ -685,6 +771,11 @@ _panel_dock_end_drag (PanelDock   *self,
   g_return_if_fail (PANEL_IS_WIDGET (panel));
 
   g_signal_emit (self, signals [PANEL_DRAG_END], 0, panel);
+
+  unprepare_from_drag (self, PANEL_DOCK_POSITION_START);
+  unprepare_from_drag (self, PANEL_DOCK_POSITION_END);
+  unprepare_from_drag (self, PANEL_DOCK_POSITION_TOP);
+  unprepare_from_drag (self, PANEL_DOCK_POSITION_BOTTOM);
 }
 
 void

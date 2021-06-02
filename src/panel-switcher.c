@@ -137,26 +137,22 @@ panel_switcher_panel_drag_begin_cb (PanelSwitcher *self,
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
-#define SHOW_REVEALER(edge, w, h) \
+#define SHOW_REVEALER(edge) \
   G_STMT_START { \
     GtkRevealer *r = self->edge##_revealer; \
     GtkToggleButton *b = self->edge##_button; \
-    GtkWidget *child = _panel_dock_get_##edge##_child (dock); \
-    if (PANEL_IS_DOCK_CHILD (child)) \
-      child = panel_dock_child_get_child (PANEL_DOCK_CHILD (child)); \
     if (!gtk_widget_get_visible (GTK_WIDGET (r))) \
       { \
         gtk_toggle_button_set_active (b, FALSE); \
         gtk_widget_show (GTK_WIDGET (r)); \
         gtk_revealer_set_reveal_child ((r), TRUE); \
-        gtk_widget_set_size_request (child, w, h); \
       } \
   } G_STMT_END
 
-  SHOW_REVEALER (start, EMPTY_DRAG_SIZE, -1);
-  SHOW_REVEALER (end, EMPTY_DRAG_SIZE, -1);
-  SHOW_REVEALER (top, -1, EMPTY_DRAG_SIZE);
-  SHOW_REVEALER (bottom, -1, EMPTY_DRAG_SIZE);
+  SHOW_REVEALER (start);
+  SHOW_REVEALER (end);
+  SHOW_REVEALER (top);
+  SHOW_REVEALER (bottom);
 
 #undef SHOW_REVEALER
 }
@@ -173,10 +169,6 @@ panel_switcher_panel_drag_end_cb (PanelSwitcher *self,
 #define HIDE_REVEALER(edge) \
   G_STMT_START { \
     GtkRevealer *r = self->edge##_revealer; \
-    GtkWidget *child = _panel_dock_get_##edge##_child (dock); \
-    if (PANEL_IS_DOCK_CHILD (child)) \
-      child = panel_dock_child_get_child (PANEL_DOCK_CHILD (child)); \
-    gtk_widget_set_size_request (child, -1, -1); \
     if (!panel_dock_get_can_reveal_##edge (dock)) \
       gtk_revealer_set_reveal_child (r, FALSE); \
   } G_STMT_END
