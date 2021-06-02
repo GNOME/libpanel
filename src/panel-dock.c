@@ -406,6 +406,7 @@ get_or_create_dock_child (PanelDock         *self,
     }
 
   child = panel_dock_child_new (position);
+  panel_dock_child_set_reveal_child (PANEL_DOCK_CHILD (child), FALSE);
   g_signal_connect_object (child,
                            "notify::empty",
                            G_CALLBACK (panel_dock_notify_empty_cb),
