@@ -34,6 +34,8 @@ struct _PanelFrame
   GtkWidget *drag_panel;
 };
 
+#define SIZE_AT_END 50
+
 G_DEFINE_TYPE_WITH_CODE (PanelFrame, panel_frame, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL))
 
@@ -85,6 +87,50 @@ panel_frame_drop_accept_cb (PanelFrame    *self,
   return TRUE;
 }
 
+static GdkDragAction
+panel_frame_drop_motion_cb (PanelFrame    *self,
+                            double         x,
+                            double         y,
+                            GtkDropTarget *drop_target)
+{
+  GtkOrientation orientation;
+  GtkAllocation alloc;
+
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
+
+  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
+
+  if (orientation == GTK_ORIENTATION_HORIZONTAL)
+    {
+      if (x + SIZE_AT_END >= alloc.width)
+        gtk_widget_add_css_class (GTK_WIDGET (self), "drop-after");
+      else
+        gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
+    }
+  else
+    {
+      if (y + SIZE_AT_END >= alloc.height)
+        gtk_widget_add_css_class (GTK_WIDGET (self), "drop-after");
+      else
+        gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
+    }
+
+  return GDK_ACTION_MOVE;
+}
+
+static void
+panel_frame_drop_leave_cb (PanelFrame    *self,
+                           GtkDropTarget *drop_target)
+{
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
+}
+
 static gboolean
 panel_frame_drop_cb (PanelFrame    *self,
                      const GValue  *value,
@@ -97,6 +143,8 @@ panel_frame_drop_cb (PanelFrame    *self,
 
   g_assert (PANEL_IS_FRAME (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
 
   if (!G_VALUE_HOLDS (value, PANEL_TYPE_WIDGET) ||
       !(panel = g_value_get_object (value)) ||
@@ -360,6 +408,16 @@ panel_frame_init (PanelFrame *self)
   g_signal_connect_object (drop_target,
                            "drop",
                            G_CALLBACK (panel_frame_drop_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_signal_connect_object (drop_target,
+                           "motion",
+                           G_CALLBACK (panel_frame_drop_motion_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_signal_connect_object (drop_target,
+                           "leave",
+                           G_CALLBACK (panel_frame_drop_leave_cb),
                            self,
                            G_CONNECT_SWAPPED);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
