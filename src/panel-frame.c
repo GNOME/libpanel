@@ -265,15 +265,14 @@ panel_frame_drag_begin_cb (PanelFrame    *self,
     {
       int width = gdk_paintable_get_intrinsic_width (paintable);
       int height = gdk_paintable_get_intrinsic_height (paintable);
-      int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (self));
       double ratio;
 
-      if (width < MAX_WIDTH && height < MAX_HEIGHT)
+      if (width <= MAX_WIDTH && height <= MAX_HEIGHT)
         ratio = 1.0;
       else if (width > height)
-        ratio = MAX_WIDTH / width * scale_factor;
+        ratio = width / MAX_WIDTH;
       else
-        ratio = MAX_HEIGHT / height * scale_factor;
+        ratio = height / MAX_HEIGHT;
 
       if (ratio != 1.0)
         {
