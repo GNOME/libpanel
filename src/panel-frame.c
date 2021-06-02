@@ -245,6 +245,9 @@ panel_frame_drag_prepare_cb (PanelFrame    *self,
   return gdk_content_provider_new_typed (PANEL_TYPE_WIDGET, child);
 }
 
+#define MAX_WIDTH  250.0
+#define MAX_HEIGHT 250.0
+
 static void
 panel_frame_drag_begin_cb (PanelFrame    *self,
                            GdkDrag       *drag,
@@ -262,20 +265,21 @@ panel_frame_drag_begin_cb (PanelFrame    *self,
     {
       int width = gdk_paintable_get_intrinsic_width (paintable);
       int height = gdk_paintable_get_intrinsic_height (paintable);
+      int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (self));
+      double ratio;
 
-      /* Scale the paintable if it is too large */
-      if (width > 250 || height > 250)
+      if (width < MAX_WIDTH && height < MAX_HEIGHT)
+        ratio = 1.0;
+      else if (width > height)
+        ratio = MAX_WIDTH / width * scale_factor;
+      else
+        ratio = MAX_HEIGHT / height * scale_factor;
+
+      if (ratio != 1.0)
         {
-          g_autoptr(GdkPaintable) unscaled = g_steal_pointer (&paintable);
-          int widget_scale = gtk_widget_get_scale_factor (GTK_WIDGET (self));
-          double scale;
-
-          if (height > width)
-            scale = 250.0 / width * widget_scale;
-          else
-            scale = 250.0 / height * widget_scale;
-
-          paintable = panel_scaler_new (unscaled, scale);
+          GdkPaintable *tmp = paintable;
+          paintable = panel_scaler_new (paintable, ratio);
+          g_clear_object (&tmp);
         }
     }
   else
