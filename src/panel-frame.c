@@ -140,6 +140,8 @@ panel_frame_drop_cb (PanelFrame    *self,
                      GtkDropTarget *drop_target)
 {
   PanelFrame *target = self;
+  GtkWidget *paned;
+  GtkWidget *src_paned;
   PanelWidget *panel;
   GtkWidget *frame;
   GtkAllocation alloc;
@@ -167,13 +169,15 @@ panel_frame_drop_cb (PanelFrame    *self,
   if (frame == GTK_WIDGET (self) && !is_after)
     return FALSE;
 
+  if (!(src_paned = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_PANED)))
+    return FALSE;
+
+  if (!(paned = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_PANED)))
+    return FALSE;
+
   if (is_after)
     {
-      GtkWidget *paned = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_PANED);
       GtkWidget *new_frame;
-
-      if (paned == NULL)
-        return FALSE;
 
       new_frame = panel_frame_new ();
       gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
@@ -185,6 +189,9 @@ panel_frame_drop_cb (PanelFrame    *self,
 
   panel_frame_remove (PANEL_FRAME (frame), panel);
   panel_frame_add (target, panel);
+
+  if (panel_frame_get_empty (PANEL_FRAME (frame)))
+    panel_paned_remove (PANEL_PANED (src_paned), frame);
 
   g_object_unref (panel);
 
@@ -467,10 +474,10 @@ panel_frame_init (PanelFrame *self)
                            self,
                            G_CONNECT_SWAPPED | G_CONNECT_AFTER);
   panel_frame_items_changed_cb (self,
-                                     0,
-                                     0,
-                                     g_list_model_get_n_items (G_LIST_MODEL (pages)),
-                                     G_LIST_MODEL (pages));
+                                0,
+                                0,
+                                g_list_model_get_n_items (G_LIST_MODEL (pages)),
+                                G_LIST_MODEL (pages));
 }
 
 void
