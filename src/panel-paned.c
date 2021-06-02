@@ -350,6 +350,32 @@ panel_paned_init (PanelPaned *self)
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
 }
 
+static void
+panel_paned_update_handles (PanelPaned *self)
+{
+  GtkWidget *child;
+
+  g_assert (PANEL_IS_PANED (self));
+
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      GtkWidget *handle;
+
+      g_assert (PANEL_IS_RESIZER (child));
+
+      if ((handle = panel_resizer_get_handle (PANEL_RESIZER (child))))
+        gtk_widget_show (handle);
+    }
+
+  if ((child = gtk_widget_get_last_child (GTK_WIDGET (self))))
+    {
+      GtkWidget *handle = panel_resizer_get_handle (PANEL_RESIZER (child));
+      gtk_widget_hide (handle);
+    }
+}
+
 void
 panel_paned_remove (PanelPaned *self,
                     GtkWidget  *child)
@@ -365,6 +391,8 @@ panel_paned_remove (PanelPaned *self,
                     gtk_widget_get_parent (parent) == GTK_WIDGET (self));
 
   gtk_widget_unparent (GTK_WIDGET (parent));
+
+  panel_paned_update_handles (self);
 }
 
 void
@@ -400,6 +428,8 @@ panel_paned_insert (PanelPaned *self,
 
       gtk_widget_insert_before (GTK_WIDGET (resizer), GTK_WIDGET (self), sibling);
     }
+
+  panel_paned_update_handles (self);
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
 }
