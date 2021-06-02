@@ -22,6 +22,7 @@
 
 #include "panel-dock-private.h"
 #include "panel-frame-private.h"
+#include "panel-paned-private.h"
 #include "panel-widget.h"
 
 struct _PanelFrame
@@ -138,8 +139,12 @@ panel_frame_drop_cb (PanelFrame    *self,
                      double         y,
                      GtkDropTarget *drop_target)
 {
+  PanelFrame *target = self;
   PanelWidget *panel;
   GtkWidget *frame;
+  GtkAllocation alloc;
+  GtkOrientation orientation;
+  gboolean is_after = FALSE;
 
   g_assert (PANEL_IS_FRAME (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
@@ -151,13 +156,35 @@ panel_frame_drop_cb (PanelFrame    *self,
       !(frame = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_FRAME)))
     return FALSE;
 
-  if (frame == GTK_WIDGET (self))
+  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
+  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
+
+  if (orientation == GTK_ORIENTATION_HORIZONTAL)
+    is_after = x + SIZE_AT_END >= alloc.width;
+  else
+    is_after = y + SIZE_AT_END >= alloc.height;
+
+  if (frame == GTK_WIDGET (self) && !is_after)
     return FALSE;
+
+  if (is_after)
+    {
+      GtkWidget *paned = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_PANED);
+      GtkWidget *new_frame;
+
+      if (paned == NULL)
+        return FALSE;
+
+      new_frame = panel_frame_new ();
+      gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
+      panel_paned_insert_after (PANEL_PANED (paned), new_frame, GTK_WIDGET (self));
+      target = PANEL_FRAME (new_frame);
+    }
 
   g_object_ref (panel);
 
   panel_frame_remove (PANEL_FRAME (frame), panel);
-  panel_frame_add (self, panel);
+  panel_frame_add (target, panel);
 
   g_object_unref (panel);
 
