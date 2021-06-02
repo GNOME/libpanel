@@ -634,7 +634,6 @@ _panel_dock_begin_drag (PanelDock *self)
 {
   g_return_if_fail (PANEL_IS_DOCK (self));
 
-  g_print ("Begin drag\n");
 }
 
 void
@@ -642,7 +641,6 @@ _panel_dock_end_drag (PanelDock *self)
 {
   g_return_if_fail (PANEL_IS_DOCK (self));
 
-  g_print ("End drag\n");
 }
 
 void
