@@ -302,6 +302,17 @@ panel_frame_dispose (GObject *object)
 {
   PanelFrame *self = (PanelFrame *)object;
 
+  if (self->switcher)
+    gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (self->switcher), NULL);
+
+  if (self->stack)
+    {
+      GtkSelectionModel *pages = gtk_stack_get_pages (GTK_STACK (self->stack));
+      g_signal_handlers_disconnect_by_func (pages,
+                                            G_CALLBACK (panel_frame_items_changed_cb),
+                                            self);
+    }
+
   g_clear_pointer (&self->box, gtk_widget_unparent);
 
   G_OBJECT_CLASS (panel_frame_parent_class)->dispose (object);
