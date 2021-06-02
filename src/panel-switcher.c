@@ -20,9 +20,12 @@
 
 #include "config.h"
 
+#include "panel-dock-private.h"
+#include "panel-dock-child-private.h"
 #include "panel-switcher.h"
 
 #define TIMEOUT_EXPAND 500
+#define EMPTY_DRAG_SIZE 100
 
 struct _PanelSwitcher
 {
@@ -123,6 +126,67 @@ notify_child_revealed_cb (GtkRevealer            *revealer,
 
   if (!gtk_revealer_get_child_revealed (revealer))
     gtk_widget_hide (GTK_WIDGET (revealer));
+}
+
+static void
+panel_switcher_panel_drag_begin_cb (PanelSwitcher *self,
+                                    PanelWidget   *widget,
+                                    PanelDock     *dock)
+{
+  g_assert (PANEL_IS_SWITCHER (self));
+  g_assert (PANEL_IS_WIDGET (widget));
+  g_assert (PANEL_IS_DOCK (dock));
+
+#define SHOW_REVEALER(edge, w, h) \
+  G_STMT_START { \
+    GtkRevealer *r = self->edge##_revealer; \
+    GtkToggleButton *b = self->edge##_button; \
+    GtkWidget *child = _panel_dock_get_##edge##_child (dock); \
+    if (PANEL_IS_DOCK_CHILD (child)) \
+      child = panel_dock_child_get_child (PANEL_DOCK_CHILD (child)); \
+    if (!gtk_widget_get_visible (GTK_WIDGET (r))) \
+      { \
+        gtk_toggle_button_set_active (b, FALSE); \
+        gtk_widget_show (GTK_WIDGET (r)); \
+        gtk_revealer_set_reveal_child ((r), TRUE); \
+        gtk_widget_set_size_request (child, w, h); \
+      } \
+  } G_STMT_END
+
+  SHOW_REVEALER (start, EMPTY_DRAG_SIZE, -1);
+  SHOW_REVEALER (end, EMPTY_DRAG_SIZE, -1);
+  SHOW_REVEALER (top, -1, EMPTY_DRAG_SIZE);
+  SHOW_REVEALER (bottom, -1, EMPTY_DRAG_SIZE);
+
+#undef SHOW_REVEALER
+}
+
+static void
+panel_switcher_panel_drag_end_cb (PanelSwitcher *self,
+                                  PanelWidget   *widget,
+                                  PanelDock     *dock)
+{
+  g_assert (PANEL_IS_SWITCHER (self));
+  g_assert (PANEL_IS_WIDGET (widget));
+  g_assert (PANEL_IS_DOCK (dock));
+
+#define HIDE_REVEALER(edge) \
+  G_STMT_START { \
+    GtkRevealer *r = self->edge##_revealer; \
+    GtkWidget *child = _panel_dock_get_##edge##_child (dock); \
+    if (PANEL_IS_DOCK_CHILD (child)) \
+      child = panel_dock_child_get_child (PANEL_DOCK_CHILD (child)); \
+    gtk_widget_set_size_request (child, -1, -1); \
+    if (!panel_dock_get_can_reveal_##edge (dock)) \
+      gtk_revealer_set_reveal_child (r, FALSE); \
+  } G_STMT_END
+
+  HIDE_REVEALER (start);
+  HIDE_REVEALER (end);
+  HIDE_REVEALER (top);
+  HIDE_REVEALER (bottom);
+
+#undef HIDE_REVEALER
 }
 
 static void
@@ -286,6 +350,12 @@ panel_switcher_set_dock (PanelSwitcher *self,
       g_signal_handlers_disconnect_by_func (self->dock,
                                             G_CALLBACK (panel_switcher_notify_can_reveal_cb),
                                             self->end_revealer);
+      g_signal_handlers_disconnect_by_func (self->dock,
+                                            G_CALLBACK (panel_switcher_panel_drag_begin_cb),
+                                            self);
+      g_signal_handlers_disconnect_by_func (self->dock,
+                                            G_CALLBACK (panel_switcher_panel_drag_end_cb),
+                                            self);
     }
 
   g_set_object (&self->dock, dock);
@@ -322,6 +392,16 @@ panel_switcher_set_dock (PanelSwitcher *self,
       self->end_binding = g_object_bind_property (self->end_button, "active",
                                                   self->dock, "reveal-end",
                                                   G_BINDING_BIDIRECTIONAL);
+      g_signal_connect_object (self->dock,
+                               "panel-drag-begin",
+                               G_CALLBACK (panel_switcher_panel_drag_begin_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
+      g_signal_connect_object (self->dock,
+                               "panel-drag-end",
+                               G_CALLBACK (panel_switcher_panel_drag_end_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
       g_signal_connect_object (self->dock,
                                "notify::can-reveal-top",
                                G_CALLBACK (panel_switcher_notify_can_reveal_cb),
