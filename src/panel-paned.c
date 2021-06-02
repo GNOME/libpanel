@@ -497,7 +497,7 @@ panel_paned_insert_after (PanelPaned *self,
     {
       position++;
 
-      if (gtk_widget_is_ancestor (child, ancestor))
+      if (child == ancestor || gtk_widget_is_ancestor (child, ancestor))
         break;
     }
 
