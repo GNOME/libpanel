@@ -37,5 +37,6 @@ void               panel_resizer_set_position (PanelResizer      *self,
 GtkWidget         *panel_resizer_get_child    (PanelResizer      *self);
 void               panel_resizer_set_child    (PanelResizer      *self,
                                                GtkWidget         *child);
+GtkWidget         *panel_resizer_get_handle   (PanelResizer      *self);
 
 G_END_DECLS

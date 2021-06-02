@@ -472,3 +472,11 @@ panel_resizer_set_position (PanelResizer      *self,
       gtk_widget_queue_resize (GTK_WIDGET (self));
     }
 }
+
+GtkWidget *
+panel_resizer_get_handle (PanelResizer *self)
+{
+  g_return_val_if_fail (PANEL_IS_RESIZER (self), NULL);
+
+  return GTK_WIDGET (self->handle);
+}
