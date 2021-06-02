@@ -190,7 +190,8 @@ panel_frame_drop_cb (PanelFrame    *self,
   panel_frame_remove (PANEL_FRAME (frame), panel);
   panel_frame_add (target, panel);
 
-  if (panel_frame_get_empty (PANEL_FRAME (frame)))
+  if (panel_frame_get_empty (PANEL_FRAME (frame)) &&
+      panel_paned_get_n_children (PANEL_PANED (src_paned)) > 1)
     panel_paned_remove (PANEL_PANED (src_paned), frame);
 
   g_object_unref (panel);

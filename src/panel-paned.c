@@ -128,17 +128,6 @@ panel_paned_measure (GtkWidget      *widget,
     }
 }
 
-static inline guint
-panel_paned_get_n_children (PanelPaned *self)
-{
-  guint count = 0;
-  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
-       child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    count++;
-  return count;
-}
-
 typedef struct
 {
   GtkWidget      *widget;
@@ -499,4 +488,17 @@ panel_paned_insert_after (PanelPaned *self,
     }
 
   panel_paned_insert (self, position, child);
+}
+
+guint
+panel_paned_get_n_children (PanelPaned *self)
+{
+  guint count = 0;
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    count++;
+
+  return count;
 }
