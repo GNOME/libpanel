@@ -192,13 +192,16 @@ panel_resizer_measure (GtkWidget      *widget,
       if (self->drag_position > *minimum)
         *natural = self->drag_position;
 
-      gtk_widget_measure (GTK_WIDGET (self->handle),
-                          orientation, for_size,
-                          &handle_min, &handle_nat,
-                          NULL, NULL);
+      if (gtk_widget_get_visible (GTK_WIDGET (self->handle)))
+        {
+          gtk_widget_measure (GTK_WIDGET (self->handle),
+                              orientation, for_size,
+                              &handle_min, &handle_nat,
+                              NULL, NULL);
 
-      *minimum += handle_min;
-      *natural += handle_nat;
+          *minimum += handle_min;
+          *natural += handle_nat;
+        }
     }
 }
 
@@ -212,7 +215,7 @@ panel_resizer_size_allocate (GtkWidget *widget,
   GtkOrientation orientation;
   GtkAllocation child_alloc;
   GtkAllocation handle_alloc;
-  int handle_min, handle_nat;
+  int handle_min = 0, handle_nat = 0;
 
   g_assert (PANEL_IS_RESIZER (self));
 
@@ -222,11 +225,12 @@ panel_resizer_size_allocate (GtkWidget *widget,
   else
     orientation = GTK_ORIENTATION_VERTICAL;
 
-  gtk_widget_measure (GTK_WIDGET (self->handle),
-                      orientation,
-                      -1,
-                      &handle_min, &handle_nat,
-                      NULL, NULL);
+  if (gtk_widget_get_visible (GTK_WIDGET (self->handle)))
+    gtk_widget_measure (GTK_WIDGET (self->handle),
+                        orientation,
+                        -1,
+                        &handle_min, &handle_nat,
+                        NULL, NULL);
 
   switch (self->position)
     {
