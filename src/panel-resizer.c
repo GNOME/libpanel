@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "panel-handle-private.h"
+#include "panel-frame-private.h"
 #include "panel-resizer-private.h"
 
 #define HANDLE_SIZE 8
@@ -442,22 +443,9 @@ panel_resizer_set_child (PanelResizer *self,
   self->child = child;
 
   if (self->child != NULL)
-    {
-      gtk_widget_insert_before (self->child,
-                                GTK_WIDGET (self),
-                                GTK_WIDGET (self->handle));
-
-      if (GTK_IS_ORIENTABLE (child))
-        {
-          if (self->position == PANEL_DOCK_POSITION_START ||
-              self->position == PANEL_DOCK_POSITION_END)
-            gtk_orientable_set_orientation (GTK_ORIENTABLE (child),
-                                            GTK_ORIENTATION_VERTICAL);
-          else
-            gtk_orientable_set_orientation (GTK_ORIENTABLE (child),
-                                            GTK_ORIENTATION_HORIZONTAL);
-        }
-    }
+    gtk_widget_insert_before (self->child,
+                              GTK_WIDGET (self),
+                              GTK_WIDGET (self->handle));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CHILD]);
 }
@@ -478,22 +466,9 @@ panel_resizer_set_position (PanelResizer      *self,
 
   if (position != self->position)
     {
-      GtkWidget *child = panel_resizer_get_child (self);
-      GtkOrientation orientation;
-
       self->position = position;
 
-      if (self->position == PANEL_DOCK_POSITION_START ||
-          self->position == PANEL_DOCK_POSITION_END)
-        orientation = GTK_ORIENTATION_HORIZONTAL;
-      else
-        orientation = GTK_ORIENTATION_VERTICAL;
-
-      if (GTK_IS_ORIENTABLE (child))
-        gtk_orientable_set_orientation (GTK_ORIENTABLE (child), orientation);
-
       panel_handle_set_position (self->handle, position);
-
       gtk_widget_queue_resize (GTK_WIDGET (self));
     }
 }

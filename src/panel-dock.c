@@ -370,6 +370,7 @@ panel_dock_add_child (GtkBuildable *buildable,
   PanelDock *self = (PanelDock *)buildable;
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
   PanelDockPosition position = 0;
+  GtkOrientation orientation = 0;
   gboolean reveal;
   int left;
   int top;
@@ -388,12 +389,14 @@ panel_dock_add_child (GtkBuildable *buildable,
       position = PANEL_DOCK_POSITION_START;
       left = 0, top = 0, width = 1, height = 3;
       reveal = priv->reveal_start;
+      orientation = GTK_ORIENTATION_VERTICAL;
     }
   else if (g_strcmp0 (type, "end") == 0)
     {
       position = PANEL_DOCK_POSITION_END;
       left = 2, top = 0, width = 1, height = 3;
       reveal = priv->reveal_end;
+      orientation = GTK_ORIENTATION_VERTICAL;
     }
   else if (g_strcmp0 (type, "top") == 0)
     {
@@ -426,12 +429,14 @@ panel_dock_add_child (GtkBuildable *buildable,
           if (paned == NULL)
             {
               paned = panel_paned_new ();
+              gtk_orientable_set_orientation (GTK_ORIENTABLE (paned), orientation);
               panel_dock_child_set_child (PANEL_DOCK_CHILD (dock_child), paned);
             }
 
           if (!(frame = find_first_frame (paned)))
             {
               frame = panel_frame_new ();
+              gtk_orientable_set_orientation (GTK_ORIENTABLE (frame), orientation);
               panel_paned_append (PANEL_PANED (paned), frame);
             }
 
