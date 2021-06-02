@@ -33,6 +33,8 @@ struct _PanelFrame
   GtkWidget *stack;
   GtkWidget *switcher;
   GtkWidget *drag_panel;
+
+  guint      disposed : 1;
 };
 
 #define SIZE_AT_END 50
@@ -292,6 +294,9 @@ panel_frame_items_changed_cb (PanelFrame *self,
   g_assert (PANEL_IS_FRAME (self));
   g_assert (G_IS_LIST_MODEL (model));
 
+  if (self->disposed)
+    return;
+
   orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
   hexpand = orientation == GTK_ORIENTATION_VERTICAL;
   vexpand = orientation == GTK_ORIENTATION_HORIZONTAL;
@@ -309,6 +314,8 @@ static void
 panel_frame_dispose (GObject *object)
 {
   PanelFrame *self = (PanelFrame *)object;
+
+  self->disposed = TRUE;
 
   if (self->switcher)
     gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (self->switcher), NULL);
