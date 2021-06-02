@@ -22,6 +22,7 @@
 
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-paned-private.h"
 #include "panel-resizer-private.h"
 #include "panel-widget.h"
 
@@ -297,6 +298,13 @@ panel_dock_child_get_empty (PanelDockChild *self)
 
   if (!(child = panel_dock_child_get_child (self)))
     return TRUE;
+
+  if (PANEL_IS_PANED (child))
+    {
+      if (gtk_widget_get_first_child (GTK_WIDGET (child)) ==
+          gtk_widget_get_last_child (GTK_WIDGET (child)))
+        child = panel_paned_get_nth_child (PANEL_PANED (child), 0);
+    }
 
   if (PANEL_IS_FRAME (child))
     return panel_frame_get_empty (PANEL_FRAME (child));

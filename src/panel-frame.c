@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "panel-dock-private.h"
+#include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
 #include "panel-paned-private.h"
 #include "panel-widget.h"
@@ -515,6 +516,7 @@ panel_frame_remove (PanelFrame  *self,
                     PanelWidget *panel)
 {
   GtkWidget *new_child;
+  GtkWidget *dock_child;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
@@ -528,7 +530,15 @@ panel_frame_remove (PanelFrame  *self,
     gtk_stack_set_visible_child (GTK_STACK (self->stack), new_child);
 
   if (panel_frame_get_empty (self))
-    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_EMPTY]);
+    {
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_EMPTY]);
+
+      if ((dock_child = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK_CHILD)))
+        {
+          if (gtk_widget_get_first_child (dock_child) == gtk_widget_get_last_child (dock_child))
+            g_object_notify (G_OBJECT (dock_child), "empty");
+        }
+    }
 }
 
 gboolean

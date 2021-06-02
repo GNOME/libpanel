@@ -22,6 +22,7 @@
 
 #include <string.h>
 
+#include "panel-dock-child-private.h"
 #include "panel-dock-private.h"
 #include "panel-paned-private.h"
 #include "panel-resizer-private.h"
@@ -403,6 +404,18 @@ panel_paned_remove (PanelPaned *self,
                     gtk_widget_get_parent (resizer) == GTK_WIDGET (self));
   gtk_widget_unparent (resizer);
   panel_paned_update_handles (self);
+
+  /* If we find a dock child, we might have changed it's reveal
+   * status and need to propagate that up.
+   */
+  if (gtk_widget_get_first_child (GTK_WIDGET (self)) ==
+      gtk_widget_get_last_child (GTK_WIDGET (self)))
+    {
+      GtkWidget *dock_child = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK_CHILD);
+
+      if (dock_child != NULL)
+        g_object_notify (G_OBJECT (dock_child), "empty");
+    }
 }
 
 void
