@@ -47,6 +47,7 @@ G_DEFINE_TYPE_WITH_CODE (PanelFrame, panel_frame, GTK_TYPE_WIDGET,
 enum {
   PROP_0,
   PROP_EMPTY,
+  PROP_VISIBLE_CHILD,
   N_PROPS,
 
   PROP_ORIENTATION,
@@ -351,6 +352,17 @@ panel_frame_items_changed_cb (PanelFrame *self,
 }
 
 static void
+panel_frame_notify_visible_child_cb (PanelFrame *self,
+                                     GParamSpec *pspec,
+                                     GtkStack   *stack)
+{
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (GTK_IS_STACK (stack));
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
+}
+
+static void
 panel_frame_dispose (GObject *object)
 {
   PanelFrame *self = (PanelFrame *)object;
@@ -383,6 +395,10 @@ panel_frame_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_VISIBLE_CHILD:
+      g_value_set_object (value, panel_frame_get_visible_child (self));
+      break;
+
     case PROP_EMPTY:
       g_value_set_boolean (value, panel_frame_get_empty (self));
       break;
@@ -406,6 +422,10 @@ panel_frame_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_VISIBLE_CHILD:
+      panel_frame_set_visible_child (self, g_value_get_object (value));
+      break;
+
     case PROP_ORIENTATION:
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->box), g_value_get_enum (value));
 #if GTK_CHECK_VERSION(4, 4, 0)
@@ -440,6 +460,13 @@ panel_frame_class_init (PanelFrameClass *klass)
                           "If there are any panels added",
                           TRUE,
                           (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_VISIBLE_CHILD] =
+    g_param_spec_object ("visible-child",
+                         "Visible Child",
+                         "Visible Child",
+                         PANEL_TYPE_WIDGET,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
@@ -515,6 +542,12 @@ panel_frame_init (PanelFrame *self)
                            G_CONNECT_SWAPPED);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 
+  g_signal_connect_object (self->stack,
+                           "notify::visible-child",
+                           G_CALLBACK (panel_frame_notify_visible_child_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+
   pages = gtk_stack_get_pages (GTK_STACK (self->stack));
   g_signal_connect_object (pages,
                            "items-changed",
@@ -586,4 +619,22 @@ panel_frame_get_empty (PanelFrame *self)
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
   return gtk_widget_get_first_child (GTK_WIDGET (self->stack)) == NULL;
+}
+
+PanelWidget *
+panel_frame_get_visible_child (PanelFrame *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+
+  return PANEL_WIDGET (gtk_stack_get_visible_child (GTK_STACK (self->stack)));
+}
+
+void
+panel_frame_set_visible_child (PanelFrame  *self,
+                               PanelWidget *widget)
+{
+  g_return_if_fail (PANEL_IS_FRAME (self));
+  g_return_if_fail (PANEL_IS_WIDGET (widget));
+
+  gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (widget));
 }

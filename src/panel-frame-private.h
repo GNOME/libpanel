@@ -30,11 +30,14 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (PanelFrame, panel_frame, PANEL, FRAME, GtkWidget)
 
-GtkWidget *panel_frame_new       (void);
-gboolean   panel_frame_get_empty (PanelFrame  *self);
-void       panel_frame_add       (PanelFrame  *self,
-                                  PanelWidget *panel);
-void       panel_frame_remove    (PanelFrame  *self,
-                                  PanelWidget *panel);
+GtkWidget   *panel_frame_new               (void);
+gboolean     panel_frame_get_empty         (PanelFrame  *self);
+void         panel_frame_add               (PanelFrame  *self,
+                                            PanelWidget *panel);
+void         panel_frame_remove            (PanelFrame  *self,
+                                            PanelWidget *panel);
+void         panel_frame_set_visible_child (PanelFrame  *self,
+                                            PanelWidget *widget);
+PanelWidget *panel_frame_get_visible_child (PanelFrame  *self);
 
 G_END_DECLS
