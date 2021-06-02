@@ -731,7 +731,7 @@ prepare_for_drag (PanelDock         *self,
           panel_dock_child_set_child (PANEL_DOCK_CHILD (child), paned);
 
           frame = panel_frame_new ();
-          gtk_orientable_set_orientation (GTK_ORIENTABLE (frame), !orientation);
+          gtk_orientable_set_orientation (GTK_ORIENTABLE (frame), orientation);
           panel_paned_append (PANEL_PANED (paned), frame);
         }
     }
