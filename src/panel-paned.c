@@ -166,8 +166,21 @@ panel_paned_size_allocate (GtkWidget *widget,
 
   GTK_WIDGET_CLASS (panel_paned_parent_class)->size_allocate (widget, width, height, baseline);
 
-  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
   n_children = panel_paned_get_n_children (self);
+
+  if (n_children == 1)
+    {
+      GtkWidget *child = gtk_widget_get_first_child (widget);
+      GtkAllocation alloc = { 0, 0, width, height };
+
+      if (gtk_widget_get_visible (child))
+        {
+          gtk_widget_size_allocate (child, &alloc, -1);
+          return;
+        }
+    }
+
+  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
   allocs = g_newa (ChildAllocation, n_children);
   memset (allocs, 0, sizeof *allocs * n_children);
 
