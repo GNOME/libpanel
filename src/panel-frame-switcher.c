@@ -259,15 +259,14 @@ panel_frame_switcher_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_ORIENTATION:
-      gtk_orientable_set_orientation (GTK_ORIENTABLE (self->switcher), g_value_get_enum (value));
 #if GTK_CHECK_VERSION(4, 4, 0)
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->switcher),
-                                      !g_value_get_enum (value));
+                                      g_value_get_enum (value));
 #else
       {
         GtkLayoutManager *layout = gtk_widget_get_layout_manager (GTK_WIDGET (self->switcher));
-        gtk_orientable_set_orientation (GTK_ORIENTABLE (layout), !g_value_get_enum (value));
-        _panel_dock_update_orientation (GTK_WIDGET (self->switcher), !g_value_get_enum (value));
+        gtk_orientable_set_orientation (GTK_ORIENTABLE (layout), g_value_get_enum (value));
+        _panel_dock_update_orientation (GTK_WIDGET (self->switcher), g_value_get_enum (value));
       }
 #endif
       break;

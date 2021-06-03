@@ -45,6 +45,16 @@
             </property>
           </object>
         </child>
+        <child type="end">
+          <object class="PanelWidget">
+            <property name="title">End Two</property>
+            <property name="child">
+              <object class="GtkLabel">
+                <property name="label">end two</property>
+              </object>
+            </property>
+          </object>
+        </child>
         <child type="bottom">
           <object class="PanelWidget">
             <property name="title">Bottom</property>

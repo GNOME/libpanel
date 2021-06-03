@@ -270,7 +270,6 @@ panel_frame_set_property (GObject      *object,
 
     case PROP_ORIENTATION:
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->box), g_value_get_enum (value));
-      /* Use reversed orientation for the header */
       if (GTK_IS_ORIENTABLE (self->header))
         gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header), !g_value_get_enum (value));
       break;
@@ -492,6 +491,9 @@ panel_frame_set_header (PanelFrame       *self,
 
   if (self->header != NULL)
     {
+      if (GTK_IS_ORIENTABLE (self->header))
+        gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header),
+                                        !gtk_orientable_get_orientation (GTK_ORIENTABLE (self->box)));
       gtk_box_prepend (GTK_BOX (self->box), GTK_WIDGET (self->header));
       _panel_frame_header_connect (self->header, self);
     }
