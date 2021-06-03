@@ -85,7 +85,7 @@ panel_grid_get_most_recent_column (PanelGrid *self)
 {
   /* TODO: actually track w/ MRU */
 
-  return panel_paned_get_nth_child (self->columns, 0);
+  return PANEL_GRID_COLUMN (panel_paned_get_nth_child (self->columns, 0));
 }
 
 void
