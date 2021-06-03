@@ -25,6 +25,7 @@ libpanel_sources = [
   'panel-frame-header.c',
   'panel-frame-switcher.c',
   'panel-grid.c',
+  'panel-grid-column.c',
   'panel-handle.c',
   'panel-init.c',
   'panel-paned.c',

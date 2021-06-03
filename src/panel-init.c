@@ -26,6 +26,7 @@
 #include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
 #include "panel-grid.h"
+#include "panel-grid-column-private.h"
 #include "panel-init.h"
 #include "panel-paned-private.h"
 #include "panel-resources.h"
@@ -47,6 +48,7 @@ panel_init (void)
   g_type_ensure (PANEL_TYPE_FRAME_HEADER);
   g_type_ensure (PANEL_TYPE_FRAME_SWITCHER);
   g_type_ensure (PANEL_TYPE_GRID);
+  g_type_ensure (PANEL_TYPE_GRID_COLUMN);
   g_type_ensure (PANEL_TYPE_PANED);
   g_type_ensure (PANEL_TYPE_WIDGET);
 
