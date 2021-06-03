@@ -1,4 +1,4 @@
-/* libpanel.h
+/* panel-grid.h
  *
  * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
@@ -20,13 +20,22 @@
 
 #pragma once
 
-#define LIBPANEL_INSIDE
-# include "panel-dock.h"
-# include "panel-dock-switcher.h"
-# include "panel-frame.h"
-# include "panel-frame-header.h"
-# include "panel-frame-switcher.h"
-# include "panel-grid.h"
-# include "panel-init.h"
-# include "panel-widget.h"
-#undef LIBPANEL_INSIDE
+#include <gtk/gtk.h>
+
+#include "panel-version-macros.h"
+#include "panel-widget.h"
+
+G_BEGIN_DECLS
+
+#define PANEL_TYPE_GRID (panel_grid_get_type())
+
+PANEL_AVAILABLE_IN_ALL
+G_DECLARE_FINAL_TYPE (PanelGrid, panel_grid, PANEL, GRID, GtkWidget)
+
+PANEL_AVAILABLE_IN_ALL
+GtkWidget *panel_grid_new (void);
+PANEL_AVAILABLE_IN_ALL
+void       panel_grid_add (PanelGrid   *self,
+                           PanelWidget *widget);
+
+G_END_DECLS

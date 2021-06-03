@@ -66,8 +66,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
-            <property name="label">center</property>
+          <object class="PanelGrid">
           </object>
         </child>
       </object>
