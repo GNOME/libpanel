@@ -169,8 +169,12 @@ panel_switcher_panel_drag_end_cb (PanelSwitcher *self,
 #define HIDE_REVEALER(edge) \
   G_STMT_START { \
     GtkRevealer *r = self->edge##_revealer; \
+    GtkToggleButton *b = self->edge##_button; \
     if (!panel_dock_get_can_reveal_##edge (dock)) \
-      gtk_revealer_set_reveal_child (r, FALSE); \
+      { \
+        gtk_revealer_set_reveal_child (r, FALSE); \
+        gtk_toggle_button_set_active (b, FALSE); \
+      } \
   } G_STMT_END
 
   HIDE_REVEALER (start);
