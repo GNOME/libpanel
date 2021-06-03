@@ -26,6 +26,7 @@ libpanel_sources = [
   'panel-paned.c',
   'panel-resizer.c',
   'panel-scaler.c',
+  'panel-signal-group.c',
   'panel-switcher.c',
   'panel-widget.c',
 ]
