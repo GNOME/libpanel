@@ -67,7 +67,7 @@
         </child>
         <child>
           <object class="PanelGrid">
-            <child>
+            <!--child>
               <object class="PanelWidget">
                 <property name="title">Page 1.txt</property>
                 <property name="icon-name">x-office-document-symbolic</property>
@@ -85,7 +85,7 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </child-->
           </object>
         </child>
       </object>

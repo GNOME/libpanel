@@ -21,7 +21,7 @@
 #include "config.h"
 
 #include "panel-grid.h"
-#include "panel-grid-column-private.h"
+#include "panel-grid-column.h"
 #include "panel-paned-private.h"
 
 struct _PanelGrid
@@ -77,29 +77,15 @@ panel_grid_init (PanelGrid *self)
   self->columns = PANEL_PANED (panel_paned_new ());
   gtk_orientable_set_orientation (GTK_ORIENTABLE (self->columns), GTK_ORIENTATION_HORIZONTAL);
   gtk_widget_set_parent (GTK_WIDGET (self->columns), GTK_WIDGET (self));
-  panel_paned_append (self->columns, _panel_grid_column_new ());
+  panel_paned_append (self->columns, panel_grid_column_new ());
 }
 
-static PanelGridColumn *
+PanelGridColumn *
 panel_grid_get_most_recent_column (PanelGrid *self)
 {
   /* TODO: actually track w/ MRU */
 
   return PANEL_GRID_COLUMN (panel_paned_get_nth_child (self->columns, 0));
-}
-
-void
-panel_grid_add (PanelGrid   *self,
-                PanelWidget *widget)
-{
-  PanelGridColumn *column;
-
-  g_return_if_fail (PANEL_IS_GRID (self));
-  g_return_if_fail (PANEL_IS_WIDGET (widget));
-  g_return_if_fail (gtk_widget_get_parent (GTK_WIDGET (widget)) == NULL);
-
-  column = panel_grid_get_most_recent_column (self);
-  _panel_grid_column_add (column, widget);
 }
 
 static void
@@ -114,10 +100,19 @@ panel_grid_add_child (GtkBuildable *buildable,
   g_assert (GTK_IS_BUILDER (builder));
   g_assert (G_IS_OBJECT (child));
 
-  if (PANEL_IS_WIDGET (child))
-    panel_grid_add (self, PANEL_WIDGET (child));
+  if (PANEL_IS_GRID_COLUMN (child))
+    {
+      GtkWidget *column;
+
+      if (panel_paned_get_n_children (self->columns) == 1 &&
+          (column = panel_paned_get_nth_child (self->columns, 0)) &&
+          panel_grid_column_get_empty (PANEL_GRID_COLUMN (column)))
+        panel_paned_remove (self->columns, column);
+
+      panel_paned_append (self->columns, GTK_WIDGET (child));
+    }
   else
-    g_warning ("%s cannot add child of type %s",
+    g_warning ("%s cannot add children of type %s",
                G_OBJECT_TYPE_NAME (self),
                G_OBJECT_TYPE_NAME (child));
 }

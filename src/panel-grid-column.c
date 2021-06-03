@@ -21,7 +21,7 @@
 #include "config.h"
 
 #include "panel-frame.h"
-#include "panel-grid-column-private.h"
+#include "panel-grid-column.h"
 #include "panel-paned-private.h"
 
 struct _PanelGridColumn
@@ -33,7 +33,7 @@ struct _PanelGridColumn
 G_DEFINE_TYPE (PanelGridColumn, panel_grid_column, GTK_TYPE_WIDGET)
 
 GtkWidget *
-_panel_grid_column_new (void)
+panel_grid_column_new (void)
 {
   return g_object_new (PANEL_TYPE_GRID_COLUMN, NULL);
 }
@@ -68,31 +68,10 @@ panel_grid_column_init (PanelGridColumn *self)
   gtk_widget_set_parent (GTK_WIDGET (self->rows), GTK_WIDGET (self));
 }
 
-static PanelFrame *
-panel_grid_column_get_most_recent_frame (PanelGridColumn *self)
+gboolean
+panel_grid_column_get_empty (PanelGridColumn *self)
 {
-  PanelFrame *frame;
+  g_return_val_if_fail (PANEL_IS_GRID_COLUMN (self), FALSE);
 
-  g_assert (PANEL_IS_GRID_COLUMN (self));
-
-  if (!(frame = PANEL_FRAME (panel_paned_get_nth_child (self->rows, 0))))
-    {
-      frame = PANEL_FRAME (panel_frame_new ());
-      panel_paned_append (self->rows, GTK_WIDGET (frame));
-    }
-
-  return frame;
-}
-
-void
-_panel_grid_column_add (PanelGridColumn *self,
-                        PanelWidget     *widget)
-{
-  PanelFrame *frame;
-
-  g_return_if_fail (PANEL_IS_GRID_COLUMN (self));
-  g_return_if_fail (PANEL_IS_WIDGET (widget));
-
-  frame = panel_grid_column_get_most_recent_frame (self);
-  panel_frame_add (frame, widget);
+  return panel_paned_get_n_children (self->rows) == 0;
 }

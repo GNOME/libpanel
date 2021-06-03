@@ -29,10 +29,12 @@ G_BEGIN_DECLS
 
 #define PANEL_TYPE_GRID_COLUMN (panel_grid_column_get_type())
 
+PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelGridColumn, panel_grid_column, PANEL, GRID_COLUMN, GtkWidget)
 
-GtkWidget *_panel_grid_column_new (void);
-void       _panel_grid_column_add (PanelGridColumn *self,
-                                   PanelWidget     *widget);
+PANEL_AVAILABLE_IN_ALL
+GtkWidget *panel_grid_column_new       (void);
+PANEL_AVAILABLE_IN_ALL
+gboolean   panel_grid_column_get_empty (PanelGridColumn *self);
 
 G_END_DECLS

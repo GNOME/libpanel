@@ -44,6 +44,7 @@ libpanel_headers = [
   'panel-frame-header.h',
   'panel-frame-switcher.h',
   'panel-grid.h',
+  'panel-grid-column.h',
   'panel-version-macros.h',
   'panel-widget.h',
 ]

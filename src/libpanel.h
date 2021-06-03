@@ -27,6 +27,7 @@
 # include "panel-frame-header.h"
 # include "panel-frame-switcher.h"
 # include "panel-grid.h"
+# include "panel-grid-column.h"
 # include "panel-init.h"
 # include "panel-widget.h"
 #undef LIBPANEL_INSIDE
