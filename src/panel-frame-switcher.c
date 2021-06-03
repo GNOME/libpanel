@@ -237,6 +237,42 @@ panel_frame_switcher_set_orientation (PanelFrameSwitcher *self,
 }
 
 static void
+panel_frame_switcher_click_pressed_cb (PanelFrameSwitcher *self,
+                                       int                 n_presses,
+                                       double              x,
+                                       double              y,
+                                       GtkGestureClick    *click)
+{
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+  g_assert (GTK_IS_GESTURE_CLICK (click));
+
+  if (n_presses == 2)
+    {
+      GtkWidget *child = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
+      GListModel *pages;
+      GtkStackPage *page;
+      guint i = 0;
+
+      if (!GTK_IS_TOGGLE_BUTTON (child) &&
+          !(child = gtk_widget_get_ancestor (child, GTK_TYPE_TOGGLE_BUTTON)))
+        return;
+
+      for (child = gtk_widget_get_prev_sibling (child);
+           child;
+           child = gtk_widget_get_prev_sibling (child))
+        i++;
+
+      pages = G_LIST_MODEL (gtk_stack_get_pages (GTK_STACK (self->stack)));
+      page = g_list_model_get_item (pages, i);
+      child = gtk_stack_page_get_child (page);
+      g_clear_object (&page);
+
+      if (PANEL_IS_WIDGET (child))
+        panel_widget_maximize (PANEL_WIDGET (child));
+    }
+}
+
+static void
 panel_frame_switcher_dispose (GObject *object)
 {
   PanelFrameSwitcher *self = (PanelFrameSwitcher *)object;
@@ -311,8 +347,19 @@ static void
 panel_frame_switcher_init (PanelFrameSwitcher *self)
 {
   GtkDragSource *drag;
+  GtkEventController *controller;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
+  g_signal_connect_object (controller,
+                           "pressed",
+                           G_CALLBACK (panel_frame_switcher_click_pressed_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (controller), 1);
+  gtk_event_controller_set_propagation_phase (controller, GTK_PHASE_CAPTURE);
+  gtk_widget_add_controller (GTK_WIDGET (self), controller);
 
   drag = gtk_drag_source_new ();
   gtk_drag_source_set_actions (drag, GDK_ACTION_COPY | GDK_ACTION_MOVE);

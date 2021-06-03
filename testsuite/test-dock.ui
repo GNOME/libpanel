@@ -37,6 +37,7 @@
         </child>
         <child type="end">
           <object class="PanelWidget">
+            <property name="can-maximize">True</property>
             <property name="title">End</property>
             <property name="child">
               <object class="GtkLabel">

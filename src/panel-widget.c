@@ -20,20 +20,30 @@
 
 #include "config.h"
 
+#include "panel-dock-private.h"
+#include "panel-dock-child-private.h"
+#include "panel-frame-private.h"
 #include "panel-widget.h"
 
 typedef struct
 {
   GtkWidget *child;
-  char *title;
-  char *icon_name;
-  guint reorderable : 1;
+  char      *title;
+  char      *icon_name;
+
+  GtkWidget *maximize_frame;
+  GtkWidget *maximize_dock_child;
+
+  guint      reorderable : 1;
+  guint      can_maximize : 1;
+  guint      maximized : 1;
 } PanelWidgetPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (PanelWidget, panel_widget, GTK_TYPE_WIDGET)
 
 enum {
   PROP_0,
+  PROP_CAN_MAXIMIZE,
   PROP_CHILD,
   PROP_ICON_NAME,
   PROP_REORDERABLE,
@@ -79,6 +89,10 @@ panel_widget_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_CAN_MAXIMIZE:
+      g_value_set_boolean (value, panel_widget_get_can_maximize (self));
+      break;
+
     case PROP_ICON_NAME:
       g_value_set_string (value, panel_widget_get_icon_name (self));
       break;
@@ -110,6 +124,10 @@ panel_widget_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_CAN_MAXIMIZE:
+      panel_widget_set_can_maximize (self, g_value_get_boolean (value));
+      break;
+
     case PROP_ICON_NAME:
       panel_widget_set_icon_name (self, g_value_get_string (value));
       break;
@@ -140,6 +158,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
   object_class->dispose = panel_widget_dispose;
   object_class->get_property = panel_widget_get_property;
   object_class->set_property = panel_widget_set_property;
+
+  properties [PROP_CAN_MAXIMIZE] =
+    g_param_spec_boolean ("can-maximize",
+                          "Can Maximize",
+                          "Can Maximize",
+                          FALSE,
+                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_ICON_NAME] =
     g_param_spec_string ("icon-name",
@@ -296,4 +321,94 @@ panel_widget_set_reorderable (PanelWidget *self,
       priv->reorderable = reorderable;
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REORDERABLE]);
     }
+}
+
+gboolean
+panel_widget_get_can_maximize (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
+
+  return priv->can_maximize;
+}
+
+void
+panel_widget_set_can_maximize (PanelWidget *self,
+                               gboolean     can_maximize)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  can_maximize = !!can_maximize;
+
+  if (priv->can_maximize != can_maximize)
+    {
+      priv->can_maximize = can_maximize;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_MAXIMIZE]);
+    }
+}
+
+void
+panel_widget_maximize (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+  GtkWidget *dock;
+  GtkWidget *dock_child;
+  GtkWidget *frame;
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if (priv->maximized)
+    return;
+
+  if (!panel_widget_get_can_maximize (self))
+    return;
+
+  if (!(frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME)) ||
+      !(dock_child = gtk_widget_get_ancestor (frame, PANEL_TYPE_DOCK_CHILD)) ||
+      !(dock = gtk_widget_get_ancestor (dock_child, PANEL_TYPE_DOCK)))
+    return;
+
+  priv->maximized = TRUE;
+
+  g_object_ref (self);
+
+  g_set_weak_pointer (&priv->maximize_frame, frame);
+  g_set_weak_pointer (&priv->maximize_dock_child, frame);
+
+  panel_frame_remove (PANEL_FRAME (frame), self);
+
+  _panel_dock_set_maximized (PANEL_DOCK (dock), self);
+
+  g_object_unref (self);
+}
+
+void
+panel_widget_unmaximize (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+  GtkWidget *dock;
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if (!priv->maximized)
+    return;
+
+  if (!(dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
+    return;
+
+  g_object_ref (self);
+
+  _panel_dock_set_maximized (PANEL_DOCK (dock), NULL);
+  _panel_dock_add_widget (PANEL_DOCK (dock),
+                          PANEL_DOCK_CHILD (priv->maximize_dock_child),
+                          PANEL_FRAME (priv->maximize_frame),
+                          self);
+
+  g_clear_weak_pointer (&priv->maximize_frame);
+  g_clear_weak_pointer (&priv->maximize_dock_child);
+
+  g_object_unref (self);
 }

@@ -24,6 +24,9 @@
 
 G_BEGIN_DECLS
 
+typedef struct _PanelDockChild PanelDockChild;
+typedef struct _PanelFrame     PanelFrame;
+
 GtkWidget *_panel_dock_get_top_child      (PanelDock      *self);
 GtkWidget *_panel_dock_get_bottom_child   (PanelDock      *self);
 GtkWidget *_panel_dock_get_start_child    (PanelDock      *self);
@@ -31,6 +34,12 @@ GtkWidget *_panel_dock_get_end_child      (PanelDock      *self);
 void       _panel_dock_begin_drag         (PanelDock      *self,
                                            PanelWidget    *widget);
 void       _panel_dock_end_drag           (PanelDock      *self,
+                                           PanelWidget    *widget);
+void       _panel_dock_set_maximized      (PanelDock      *self,
+                                           PanelWidget    *widget);
+void       _panel_dock_add_widget         (PanelDock      *self,
+                                           PanelDockChild *dock_child,
+                                           PanelFrame     *frame,
                                            PanelWidget    *widget);
 void       _panel_dock_update_orientation (GtkWidget      *widget,
                                            GtkOrientation  orientation);

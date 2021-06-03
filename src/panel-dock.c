@@ -30,7 +30,11 @@
 
 typedef struct
 {
+  GtkOverlay *overlay;
   GtkGrid *grid;
+
+  PanelWidget *maximized;
+
   guint reveal_start : 1;
   guint reveal_end : 1;
   guint reveal_top : 1;
@@ -140,14 +144,37 @@ set_reveal (PanelDock         *self,
 }
 
 static void
-panel_dock_finalize (GObject *object)
+panel_dock_get_child_position_cb (PanelDock     *self,
+                                  GtkWidget     *child,
+                                  GtkAllocation *allocation,
+                                  GtkOverlay    *overlay)
+{
+  GtkRequisition min, nat;
+
+  g_assert (PANEL_IS_DOCK (self));
+  g_assert (GTK_IS_WIDGET (child));
+  g_assert (allocation != NULL);
+  g_assert (GTK_IS_OVERLAY (overlay));
+
+  /* Just use the whole section for now and rely on styling to
+   * adjust the margin/padding/etc.
+   */
+  gtk_widget_get_preferred_size (child, &min, &nat);
+  gtk_widget_get_allocation (GTK_WIDGET (self), allocation);
+  allocation->x = 0;
+  allocation->y = 0;
+}
+
+static void
+panel_dock_dispose (GObject *object)
 {
   PanelDock *self = (PanelDock *)object;
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
-  g_clear_pointer ((GtkWidget **)&priv->grid, gtk_widget_unparent);
+  _panel_dock_set_maximized (self, NULL);
+  g_clear_pointer ((GtkWidget **)&priv->overlay, gtk_widget_unparent);
 
-  G_OBJECT_CLASS (panel_dock_parent_class)->finalize (object);
+  G_OBJECT_CLASS (panel_dock_parent_class)->dispose (object);
 }
 
 static void
@@ -234,7 +261,7 @@ panel_dock_class_init (PanelDockClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = panel_dock_finalize;
+  object_class->dispose = panel_dock_dispose;
   object_class->get_property = panel_dock_get_property;
   object_class->set_property = panel_dock_set_property;
 
@@ -336,8 +363,16 @@ panel_dock_init (PanelDock *self)
 {
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
+  priv->overlay = GTK_OVERLAY (gtk_overlay_new ());
+  g_signal_connect_object (priv->overlay,
+                           "get-child-position",
+                           G_CALLBACK (panel_dock_get_child_position_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  gtk_widget_set_parent (GTK_WIDGET (priv->overlay), GTK_WIDGET (self));
+
   priv->grid = GTK_GRID (gtk_grid_new ());
-  gtk_widget_set_parent (GTK_WIDGET (priv->grid), GTK_WIDGET (self));
+  gtk_overlay_set_child (priv->overlay, GTK_WIDGET (priv->grid));
 }
 
 static void
@@ -805,4 +840,86 @@ _panel_dock_update_orientation (GtkWidget      *widget,
   gtk_accessible_update_property (GTK_ACCESSIBLE (widget),
                                   GTK_ACCESSIBLE_PROPERTY_ORIENTATION, orientation,
                                   -1);
+}
+
+void
+_panel_dock_set_maximized (PanelDock   *self,
+                           PanelWidget *widget)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+  g_return_if_fail (PANEL_IS_WIDGET (widget));
+  g_return_if_fail (gtk_widget_get_parent (GTK_WIDGET (widget)) == NULL);
+
+  if (priv->maximized == widget)
+    return;
+
+  if (priv->maximized)
+    {
+      gtk_widget_remove_css_class (GTK_WIDGET (widget), "maximized");
+      gtk_overlay_remove_overlay (priv->overlay, GTK_WIDGET (priv->maximized));
+      priv->maximized = NULL;
+    }
+
+  priv->maximized = widget;
+
+  gtk_widget_add_css_class (GTK_WIDGET (widget), "maximized");
+
+  if (priv->maximized)
+    gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->maximized));
+}
+
+void
+_panel_dock_add_widget (PanelDock      *self,
+                        PanelDockChild *dock_child,
+                        PanelFrame     *frame,
+                        PanelWidget    *widget)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+  g_return_if_fail (!dock_child || PANEL_IS_DOCK_CHILD (dock_child));
+  g_return_if_fail (!frame || PANEL_IS_FRAME (frame));
+  g_return_if_fail (PANEL_IS_WIDGET (widget));
+
+  if (dock_child == NULL)
+    {
+      if (!(dock_child = PANEL_DOCK_CHILD (_panel_dock_get_start_child (self))))
+        {
+          int left, top, width, height;
+          GtkOrientation orientation;
+
+          get_grid_positions (PANEL_DOCK_POSITION_START, &left, &top, &width, &height, &orientation);
+
+          dock_child = PANEL_DOCK_CHILD (panel_dock_child_new (PANEL_DOCK_POSITION_START));
+          gtk_orientable_set_orientation (GTK_ORIENTABLE (dock_child), orientation);
+          gtk_grid_attach (priv->grid, GTK_WIDGET (dock_child), left, top, width, height);
+        }
+
+      frame = NULL;
+    }
+
+  if (frame == NULL)
+    {
+      PanelDockPosition position = panel_dock_child_get_position (dock_child);
+      GtkOrientation orientation;
+
+      if (position == PANEL_DOCK_POSITION_START ||
+          position == PANEL_DOCK_POSITION_END)
+        orientation = GTK_ORIENTATION_VERTICAL;
+      else
+        orientation = GTK_ORIENTATION_HORIZONTAL;
+
+      frame = PANEL_FRAME (panel_frame_new ());
+      gtk_orientable_set_orientation (GTK_ORIENTABLE (dock_child), orientation);
+      panel_dock_child_set_child (dock_child, GTK_WIDGET (frame));
+
+      panel_dock_child_set_reveal_child (dock_child, TRUE);
+    }
+
+  g_assert (PANEL_IS_DOCK_CHILD (dock_child));
+  g_assert (PANEL_IS_FRAME (frame));
+
+  panel_frame_add (frame, widget);
 }

@@ -37,26 +37,35 @@ struct _PanelWidgetClass
 };
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget  *panel_widget_new             (void);
+GtkWidget  *panel_widget_new              (void);
 PANEL_AVAILABLE_IN_ALL
-GtkWidget  *panel_widget_get_child       (PanelWidget *self);
+GtkWidget  *panel_widget_get_child        (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
-void        panel_widget_set_child       (PanelWidget *self,
-                                          GtkWidget   *child);
+void        panel_widget_set_child        (PanelWidget *self,
+                                           GtkWidget   *child);
 PANEL_AVAILABLE_IN_ALL
-const char *panel_widget_get_title       (PanelWidget *self);
+const char *panel_widget_get_title        (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
-void        panel_widget_set_title       (PanelWidget *self,
-                                          const char  *title);
+void        panel_widget_set_title        (PanelWidget *self,
+                                           const char  *title);
 PANEL_AVAILABLE_IN_ALL
-const char *panel_widget_get_icon_name   (PanelWidget *self);
+const char *panel_widget_get_icon_name    (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
-void        panel_widget_set_icon_name   (PanelWidget *self,
-                                          const char  *icon_name);
+void        panel_widget_set_icon_name    (PanelWidget *self,
+                                           const char  *icon_name);
 PANEL_AVAILABLE_IN_ALL
-gboolean    panel_widget_get_reorderable (PanelWidget *self);
+gboolean    panel_widget_get_reorderable  (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
-void        panel_widget_set_reorderable (PanelWidget *self,
-                                          gboolean     reorderable);
+void        panel_widget_set_reorderable  (PanelWidget *self,
+                                           gboolean     reorderable);
+PANEL_AVAILABLE_IN_ALL
+gboolean    panel_widget_get_can_maximize (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_set_can_maximize (PanelWidget *self,
+                                           gboolean     can_maximize);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_maximize         (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_unmaximize       (PanelWidget *self);
 
 G_END_DECLS
