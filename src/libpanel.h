@@ -22,10 +22,10 @@
 
 #define LIBPANEL_INSIDE
 # include "panel-dock.h"
+# include "panel-dock-switcher.h"
 # include "panel-init.h"
 # include "panel-frame.h"
 # include "panel-frame-header.h"
 # include "panel-frame-switcher.h"
-# include "panel-switcher.h"
 # include "panel-widget.h"
 #undef LIBPANEL_INSIDE

@@ -21,9 +21,13 @@
 #include "config.h"
 
 #include "panel-dock.h"
+#include "panel-dock-switcher.h"
+#include "panel-frame.h"
+#include "panel-frame-header.h"
+#include "panel-frame-switcher.h"
 #include "panel-init.h"
+#include "panel-paned-private.h"
 #include "panel-resources.h"
-#include "panel-switcher.h"
 #include "panel-widget.h"
 
 static GtkCssProvider *css_provider;
@@ -37,8 +41,12 @@ panel_init (void)
   g_resources_register (panel_get_resource ());
 
   g_type_ensure (PANEL_TYPE_DOCK);
+  g_type_ensure (PANEL_TYPE_DOCK_SWITCHER);
+  g_type_ensure (PANEL_TYPE_FRAME);
+  g_type_ensure (PANEL_TYPE_FRAME_HEADER);
+  g_type_ensure (PANEL_TYPE_FRAME_SWITCHER);
+  g_type_ensure (PANEL_TYPE_PANED);
   g_type_ensure (PANEL_TYPE_WIDGET);
-  g_type_ensure (PANEL_TYPE_SWITCHER);
 
   css_provider = gtk_css_provider_new ();
   gtk_css_provider_load_from_resource (css_provider, "/org/gnome/libpanel/stylesheet.css");

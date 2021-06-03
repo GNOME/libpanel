@@ -27,17 +27,17 @@
 
 G_BEGIN_DECLS
 
-#define PANEL_TYPE_SWITCHER (panel_switcher_get_type())
+#define PANEL_TYPE_DOCK_SWITCHER (panel_dock_switcher_get_type())
 
 PANEL_AVAILABLE_IN_ALL
-G_DECLARE_FINAL_TYPE (PanelSwitcher, panel_switcher, PANEL, SWITCHER, GtkWidget)
+G_DECLARE_FINAL_TYPE (PanelDockSwitcher, panel_dock_switcher, PANEL, DOCK_SWITCHER, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_switcher_new      (void);
+GtkWidget *panel_dock_switcher_new      (void);
 PANEL_AVAILABLE_IN_ALL
-PanelDock *panel_switcher_get_dock (PanelSwitcher *self);
+PanelDock *panel_dock_switcher_get_dock (PanelDockSwitcher *self);
 PANEL_AVAILABLE_IN_ALL
-void       panel_switcher_set_dock (PanelSwitcher *self,
-                                    PanelDock     *dock);
+void       panel_dock_switcher_set_dock (PanelDockSwitcher *self,
+                                         PanelDock         *dock);
 
 G_END_DECLS

@@ -4,16 +4,16 @@ panelframe panelframeswitcher stackswitcher {
 paneldockchild:not(.center) {
   background-color: @theme_bg_color;
 }
-panelswitcher box.linked revealer:first-child button {
+paneldockswitcher box.linked revealer:first-child button {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
   border-right-width: 0px;
 }
-panelswitcher box.linked revealer:last-child button {
+paneldockswitcher box.linked revealer:last-child button {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
-panelswitcher box.linked revealer:not(:first-child):not(:last-child) button {
+paneldockswitcher box.linked revealer:not(:first-child):not(:last-child) button {
   border-radius: 0px;
   border-right-width: 0px;
 }

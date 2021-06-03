@@ -22,12 +22,12 @@
 
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
-#include "panel-switcher.h"
+#include "panel-dock-switcher.h"
 
 #define TIMEOUT_EXPAND 500
 #define EMPTY_DRAG_SIZE 100
 
-struct _PanelSwitcher
+struct _PanelDockSwitcher
 {
   GtkWidget        parent_instance;
 
@@ -49,7 +49,7 @@ struct _PanelSwitcher
   GBinding        *end_binding;
 };
 
-G_DEFINE_TYPE (PanelSwitcher, panel_switcher, GTK_TYPE_WIDGET)
+G_DEFINE_TYPE (PanelDockSwitcher, panel_dock_switcher, GTK_TYPE_WIDGET)
 
 enum {
   PROP_0,
@@ -60,13 +60,13 @@ enum {
 static GParamSpec *properties [N_PROPS];
 
 GtkWidget *
-panel_switcher_new (void)
+panel_dock_switcher_new (void)
 {
-  return g_object_new (PANEL_TYPE_SWITCHER, NULL);
+  return g_object_new (PANEL_TYPE_DOCK_SWITCHER, NULL);
 }
 
 static gboolean
-panel_switcher_switch_timeout (gpointer data)
+panel_dock_switcher_switch_timeout (gpointer data)
 {
   GtkToggleButton *button = data;
 
@@ -94,10 +94,10 @@ drag_enter_cb (GtkDropControllerMotion *motion,
     {
       guint switch_timer = g_timeout_add_full (G_PRIORITY_DEFAULT,
                                                TIMEOUT_EXPAND,
-                                               panel_switcher_switch_timeout,
+                                               panel_dock_switcher_switch_timeout,
                                                g_object_ref (button),
                                                g_object_unref);
-      g_source_set_name_by_id (switch_timer, "[panel] panel_switcher_switch_timeout");
+      g_source_set_name_by_id (switch_timer, "[panel] panel_dock_switcher_switch_timeout");
       g_object_set_data (G_OBJECT (button), "-panel-switch-timer", GUINT_TO_POINTER (switch_timer));
     }
 }
@@ -129,11 +129,11 @@ notify_child_revealed_cb (GtkRevealer            *revealer,
 }
 
 static void
-panel_switcher_panel_drag_begin_cb (PanelSwitcher *self,
-                                    PanelWidget   *widget,
-                                    PanelDock     *dock)
+panel_dock_switcher_panel_drag_begin_cb (PanelDockSwitcher *self,
+                                         PanelWidget       *widget,
+                                         PanelDock         *dock)
 {
-  g_assert (PANEL_IS_SWITCHER (self));
+  g_assert (PANEL_IS_DOCK_SWITCHER (self));
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
@@ -158,11 +158,11 @@ panel_switcher_panel_drag_begin_cb (PanelSwitcher *self,
 }
 
 static void
-panel_switcher_panel_drag_end_cb (PanelSwitcher *self,
-                                  PanelWidget   *widget,
-                                  PanelDock     *dock)
+panel_dock_switcher_panel_drag_end_cb (PanelDockSwitcher *self,
+                                       PanelWidget       *widget,
+                                       PanelDock         *dock)
 {
-  g_assert (PANEL_IS_SWITCHER (self));
+  g_assert (PANEL_IS_DOCK_SWITCHER (self));
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
@@ -186,29 +186,29 @@ panel_switcher_panel_drag_end_cb (PanelSwitcher *self,
 }
 
 static void
-panel_switcher_dispose (GObject *object)
+panel_dock_switcher_dispose (GObject *object)
 {
-  PanelSwitcher *self = (PanelSwitcher *)object;
+  PanelDockSwitcher *self = (PanelDockSwitcher *)object;
 
-  panel_switcher_set_dock (self, NULL);
+  panel_dock_switcher_set_dock (self, NULL);
 
   g_clear_pointer (&self->box, gtk_widget_unparent);
 
-  G_OBJECT_CLASS (panel_switcher_parent_class)->dispose (object);
+  G_OBJECT_CLASS (panel_dock_switcher_parent_class)->dispose (object);
 }
 
 static void
-panel_switcher_get_property (GObject    *object,
-                             guint       prop_id,
-                             GValue     *value,
-                             GParamSpec *pspec)
+panel_dock_switcher_get_property (GObject    *object,
+                                  guint       prop_id,
+                                  GValue     *value,
+                                  GParamSpec *pspec)
 {
-  PanelSwitcher *self = PANEL_SWITCHER (object);
+  PanelDockSwitcher *self = PANEL_DOCK_SWITCHER (object);
 
   switch (prop_id)
     {
     case PROP_DOCK:
-      g_value_set_object (value, panel_switcher_get_dock (self));
+      g_value_set_object (value, panel_dock_switcher_get_dock (self));
       break;
 
     default:
@@ -217,17 +217,17 @@ panel_switcher_get_property (GObject    *object,
 }
 
 static void
-panel_switcher_set_property (GObject      *object,
-                             guint         prop_id,
-                             const GValue *value,
-                             GParamSpec   *pspec)
+panel_dock_switcher_set_property (GObject      *object,
+                                  guint         prop_id,
+                                  const GValue *value,
+                                  GParamSpec   *pspec)
 {
-  PanelSwitcher *self = PANEL_SWITCHER (object);
+  PanelDockSwitcher *self = PANEL_DOCK_SWITCHER (object);
 
   switch (prop_id)
     {
     case PROP_DOCK:
-      panel_switcher_set_dock (self, g_value_get_object (value));
+      panel_dock_switcher_set_dock (self, g_value_get_object (value));
       break;
 
     default:
@@ -236,14 +236,14 @@ panel_switcher_set_property (GObject      *object,
 }
 
 static void
-panel_switcher_class_init (PanelSwitcherClass *klass)
+panel_dock_switcher_class_init (PanelDockSwitcherClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->dispose = panel_switcher_dispose;
-  object_class->get_property = panel_switcher_get_property;
-  object_class->set_property = panel_switcher_set_property;
+  object_class->dispose = panel_dock_switcher_dispose;
+  object_class->get_property = panel_dock_switcher_get_property;
+  object_class->set_property = panel_dock_switcher_set_property;
 
   properties [PROP_DOCK] =
     g_param_spec_object ("dock",
@@ -255,48 +255,48 @@ panel_switcher_class_init (PanelSwitcherClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-switcher.ui");
-  gtk_widget_class_set_css_name (widget_class, "panelswitcher");
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, box);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, start_button);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, end_button);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, top_button);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, bottom_button);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, start_revealer);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, end_revealer);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, top_revealer);
-  gtk_widget_class_bind_template_child (widget_class, PanelSwitcher, bottom_revealer);
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-dock-switcher.ui");
+  gtk_widget_class_set_css_name (widget_class, "paneldockswitcher");
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, box);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, start_button);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, end_button);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, top_button);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, bottom_button);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, start_revealer);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, end_revealer);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, top_revealer);
+  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, bottom_revealer);
   gtk_widget_class_bind_template_callback (widget_class, drag_enter_cb);
   gtk_widget_class_bind_template_callback (widget_class, drag_leave_cb);
   gtk_widget_class_bind_template_callback (widget_class, notify_child_revealed_cb);
 }
 
 static void
-panel_switcher_init (PanelSwitcher *self)
+panel_dock_switcher_init (PanelDockSwitcher *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 /**
- * panel_switcher_get_dock:
- * @self: a #PanelSwitcher
+ * panel_dock_switcher_get_dock:
+ * @self: a #PanelDockSwitcher
  *
- * Gets #PanelSwitcher:dock property.
+ * Gets #PanelDockSwitcher:dock property.
  *
  * Returns: (transfer none) (nullable): a #PanelDock or %NULL
  */
 PanelDock *
-panel_switcher_get_dock (PanelSwitcher *self)
+panel_dock_switcher_get_dock (PanelDockSwitcher *self)
 {
-  g_return_val_if_fail (PANEL_IS_SWITCHER (self), NULL);
+  g_return_val_if_fail (PANEL_IS_DOCK_SWITCHER (self), NULL);
 
   return self->dock;
 }
 
 static void
-panel_switcher_notify_can_reveal_cb (PanelDock   *dock,
-                                     GParamSpec  *pspec,
-                                     GtkRevealer *revealer)
+panel_dock_switcher_notify_can_reveal_cb (PanelDock   *dock,
+                                          GParamSpec  *pspec,
+                                          GtkRevealer *revealer)
 {
   g_auto(GValue) value = G_VALUE_INIT;
 
@@ -319,10 +319,10 @@ panel_switcher_notify_can_reveal_cb (PanelDock   *dock,
 }
 
 void
-panel_switcher_set_dock (PanelSwitcher *self,
-                         PanelDock     *dock)
+panel_dock_switcher_set_dock (PanelDockSwitcher *self,
+                              PanelDock         *dock)
 {
-  g_return_if_fail (PANEL_IS_SWITCHER (self));
+  g_return_if_fail (PANEL_IS_DOCK_SWITCHER (self));
   g_return_if_fail (!dock || PANEL_IS_DOCK (dock));
 
   if (dock == self->dock)
@@ -335,22 +335,22 @@ panel_switcher_set_dock (PanelSwitcher *self,
       g_clear_pointer (&self->start_binding, g_binding_unbind);
       g_clear_pointer (&self->end_binding, g_binding_unbind);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                                            G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                             self->top_revealer);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                                            G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                             self->bottom_revealer);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                                            G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                             self->start_revealer);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                                            G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                             self->end_revealer);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_switcher_panel_drag_begin_cb),
+                                            G_CALLBACK (panel_dock_switcher_panel_drag_begin_cb),
                                             self);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_switcher_panel_drag_end_cb),
+                                            G_CALLBACK (panel_dock_switcher_panel_drag_end_cb),
                                             self);
     }
 
@@ -390,32 +390,32 @@ panel_switcher_set_dock (PanelSwitcher *self,
                                                   G_BINDING_BIDIRECTIONAL);
       g_signal_connect_object (self->dock,
                                "panel-drag-begin",
-                               G_CALLBACK (panel_switcher_panel_drag_begin_cb),
+                               G_CALLBACK (panel_dock_switcher_panel_drag_begin_cb),
                                self,
                                G_CONNECT_SWAPPED);
       g_signal_connect_object (self->dock,
                                "panel-drag-end",
-                               G_CALLBACK (panel_switcher_panel_drag_end_cb),
+                               G_CALLBACK (panel_dock_switcher_panel_drag_end_cb),
                                self,
                                G_CONNECT_SWAPPED);
       g_signal_connect_object (self->dock,
                                "notify::can-reveal-top",
-                               G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                               G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                self->top_revealer,
                                0);
       g_signal_connect_object (self->dock,
                                "notify::can-reveal-bottom",
-                               G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                               G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                self->bottom_revealer,
                                0);
       g_signal_connect_object (self->dock,
                                "notify::can-reveal-start",
-                               G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                               G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                self->start_revealer,
                                0);
       g_signal_connect_object (self->dock,
                                "notify::can-reveal-end",
-                               G_CALLBACK (panel_switcher_notify_can_reveal_cb),
+                               G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                self->end_revealer,
                                0);
     }

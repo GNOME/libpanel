@@ -18,8 +18,9 @@ panel_version_h = configure_file(
   configuration: version_data)
 
 libpanel_sources = [
-  'panel-dock-child.c',
   'panel-dock.c',
+  'panel-dock-child.c',
+  'panel-dock-switcher.c',
   'panel-frame.c',
   'panel-frame-header.c',
   'panel-frame-switcher.c',
@@ -29,7 +30,6 @@ libpanel_sources = [
   'panel-resizer.c',
   'panel-scaler.c',
   'panel-signal-group.c',
-  'panel-switcher.c',
   'panel-widget.c',
 ]
 
@@ -37,10 +37,10 @@ libpanel_headers = [
   'libpanel.h',
   'panel-init.h',
   'panel-dock.h',
+  'panel-dock-switcher.h',
   'panel-frame.h',
   'panel-frame-header.h',
   'panel-frame-switcher.h',
-  'panel-switcher.h',
   'panel-version-macros.h',
   'panel-widget.h',
 ]
