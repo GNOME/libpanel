@@ -28,6 +28,7 @@ libpanel_sources = [
   'panel-grid-column.c',
   'panel-handle.c',
   'panel-init.c',
+  'panel-maximized-controls.c',
   'panel-paned.c',
   'panel-resizer.c',
   'panel-scaler.c',

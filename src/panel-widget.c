@@ -376,7 +376,7 @@ panel_widget_maximize (PanelWidget *self)
   g_object_ref (self);
 
   g_set_weak_pointer (&priv->maximize_frame, frame);
-  g_set_weak_pointer (&priv->maximize_dock_child, frame);
+  g_set_weak_pointer (&priv->maximize_dock_child, dock_child);
 
   panel_frame_remove (PANEL_FRAME (frame), self);
 
@@ -398,6 +398,8 @@ panel_widget_unmaximize (PanelWidget *self)
 
   if (!(dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
     return;
+
+  priv->maximized = FALSE;
 
   g_object_ref (self);
 

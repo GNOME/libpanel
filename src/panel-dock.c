@@ -24,6 +24,7 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-maximized-controls-private.h"
 #include "panel-paned-private.h"
 #include "panel-resizer-private.h"
 #include "panel-widget.h"
@@ -32,6 +33,7 @@ typedef struct
 {
   GtkOverlay *overlay;
   GtkGrid *grid;
+  PanelMaximizedControls *controls;
 
   PanelWidget *maximized;
 
@@ -143,7 +145,7 @@ set_reveal (PanelDock         *self,
   return FALSE;
 }
 
-static void
+static gboolean
 panel_dock_get_child_position_cb (PanelDock     *self,
                                   GtkWidget     *child,
                                   GtkAllocation *allocation,
@@ -156,6 +158,9 @@ panel_dock_get_child_position_cb (PanelDock     *self,
   g_assert (allocation != NULL);
   g_assert (GTK_IS_OVERLAY (overlay));
 
+  if (PANEL_IS_MAXIMIZED_CONTROLS (child))
+    return FALSE;
+
   /* Just use the whole section for now and rely on styling to
    * adjust the margin/padding/etc.
    */
@@ -163,6 +168,21 @@ panel_dock_get_child_position_cb (PanelDock     *self,
   gtk_widget_get_allocation (GTK_WIDGET (self), allocation);
   allocation->x = 0;
   allocation->y = 0;
+
+  return TRUE;
+}
+
+static void
+panel_dock_controls_close_cb (PanelDock              *self,
+                              PanelMaximizedControls *controls)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_assert (PANEL_IS_DOCK (self));
+  g_assert (PANEL_IS_MAXIMIZED_CONTROLS (controls));
+
+  if (priv->maximized != NULL)
+    panel_widget_unmaximize (priv->maximized);
 }
 
 static void
@@ -373,6 +393,17 @@ panel_dock_init (PanelDock *self)
 
   priv->grid = GTK_GRID (gtk_grid_new ());
   gtk_overlay_set_child (priv->overlay, GTK_WIDGET (priv->grid));
+
+  priv->controls = PANEL_MAXIMIZED_CONTROLS (panel_maximized_controls_new ());
+  gtk_widget_set_halign (GTK_WIDGET (priv->controls), GTK_ALIGN_END);
+  gtk_widget_set_valign (GTK_WIDGET (priv->controls), GTK_ALIGN_START);
+  gtk_widget_hide (GTK_WIDGET (priv->controls));
+  g_signal_connect_object (priv->controls,
+                           "close",
+                           G_CALLBACK (panel_dock_controls_close_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->controls));
 }
 
 static void
@@ -849,25 +880,35 @@ _panel_dock_set_maximized (PanelDock   *self,
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
   g_return_if_fail (PANEL_IS_DOCK (self));
-  g_return_if_fail (PANEL_IS_WIDGET (widget));
-  g_return_if_fail (gtk_widget_get_parent (GTK_WIDGET (widget)) == NULL);
+  g_return_if_fail (!widget || PANEL_IS_WIDGET (widget));
+  g_return_if_fail (!widget || gtk_widget_get_parent (GTK_WIDGET (widget)) == NULL);
 
   if (priv->maximized == widget)
     return;
 
   if (priv->maximized)
     {
-      gtk_widget_remove_css_class (GTK_WIDGET (widget), "maximized");
+      gtk_widget_remove_css_class (GTK_WIDGET (priv->maximized), "maximized");
       gtk_overlay_remove_overlay (priv->overlay, GTK_WIDGET (priv->maximized));
+      gtk_widget_hide (GTK_WIDGET (priv->controls));
       priv->maximized = NULL;
     }
 
   priv->maximized = widget;
 
-  gtk_widget_add_css_class (GTK_WIDGET (widget), "maximized");
-
   if (priv->maximized)
-    gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->maximized));
+    {
+      gtk_widget_add_css_class (GTK_WIDGET (priv->maximized), "maximized");
+      gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->maximized));
+
+      /* Move the controls to the top */
+      g_object_ref (priv->controls);
+      gtk_overlay_remove_overlay (priv->overlay, GTK_WIDGET (priv->controls));
+      gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->controls));
+      gtk_widget_show (GTK_WIDGET (priv->controls));
+      gtk_widget_grab_focus (GTK_WIDGET (priv->controls));
+      g_object_unref (priv->controls);
+    }
 }
 
 void
