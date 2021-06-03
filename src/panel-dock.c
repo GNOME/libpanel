@@ -751,7 +751,7 @@ prepare_for_drag (PanelDock         *self,
       GtkOrientation orientation;
       int left, top, width, height;
 
-      /* TODO: If policy allows it, we can create this child immediately */
+      /* TODO: Add policy to disable creating some panels (like top). */
 
       get_grid_positions (position, &left, &top, &width, &height, &orientation);
       child = get_or_create_dock_child (self, position, left, top, width, height);

@@ -22,9 +22,14 @@ panelwidget {
   background-color: @theme_bg_color;
 }
 panelwidget.maximized {
-  margin: 12px;
-  box-shadow: 0px 0px 5px @wm_shadow;
+  margin: 24px;
+  box-shadow: 0px 0px 5px @borders;
+  border: 1px solid @borders;
   border-radius: 5px;
+}
+
+panelwidget listview {
+  background: transparent;
 }
 
 panelframe.vertical panelwidget {
