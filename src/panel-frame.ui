@@ -5,11 +5,6 @@
       <object class="GtkBox" id="box">
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkStackSwitcher" id="switcher">
-            <property name="stack">stack</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkStack" id="stack">
             <property name="hexpand">true</property>
             <property name="vexpand">true</property>

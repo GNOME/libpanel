@@ -23,20 +23,19 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-frame-header-private.h"
+#include "panel-frame-switcher.h"
 #include "panel-paned-private.h"
 #include "panel-scaler-private.h"
 #include "panel-widget.h"
 
 struct _PanelFrame
 {
-  GtkWidget parent_instance;
+  GtkWidget         parent_instance;
 
-  GtkWidget *box;
-  GtkWidget *stack;
-  GtkWidget *switcher;
-  GtkWidget *drag_panel;
-
-  guint      disposed : 1;
+  PanelFrameHeader *header;
+  GtkWidget        *box;
+  GtkWidget        *stack;
 };
 
 #define SIZE_AT_END 50
@@ -205,153 +204,6 @@ panel_frame_drop_cb (PanelFrame    *self,
   return TRUE;
 }
 
-static GdkContentProvider *
-panel_frame_drag_prepare_cb (PanelFrame    *self,
-                             double         x,
-                             double         y,
-                             GtkDragSource *source)
-{
-  GtkStackPage *page = NULL;
-  GListModel *pages;
-  GtkWidget *child;
-  guint i = 0;
-
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (GTK_IS_DRAG_SOURCE (source));
-
-  child = gtk_widget_pick (GTK_WIDGET (self->switcher), x, y, GTK_PICK_DEFAULT);
-  if (!GTK_IS_TOGGLE_BUTTON (child) &&
-      !(child = gtk_widget_get_ancestor (child, GTK_TYPE_TOGGLE_BUTTON)))
-    return NULL;
-
-  /* Only allow dragging the current panel */
-  if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (child)))
-    return NULL;
-
-  for (child = gtk_widget_get_prev_sibling (child);
-       child;
-       child = gtk_widget_get_prev_sibling (child))
-    i++;
-
-  pages = G_LIST_MODEL (gtk_stack_get_pages (GTK_STACK (self->stack)));
-  page = g_list_model_get_item (pages, i);
-  child = gtk_stack_page_get_child (page);
-  g_clear_object (&page);
-
-  if (!PANEL_IS_WIDGET (child) ||
-      !panel_widget_get_reorderable (PANEL_WIDGET (child)))
-    return NULL;
-
-  self->drag_panel = child;
-
-  return gdk_content_provider_new_typed (PANEL_TYPE_WIDGET, child);
-}
-
-#define MAX_WIDTH  250.0
-#define MAX_HEIGHT 250.0
-
-static void
-panel_frame_drag_begin_cb (PanelFrame    *self,
-                           GdkDrag       *drag,
-                           GtkDragSource *source)
-{
-  g_autoptr(GdkPaintable) paintable = NULL;
-  GtkWidget *dock;
-
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (GTK_IS_DRAG_SOURCE (source));
-  g_assert (GDK_IS_DRAG (drag));
-  g_assert (PANEL_IS_WIDGET (self->drag_panel));
-
-  if ((paintable = gtk_widget_paintable_new (self->drag_panel)))
-    {
-      int width = gdk_paintable_get_intrinsic_width (paintable);
-      int height = gdk_paintable_get_intrinsic_height (paintable);
-      double ratio;
-
-      if (width <= MAX_WIDTH && height <= MAX_HEIGHT)
-        ratio = 1.0;
-      else if (width > height)
-        ratio = width / MAX_WIDTH;
-      else
-        ratio = height / MAX_HEIGHT;
-
-      if (ratio != 1.0)
-        {
-          GdkPaintable *tmp = paintable;
-          paintable = panel_scaler_new (paintable, ratio);
-          g_clear_object (&tmp);
-        }
-    }
-  else
-    {
-      GtkIconTheme *icon_theme;
-      const char *icon_name;
-      int scale;
-
-      icon_theme = gtk_icon_theme_get_for_display (gtk_widget_get_display (GTK_WIDGET (self)));
-      icon_name = panel_widget_get_icon_name (PANEL_WIDGET (self->drag_panel));
-      scale = gtk_widget_get_scale_factor (GTK_WIDGET (self));
-
-      if (icon_name)
-        paintable = GDK_PAINTABLE (gtk_icon_theme_lookup_icon (icon_theme, icon_name, NULL, 32, scale, GTK_TEXT_DIR_NONE,  0));
-    }
-
-  if (paintable != NULL)
-    gtk_drag_source_set_icon (source, paintable, 0, 0);
-
-  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
-}
-
-static void
-panel_frame_drag_end_cb (PanelFrame    *self,
-                         GdkDrag       *drag,
-                         gboolean       delete_data,
-                         GtkDragSource *source)
-{
-  GtkWidget *dock;
-
-  g_assert (GTK_IS_DRAG_SOURCE (source));
-  g_assert (GDK_IS_DRAG (drag));
-  g_assert (PANEL_IS_FRAME (self));
-
-  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_end_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
-
-  self->drag_panel = NULL;
-}
-
-static void
-panel_frame_items_changed_cb (PanelFrame *self,
-                              guint       position,
-                              guint       removed,
-                              guint       added,
-                              GListModel *model)
-{
-  GtkOrientation orientation;
-  gboolean hexpand;
-  gboolean vexpand;
-
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (G_IS_LIST_MODEL (model));
-
-  if (self->disposed)
-    return;
-
-  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
-  hexpand = orientation == GTK_ORIENTATION_VERTICAL;
-  vexpand = orientation == GTK_ORIENTATION_HORIZONTAL;
-
-  for (GtkWidget *child = gtk_widget_get_first_child (self->switcher);
-       child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    {
-      gtk_widget_set_vexpand (child, vexpand);
-      gtk_widget_set_hexpand (child, hexpand);
-    }
-}
-
 static void
 panel_frame_notify_visible_child_cb (PanelFrame *self,
                                      GParamSpec *pspec,
@@ -368,18 +220,7 @@ panel_frame_dispose (GObject *object)
 {
   PanelFrame *self = (PanelFrame *)object;
 
-  self->disposed = TRUE;
-
-  if (self->switcher)
-    gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (self->switcher), NULL);
-
-  if (self->stack)
-    {
-      GtkSelectionModel *pages = gtk_stack_get_pages (GTK_STACK (self->stack));
-      g_signal_handlers_disconnect_by_func (pages,
-                                            G_CALLBACK (panel_frame_items_changed_cb),
-                                            self);
-    }
+  panel_frame_set_header (self, NULL);
 
   g_clear_pointer (&self->box, gtk_widget_unparent);
 
@@ -429,15 +270,9 @@ panel_frame_set_property (GObject      *object,
 
     case PROP_ORIENTATION:
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->box), g_value_get_enum (value));
-#if GTK_CHECK_VERSION(4, 4, 0)
-      gtk_orientable_set_orientation (GTK_ORIENTABLE (self->switcher), g_value_get_enum (value));
-#else
-      {
-        GtkLayoutManager *layout = gtk_widget_get_layout_manager (GTK_WIDGET (self->switcher));
-        gtk_orientable_set_orientation (GTK_ORIENTABLE (layout), !g_value_get_enum (value));
-        _panel_dock_update_orientation (GTK_WIDGET (self->switcher), !g_value_get_enum (value));
-      }
-#endif
+      /* Use reversed orientation for the header */
+      if (GTK_IS_ORIENTABLE (self->header))
+        gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header), !g_value_get_enum (value));
       break;
 
     default:
@@ -478,40 +313,15 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame.ui");
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, stack);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, switcher);
 }
 
 static void
 panel_frame_init (PanelFrame *self)
 {
-  GtkSelectionModel *pages;
-  GtkDragSource *drag;
   GtkDropTarget *drop_target;
   GType types[] = { PANEL_TYPE_WIDGET };
 
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  drag = gtk_drag_source_new ();
-  gtk_drag_source_set_actions (drag, GDK_ACTION_COPY | GDK_ACTION_MOVE);
-  g_signal_connect_object (drag,
-                           "prepare",
-                           G_CALLBACK (panel_frame_drag_prepare_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  g_signal_connect_object (drag,
-                           "drag-begin",
-                           G_CALLBACK (panel_frame_drag_begin_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  g_signal_connect_object (drag,
-                           "drag-end",
-                           G_CALLBACK (panel_frame_drag_end_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (drag),
-                                              GTK_PHASE_CAPTURE);
-  gtk_widget_add_controller (GTK_WIDGET (self->switcher),
-                             GTK_EVENT_CONTROLLER (drag));
 
   drop_target = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY | GDK_ACTION_MOVE);
   gtk_drop_target_set_gtypes (drop_target, types, G_N_ELEMENTS (types));
@@ -549,17 +359,7 @@ panel_frame_init (PanelFrame *self)
                            self,
                            G_CONNECT_SWAPPED);
 
-  pages = gtk_stack_get_pages (GTK_STACK (self->stack));
-  g_signal_connect_object (pages,
-                           "items-changed",
-                           G_CALLBACK (panel_frame_items_changed_cb),
-                           self,
-                           G_CONNECT_SWAPPED | G_CONNECT_AFTER);
-  panel_frame_items_changed_cb (self,
-                                0,
-                                0,
-                                g_list_model_get_n_items (G_LIST_MODEL (pages)),
-                                G_LIST_MODEL (pages));
+  panel_frame_set_header (self, PANEL_FRAME_HEADER (panel_frame_switcher_new ()));
 }
 
 void
@@ -638,4 +438,61 @@ panel_frame_set_visible_child (PanelFrame  *self,
   g_return_if_fail (PANEL_IS_WIDGET (widget));
 
   gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (widget));
+}
+
+GtkStack *
+_panel_frame_get_stack (PanelFrame *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+
+  return GTK_STACK (self->stack);
+}
+
+/**
+ * panel_frame_get_header:
+ * @self: a #PanelFrame
+ *
+ * Gets the header for the frame.
+ *
+ * Returns: (transfer none): a #PanelFrameHeader
+ */
+PanelFrameHeader *
+panel_frame_get_header (PanelFrame *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+  g_return_val_if_fail (PANEL_IS_FRAME_HEADER (self->header), NULL);
+
+  return self->header;
+}
+
+/**
+ * panel_frame_set_header:
+ * @self: a #PanelFrame
+ * @header: a #PanelFrameHeader
+ *
+ * Sets the header for the frame, such as a #PanelFrameSwitcher.
+ */
+void
+panel_frame_set_header (PanelFrame       *self,
+                        PanelFrameHeader *header)
+{
+  g_return_if_fail (PANEL_IS_FRAME (self));
+  g_return_if_fail (PANEL_IS_FRAME_HEADER (header));
+
+  if (self->header == header)
+    return;
+
+  if (self->header != NULL)
+    {
+      _panel_frame_header_disconnect (self->header);
+      g_clear_pointer ((GtkWidget **)&self->header, gtk_widget_unparent);
+    }
+
+  self->header = header;
+
+  if (self->header != NULL)
+    {
+      gtk_box_prepend (GTK_BOX (self->box), GTK_WIDGET (self->header));
+      _panel_frame_header_connect (self->header, self);
+    }
 }

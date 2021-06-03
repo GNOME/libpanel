@@ -1,4 +1,4 @@
-/* panel-frame-private.h
+/* panel-frame-header-private.h
  *
  * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
@@ -20,10 +20,22 @@
 
 #pragma once
 
-#include "panel-frame.h"
+#include "panel-frame-header.h"
+#include "panel-frame-private.h"
 
 G_BEGIN_DECLS
 
-GtkStack *_panel_frame_get_stack (PanelFrame *self);
+struct _PanelFrameHeaderInterface
+{
+  GTypeInterface parent_iface;
+
+  void (*connect)    (PanelFrameHeader *self,
+                      PanelFrame       *frame);
+  void (*disconnect) (PanelFrameHeader *self);
+};
+
+void _panel_frame_header_connect    (PanelFrameHeader *self,
+                                     PanelFrame       *frame);
+void _panel_frame_header_disconnect (PanelFrameHeader *self);
 
 G_END_DECLS

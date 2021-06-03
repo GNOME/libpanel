@@ -1,4 +1,4 @@
-/* panel-frame-private.h
+/* panel-frame-header.h
  *
  * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
@@ -20,10 +20,15 @@
 
 #pragma once
 
-#include "panel-frame.h"
+#include <gtk/gtk.h>
+
+#include "panel-version-macros.h"
 
 G_BEGIN_DECLS
 
-GtkStack *_panel_frame_get_stack (PanelFrame *self);
+#define PANEL_TYPE_FRAME_HEADER (panel_frame_header_get_type())
+
+PANEL_AVAILABLE_IN_ALL
+G_DECLARE_INTERFACE (PanelFrameHeader, panel_frame_header, PANEL, FRAME_HEADER, GtkWidget)
 
 G_END_DECLS

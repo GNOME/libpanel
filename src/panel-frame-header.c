@@ -1,4 +1,4 @@
-/* panel-frame-private.h
+/* panel-frame-header.c
  *
  * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
@@ -18,12 +18,31 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#pragma once
+#include "config.h"
 
-#include "panel-frame.h"
+#include "panel-frame-header-private.h"
 
-G_BEGIN_DECLS
+G_DEFINE_INTERFACE (PanelFrameHeader, panel_frame_header, GTK_TYPE_WIDGET)
 
-GtkStack *_panel_frame_get_stack (PanelFrame *self);
+static void
+panel_frame_header_default_init (PanelFrameHeaderInterface *iface)
+{
+}
 
-G_END_DECLS
+void
+_panel_frame_header_connect (PanelFrameHeader *self,
+                             PanelFrame       *frame)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
+  g_return_if_fail (PANEL_IS_FRAME (frame));
+
+  PANEL_FRAME_HEADER_GET_IFACE (self)->connect (self, frame);
+}
+
+void
+_panel_frame_header_disconnect (PanelFrameHeader *self)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
+
+  PANEL_FRAME_HEADER_GET_IFACE (self)->disconnect (self);
+}

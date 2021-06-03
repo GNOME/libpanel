@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PanelFrameSwitcher" parent="GtkWidget">
+    <child>
+      <object class="GtkStackSwitcher" id="switcher">
+      </object>
+    </child>
+  </template>
+</interface>

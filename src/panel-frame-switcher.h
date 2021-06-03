@@ -1,4 +1,4 @@
-/* panel-frame-private.h
+/* panel-frame-switcher.h
  *
  * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
@@ -20,10 +20,18 @@
 
 #pragma once
 
-#include "panel-frame.h"
+#include <gtk/gtk.h>
+
+#include "panel-version-macros.h"
 
 G_BEGIN_DECLS
 
-GtkStack *_panel_frame_get_stack (PanelFrame *self);
+#define PANEL_TYPE_FRAME_SWITCHER (panel_frame_switcher_get_type())
+
+PANEL_AVAILABLE_IN_ALL
+G_DECLARE_FINAL_TYPE (PanelFrameSwitcher, panel_frame_switcher, PANEL, FRAME_SWITCHER, GtkWidget)
+
+PANEL_AVAILABLE_IN_ALL
+GtkWidget *panel_frame_switcher_new (void);
 
 G_END_DECLS
