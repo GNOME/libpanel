@@ -37,6 +37,7 @@ struct _PanelFrameSwitcher
   GtkStack         *stack;
   GListModel       *pages;
 
+  GtkOrientation    orientation : 1;
   guint             disposed : 1;
 };
 
@@ -107,7 +108,6 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
 
   return gdk_content_provider_new_typed (PANEL_TYPE_WIDGET, child);
 }
-
 
 #define MAX_WIDTH  250.0
 #define MAX_HEIGHT 250.0
@@ -191,7 +191,6 @@ panel_frame_switcher_items_changed_cb (PanelFrameSwitcher *self,
                                        guint               added,
                                        GListModel         *model)
 {
-  GtkOrientation orientation;
   gboolean hexpand;
   gboolean vexpand;
 
@@ -201,9 +200,8 @@ panel_frame_switcher_items_changed_cb (PanelFrameSwitcher *self,
   if (self->disposed)
     return;
 
-  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
-  hexpand = orientation == GTK_ORIENTATION_VERTICAL;
-  vexpand = orientation == GTK_ORIENTATION_HORIZONTAL;
+  hexpand = self->orientation == GTK_ORIENTATION_HORIZONTAL;
+  vexpand = self->orientation == GTK_ORIENTATION_VERTICAL;
 
   for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self->switcher));
        child != NULL;
@@ -212,6 +210,30 @@ panel_frame_switcher_items_changed_cb (PanelFrameSwitcher *self,
       gtk_widget_set_vexpand (child, vexpand);
       gtk_widget_set_hexpand (child, hexpand);
     }
+}
+
+static void
+panel_frame_switcher_set_orientation (PanelFrameSwitcher *self,
+                                      GtkOrientation      orientation)
+{
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+
+  if (self->orientation == orientation)
+    return;
+
+  self->orientation = orientation;
+
+#if GTK_CHECK_VERSION(4, 4, 0)
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (self->switcher), orientation);
+#else
+  {
+    GtkLayoutManager *layout = gtk_widget_get_layout_manager (GTK_WIDGET (self->switcher));
+    gtk_orientable_set_orientation (GTK_ORIENTABLE (layout), orientation);
+    _panel_dock_update_orientation (GTK_WIDGET (self->switcher), orientation);
+  }
+#endif
+
+  g_object_notify (G_OBJECT (self), "orientation");
 }
 
 static void
@@ -240,7 +262,7 @@ panel_frame_switcher_get_property (GObject    *object,
   switch (prop_id)
     {
     case PROP_ORIENTATION:
-      g_value_set_enum (value, gtk_orientable_get_orientation (GTK_ORIENTABLE (self->switcher)));
+      g_value_set_enum (value, self->orientation);
       break;
 
     default:
@@ -259,16 +281,7 @@ panel_frame_switcher_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_ORIENTATION:
-#if GTK_CHECK_VERSION(4, 4, 0)
-      gtk_orientable_set_orientation (GTK_ORIENTABLE (self->switcher),
-                                      g_value_get_enum (value));
-#else
-      {
-        GtkLayoutManager *layout = gtk_widget_get_layout_manager (GTK_WIDGET (self->switcher));
-        gtk_orientable_set_orientation (GTK_ORIENTABLE (layout), g_value_get_enum (value));
-        _panel_dock_update_orientation (GTK_WIDGET (self->switcher), g_value_get_enum (value));
-      }
-#endif
+      panel_frame_switcher_set_orientation (self, g_value_get_enum (value));
       break;
 
     default:
