@@ -53,6 +53,14 @@ enum {
 
 static GParamSpec *properties [N_PROPS];
 
+static void
+panel_widget_unmaximize_action (GtkWidget  *widget,
+                                const char *action_name,
+                                GVariant   *param)
+{
+  panel_widget_unmaximize (PANEL_WIDGET (widget));
+}
+
 /**
  * panel_widget_new:
  *
@@ -198,12 +206,17 @@ panel_widget_class_init (PanelWidgetClass *klass)
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
+
+  gtk_widget_class_install_action (widget_class, "panel.unmaximize", NULL, panel_widget_unmaximize_action);
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_Escape, 0, "panel.unmaximize", NULL);
 }
 
 static void
 panel_widget_init (PanelWidget *self)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "panel.unmaximize", FALSE);
 
   priv->reorderable = TRUE;
 }
@@ -372,6 +385,7 @@ panel_widget_maximize (PanelWidget *self)
     return;
 
   priv->maximized = TRUE;
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "panel.unmaximize", priv->maximized);
 
   g_object_ref (self);
 
@@ -400,6 +414,7 @@ panel_widget_unmaximize (PanelWidget *self)
     return;
 
   priv->maximized = FALSE;
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "panel.unmaximize", priv->maximized);
 
   g_object_ref (self);
 
