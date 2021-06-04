@@ -955,12 +955,37 @@ _panel_dock_add_widget (PanelDock      *self,
       frame = PANEL_FRAME (panel_frame_new ());
       gtk_orientable_set_orientation (GTK_ORIENTABLE (dock_child), orientation);
       panel_dock_child_set_child (dock_child, GTK_WIDGET (frame));
-
-      panel_dock_child_set_reveal_child (dock_child, TRUE);
     }
 
   g_assert (PANEL_IS_DOCK_CHILD (dock_child));
   g_assert (PANEL_IS_FRAME (frame));
 
   panel_frame_add (frame, widget);
+
+  switch (panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)))
+    {
+    case PANEL_DOCK_POSITION_START:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_START]);
+      panel_dock_set_reveal_start (self, TRUE);
+      break;
+
+    case PANEL_DOCK_POSITION_END:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_END]);
+      panel_dock_set_reveal_end (self, TRUE);
+      break;
+
+    case PANEL_DOCK_POSITION_TOP:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_TOP]);
+      panel_dock_set_reveal_top (self, TRUE);
+      break;
+
+    case PANEL_DOCK_POSITION_BOTTOM:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_BOTTOM]);
+      panel_dock_set_reveal_bottom (self, TRUE);
+      break;
+
+    case PANEL_DOCK_POSITION_CENTER:
+    default:
+      break;
+    }
 }
