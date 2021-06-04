@@ -24,8 +24,9 @@ panelwidget {
 panelwidget.maximized {
   margin: 24px;
   border-radius: 5px;
+  box-shadow: 0 0 32px 50px alpha(@borders,.3),
+              0 1px 3px 1px rgba(0,0,0,.35);
   border: 1px solid shade(@borders, 0.9);
-  box-shadow: 0 1px 3px 1px @borders;
 }
 panelwidget.maximized:backdrop {
   box-shadow: none;
