@@ -23,9 +23,14 @@ panelwidget {
 }
 panelwidget.maximized {
   margin: 24px;
-  box-shadow: 0px 0px 5px @wm_shadow;
-  border: 1px solid @wm_border;
   border-radius: 5px;
+  border: 1px solid shade(@borders, 0.9);
+  box-shadow: 0 1px 3px 1px @borders;
+}
+panelwidget.maximized:backdrop {
+  box-shadow: none;
+  border: 1px solid alpha(@borders, 0.5);
+  transition: 200ms ease-out;
 }
 
 panelwidget listview {
