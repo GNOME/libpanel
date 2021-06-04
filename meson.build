@@ -23,12 +23,15 @@ pkgconfigdir = join_paths(libdir, 'pkgconfig')
 # Check dependencies
 glib_req_version = '2.68'
 gtk_req_version = '4.3'
+adwaita_req_version = '1.1'
 
 glib_req = '>= @0@'.format(glib_req_version)
 gtk_req = '>= @0@'.format(gtk_req_version)
+adwaita_req = '>= @0@'.format(adwaita_req_version)
 
 libglib_dep = dependency('glib-2.0', version: glib_req)
 libgtk_dep = dependency('gtk4', version: gtk_req)
+libadwaita_dep = dependency('libadwaita-1', version: adwaita_req)
 
 # Setup commonly used config data
 config_h = configuration_data()

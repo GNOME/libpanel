@@ -68,6 +68,7 @@ libpanel_generated_headers = [
 libpanel_deps = [
   libglib_dep,
   libgtk_dep,
+  libadwaita_dep,
 ]
 
 libpanel_static = static_library('panel',
