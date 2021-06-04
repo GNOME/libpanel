@@ -42,6 +42,7 @@
             <property name="child">
               <object class="GtkLabel">
                 <property name="label">end</property>
+                <property name="selectable">true</property>
               </object>
             </property>
           </object>
