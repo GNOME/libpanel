@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include <glib/gi18n.h>
+
 #include "panel-maximized-controls-private.h"
 
 struct _PanelMaximizedControls
@@ -100,7 +102,8 @@ panel_maximized_controls_init (PanelMaximizedControls *self)
   gtk_widget_set_parent (GTK_WIDGET (self->box), GTK_WIDGET (self));
 
   self->close = GTK_BUTTON (gtk_button_new ());
-  gtk_button_set_icon_name (self->close, "window-close-symbolic");
+  gtk_button_set_icon_name (self->close, "view-restore-symbolic");
+  gtk_widget_set_tooltip_text (GTK_WIDGET (self->close), _("Restore panel to previous location"));
   gtk_widget_set_can_focus (GTK_WIDGET (self->close), TRUE);
   gtk_widget_add_css_class (GTK_WIDGET (self->close), "circular");
   gtk_widget_add_css_class (GTK_WIDGET (self->close), "close");
