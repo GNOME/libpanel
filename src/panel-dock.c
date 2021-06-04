@@ -961,6 +961,7 @@ _panel_dock_add_widget (PanelDock      *self,
   g_assert (PANEL_IS_FRAME (frame));
 
   panel_frame_add (frame, widget);
+  panel_frame_set_visible_child (frame, widget);
 
   switch (panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)))
     {
