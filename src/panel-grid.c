@@ -171,6 +171,11 @@ panel_grid_add_child (GtkBuildable *buildable,
 
       panel_paned_append (self->columns, GTK_WIDGET (child));
     }
+  else if (PANEL_IS_WIDGET (child))
+    {
+      PanelFrame *frame = panel_grid_get_most_recent_frame (self);
+      panel_frame_add (frame, PANEL_WIDGET (child));
+    }
   else
     g_warning ("%s cannot add children of type %s",
                G_OBJECT_TYPE_NAME (self),
