@@ -95,6 +95,18 @@ panel_grid_class_init (PanelGridClass *klass)
 
   object_class->dispose = panel_grid_dispose;
 
+  /**
+   * PanelGrid::create-frame:
+   * @self: a #PanelGrid
+   *
+   * The "create-frame" signal is used to create a new frame within
+   * the grid.
+   *
+   * Consumers of this signal are required to return an unrooted
+   * #PanelFrame from this signal. The first signal handler wins.
+   *
+   * Returns: (transfer full) (not nullable): an unrooted #PanelFrame
+   */
   signals [CREATE_FRAME] =
     g_signal_new_class_handler ("create-frame",
                                 G_TYPE_FROM_CLASS (klass),
