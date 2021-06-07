@@ -20,7 +20,6 @@
 
 #include "config.h"
 
-#include "panel-frame.h"
 #include "panel-grid-column.h"
 #include "panel-paned-private.h"
 
@@ -74,4 +73,17 @@ panel_grid_column_get_empty (PanelGridColumn *self)
   g_return_val_if_fail (PANEL_IS_GRID_COLUMN (self), FALSE);
 
   return panel_paned_get_n_children (self->rows) == 0;
+}
+
+PanelFrame *
+panel_grid_column_get_most_recent_frame (PanelGridColumn *self)
+{
+  g_return_val_if_fail (PANEL_IS_GRID_COLUMN (self), NULL);
+
+  /* TODO: Actually track with MRU */
+
+  if (panel_grid_column_get_empty (self))
+    panel_paned_append (self->rows, panel_frame_new ());
+
+  return PANEL_FRAME (panel_paned_get_nth_child (self->rows, 0));
 }

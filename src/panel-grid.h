@@ -36,5 +36,7 @@ PANEL_AVAILABLE_IN_ALL
 GtkWidget       *panel_grid_new                    (void);
 PANEL_AVAILABLE_IN_ALL
 PanelGridColumn *panel_grid_get_most_recent_column (PanelGrid *self);
+PANEL_AVAILABLE_IN_ALL
+PanelFrame      *panel_grid_get_most_recent_frame  (PanelGrid *self);
 
 G_END_DECLS

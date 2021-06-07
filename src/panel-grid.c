@@ -83,9 +83,32 @@ panel_grid_init (PanelGrid *self)
 PanelGridColumn *
 panel_grid_get_most_recent_column (PanelGrid *self)
 {
+  GtkWidget *column;
+
+  g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
+
   /* TODO: actually track w/ MRU */
 
-  return PANEL_GRID_COLUMN (panel_paned_get_nth_child (self->columns, 0));
+  if (!(column = panel_paned_get_nth_child (self->columns, 0)))
+    {
+      column = panel_grid_column_new ();
+      panel_paned_append (self->columns, column);
+    }
+
+  return PANEL_GRID_COLUMN (column);
+}
+
+PanelFrame *
+panel_grid_get_most_recent_frame (PanelGrid *self)
+{
+  PanelGridColumn *column;
+
+  g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
+
+  /* TODO: actually track w/ MRU */
+
+  column = panel_grid_get_most_recent_column (self);
+  return panel_grid_column_get_most_recent_frame (column);
 }
 
 static void

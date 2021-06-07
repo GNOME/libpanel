@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 
+#include "panel-frame.h"
 #include "panel-version-macros.h"
 #include "panel-widget.h"
 
@@ -33,8 +34,10 @@ PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelGridColumn, panel_grid_column, PANEL, GRID_COLUMN, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_grid_column_new       (void);
+GtkWidget  *panel_grid_column_new                   (void);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_grid_column_get_empty (PanelGridColumn *self);
+gboolean    panel_grid_column_get_empty             (PanelGridColumn *self);
+PANEL_AVAILABLE_IN_ALL
+PanelFrame *panel_grid_column_get_most_recent_frame (PanelGridColumn *self);
 
 G_END_DECLS
