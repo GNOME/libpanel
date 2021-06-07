@@ -476,7 +476,7 @@ panel_frame_set_header (PanelFrame       *self,
                         PanelFrameHeader *header)
 {
   g_return_if_fail (PANEL_IS_FRAME (self));
-  g_return_if_fail (PANEL_IS_FRAME_HEADER (header));
+  g_return_if_fail (!header || PANEL_IS_FRAME_HEADER (header));
 
   if (self->header == header)
     return;
