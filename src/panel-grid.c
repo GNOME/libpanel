@@ -20,8 +20,9 @@
 
 #include "config.h"
 
-#include "panel-grid.h"
+#include "panel-frame.h"
 #include "panel-grid-column.h"
+#include "panel-grid-private.h"
 #include "panel-paned-private.h"
 
 struct _PanelGrid
@@ -36,6 +37,13 @@ static void buildable_iface_init (GtkBuildableIface *iface);
 G_DEFINE_TYPE_WITH_CODE (PanelGrid, panel_grid, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init))
 
+enum {
+  CREATE_FRAME,
+  N_SIGNALS
+};
+
+static guint signals [N_SIGNALS];
+
 /**
  * panel_grid_new:
  *
@@ -47,6 +55,26 @@ GtkWidget *
 panel_grid_new (void)
 {
   return g_object_new (PANEL_TYPE_GRID, NULL);
+}
+
+static PanelFrame *
+panel_grid_real_create_frame (PanelGrid *self)
+{
+  g_assert (PANEL_IS_GRID (self));
+
+  return PANEL_FRAME (panel_frame_new ());
+}
+
+PanelFrame *
+_panel_grid_create_frame (PanelGrid *self)
+{
+  PanelFrame *frame = NULL;
+
+  g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
+
+  g_signal_emit (self, signals [CREATE_FRAME], 0, &frame);
+  g_return_val_if_fail (PANEL_IS_FRAME (frame), NULL);
+  return frame;
 }
 
 static void
@@ -66,6 +94,15 @@ panel_grid_class_init (PanelGridClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = panel_grid_dispose;
+
+  signals [CREATE_FRAME] =
+    g_signal_new_class_handler ("create-frame",
+                                G_TYPE_FROM_CLASS (klass),
+                                G_SIGNAL_RUN_LAST,
+                                G_CALLBACK (panel_grid_real_create_frame),
+                                g_signal_accumulator_first_wins, NULL,
+                                NULL,
+                                PANEL_TYPE_FRAME, 0);
 
   gtk_widget_class_set_css_name (widget_class, "panelgrid");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
