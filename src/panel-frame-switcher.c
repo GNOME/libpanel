@@ -1,21 +1,20 @@
-/* panel-frame-switcher.c
+/*
+ * Copyright (c) 2013 Red Hat, Inc.
  *
- * Copyright 2021 Christian Hergert <chergert@redhat.com>
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
  *
- * This file is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of the
- * License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+ * License for more details.
  *
- * This file is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #include "config.h"
@@ -23,48 +22,253 @@
 #include "panel-dock-private.h"
 #include "panel-frame-header-private.h"
 #include "panel-frame-switcher.h"
-#include "panel-frame-private.h"
 #include "panel-scaler-private.h"
+#include "panel-widget.h"
+
+/**
+ * PanelFrameSwitcher:
+ *
+ * The `PanelFrameSwitcher` shows a row of buttons to switch between `GtkStack`
+ * pages.
+ */
+
+#define TIMEOUT_EXPAND 500
 
 struct _PanelFrameSwitcher
 {
-  GtkWidget         parent_instance;
+  GtkWidget parent_instance;
 
-  GtkStackSwitcher *switcher;
-
-  /* Unowned references */
-  GtkWidget        *drag_panel;
-  GtkStack         *stack;
-  GListModel       *pages;
-
-  GtkOrientation    orientation : 1;
-  guint             disposed : 1;
+  PanelFrame        *frame;
+  GtkSelectionModel *pages;
+  GHashTable        *buttons;
+  PanelWidget       *drag_panel;
 };
+
+struct _PanelFrameSwitcherClass
+{
+  GtkWidgetClass parent_class;
+};
+
+static PanelFrame *panel_frame_switcher_get_frame (PanelFrameSwitcher *self);
+static void        panel_frame_switcher_set_frame (PanelFrameSwitcher *self,
+                                                   PanelFrame         *frame);
 
 enum {
   PROP_0,
   N_PROPS,
 
+  PROP_FRAME,
   PROP_ORIENTATION,
 };
 
-static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
-
 G_DEFINE_TYPE_WITH_CODE (PanelFrameSwitcher, panel_frame_switcher, GTK_TYPE_WIDGET,
-                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, frame_header_iface_init)
-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL))
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL)
+                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, NULL))
 
-/**
- * panel_frame_switcher_new:
- *
- * Create a new #PanelFrameSwitcher.
- *
- * Returns: (transfer full): a newly created #PanelFrameSwitcher
- */
-GtkWidget *
-panel_frame_switcher_new (void)
+static void
+panel_frame_switcher_init (PanelFrameSwitcher *switcher)
 {
-  return g_object_new (PANEL_TYPE_FRAME_SWITCHER, NULL);
+  GtkLayoutManager *layout_manager;
+
+  switcher->buttons = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, NULL);
+
+  gtk_widget_add_css_class (GTK_WIDGET (switcher), "linked");
+
+  layout_manager = gtk_widget_get_layout_manager (GTK_WIDGET (switcher));
+  gtk_box_layout_set_homogeneous (GTK_BOX_LAYOUT (layout_manager), TRUE);
+}
+
+static void
+on_button_toggled (GtkWidget        *button,
+                   GParamSpec       *pspec,
+                   PanelFrameSwitcher *self)
+{
+  gboolean active;
+  guint index;
+
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button));
+  index = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (button), "child-index"));
+
+  if (active)
+    {
+      gtk_selection_model_select_item (self->pages, index, TRUE);
+    }
+  else
+    {
+      gboolean selected = gtk_selection_model_is_selected (self->pages, index);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), selected);
+    }
+}
+
+static void
+rebuild_child (GtkWidget  *self,
+               GIcon      *icon,
+               const char *title)
+{
+  GtkWidget *button_child;
+
+  button_child = NULL;
+
+  if (icon != NULL)
+    {
+      button_child = gtk_image_new_from_gicon (icon);
+      if (title != NULL)
+        gtk_widget_set_tooltip_text (GTK_WIDGET (self), title);
+
+      gtk_widget_remove_css_class (self, "text-button");
+      gtk_widget_add_css_class (self, "image-button");
+    }
+  else if (title != NULL)
+    {
+      button_child = gtk_label_new (title);
+
+      gtk_widget_set_tooltip_text (GTK_WIDGET (self), NULL);
+
+      gtk_widget_remove_css_class (self, "image-button");
+      gtk_widget_add_css_class (self, "text-button");
+    }
+
+  if (button_child)
+    {
+      gtk_widget_set_halign (GTK_WIDGET (button_child), GTK_ALIGN_CENTER);
+      gtk_button_set_child (GTK_BUTTON (self), button_child);
+    }
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_LABEL, title,
+                                  -1);
+}
+
+static void
+update_button (PanelFrameSwitcher *self,
+               AdwTabPage         *page,
+               GtkWidget          *button)
+{
+  char *title = NULL;
+  GIcon *icon = NULL;
+  gboolean needs_attention = FALSE;
+
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+  g_assert (ADW_IS_TAB_PAGE (page));
+  g_assert (GTK_IS_TOGGLE_BUTTON (button));
+
+  g_object_get (page,
+                "title", &title,
+                "icon", &icon,
+                "needs-attention", &needs_attention,
+                NULL);
+
+  rebuild_child (button, icon, title);
+
+  gtk_widget_set_visible (button, (title != NULL || icon != NULL));
+
+  if (needs_attention)
+    gtk_widget_add_css_class (button, "needs-attention");
+  else
+    gtk_widget_remove_css_class (button, "needs-attention");
+
+  g_free (title);
+  g_clear_object (&icon);
+}
+
+static void
+on_page_updated (AdwTabPage       *page,
+                 GParamSpec       *pspec,
+                 PanelFrameSwitcher *self)
+{
+  GtkWidget *button;
+
+  button = g_hash_table_lookup (self->buttons, page);
+  update_button (self, page, button);
+}
+
+static gboolean
+panel_frame_switcher_switch_timeout (gpointer data)
+{
+  GtkWidget *button = data;
+
+  g_object_steal_data (G_OBJECT (button), "-panel-switch-timer");
+
+  if (button)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+
+  return G_SOURCE_REMOVE;
+}
+
+static void
+clear_timer (gpointer data)
+{
+  if (data)
+    g_source_remove (GPOINTER_TO_UINT (data));
+}
+
+static void
+panel_frame_switcher_drag_enter (GtkDropControllerMotion *motion,
+                                 double                   x,
+                                 double                   y,
+                                 gpointer                 unused)
+{
+  GtkWidget *button = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (motion));
+
+  if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)))
+    {
+      guint switch_timer = g_timeout_add (TIMEOUT_EXPAND,
+                                          panel_frame_switcher_switch_timeout,
+                                          button);
+      g_source_set_name_by_id (switch_timer, "[gtk] panel_frame_switcher_switch_timeout");
+      g_object_set_data_full (G_OBJECT (button), "-panel-switch-timer", GUINT_TO_POINTER (switch_timer), clear_timer);
+    }
+}
+
+static void
+panel_frame_switcher_drag_leave (GtkDropControllerMotion *motion,
+                                 gpointer                 unused)
+{
+  GtkWidget *button = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (motion));
+  guint switch_timer;
+
+  switch_timer = GPOINTER_TO_UINT (g_object_steal_data (G_OBJECT (button), "-panel-switch-timer"));
+  if (switch_timer)
+    g_source_remove (switch_timer);
+}
+
+static void
+panel_frame_switcher_click_pressed_cb (PanelFrameSwitcher *self,
+                                       int                 n_presses,
+                                       double              x,
+                                       double              y,
+                                       GtkGestureClick    *click)
+{
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+  g_assert (GTK_IS_GESTURE_CLICK (click));
+
+  if (self->frame == NULL)
+    return;
+
+  if (n_presses == 2)
+    {
+      GtkWidget *child = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
+      GListModel *pages;
+      AdwTabPage *page;
+      guint i = 0;
+
+      if (!GTK_IS_TOGGLE_BUTTON (child) &&
+          !(child = gtk_widget_get_ancestor (child, GTK_TYPE_TOGGLE_BUTTON)))
+        return;
+
+      for (child = gtk_widget_get_prev_sibling (child);
+           child;
+           child = gtk_widget_get_prev_sibling (child))
+        i++;
+
+      pages = G_LIST_MODEL (panel_frame_get_pages (self->frame));
+      page = g_list_model_get_item (pages, i);
+      child = adw_tab_page_get_child (page);
+      g_clear_object (&page);
+
+      if (PANEL_IS_WIDGET (child))
+        panel_widget_maximize (PANEL_WIDGET (child));
+    }
 }
 
 static GdkContentProvider *
@@ -81,7 +285,10 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
   g_assert (PANEL_IS_FRAME_SWITCHER (self));
   g_assert (GTK_IS_DRAG_SOURCE (source));
 
-  child = gtk_widget_pick (GTK_WIDGET (self->switcher), x, y, GTK_PICK_DEFAULT);
+  if (self->frame == NULL)
+    return NULL;
+
+  child = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
   if (!GTK_IS_TOGGLE_BUTTON (child) &&
       !(child = gtk_widget_get_ancestor (child, GTK_TYPE_TOGGLE_BUTTON)))
     return NULL;
@@ -95,7 +302,7 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
        child = gtk_widget_get_prev_sibling (child))
     i++;
 
-  pages = G_LIST_MODEL (gtk_stack_get_pages (GTK_STACK (self->stack)));
+  pages = G_LIST_MODEL (panel_frame_get_pages (self->frame));
   page = g_list_model_get_item (pages, i);
   child = gtk_stack_page_get_child (page);
   g_clear_object (&page);
@@ -104,7 +311,7 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
       !panel_widget_get_reorderable (PANEL_WIDGET (child)))
     return NULL;
 
-  self->drag_panel = child;
+  self->drag_panel = PANEL_WIDGET (child);
 
   return gdk_content_provider_new_typed (PANEL_TYPE_WIDGET, child);
 }
@@ -125,7 +332,7 @@ panel_frame_switcher_drag_begin_cb (PanelFrameSwitcher *self,
   g_assert (GDK_IS_DRAG (drag));
   g_assert (PANEL_IS_WIDGET (self->drag_panel));
 
-  if ((paintable = gtk_widget_paintable_new (self->drag_panel)))
+  if ((paintable = gtk_widget_paintable_new (GTK_WIDGET (self->drag_panel))))
     {
       int width = gdk_paintable_get_intrinsic_width (paintable);
       int height = gdk_paintable_get_intrinsic_height (paintable);
@@ -185,171 +392,29 @@ panel_frame_switcher_drag_end_cb (PanelFrameSwitcher *self,
 }
 
 static void
-panel_frame_switcher_items_changed_cb (PanelFrameSwitcher *self,
-                                       guint               position,
-                                       guint               removed,
-                                       guint               added,
-                                       GListModel         *model)
+add_child (guint               position,
+           PanelFrameSwitcher *self)
 {
-  gboolean hexpand;
-  gboolean vexpand;
-
-  g_assert (PANEL_IS_FRAME_SWITCHER (self));
-  g_assert (G_IS_LIST_MODEL (model));
-
-  if (self->disposed)
-    return;
-
-  hexpand = self->orientation == GTK_ORIENTATION_HORIZONTAL;
-  vexpand = self->orientation == GTK_ORIENTATION_VERTICAL;
-
-  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self->switcher));
-       child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    {
-      gtk_widget_set_vexpand (child, vexpand);
-      gtk_widget_set_hexpand (child, hexpand);
-    }
-}
-
-static void
-panel_frame_switcher_set_orientation (PanelFrameSwitcher *self,
-                                      GtkOrientation      orientation)
-{
-  g_assert (PANEL_IS_FRAME_SWITCHER (self));
-
-  if (self->orientation == orientation)
-    return;
-
-  self->orientation = orientation;
-
-#if GTK_CHECK_VERSION(4, 4, 0)
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (self->switcher), orientation);
-#else
-  {
-    GtkLayoutManager *layout = gtk_widget_get_layout_manager (GTK_WIDGET (self->switcher));
-    gtk_orientable_set_orientation (GTK_ORIENTABLE (layout), orientation);
-    _panel_dock_update_orientation (GTK_WIDGET (self->switcher), orientation);
-  }
-#endif
-
-  g_object_notify (G_OBJECT (self), "orientation");
-}
-
-static void
-panel_frame_switcher_click_pressed_cb (PanelFrameSwitcher *self,
-                                       int                 n_presses,
-                                       double              x,
-                                       double              y,
-                                       GtkGestureClick    *click)
-{
-  g_assert (PANEL_IS_FRAME_SWITCHER (self));
-  g_assert (GTK_IS_GESTURE_CLICK (click));
-
-  if (n_presses == 2)
-    {
-      GtkWidget *child = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
-      GListModel *pages;
-      GtkStackPage *page;
-      guint i = 0;
-
-      if (!GTK_IS_TOGGLE_BUTTON (child) &&
-          !(child = gtk_widget_get_ancestor (child, GTK_TYPE_TOGGLE_BUTTON)))
-        return;
-
-      for (child = gtk_widget_get_prev_sibling (child);
-           child;
-           child = gtk_widget_get_prev_sibling (child))
-        i++;
-
-      pages = G_LIST_MODEL (gtk_stack_get_pages (GTK_STACK (self->stack)));
-      page = g_list_model_get_item (pages, i);
-      child = gtk_stack_page_get_child (page);
-      g_clear_object (&page);
-
-      if (PANEL_IS_WIDGET (child))
-        panel_widget_maximize (PANEL_WIDGET (child));
-    }
-}
-
-static void
-panel_frame_switcher_dispose (GObject *object)
-{
-  PanelFrameSwitcher *self = (PanelFrameSwitcher *)object;
-
-  self->disposed = TRUE;
-
-  if (self->stack)
-    _panel_frame_header_disconnect (PANEL_FRAME_HEADER (self));
-
-  g_clear_pointer ((GtkWidget **)&self->switcher, gtk_widget_unparent);
-
-  G_OBJECT_CLASS (panel_frame_switcher_parent_class)->dispose (object);
-}
-
-static void
-panel_frame_switcher_get_property (GObject    *object,
-                                   guint       prop_id,
-                                   GValue     *value,
-                                   GParamSpec *pspec)
-{
-  PanelFrameSwitcher *self = PANEL_FRAME_SWITCHER (object);
-
-  switch (prop_id)
-    {
-    case PROP_ORIENTATION:
-      g_value_set_enum (value, self->orientation);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-panel_frame_switcher_set_property (GObject      *object,
-                                   guint         prop_id,
-                                   const GValue *value,
-                                   GParamSpec   *pspec)
-{
-  PanelFrameSwitcher *self = PANEL_FRAME_SWITCHER (object);
-
-  switch (prop_id)
-    {
-    case PROP_ORIENTATION:
-      panel_frame_switcher_set_orientation (self, g_value_get_enum (value));
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-panel_frame_switcher_class_init (PanelFrameSwitcherClass *klass)
-{
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-
-  object_class->dispose = panel_frame_switcher_dispose;
-  object_class->get_property = panel_frame_switcher_get_property;
-  object_class->set_property = panel_frame_switcher_set_property;
-
-  g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
-
-  gtk_widget_class_set_css_name (widget_class, "panelframeswitcher");
-  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame-switcher.ui");
-  gtk_widget_class_bind_template_child (widget_class, PanelFrameSwitcher, switcher);
-}
-
-static void
-panel_frame_switcher_init (PanelFrameSwitcher *self)
-{
-  GtkDragSource *drag;
   GtkEventController *controller;
+  GtkDragSource *drag;
+  GtkWidget *button;
+  gboolean selected;
+  AdwTabPage *page;
 
-  gtk_widget_init_template (GTK_WIDGET (self));
+  button = g_object_new (GTK_TYPE_TOGGLE_BUTTON,
+                         "accessible-role", GTK_ACCESSIBLE_ROLE_TAB,
+                         NULL);
+  gtk_widget_set_focus_on_click (button, FALSE);
+
+  if (gtk_orientable_get_orientation (GTK_ORIENTABLE (self)) == GTK_ORIENTATION_HORIZONTAL)
+    gtk_widget_set_hexpand (button, TRUE);
+  else
+    gtk_widget_set_vexpand (button, TRUE);
+
+  controller = gtk_drop_controller_motion_new ();
+  g_signal_connect (controller, "enter", G_CALLBACK (panel_frame_switcher_drag_enter), NULL);
+  g_signal_connect (controller, "leave", G_CALLBACK (panel_frame_switcher_drag_leave), NULL);
+  gtk_widget_add_controller (button, controller);
 
   controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
   g_signal_connect_object (controller,
@@ -380,58 +445,272 @@ panel_frame_switcher_init (PanelFrameSwitcher *self)
                            G_CONNECT_SWAPPED);
   gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (drag),
                                               GTK_PHASE_CAPTURE);
-  gtk_widget_add_controller (GTK_WIDGET (self->switcher),
+  gtk_widget_add_controller (GTK_WIDGET (self),
                              GTK_EVENT_CONTROLLER (drag));
+
+  page = g_list_model_get_item (G_LIST_MODEL (self->pages), position);
+  update_button (self, page, button);
+
+  gtk_widget_set_parent (button, GTK_WIDGET (self));
+
+  g_object_set_data (G_OBJECT (button), "child-index", GUINT_TO_POINTER (position));
+  selected = gtk_selection_model_is_selected (self->pages, position);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), selected);
+
+  gtk_accessible_update_state (GTK_ACCESSIBLE (button),
+                               GTK_ACCESSIBLE_STATE_SELECTED, selected,
+                               -1);
+
+#if 0
+  gtk_accessible_update_relation (GTK_ACCESSIBLE (button),
+                                  GTK_ACCESSIBLE_RELATION_CONTROLS, page, NULL,
+                                  -1);
+#endif
+
+  g_signal_connect (button, "notify::active", G_CALLBACK (on_button_toggled), self);
+  g_signal_connect (page, "notify", G_CALLBACK (on_page_updated), self);
+
+  g_hash_table_insert (self->buttons, g_object_ref (page), button);
+
+  g_object_unref (page);
 }
 
 static void
-panel_frame_switcher_connect (PanelFrameHeader *header,
-                              PanelFrame       *frame)
+populate_switcher (PanelFrameSwitcher *self)
 {
-  PanelFrameSwitcher *self = (PanelFrameSwitcher *)header;
-  guint n_items;
+  guint i;
 
-  g_assert (PANEL_IS_FRAME_SWITCHER (self));
-  g_assert (PANEL_IS_FRAME (frame));
-
-  self->stack = _panel_frame_get_stack (frame);
-  self->pages = G_LIST_MODEL (gtk_stack_get_pages (GTK_STACK (self->stack)));
-  n_items = g_list_model_get_n_items (self->pages);
-
-  gtk_stack_switcher_set_stack (self->switcher, self->stack);
-
-  g_signal_connect_object (self->pages,
-                           "items-changed",
-                           G_CALLBACK (panel_frame_switcher_items_changed_cb),
-                           self,
-                           G_CONNECT_SWAPPED | G_CONNECT_AFTER);
-
-  if (n_items > 0)
-    panel_frame_switcher_items_changed_cb (self, 0, 0, n_items, self->pages);
+  for (i = 0; i < g_list_model_get_n_items (G_LIST_MODEL (self->pages)); i++)
+    add_child (i, self);
 }
 
 static void
-panel_frame_switcher_disconnect (PanelFrameHeader *header)
+clear_switcher (PanelFrameSwitcher *self)
 {
-  PanelFrameSwitcher *self = (PanelFrameSwitcher *)header;
+  GHashTableIter iter;
+  GtkWidget *page;
+  GtkWidget *button;
 
-  g_assert (PANEL_IS_FRAME_SWITCHER (self));
-
-  if (self->pages)
+  g_hash_table_iter_init (&iter, self->buttons);
+  while (g_hash_table_iter_next (&iter, (gpointer *)&page, (gpointer *)&button))
     {
-      g_signal_handlers_disconnect_by_func (self->pages,
-                                            G_CALLBACK (panel_frame_switcher_items_changed_cb),
-                                            self);
-      self->pages = NULL;
+      gtk_widget_unparent (button);
+      g_signal_handlers_disconnect_by_func (page, on_page_updated, self);
+      g_hash_table_iter_remove (&iter);
     }
-
-  gtk_stack_switcher_set_stack (self->switcher, NULL);
-  self->stack = NULL;
 }
 
 static void
-frame_header_iface_init (PanelFrameHeaderInterface *iface)
+items_changed_cb (GListModel       *model,
+                  guint             position,
+                  guint             removed,
+                  guint             added,
+                  PanelFrameSwitcher *switcher)
 {
-  iface->connect = panel_frame_switcher_connect;
-  iface->disconnect = panel_frame_switcher_disconnect;
+  clear_switcher (switcher);
+  populate_switcher (switcher);
+}
+
+static void
+selection_changed_cb (GtkSelectionModel *model,
+                      guint              position,
+                      guint              n_items,
+                      PanelFrameSwitcher  *switcher)
+{
+  guint i;
+
+  for (i = position; i < position + n_items; i++)
+    {
+      GtkStackPage *page;
+      GtkWidget *button;
+      gboolean selected;
+
+      page = g_list_model_get_item (G_LIST_MODEL (switcher->pages), i);
+      button = g_hash_table_lookup (switcher->buttons, page);
+      if (button)
+        {
+          selected = gtk_selection_model_is_selected (switcher->pages, i);
+          gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), selected);
+
+          gtk_accessible_update_state (GTK_ACCESSIBLE (button),
+                                       GTK_ACCESSIBLE_STATE_SELECTED, selected,
+                                       -1);
+        }
+      g_object_unref (page);
+    }
+}
+
+static void
+disconnect_frame_signals (PanelFrameSwitcher *switcher)
+{
+  g_signal_handlers_disconnect_by_func (switcher->pages, items_changed_cb, switcher);
+  g_signal_handlers_disconnect_by_func (switcher->pages, selection_changed_cb, switcher);
+}
+
+static void
+connect_frame_signals (PanelFrameSwitcher *switcher)
+{
+  g_signal_connect (switcher->pages, "items-changed", G_CALLBACK (items_changed_cb), switcher);
+  g_signal_connect (switcher->pages, "selection-changed", G_CALLBACK (selection_changed_cb), switcher);
+}
+
+static void
+set_frame (PanelFrameSwitcher *switcher,
+           PanelFrame         *frame)
+{
+  if (frame)
+    {
+      switcher->frame = g_object_ref (frame);
+      switcher->pages = panel_frame_get_pages (frame);
+      populate_switcher (switcher);
+      connect_frame_signals (switcher);
+    }
+}
+
+static void
+unset_frame (PanelFrameSwitcher *switcher)
+{
+  if (switcher->frame)
+    {
+      disconnect_frame_signals (switcher);
+      clear_switcher (switcher);
+      g_clear_object (&switcher->frame);
+      g_clear_object (&switcher->pages);
+    }
+}
+
+static void
+panel_frame_switcher_set_frame (PanelFrameSwitcher *switcher,
+                                PanelFrame         *frame)
+{
+  g_return_if_fail (PANEL_IS_FRAME_SWITCHER (switcher));
+  g_return_if_fail (!frame || PANEL_IS_FRAME (frame));
+
+  if (switcher->frame == frame)
+    return;
+
+  unset_frame (switcher);
+  set_frame (switcher, frame);
+
+  gtk_widget_queue_resize (GTK_WIDGET (switcher));
+
+  g_object_notify (G_OBJECT (switcher), "frame");
+}
+
+static PanelFrame *
+panel_frame_switcher_get_frame (PanelFrameSwitcher *switcher)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME_SWITCHER (switcher), NULL);
+
+  return switcher->frame;
+}
+
+static void
+panel_frame_switcher_get_property (GObject    *object,
+                                   guint       prop_id,
+                                   GValue     *value,
+                                   GParamSpec *pspec)
+{
+  PanelFrameSwitcher *switcher = PANEL_FRAME_SWITCHER (object);
+  GtkLayoutManager *box_layout = gtk_widget_get_layout_manager (GTK_WIDGET (switcher));
+
+  switch (prop_id)
+    {
+    case PROP_ORIENTATION:
+      g_value_set_enum (value, gtk_orientable_get_orientation (GTK_ORIENTABLE (box_layout)));
+      break;
+
+    case PROP_FRAME:
+      g_value_set_object (value, panel_frame_switcher_get_frame (switcher));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+panel_frame_switcher_set_property (GObject      *object,
+                                   guint         prop_id,
+                                   const GValue *value,
+                                   GParamSpec   *pspec)
+{
+  PanelFrameSwitcher *switcher = PANEL_FRAME_SWITCHER (object);
+  GtkLayoutManager *box_layout = gtk_widget_get_layout_manager (GTK_WIDGET (switcher));
+
+  switch (prop_id)
+    {
+    case PROP_ORIENTATION:
+      {
+        GtkOrientation orientation = g_value_get_enum (value);
+        if (gtk_orientable_get_orientation (GTK_ORIENTABLE (box_layout)) != orientation)
+          {
+            gtk_orientable_set_orientation (GTK_ORIENTABLE (box_layout), orientation);
+            _panel_dock_update_orientation (GTK_WIDGET (switcher), orientation);
+            g_object_notify_by_pspec (object, pspec);
+          }
+      }
+      break;
+
+    case PROP_FRAME:
+      panel_frame_switcher_set_frame (switcher, g_value_get_object (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+panel_frame_switcher_dispose (GObject *object)
+{
+  PanelFrameSwitcher *switcher = PANEL_FRAME_SWITCHER (object);
+
+  unset_frame (switcher);
+
+  G_OBJECT_CLASS (panel_frame_switcher_parent_class)->dispose (object);
+}
+
+static void
+panel_frame_switcher_finalize (GObject *object)
+{
+  PanelFrameSwitcher *switcher = PANEL_FRAME_SWITCHER (object);
+
+  g_hash_table_destroy (switcher->buttons);
+
+  G_OBJECT_CLASS (panel_frame_switcher_parent_class)->finalize (object);
+}
+
+static void
+panel_frame_switcher_class_init (PanelFrameSwitcherClass *class)
+{
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
+
+  object_class->get_property = panel_frame_switcher_get_property;
+  object_class->set_property = panel_frame_switcher_set_property;
+  object_class->dispose = panel_frame_switcher_dispose;
+  object_class->finalize = panel_frame_switcher_finalize;
+
+  g_object_class_override_property (object_class, PROP_FRAME, "frame");
+  g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
+
+  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BOX_LAYOUT);
+  gtk_widget_class_set_css_name (widget_class, "panelframeswitcher");
+  gtk_widget_class_set_accessible_role (widget_class, GTK_ACCESSIBLE_ROLE_TAB_LIST);
+}
+
+/**
+ * panel_frame_switcher_new:
+ *
+ * Create a new `PanelFrameSwitcher`.
+ *
+ * Returns: a new `PanelFrameSwitcher`.
+ */
+GtkWidget *
+panel_frame_switcher_new (void)
+{
+  return g_object_new (PANEL_TYPE_FRAME_SWITCHER, NULL);
 }

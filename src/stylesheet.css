@@ -1,4 +1,4 @@
-panelframe panelframeswitcher stackswitcher {
+panelframe panelframeswitcher {
   margin: 6px;
 }
 paneldockchild:not(.center) {

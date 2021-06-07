@@ -4,6 +4,5 @@
     <file compressed="true">stylesheet.css</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-dock-switcher.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-frame.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">panel-frame-switcher.ui</file>
   </gresource>
 </gresources>

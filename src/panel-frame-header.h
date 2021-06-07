@@ -28,7 +28,15 @@ G_BEGIN_DECLS
 
 #define PANEL_TYPE_FRAME_HEADER (panel_frame_header_get_type())
 
+typedef struct _PanelFrame PanelFrame;
+
 PANEL_AVAILABLE_IN_ALL
 G_DECLARE_INTERFACE (PanelFrameHeader, panel_frame_header, PANEL, FRAME_HEADER, GtkWidget)
+
+PANEL_AVAILABLE_IN_ALL
+PanelFrame *panel_frame_header_get_frame (PanelFrameHeader *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_frame_header_set_frame (PanelFrameHeader *self,
+                                          PanelFrame       *frame);
 
 G_END_DECLS

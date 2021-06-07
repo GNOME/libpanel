@@ -20,10 +20,12 @@
 
 #pragma once
 
+#include <adwaita.h>
+
 #include "panel-frame.h"
 
 G_BEGIN_DECLS
 
-GtkStack *_panel_frame_get_stack (PanelFrame *self);
+AdwTabView *_panel_frame_get_tab_view (PanelFrame *self);
 
 G_END_DECLS

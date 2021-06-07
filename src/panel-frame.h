@@ -34,24 +34,26 @@ PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelFrame, panel_frame, PANEL, FRAME, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget        *panel_frame_new               (void);
+GtkWidget         *panel_frame_new               (void);
 PANEL_AVAILABLE_IN_ALL
-PanelFrameHeader *panel_frame_get_header        (PanelFrame       *self);
+PanelFrameHeader  *panel_frame_get_header        (PanelFrame       *self);
 PANEL_AVAILABLE_IN_ALL
-void              panel_frame_set_header        (PanelFrame       *self,
-                                                 PanelFrameHeader *header);
+void               panel_frame_set_header        (PanelFrame       *self,
+                                                  PanelFrameHeader *header);
 PANEL_AVAILABLE_IN_ALL
-gboolean          panel_frame_get_empty         (PanelFrame       *self);
+gboolean           panel_frame_get_empty         (PanelFrame       *self);
 PANEL_AVAILABLE_IN_ALL
-void              panel_frame_add               (PanelFrame       *self,
-                                                 PanelWidget      *panel);
+void               panel_frame_add               (PanelFrame       *self,
+                                                  PanelWidget      *panel);
 PANEL_AVAILABLE_IN_ALL
-void              panel_frame_remove            (PanelFrame       *self,
-                                                 PanelWidget      *panel);
+void               panel_frame_remove            (PanelFrame       *self,
+                                                  PanelWidget      *panel);
 PANEL_AVAILABLE_IN_ALL
-void              panel_frame_set_visible_child (PanelFrame       *self,
-                                                 PanelWidget      *widget);
+void               panel_frame_set_visible_child (PanelFrame       *self,
+                                                  PanelWidget      *widget);
 PANEL_AVAILABLE_IN_ALL
-PanelWidget      *panel_frame_get_visible_child (PanelFrame       *self);
+PanelWidget       *panel_frame_get_visible_child (PanelFrame       *self);
+PANEL_AVAILABLE_IN_ALL
+GtkSelectionModel *panel_frame_get_pages         (PanelFrame       *self);
 
 G_END_DECLS

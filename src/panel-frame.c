@@ -35,7 +35,7 @@ struct _PanelFrame
 
   PanelFrameHeader *header;
   GtkWidget        *box;
-  GtkWidget        *stack;
+  AdwTabView       *tab_view;
 };
 
 #define SIZE_AT_END 50
@@ -205,12 +205,12 @@ panel_frame_drop_cb (PanelFrame    *self,
 }
 
 static void
-panel_frame_notify_visible_child_cb (PanelFrame *self,
+panel_frame_notify_selected_page_cb (PanelFrame *self,
                                      GParamSpec *pspec,
-                                     GtkStack   *stack)
+                                     AdwTabView *tab_view)
 {
   g_assert (PANEL_IS_FRAME (self));
-  g_assert (GTK_IS_STACK (stack));
+  g_assert (ADW_IS_TAB_VIEW (tab_view));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
 }
@@ -311,7 +311,9 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame.ui");
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, stack);
+  gtk_widget_class_bind_template_child (widget_class, PanelFrame, tab_view);
+
+  g_type_ensure (ADW_TYPE_TAB_VIEW);
 }
 
 static void
@@ -352,9 +354,9 @@ panel_frame_init (PanelFrame *self)
                            G_CONNECT_SWAPPED);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 
-  g_signal_connect_object (self->stack,
-                           "notify::visible-child",
-                           G_CALLBACK (panel_frame_notify_visible_child_cb),
+  g_signal_connect_object (self->tab_view,
+                           "notify::selected-page",
+                           G_CALLBACK (panel_frame_notify_selected_page_cb),
                            self,
                            G_CONNECT_SWAPPED);
 
@@ -365,17 +367,17 @@ void
 panel_frame_add (PanelFrame  *self,
                  PanelWidget *panel)
 {
-  GtkStackPage *page;
+  AdwTabPage *page;
   gboolean empty;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
 
   empty = panel_frame_get_empty (self);
-  page = gtk_stack_add_child (GTK_STACK (self->stack), GTK_WIDGET (panel));
+  page = adw_tab_view_add_page (self->tab_view, GTK_WIDGET (panel), NULL);
 
   g_object_bind_property (panel, "title", page, "title", G_BINDING_SYNC_CREATE);
-  g_object_bind_property (panel, "icon-name", page, "icon-name", G_BINDING_SYNC_CREATE);
+  g_object_bind_property (panel, "icon", page, "icon", G_BINDING_SYNC_CREATE);
 
   g_assert (!panel_frame_get_empty (self));
 
@@ -387,19 +389,14 @@ void
 panel_frame_remove (PanelFrame  *self,
                     PanelWidget *panel)
 {
-  GtkWidget *new_child;
   GtkWidget *dock_child;
+  AdwTabPage *page;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
 
-  if (!(new_child = gtk_widget_get_prev_sibling (GTK_WIDGET (panel))))
-    new_child = gtk_widget_get_next_sibling (GTK_WIDGET (panel));
-
-  gtk_stack_remove (GTK_STACK (self->stack), GTK_WIDGET (panel));
-
-  if (new_child)
-    gtk_stack_set_visible_child (GTK_STACK (self->stack), new_child);
+  page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (panel));
+  adw_tab_view_close_page (self->tab_view, page);
 
   if (panel_frame_get_empty (self))
     {
@@ -418,33 +415,40 @@ panel_frame_get_empty (PanelFrame *self)
 {
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
-  return gtk_widget_get_first_child (GTK_WIDGET (self->stack)) == NULL;
+  return adw_tab_view_get_n_pages (self->tab_view) == 0;
 }
 
 PanelWidget *
 panel_frame_get_visible_child (PanelFrame *self)
 {
+  AdwTabPage *page;
+
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
-  return PANEL_WIDGET (gtk_stack_get_visible_child (GTK_STACK (self->stack)));
+  page = adw_tab_view_get_selected_page (self->tab_view);
+
+  return page ? PANEL_WIDGET (adw_tab_page_get_child (page)) : NULL;
 }
 
 void
 panel_frame_set_visible_child (PanelFrame  *self,
                                PanelWidget *widget)
 {
+  AdwTabPage *page;
+
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (widget));
 
-  gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (widget));
+  if ((page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (widget))))
+    adw_tab_view_set_selected_page (self->tab_view, page);
 }
 
-GtkStack *
-_panel_frame_get_stack (PanelFrame *self)
+AdwTabView *
+_panel_frame_get_tab_view (PanelFrame *self)
 {
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
-  return GTK_STACK (self->stack);
+  return self->tab_view;
 }
 
 /**
@@ -483,7 +487,7 @@ panel_frame_set_header (PanelFrame       *self,
 
   if (self->header != NULL)
     {
-      _panel_frame_header_disconnect (self->header);
+      panel_frame_header_set_frame (self->header, NULL);
       g_clear_pointer ((GtkWidget **)&self->header, gtk_widget_unparent);
     }
 
@@ -495,6 +499,14 @@ panel_frame_set_header (PanelFrame       *self,
         gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header),
                                         !gtk_orientable_get_orientation (GTK_ORIENTABLE (self->box)));
       gtk_box_prepend (GTK_BOX (self->box), GTK_WIDGET (self->header));
-      _panel_frame_header_connect (self->header, self);
+      panel_frame_header_set_frame (self->header, self);
     }
+}
+
+GtkSelectionModel *
+panel_frame_get_pages (PanelFrame *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+
+  return adw_tab_view_get_pages (self->tab_view);
 }

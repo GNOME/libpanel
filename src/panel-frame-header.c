@@ -27,22 +27,45 @@ G_DEFINE_INTERFACE (PanelFrameHeader, panel_frame_header, GTK_TYPE_WIDGET)
 static void
 panel_frame_header_default_init (PanelFrameHeaderInterface *iface)
 {
+  g_object_interface_install_property (iface,
+                                       g_param_spec_object ("frame",
+                                                            "Frame",
+                                                            "Frame",
+                                                            PANEL_TYPE_FRAME,
+                                                            (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
 }
 
 void
-_panel_frame_header_connect (PanelFrameHeader *self,
-                             PanelFrame       *frame)
+panel_frame_header_set_frame (PanelFrameHeader *self,
+                              PanelFrame       *frame)
 {
   g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
-  g_return_if_fail (PANEL_IS_FRAME (frame));
+  g_return_if_fail (!frame || PANEL_IS_FRAME (frame));
 
-  PANEL_FRAME_HEADER_GET_IFACE (self)->connect (self, frame);
+  g_object_set (self, "frame", frame, NULL);
 }
 
-void
-_panel_frame_header_disconnect (PanelFrameHeader *self)
+/**
+ * panel_frame_header_get_frame:
+ * @self: a #PanelFrameHeader
+ *
+ * Gets the frame the header is attached to.
+ *
+ * Returns: (transfer none) (nullable): a #PanelFrame or %NULL
+ */
+PanelFrame *
+panel_frame_header_get_frame (PanelFrameHeader *self)
 {
-  g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
+  PanelFrame *frame = NULL;
 
-  PANEL_FRAME_HEADER_GET_IFACE (self)->disconnect (self);
+  g_return_val_if_fail (PANEL_IS_FRAME_HEADER (self), NULL);
+
+  g_object_get (self, "frame", &frame, NULL);
+
+  /* We return a borrowed reference */
+  g_return_val_if_fail (!frame || PANEL_IS_FRAME (frame), NULL);
+  g_return_val_if_fail (!frame || G_OBJECT (frame)->ref_count > 1, NULL);
+  g_object_unref (frame);
+
+  return frame;
 }

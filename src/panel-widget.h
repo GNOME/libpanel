@@ -49,6 +49,11 @@ PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_title        (PanelWidget *self,
                                            const char  *title);
 PANEL_AVAILABLE_IN_ALL
+GIcon      *panel_widget_get_icon         (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_set_icon         (PanelWidget *self,
+                                           GIcon       *icon);
+PANEL_AVAILABLE_IN_ALL
 const char *panel_widget_get_icon_name    (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_icon_name    (PanelWidget *self,

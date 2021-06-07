@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include <adwaita.h>
+
 #include "panel-dock.h"
 #include "panel-dock-switcher.h"
 #include "panel-frame.h"
@@ -39,6 +41,8 @@ panel_init (void)
 {
   if (css_provider)
     return;
+
+  adw_init ();
 
   g_resources_register (panel_get_resource ());
 

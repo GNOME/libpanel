@@ -30,6 +30,7 @@ typedef struct
   GtkWidget *child;
   char      *title;
   char      *icon_name;
+  GIcon     *icon;
 
   GtkWidget *maximize_frame;
   GtkWidget *maximize_dock_child;
@@ -45,6 +46,7 @@ enum {
   PROP_0,
   PROP_CAN_MAXIMIZE,
   PROP_CHILD,
+  PROP_ICON,
   PROP_ICON_NAME,
   PROP_REORDERABLE,
   PROP_TITLE,
@@ -83,6 +85,7 @@ panel_widget_dispose (GObject *object)
   g_clear_pointer (&priv->icon_name, g_free);
   g_clear_pointer (&priv->title, g_free);
   g_clear_pointer (&priv->child, gtk_widget_unparent);
+  g_clear_object (&priv->icon);
 
   G_OBJECT_CLASS (panel_widget_parent_class)->dispose (object);
 }
@@ -99,6 +102,10 @@ panel_widget_get_property (GObject    *object,
     {
     case PROP_CAN_MAXIMIZE:
       g_value_set_boolean (value, panel_widget_get_can_maximize (self));
+      break;
+
+    case PROP_ICON:
+      g_value_set_object (value, panel_widget_get_icon (self));
       break;
 
     case PROP_ICON_NAME:
@@ -134,6 +141,10 @@ panel_widget_set_property (GObject      *object,
     {
     case PROP_CAN_MAXIMIZE:
       panel_widget_set_can_maximize (self, g_value_get_boolean (value));
+      break;
+
+    case PROP_ICON:
+      panel_widget_set_icon (self, g_value_get_object (value));
       break;
 
     case PROP_ICON_NAME:
@@ -173,6 +184,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           "Can Maximize",
                           FALSE,
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_ICON] =
+    g_param_spec_object ("icon",
+                         "Icon",
+                         "A GIcon for the panel",
+                         G_TYPE_ICON,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY |G_PARAM_STATIC_STRINGS));
 
   properties [PROP_ICON_NAME] =
     g_param_spec_string ("icon-name",
@@ -228,6 +246,14 @@ panel_widget_get_icon_name (PanelWidget *self)
 
   g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
 
+  if (priv->icon_name == NULL && G_IS_THEMED_ICON (priv->icon))
+    {
+      const char * const *names = g_themed_icon_get_names (G_THEMED_ICON (priv->icon));
+
+      if (names != NULL && names[0] != NULL)
+        return names[0];
+    }
+
   return priv->icon_name;
 }
 
@@ -241,9 +267,53 @@ panel_widget_set_icon_name (PanelWidget *self,
 
   if (g_strcmp0 (priv->icon_name, icon_name) != 0)
     {
+      g_clear_object (&priv->icon);
       g_free (priv->icon_name);
       priv->icon_name = g_strdup (icon_name);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
+    }
+}
+
+/**
+ * panel_widget_get_icon:
+ * @self: a #PanelWidget
+ *
+ * Gets a #GIcon for the widget.
+ *
+ * Returns: (transfer none) (nullable): a #GIcon or NULL
+ */
+GIcon *
+panel_widget_get_icon (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  if (priv->icon == NULL && priv->icon_name != NULL)
+    priv->icon = g_themed_icon_new (priv->icon_name);
+
+  return priv->icon;
+}
+
+void
+panel_widget_set_icon (PanelWidget *self,
+                       GIcon       *icon)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+  g_return_if_fail (!icon || G_IS_ICON (icon));
+
+  if (g_set_object (&priv->icon, icon))
+    {
+      if (priv->icon_name != NULL)
+        {
+          g_clear_pointer (&priv->icon_name, g_free);
+          g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
+        }
+
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
     }
 }
 
