@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "panel-frame.h"
+#include "panel-frame-tab-bar.h"
 #include "panel-grid-column.h"
 #include "panel-grid-private.h"
 #include "panel-paned-private.h"
@@ -60,9 +61,16 @@ panel_grid_new (void)
 static PanelFrame *
 panel_grid_real_create_frame (PanelGrid *self)
 {
+  PanelFrame *frame;
+  PanelFrameHeader *header;
+
   g_assert (PANEL_IS_GRID (self));
 
-  return PANEL_FRAME (panel_frame_new ());
+  frame = PANEL_FRAME (panel_frame_new ());
+  header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
+  panel_frame_set_header (frame, header);
+
+  return frame;
 }
 
 PanelFrame *

@@ -1,4 +1,4 @@
-/* libpanel.h
+/* panel-frame-tab-bar.h
  *
  * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
@@ -20,15 +20,18 @@
 
 #pragma once
 
-#define LIBPANEL_INSIDE
-# include "panel-dock.h"
-# include "panel-dock-switcher.h"
-# include "panel-frame.h"
-# include "panel-frame-header.h"
-# include "panel-frame-switcher.h"
-# include "panel-frame-tab-bar.h"
-# include "panel-grid.h"
-# include "panel-grid-column.h"
-# include "panel-init.h"
-# include "panel-widget.h"
-#undef LIBPANEL_INSIDE
+#include <gtk/gtk.h>
+
+#include "panel-version-macros.h"
+
+G_BEGIN_DECLS
+
+#define PANEL_TYPE_FRAME_TAB_BAR (panel_frame_tab_bar_get_type())
+
+PANEL_AVAILABLE_IN_ALL
+G_DECLARE_FINAL_TYPE (PanelFrameTabBar, panel_frame_tab_bar, PANEL, FRAME_TAB_BAR, GtkWidget)
+
+PANEL_AVAILABLE_IN_ALL
+GtkWidget *panel_frame_tab_bar_new (void);
+
+G_END_DECLS
