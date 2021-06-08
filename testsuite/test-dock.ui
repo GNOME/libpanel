@@ -7,6 +7,12 @@
             <property name="dock">dock</property>
           </object>
         </child>
+        <child>
+          <object class="GtkButton">
+            <signal name="clicked" handler="add_clicked_cb" object="grid"/>
+            <property name="icon-name">list-add-symbolic</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
@@ -68,27 +74,8 @@
           </object>
         </child>
         <child>
-          <object class="PanelGrid">
-            <child>
-              <object class="PanelWidget">
-                <property name="kind">document</property>
-                <property name="title">Page 1.txt</property>
-                <property name="icon-name">x-office-document-symbolic</property>
-                <child>
-                  <object class="GtkScrolledWindow">
-                    <child>
-                      <object class="GtkTextView">
-                        <property name="buffer">
-                          <object class="GtkTextBuffer">
-                            <property name="text">Page 1</property>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
+          <object class="PanelGrid" id="grid">
+            <signal name="create-frame" handler="create_frame_cb"/>
           </object>
         </child>
       </object>
