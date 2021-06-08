@@ -32,6 +32,31 @@ PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelFrameTabBar, panel_frame_tab_bar, PANEL, FRAME_TAB_BAR, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_frame_tab_bar_new (void);
+GtkWidget *panel_frame_tab_bar_new             (void);
+PANEL_AVAILABLE_IN_ALL
+gboolean   panel_frame_tab_bar_get_autohide    (PanelFrameTabBar *self);
+PANEL_AVAILABLE_IN_ALL
+void       panel_frame_tab_bar_set_autohide    (PanelFrameTabBar *self,
+                                                gboolean          autohide);
+PANEL_AVAILABLE_IN_ALL
+gboolean   panel_frame_tab_bar_get_inverted    (PanelFrameTabBar *self);
+PANEL_AVAILABLE_IN_ALL
+void       panel_frame_tab_bar_set_inverted    (PanelFrameTabBar *self,
+                                                gboolean          inverted);
+PANEL_AVAILABLE_IN_ALL
+gboolean   panel_frame_tab_bar_get_expand_tabs (PanelFrameTabBar *self);
+PANEL_AVAILABLE_IN_ALL
+void       panel_frame_tab_bar_set_expand_tabs (PanelFrameTabBar *self,
+                                                gboolean          expand_tabs);
+PANEL_AVAILABLE_IN_ALL
+GtkWidget *panel_frame_tab_bar_get_start_child (PanelFrameTabBar *self);
+PANEL_AVAILABLE_IN_ALL
+void       panel_frame_tab_bar_set_start_child (PanelFrameTabBar *self,
+                                                GtkWidget        *widget);
+PANEL_AVAILABLE_IN_ALL
+GtkWidget *panel_frame_tab_bar_get_end_child   (PanelFrameTabBar *self);
+PANEL_AVAILABLE_IN_ALL
+void       panel_frame_tab_bar_set_end_child   (PanelFrameTabBar *self,
+                                                GtkWidget        *widget);
 
 G_END_DECLS
