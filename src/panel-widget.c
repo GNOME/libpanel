@@ -39,6 +39,7 @@ typedef struct
   guint      reorderable : 1;
   guint      can_maximize : 1;
   guint      maximized : 1;
+  guint      needs_attention : 1;
 } PanelWidgetPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (PanelWidget, panel_widget, GTK_TYPE_WIDGET)
@@ -49,6 +50,7 @@ enum {
   PROP_CHILD,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_NEEDS_ATTENTION,
   PROP_KIND,
   PROP_REORDERABLE,
   PROP_TITLE,
@@ -130,6 +132,10 @@ panel_widget_get_property (GObject    *object,
       g_value_set_boolean (value, panel_widget_get_reorderable (self));
       break;
 
+    case PROP_NEEDS_ATTENTION:
+      g_value_set_boolean (value, panel_widget_get_needs_attention (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -171,6 +177,10 @@ panel_widget_set_property (GObject      *object,
 
     case PROP_REORDERABLE:
       panel_widget_set_reorderable (self, g_value_get_boolean (value));
+      break;
+
+    case PROP_NEEDS_ATTENTION:
+      panel_widget_set_needs_attention (self, g_value_get_boolean (value));
       break;
 
     default:
@@ -235,6 +245,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           "Reorderable",
                           "If the panel may be reordered",
                           TRUE,
+                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_NEEDS_ATTENTION] =
+    g_param_spec_boolean ("needs-attention",
+                          "Needs Attention",
+                          "Needs Attention",
+                          FALSE,
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -551,5 +568,32 @@ panel_widget_set_kind (PanelWidget *self,
     {
       priv->kind = qkind;
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_KIND]);
+    }
+}
+
+gboolean
+panel_widget_get_needs_attention (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
+
+  return priv->needs_attention;
+}
+
+void
+panel_widget_set_needs_attention (PanelWidget *self,
+                                  gboolean     needs_attention)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  needs_attention = !!needs_attention;
+
+  if (priv->needs_attention != needs_attention)
+    {
+      priv->needs_attention = needs_attention;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_NEEDS_ATTENTION]);
     }
 }
