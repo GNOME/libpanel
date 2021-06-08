@@ -87,5 +87,11 @@ const char *panel_widget_get_kind            (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_kind            (PanelWidget *self,
                                               const char  *kind);
+PANEL_AVAILABLE_IN_ALL
+gboolean    panel_widget_get_busy            (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_mark_busy           (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_unmark_busy         (PanelWidget *self);
 
 G_END_DECLS

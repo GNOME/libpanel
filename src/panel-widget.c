@@ -36,6 +36,8 @@ typedef struct
   GtkWidget *maximize_frame;
   GtkWidget *maximize_dock_child;
 
+  guint      busy_count;
+
   guint      reorderable : 1;
   guint      can_maximize : 1;
   guint      maximized : 1;
@@ -46,6 +48,7 @@ G_DEFINE_TYPE_WITH_PRIVATE (PanelWidget, panel_widget, GTK_TYPE_WIDGET)
 
 enum {
   PROP_0,
+  PROP_BUSY,
   PROP_CAN_MAXIMIZE,
   PROP_CHILD,
   PROP_ICON,
@@ -104,6 +107,10 @@ panel_widget_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_BUSY:
+      g_value_set_boolean (value, panel_widget_get_busy (self));
+      break;
+
     case PROP_CAN_MAXIMIZE:
       g_value_set_boolean (value, panel_widget_get_can_maximize (self));
       break;
@@ -197,6 +204,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
   object_class->dispose = panel_widget_dispose;
   object_class->get_property = panel_widget_get_property;
   object_class->set_property = panel_widget_set_property;
+
+  properties [PROP_BUSY] =
+    g_param_spec_boolean ("busy",
+                          "Busy",
+                          "If the widget is busy, such as loading or saving a file",
+                          FALSE,
+                          (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_CAN_MAXIMIZE] =
     g_param_spec_boolean ("can-maximize",
@@ -596,4 +610,40 @@ panel_widget_set_needs_attention (PanelWidget *self,
       priv->needs_attention = needs_attention;
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_NEEDS_ATTENTION]);
     }
+}
+
+gboolean
+panel_widget_get_busy (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
+
+  return priv->busy_count > 0;
+}
+
+void
+panel_widget_mark_busy (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  priv->busy_count++;
+
+  if (priv->busy_count == 1)
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BUSY]);
+}
+
+void
+panel_widget_unmark_busy (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  priv->busy_count--;
+
+  if (priv->busy_count == 0)
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BUSY]);
 }

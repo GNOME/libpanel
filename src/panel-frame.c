@@ -382,6 +382,7 @@ panel_frame_add (PanelFrame  *self,
   g_object_bind_property (panel, "title", page, "title", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "icon", page, "icon", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "needs-attention", page, "needs-attention", G_BINDING_SYNC_CREATE);
+  g_object_bind_property (panel, "busy", page, "loading", G_BINDING_SYNC_CREATE);
 
   g_assert (!panel_frame_get_empty (self));
 
