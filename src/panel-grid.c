@@ -168,6 +168,19 @@ panel_grid_get_most_recent_frame (PanelGrid *self)
   return panel_grid_column_get_most_recent_frame (column);
 }
 
+void
+panel_grid_add (PanelGrid   *self,
+                PanelWidget *widget)
+{
+  PanelFrame *frame;
+
+  g_return_if_fail (PANEL_IS_GRID (self));
+  g_return_if_fail (PANEL_IS_WIDGET (widget));
+
+  frame = panel_grid_get_most_recent_frame (self);
+  panel_frame_add (frame, widget);
+}
+
 static void
 panel_grid_add_child (GtkBuildable *buildable,
                       GtkBuilder   *builder,
@@ -193,8 +206,7 @@ panel_grid_add_child (GtkBuildable *buildable,
     }
   else if (PANEL_IS_WIDGET (child))
     {
-      PanelFrame *frame = panel_grid_get_most_recent_frame (self);
-      panel_frame_add (frame, PANEL_WIDGET (child));
+      panel_grid_add (self, PANEL_WIDGET (child));
     }
   else
     g_warning ("%s cannot add children of type %s",

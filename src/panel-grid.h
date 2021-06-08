@@ -35,8 +35,11 @@ G_DECLARE_FINAL_TYPE (PanelGrid, panel_grid, PANEL, GRID, GtkWidget)
 PANEL_AVAILABLE_IN_ALL
 GtkWidget       *panel_grid_new                    (void);
 PANEL_AVAILABLE_IN_ALL
-PanelGridColumn *panel_grid_get_most_recent_column (PanelGrid *self);
+PanelGridColumn *panel_grid_get_most_recent_column (PanelGrid   *self);
 PANEL_AVAILABLE_IN_ALL
-PanelFrame      *panel_grid_get_most_recent_frame  (PanelGrid *self);
+PanelFrame      *panel_grid_get_most_recent_frame  (PanelGrid   *self);
+PANEL_AVAILABLE_IN_ALL
+void             panel_grid_add                    (PanelGrid   *self,
+                                                    PanelWidget *widget);
 
 G_END_DECLS
