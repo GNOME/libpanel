@@ -20,7 +20,8 @@
 #include "config.h"
 
 #include "panel-dock-private.h"
-#include "panel-frame-header-private.h"
+#include "panel-frame-private.h"
+#include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
 #include "panel-scaler-private.h"
 #include "panel-widget.h"
@@ -49,9 +50,10 @@ struct _PanelFrameSwitcherClass
   GtkWidgetClass parent_class;
 };
 
-static PanelFrame *panel_frame_switcher_get_frame (PanelFrameSwitcher *self);
-static void        panel_frame_switcher_set_frame (PanelFrameSwitcher *self,
-                                                   PanelFrame         *frame);
+static void        frame_header_iface_init        (PanelFrameHeaderInterface *iface);
+static PanelFrame *panel_frame_switcher_get_frame (PanelFrameSwitcher        *self);
+static void        panel_frame_switcher_set_frame (PanelFrameSwitcher        *self,
+                                                   PanelFrame                *frame);
 
 enum {
   PROP_0,
@@ -63,7 +65,7 @@ enum {
 
 G_DEFINE_TYPE_WITH_CODE (PanelFrameSwitcher, panel_frame_switcher, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL)
-                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, NULL))
+                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, frame_header_iface_init))
 
 static void
 panel_frame_switcher_init (PanelFrameSwitcher *switcher)
@@ -713,4 +715,26 @@ GtkWidget *
 panel_frame_switcher_new (void)
 {
   return g_object_new (PANEL_TYPE_FRAME_SWITCHER, NULL);
+}
+
+static gboolean
+panel_frame_switcher_can_drop (PanelFrameHeader *header,
+                               PanelWidget      *widget)
+{
+  const char *kind;
+
+  g_assert (PANEL_IS_FRAME_SWITCHER (header));
+  g_assert (PANEL_IS_WIDGET (widget));
+
+  kind = panel_widget_get_kind (widget);
+
+  /* Don't alloc documents here */
+
+  return g_strcmp0 (kind, PANEL_WIDGET_KIND_DOCUMENT) != 0;
+}
+
+static void
+frame_header_iface_init (PanelFrameHeaderInterface *iface)
+{
+  iface->can_drop = panel_frame_switcher_can_drop;
 }

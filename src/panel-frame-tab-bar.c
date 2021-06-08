@@ -33,8 +33,10 @@ struct _PanelFrameTabBar
   AdwTabBar  *tab_bar;
 };
 
+static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
+
 G_DEFINE_TYPE_WITH_CODE (PanelFrameTabBar, panel_frame_tab_bar, GTK_TYPE_WIDGET,
-                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, NULL))
+                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, frame_header_iface_init))
 
 enum {
   PROP_0,
@@ -143,4 +145,24 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
   self->tab_bar = ADW_TAB_BAR (adw_tab_bar_new ());
   adw_tab_bar_set_autohide (self->tab_bar, FALSE);
   gtk_widget_set_parent (GTK_WIDGET (self->tab_bar), GTK_WIDGET (self));
+}
+
+static gboolean
+panel_frame_tab_bar_can_drop (PanelFrameHeader *header,
+                              PanelWidget      *widget)
+{
+  const char *kind;
+
+  g_assert (PANEL_IS_FRAME_TAB_BAR (header));
+  g_assert (PANEL_IS_WIDGET (widget));
+
+  kind = panel_widget_get_kind (widget);
+
+  return g_strcmp0 (kind, PANEL_WIDGET_KIND_DOCUMENT) == 0;
+}
+
+static void
+frame_header_iface_init (PanelFrameHeaderInterface *iface)
+{
+  iface->can_drop = panel_frame_tab_bar_can_drop;
 }

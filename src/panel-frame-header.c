@@ -20,7 +20,8 @@
 
 #include "config.h"
 
-#include "panel-frame-header-private.h"
+#include "panel-frame.h"
+#include "panel-frame-header.h"
 
 G_DEFINE_INTERFACE (PanelFrameHeader, panel_frame_header, GTK_TYPE_WIDGET)
 
@@ -68,4 +69,17 @@ panel_frame_header_get_frame (PanelFrameHeader *self)
   g_object_unref (frame);
 
   return frame;
+}
+
+gboolean
+panel_frame_header_can_drop (PanelFrameHeader *self,
+                             PanelWidget      *widget)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME_HEADER (self), FALSE);
+  g_return_val_if_fail (PANEL_IS_WIDGET (widget), FALSE);
+
+  if (PANEL_FRAME_HEADER_GET_IFACE (self)->can_drop)
+    return PANEL_FRAME_HEADER_GET_IFACE (self)->can_drop (self, widget);
+
+  return FALSE;
 }

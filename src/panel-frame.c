@@ -23,7 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
-#include "panel-frame-header-private.h"
+#include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
 #include "panel-paned-private.h"
 #include "panel-scaler-private.h"
@@ -76,7 +76,8 @@ panel_frame_notify_value_cb (PanelFrame    *self,
       !(panel = g_value_get_object (value)))
     return;
 
-  if (!panel_widget_get_reorderable (panel))
+  if (!panel_widget_get_reorderable (panel) ||
+      (self->header && !panel_frame_header_can_drop (self->header, panel)))
     gtk_drop_target_reject (drop_target);
 }
 
@@ -159,7 +160,9 @@ panel_frame_drop_cb (PanelFrame    *self,
 
   if (!G_VALUE_HOLDS (value, PANEL_TYPE_WIDGET) ||
       !(panel = g_value_get_object (value)) ||
-      !(frame = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_FRAME)))
+      !(frame = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_FRAME)) ||
+      !panel_widget_get_reorderable (panel) ||
+      (self->header && !panel_frame_header_can_drop (self->header, panel)))
     return FALSE;
 
   orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
