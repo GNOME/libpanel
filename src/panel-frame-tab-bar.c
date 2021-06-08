@@ -84,13 +84,13 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
 static void
 panel_frame_tab_bar_notify_cb (PanelFrameTabBar *self,
                                GParamSpec       *pspec,
-                               AdwTabView       *tab_view)
+                               AdwTabBar        *tab_bar)
 {
   GParamSpec *relative;
 
   g_assert (PANEL_IS_FRAME_TAB_BAR (self));
   g_assert (pspec != NULL);
-  g_assert (ADW_IS_TAB_VIEW (tab_view));
+  g_assert (ADW_IS_TAB_BAR (tab_bar));
 
   if ((relative = g_object_class_find_property (G_OBJECT_GET_CLASS (self), pspec->name)))
     {
