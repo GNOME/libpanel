@@ -21,6 +21,9 @@ paneldockswitcher box.linked revealer:not(:first-child):not(:last-child) button 
 panelwidget {
   background-color: @theme_bg_color;
 }
+panelgrid panelwidget {
+  background-color: transparent;
+}
 panelwidget.maximized {
   margin: 24px;
   border-radius: 5px;
