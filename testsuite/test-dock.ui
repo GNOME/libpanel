@@ -71,6 +71,7 @@
           <object class="PanelGrid">
             <child>
               <object class="PanelWidget">
+                <property name="kind">document</property>
                 <property name="title">Page 1.txt</property>
                 <property name="icon-name">x-office-document-symbolic</property>
                 <child>

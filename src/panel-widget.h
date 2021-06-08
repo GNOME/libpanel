@@ -36,6 +36,11 @@ struct _PanelWidgetClass
   GtkWidgetClass parent_instance;
 };
 
+#define PANEL_WIDGET_KIND_ANY      "*"
+#define PANEL_WIDGET_KIND_UNKNOWN  "unknown"
+#define PANEL_WIDGET_KIND_DOCUMENT "document"
+#define PANEL_WIDGET_KIND_UTILITY  "utility"
+
 PANEL_AVAILABLE_IN_ALL
 GtkWidget  *panel_widget_new              (void);
 PANEL_AVAILABLE_IN_ALL
@@ -72,5 +77,10 @@ PANEL_AVAILABLE_IN_ALL
 void        panel_widget_maximize         (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_unmaximize       (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+const char *panel_widget_get_kind         (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_set_kind         (PanelWidget *self,
+                                           const char  *kind);
 
 G_END_DECLS

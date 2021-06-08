@@ -27,10 +27,11 @@
 
 typedef struct
 {
-  GtkWidget *child;
-  char      *title;
-  char      *icon_name;
-  GIcon     *icon;
+  GtkWidget  *child;
+  GQuark      kind;
+  char       *title;
+  char       *icon_name;
+  GIcon      *icon;
 
   GtkWidget *maximize_frame;
   GtkWidget *maximize_dock_child;
@@ -48,6 +49,7 @@ enum {
   PROP_CHILD,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_KIND,
   PROP_REORDERABLE,
   PROP_TITLE,
   N_PROPS
@@ -104,6 +106,10 @@ panel_widget_get_property (GObject    *object,
       g_value_set_boolean (value, panel_widget_get_can_maximize (self));
       break;
 
+    case PROP_KIND:
+      g_value_set_string (value, panel_widget_get_kind (self));
+      break;
+
     case PROP_ICON:
       g_value_set_object (value, panel_widget_get_icon (self));
       break;
@@ -141,6 +147,10 @@ panel_widget_set_property (GObject      *object,
     {
     case PROP_CAN_MAXIMIZE:
       panel_widget_set_can_maximize (self, g_value_get_boolean (value));
+      break;
+
+    case PROP_KIND:
+      panel_widget_set_kind (self, g_value_get_string (value));
       break;
 
     case PROP_ICON:
@@ -199,6 +209,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          NULL,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  properties [PROP_KIND] =
+    g_param_spec_string ("kind",
+                         "Kind",
+                         "The kind of panel widget",
+                         "unknown",
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
   properties [PROP_TITLE] =
     g_param_spec_string ("title",
                          "Title",
@@ -227,6 +244,12 @@ panel_widget_class_init (PanelWidgetClass *klass)
 
   gtk_widget_class_install_action (widget_class, "panel.unmaximize", NULL, panel_widget_unmaximize_action);
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_Escape, 0, "panel.unmaximize", NULL);
+
+  /* Ensure we have quarks for known types */
+  g_quark_from_static_string (PANEL_WIDGET_KIND_ANY);
+  g_quark_from_static_string (PANEL_WIDGET_KIND_UNKNOWN);
+  g_quark_from_static_string (PANEL_WIDGET_KIND_DOCUMENT);
+  g_quark_from_static_string (PANEL_WIDGET_KIND_UTILITY);
 }
 
 static void
@@ -236,6 +259,7 @@ panel_widget_init (PanelWidget *self)
 
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "panel.unmaximize", FALSE);
 
+  priv->kind = g_quark_from_static_string (PANEL_WIDGET_KIND_UNKNOWN);
   priv->reorderable = TRUE;
 }
 
@@ -498,4 +522,34 @@ panel_widget_unmaximize (PanelWidget *self)
   g_clear_weak_pointer (&priv->maximize_dock_child);
 
   g_object_unref (self);
+}
+
+const char *
+panel_widget_get_kind (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  return g_quark_to_string (priv->kind);
+}
+
+void
+panel_widget_set_kind (PanelWidget *self,
+                       const char  *kind)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+  GQuark qkind;
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if (kind == NULL)
+    kind = PANEL_WIDGET_KIND_UNKNOWN;
+  qkind = g_quark_from_static_string (kind);
+
+  if (qkind != priv->kind)
+    {
+      priv->kind = qkind;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_KIND]);
+    }
 }
