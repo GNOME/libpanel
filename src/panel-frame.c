@@ -25,6 +25,7 @@
 #include "panel-frame-private.h"
 #include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
+#include "panel-grid-private.h"
 #include "panel-paned-private.h"
 #include "panel-scaler-private.h"
 #include "panel-widget.h"
@@ -208,6 +209,22 @@ panel_frame_drop_cb (PanelFrame    *self,
 }
 
 static void
+panel_frame_update_actions (PanelFrame *self)
+{
+  GtkWidget *grid;
+  PanelWidget *visible_child;
+
+  g_assert (PANEL_IS_FRAME (self));
+
+  grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID);
+  visible_child = panel_frame_get_visible_child (self);
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-right", grid  && visible_child);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-left", grid && visible_child);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "frame.close", grid != NULL);
+}
+
+static void
 panel_frame_notify_selected_page_cb (PanelFrame *self,
                                      GParamSpec *pspec,
                                      AdwTabView *tab_view)
@@ -215,7 +232,77 @@ panel_frame_notify_selected_page_cb (PanelFrame *self,
   g_assert (PANEL_IS_FRAME (self));
   g_assert (ADW_IS_TAB_VIEW (tab_view));
 
+  panel_frame_update_actions (self);
+
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
+}
+
+static void
+page_move_right_action (GtkWidget  *widget,
+                        const char *action_name,
+                        GVariant   *param)
+{
+  PanelWidget *visible_child;
+  GtkWidget *grid;
+  guint column;
+  guint row;
+
+  g_assert (PANEL_IS_FRAME (widget));
+
+  if (!(visible_child = panel_frame_get_visible_child (PANEL_FRAME (widget))))
+    g_return_if_reached ();
+
+  if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)) &&
+      _panel_grid_get_position (PANEL_GRID (grid), widget, &column, &row))
+    _panel_grid_reposition (PANEL_GRID (grid), GTK_WIDGET (visible_child), column + 1, row);
+}
+
+static void
+page_move_left_action (GtkWidget  *widget,
+                       const char *action_name,
+                       GVariant   *param)
+{
+  PanelWidget *visible_child;
+  GtkWidget *grid;
+  guint column;
+  guint row;
+
+  g_assert (PANEL_IS_FRAME (widget));
+
+  if (!(visible_child = panel_frame_get_visible_child (PANEL_FRAME (widget))))
+    g_return_if_reached ();
+
+  if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)) &&
+      _panel_grid_get_position (PANEL_GRID (grid), widget, &column, &row))
+    {
+      if (column == 0)
+        {
+          _panel_grid_prepend_column (PANEL_GRID (grid));
+          column = 1;
+        }
+
+      _panel_grid_reposition (PANEL_GRID (grid), GTK_WIDGET (visible_child), column - 1, row);
+    }
+}
+
+static void
+panel_frame_root (GtkWidget *widget)
+{
+  g_assert (PANEL_IS_FRAME (widget));
+
+  GTK_WIDGET_CLASS (panel_frame_parent_class)->root (widget);
+
+  panel_frame_update_actions (PANEL_FRAME (widget));
+}
+
+static void
+panel_frame_unroot (GtkWidget *widget)
+{
+  g_assert (PANEL_IS_FRAME (widget));
+
+  GTK_WIDGET_CLASS (panel_frame_parent_class)->unroot (widget);
+
+  panel_frame_update_actions (PANEL_FRAME (widget));
 }
 
 static void
@@ -292,6 +379,9 @@ panel_frame_class_init (PanelFrameClass *klass)
   object_class->get_property = panel_frame_get_property;
   object_class->set_property = panel_frame_set_property;
 
+  widget_class->root = panel_frame_root;
+  widget_class->unroot = panel_frame_unroot;
+
   properties [PROP_EMPTY] =
     g_param_spec_boolean ("empty",
                           "Empty",
@@ -315,6 +405,12 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame.ui");
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, tab_view);
+
+  gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
+  gtk_widget_class_install_action (widget_class, "page.move-left", NULL, page_move_left_action);
+
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceright, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-right", NULL);
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceleft, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-left", NULL);
 
   g_type_ensure (ADW_TYPE_TAB_VIEW);
 }
@@ -364,6 +460,8 @@ panel_frame_init (PanelFrame *self)
                            G_CONNECT_SWAPPED);
 
   panel_frame_set_header (self, PANEL_FRAME_HEADER (panel_frame_switcher_new ()));
+
+  panel_frame_update_actions (self);
 }
 
 void
@@ -514,4 +612,33 @@ panel_frame_get_pages (PanelFrame *self)
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
   return adw_tab_view_get_pages (self->tab_view);
+}
+
+void
+_panel_frame_transfer (PanelFrame  *self,
+                       PanelWidget *widget,
+                       PanelFrame  *new_frame,
+                       int          position)
+{
+  AdwTabPage *page;
+
+  g_return_if_fail (PANEL_IS_FRAME (self));
+  g_return_if_fail (PANEL_IS_WIDGET (widget));
+  g_return_if_fail (PANEL_IS_FRAME (new_frame));
+
+  if (!(page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (widget))))
+    g_return_if_reached ();
+
+  if (position < 0)
+    position = adw_tab_view_get_n_pages (new_frame->tab_view);
+
+  adw_tab_view_transfer_page (self->tab_view, page, new_frame->tab_view, position);
+}
+
+guint
+panel_frame_get_n_pages (PanelFrame *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME (self), 0);
+
+  return adw_tab_view_get_n_pages (self->tab_view);
 }

@@ -27,5 +27,9 @@
 G_BEGIN_DECLS
 
 AdwTabView *_panel_frame_get_tab_view (PanelFrame *self);
+void        _panel_frame_transfer     (PanelFrame  *self,
+                                       PanelWidget *widget,
+                                       PanelFrame  *new_frame,
+                                       int          position);
 
 G_END_DECLS

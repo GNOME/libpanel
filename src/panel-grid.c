@@ -20,7 +20,7 @@
 
 #include "config.h"
 
-#include "panel-frame.h"
+#include "panel-frame-private.h"
 #include "panel-frame-tab-bar.h"
 #include "panel-grid-column.h"
 #include "panel-grid-private.h"
@@ -218,4 +218,113 @@ static void
 buildable_iface_init (GtkBuildableIface *iface)
 {
   iface->add_child = panel_grid_add_child;
+}
+
+gboolean
+_panel_grid_get_position (PanelGrid *self,
+                          GtkWidget *widget,
+                          guint     *column,
+                          guint     *row)
+{
+  guint n_columns;
+
+  g_return_val_if_fail (PANEL_IS_GRID (self), FALSE);
+  g_return_val_if_fail (PANEL_IS_FRAME (widget), FALSE);
+
+  /* TODO: This could be made better by walking towards the root
+   *       from the child and calculating offsets.
+   */
+
+  *column = 0;
+  *row = 0;
+
+  n_columns = panel_paned_get_n_children (self->columns);
+
+  for (guint i = 0; i < n_columns; i++)
+    {
+      GtkWidget *column_widget = panel_paned_get_nth_child (self->columns, i);
+      guint n_rows;
+
+      g_assert (PANEL_IS_GRID_COLUMN (column_widget));
+
+      if (!gtk_widget_is_ancestor (widget, column_widget))
+        continue;
+
+      n_rows = panel_grid_column_get_n_rows (PANEL_GRID_COLUMN (column_widget));
+
+      for (guint j = 0; j < n_rows; j++)
+        {
+          PanelFrame *frame = panel_grid_column_get_row (PANEL_GRID_COLUMN (column_widget), j);
+
+          g_assert (PANEL_IS_FRAME (frame));
+
+          if (widget != GTK_WIDGET (frame) &&
+              !gtk_widget_is_ancestor (widget, GTK_WIDGET (frame)))
+            continue;
+
+          *column = i;
+          *row = j;
+
+          return TRUE;
+        }
+    }
+
+  return FALSE;
+}
+
+PanelGridColumn *
+panel_grid_get_column (PanelGrid *self,
+                       guint      column)
+{
+  GtkWidget *child;
+
+  g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
+
+  while (panel_paned_get_n_children (self->columns) <= column)
+    {
+      GtkWidget *column_widget = panel_grid_column_new ();
+      panel_paned_append (self->columns, column_widget);
+    }
+
+  child = panel_paned_get_nth_child (self->columns, column);
+  g_return_val_if_fail (PANEL_IS_GRID_COLUMN (child), NULL);
+  return PANEL_GRID_COLUMN (child);
+}
+
+void
+_panel_grid_reposition (PanelGrid *self,
+                        GtkWidget *widget,
+                        guint      column,
+                        guint      row)
+{
+  GtkWidget *frame;
+  PanelFrame *new_frame;
+  PanelGridColumn *column_widget;
+  guint n_rows;
+
+  g_return_if_fail (PANEL_IS_GRID (self));
+  g_return_if_fail (PANEL_IS_WIDGET (widget));
+
+  if (!(frame = gtk_widget_get_ancestor (widget, PANEL_TYPE_FRAME)) ||
+      !(column_widget = panel_grid_get_column (self, column)))
+    g_return_if_reached ();
+
+  n_rows = panel_grid_column_get_n_rows (column_widget);
+  if (row >= n_rows)
+    row = n_rows ? n_rows - 1 : 0;
+
+  new_frame = panel_grid_column_get_row (column_widget, row);
+
+  _panel_frame_transfer (PANEL_FRAME (frame),
+                         PANEL_WIDGET (widget),
+                         new_frame,
+                         -1);
+}
+
+void
+_panel_grid_prepend_column (PanelGrid *self)
+{
+  g_return_if_fail (PANEL_IS_GRID (self));
+
+  panel_paned_insert (self->columns, 0, panel_grid_column_new ());
 }

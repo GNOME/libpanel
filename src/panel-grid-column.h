@@ -39,5 +39,10 @@ PANEL_AVAILABLE_IN_ALL
 gboolean    panel_grid_column_get_empty             (PanelGridColumn *self);
 PANEL_AVAILABLE_IN_ALL
 PanelFrame *panel_grid_column_get_most_recent_frame (PanelGridColumn *self);
+PANEL_AVAILABLE_IN_ALL
+PanelFrame *panel_grid_column_get_row               (PanelGridColumn *self,
+                                                     guint            row);
+PANEL_AVAILABLE_IN_ALL
+guint       panel_grid_column_get_n_rows            (PanelGridColumn *self);
 
 G_END_DECLS

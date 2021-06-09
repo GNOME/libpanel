@@ -24,6 +24,15 @@
 
 G_BEGIN_DECLS
 
-PanelFrame *_panel_grid_create_frame (PanelGrid *self);
+PanelFrame *_panel_grid_create_frame   (PanelGrid *self);
+gboolean    _panel_grid_get_position   (PanelGrid *self,
+                                        GtkWidget *widget,
+                                        guint     *column,
+                                        guint     *row);
+void        _panel_grid_reposition     (PanelGrid *self,
+                                        GtkWidget *widget,
+                                        guint      column,
+                                        guint      row);
+void        _panel_grid_prepend_column (PanelGrid *self);
 
 G_END_DECLS

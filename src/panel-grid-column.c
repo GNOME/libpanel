@@ -63,6 +63,8 @@ panel_grid_column_class_init (PanelGridColumnClass *klass)
 static void
 panel_grid_column_init (PanelGridColumn *self)
 {
+  gtk_widget_set_hexpand (GTK_WIDGET (self), TRUE);
+
   self->rows = PANEL_PANED (panel_paned_new ());
   gtk_orientable_set_orientation (GTK_ORIENTABLE (self->rows), GTK_ORIENTATION_VERTICAL);
   gtk_widget_set_parent (GTK_WIDGET (self->rows), GTK_WIDGET (self));
@@ -97,4 +99,35 @@ panel_grid_column_get_most_recent_frame (PanelGridColumn *self)
     }
 
   return PANEL_FRAME (panel_paned_get_nth_child (self->rows, 0));
+}
+
+PanelFrame *
+panel_grid_column_get_row (PanelGridColumn *self,
+                           guint            row)
+{
+  PanelGrid *grid;
+  GtkWidget *child;
+
+  g_return_val_if_fail (PANEL_IS_GRID_COLUMN (self), NULL);
+
+  if (!(grid = PANEL_GRID (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID))))
+    g_return_val_if_reached (NULL);
+
+  while (panel_paned_get_n_children (self->rows) <= row)
+    {
+      PanelFrame *frame = _panel_grid_create_frame (grid);
+      panel_paned_append (self->rows, GTK_WIDGET (frame));
+    }
+
+  child = panel_paned_get_nth_child (self->rows, row);
+  g_return_val_if_fail (PANEL_IS_FRAME (child), NULL);
+  return PANEL_FRAME (child);
+}
+
+guint
+panel_grid_column_get_n_rows (PanelGridColumn *self)
+{
+  g_return_val_if_fail (PANEL_IS_GRID_COLUMN (self), 0);
+
+  return panel_paned_get_n_children (self->rows);
 }

@@ -55,5 +55,7 @@ PANEL_AVAILABLE_IN_ALL
 PanelWidget       *panel_frame_get_visible_child (PanelFrame       *self);
 PANEL_AVAILABLE_IN_ALL
 GtkSelectionModel *panel_frame_get_pages         (PanelFrame       *self);
+PANEL_AVAILABLE_IN_ALL
+guint              panel_frame_get_n_pages       (PanelFrame       *self);
 
 G_END_DECLS
