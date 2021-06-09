@@ -16,6 +16,7 @@
         </child>
         <child>
           <object class="GtkButton" id="close">
+            <property name="action-name">page.close</property>
             <property name="icon-name">window-close-symbolic</property>
           </object>
         </child>

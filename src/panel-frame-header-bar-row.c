@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-frame-private.h"
 #include "panel-frame-header-bar-row-private.h"
 
 struct _PanelFrameHeaderBarRow
@@ -54,6 +55,23 @@ GtkWidget *
 panel_frame_header_bar_row_new (void)
 {
   return g_object_new (PANEL_TYPE_FRAME_HEADER_BAR_ROW, NULL);
+}
+
+static void
+page_close_action (GtkWidget  *widget,
+                   const char *action_name,
+                   GVariant   *param)
+{
+  PanelFrameHeaderBarRow *self = (PanelFrameHeaderBarRow *)widget;
+  AdwTabView *tab_view;
+  GtkWidget *frame;
+
+  g_assert (PANEL_FRAME_HEADER_BAR_ROW (self));
+
+  if (self->page != NULL &&
+      (frame = gtk_widget_get_ancestor (widget, PANEL_TYPE_FRAME)) &&
+      (tab_view = _panel_frame_get_tab_view (PANEL_FRAME (frame))))
+    adw_tab_view_close_page (tab_view, self->page);
 }
 
 static void
@@ -129,6 +147,8 @@ panel_frame_header_bar_row_class_init (PanelFrameHeaderBarRowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBarRow, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBarRow, image);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBarRow, label);
+
+  gtk_widget_class_install_action (widget_class, "page.close", NULL, page_close_action);
 }
 
 static void
