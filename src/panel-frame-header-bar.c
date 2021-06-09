@@ -26,6 +26,7 @@
 #include "panel-frame-header-bar.h"
 #include "panel-frame-header-bar-row-private.h"
 #include "panel-frame-private.h"
+#include "panel-joined-menu-private.h"
 
 struct _PanelFrameHeaderBar
 {
@@ -35,7 +36,9 @@ struct _PanelFrameHeaderBar
   PanelFrame        *frame;
   GMenuModel        *menu_model;
   PanelWidget       *visible_child;
+  PanelJoinedMenu   *joined_menu;
 
+  GMenuModel        *frame_menu;
   GtkBox            *box;
   GtkBox            *start_area;
   GtkBox            *end_area;
@@ -223,6 +226,7 @@ panel_frame_header_bar_dispose (GObject *object)
   g_clear_object (&self->frame);
   g_clear_object (&self->menu_model);
   g_clear_object (&self->bindings);
+  g_clear_object (&self->joined_menu);
 
   G_OBJECT_CLASS (panel_frame_header_bar_parent_class)->dispose (object);
 }
@@ -330,6 +334,7 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, controls);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, end_area);
+  gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, frame_menu);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, list_view);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, menu_button);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, pages_popover);
@@ -378,6 +383,11 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   button = gtk_widget_get_first_child (GTK_WIDGET (self->title_button));
   gtk_button_set_child (GTK_BUTTON (button), box);
 
+  self->joined_menu = panel_joined_menu_new ();
+  panel_joined_menu_append_menu (self->joined_menu, self->frame_menu);
+  gtk_menu_button_set_menu_model (self->menu_button,
+                                  G_MENU_MODEL (self->joined_menu));
+
   self->bindings = panel_binding_group_new ();
   panel_binding_group_bind (self->bindings, "title", self->title, "label", 0);
   panel_binding_group_bind (self->bindings, "modified", self->modified, "visible", 0);
@@ -419,10 +429,18 @@ panel_frame_header_bar_set_menu_model (PanelFrameHeaderBar *self,
   g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
   g_return_if_fail (!menu_model || G_IS_MENU_MODEL (menu_model));
 
-  if (g_set_object (&self->menu_model, menu_model))
-    {
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_MENU_MODEL]);
-    }
+  if (self->menu_model == menu_model)
+    return;
+
+  if (self->menu_model)
+    panel_joined_menu_remove_menu (self->joined_menu, self->menu_model);
+
+  g_set_object (&self->menu_model, menu_model);
+
+  if (self->menu_model)
+    panel_joined_menu_prepend_menu (self->joined_menu, self->menu_model);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_MENU_MODEL]);
 }
 
 GtkPopoverMenu *
