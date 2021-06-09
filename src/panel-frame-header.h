@@ -38,17 +38,22 @@ struct _PanelFrameHeaderInterface
 {
   GTypeInterface parent_iface;
 
-  gboolean (*can_drop) (PanelFrameHeader *self,
-                        PanelWidget      *widget);
+  void     (*page_changed) (PanelFrameHeader *self,
+                            PanelWidget      *page);
+  gboolean (*can_drop)     (PanelFrameHeader *self,
+                            PanelWidget      *widget);
 };
 
 PANEL_AVAILABLE_IN_ALL
-PanelFrame *panel_frame_header_get_frame (PanelFrameHeader *self);
+PanelFrame *panel_frame_header_get_frame    (PanelFrameHeader *self);
 PANEL_AVAILABLE_IN_ALL
-void        panel_frame_header_set_frame (PanelFrameHeader *self,
-                                          PanelFrame       *frame);
+void        panel_frame_header_set_frame    (PanelFrameHeader *self,
+                                             PanelFrame       *frame);
 PANEL_AVAILABLE_IN_ALL
-gboolean    panel_frame_header_can_drop  (PanelFrameHeader *self,
-                                          PanelWidget      *widget);
+gboolean    panel_frame_header_can_drop     (PanelFrameHeader *self,
+                                             PanelWidget      *widget);
+PANEL_AVAILABLE_IN_ALL
+void        panel_frame_header_page_changed (PanelFrameHeader *self,
+                                             PanelWidget      *widget);
 
 G_END_DECLS

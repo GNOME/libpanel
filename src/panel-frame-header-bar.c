@@ -411,9 +411,31 @@ panel_frame_header_bar_can_drop (PanelFrameHeader *header,
 }
 
 static void
+panel_frame_header_bar_page_changed (PanelFrameHeader *header,
+                                     PanelWidget      *page)
+{
+  PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)header;
+
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+  g_assert (!page || PANEL_IS_WIDGET (page));
+
+  while (panel_joined_menu_get_n_joined (self->joined_menu) > 1)
+    panel_joined_menu_remove_index (self->joined_menu, 0);
+
+  if (page != NULL)
+    {
+      GMenuModel *menu_model = panel_widget_get_menu_model (page);
+
+      if (menu_model != NULL)
+        panel_joined_menu_prepend_menu (self->joined_menu, menu_model);
+    }
+}
+
+static void
 frame_header_iface_init (PanelFrameHeaderInterface *iface)
 {
   iface->can_drop = panel_frame_header_bar_can_drop;
+  iface->page_changed = panel_frame_header_bar_page_changed;
 }
 
 GMenuModel *

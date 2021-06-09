@@ -83,3 +83,21 @@ panel_frame_header_can_drop (PanelFrameHeader *self,
 
   return FALSE;
 }
+
+/**
+ * panel_frame_header_page_changed:
+ * @self: a #PanelFrameHeader
+ * @widget: (nullable): a #PanelWidget or %NULL if no page is visible
+ *
+ * Notifies the header that the visible page has changed.
+ */
+void
+panel_frame_header_page_changed (PanelFrameHeader *self,
+                                 PanelWidget      *widget)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
+  g_return_if_fail (!widget || PANEL_IS_WIDGET (widget));
+
+  if (PANEL_FRAME_HEADER_GET_IFACE (self)->page_changed)
+    PANEL_FRAME_HEADER_GET_IFACE (self)->page_changed (self, widget);
+}

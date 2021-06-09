@@ -229,10 +229,17 @@ panel_frame_notify_selected_page_cb (PanelFrame *self,
                                      GParamSpec *pspec,
                                      AdwTabView *tab_view)
 {
+  PanelWidget *visible_child;
+
   g_assert (PANEL_IS_FRAME (self));
   g_assert (ADW_IS_TAB_VIEW (tab_view));
 
+  visible_child = panel_frame_get_visible_child (self);
+
   panel_frame_update_actions (self);
+
+  if (self->header)
+    panel_frame_header_page_changed (self->header, visible_child);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
 }
@@ -590,6 +597,7 @@ panel_frame_set_header (PanelFrame       *self,
 
   if (self->header != NULL)
     {
+      panel_frame_header_page_changed (self->header, NULL);
       panel_frame_header_set_frame (self->header, NULL);
       g_clear_pointer ((GtkWidget **)&self->header, gtk_widget_unparent);
     }
@@ -598,11 +606,17 @@ panel_frame_set_header (PanelFrame       *self,
 
   if (self->header != NULL)
     {
+      PanelWidget *visible_child = panel_frame_get_visible_child (self);
+
       if (GTK_IS_ORIENTABLE (self->header))
         gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header),
                                         !gtk_orientable_get_orientation (GTK_ORIENTABLE (self->box)));
       gtk_box_prepend (GTK_BOX (self->box), GTK_WIDGET (self->header));
+
       panel_frame_header_set_frame (self->header, self);
+
+      if (visible_child)
+        panel_frame_header_page_changed (self->header, visible_child);
     }
 }
 
