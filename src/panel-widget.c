@@ -41,6 +41,7 @@ typedef struct
   guint      reorderable : 1;
   guint      can_maximize : 1;
   guint      maximized : 1;
+  guint      modified : 1;
   guint      needs_attention : 1;
 } PanelWidgetPrivate;
 
@@ -53,6 +54,7 @@ enum {
   PROP_CHILD,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_MODIFIED,
   PROP_NEEDS_ATTENTION,
   PROP_KIND,
   PROP_REORDERABLE,
@@ -127,6 +129,10 @@ panel_widget_get_property (GObject    *object,
       g_value_set_string (value, panel_widget_get_icon_name (self));
       break;
 
+    case PROP_MODIFIED:
+      g_value_set_boolean (value, panel_widget_get_modified (self));
+      break;
+
     case PROP_TITLE:
       g_value_set_string (value, panel_widget_get_title (self));
       break;
@@ -172,6 +178,10 @@ panel_widget_set_property (GObject      *object,
 
     case PROP_ICON_NAME:
       panel_widget_set_icon_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_MODIFIED:
+      panel_widget_set_modified (self, g_value_get_boolean (value));
       break;
 
     case PROP_TITLE:
@@ -239,6 +249,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          "The kind of panel widget",
                          "unknown",
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_MODIFIED] =
+    g_param_spec_boolean ("modified",
+                          "Modified",
+                          "If the widget contains unsaved state",
+                          FALSE,
+                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_TITLE] =
     g_param_spec_string ("title",
@@ -369,6 +386,33 @@ panel_widget_set_icon (PanelWidget *self,
         }
 
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
+    }
+}
+
+gboolean
+panel_widget_get_modified (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
+
+  return priv->modified;
+}
+
+void
+panel_widget_set_modified (PanelWidget *self,
+                           gboolean     modified)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  modified = !!modified;
+
+  if (priv->modified != modified)
+    {
+      priv->modified = modified;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_MODIFIED]);
     }
 }
 

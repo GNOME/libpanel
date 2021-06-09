@@ -74,6 +74,11 @@ PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_can_maximize    (PanelWidget *self,
                                               gboolean     can_maximize);
 PANEL_AVAILABLE_IN_ALL
+gboolean    panel_widget_get_modified        (PanelWidget *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_widget_set_modified        (PanelWidget *self,
+                                              gboolean     modified);
+PANEL_AVAILABLE_IN_ALL
 gboolean    panel_widget_get_needs_attention (PanelWidget *self);
 PANEL_AVAILABLE_IN_ALL
 void        panel_widget_set_needs_attention (PanelWidget *self,
