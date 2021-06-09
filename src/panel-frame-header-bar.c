@@ -151,6 +151,9 @@ notify_visible_child_cb (PanelFrameHeaderBar *self,
 
   widget = panel_frame_get_visible_child (frame);
   panel_frame_header_bar_set_visible_child (self, widget);
+
+  if (widget == NULL)
+    gtk_menu_button_popdown (self->title_button);
 }
 
 static void
