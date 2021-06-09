@@ -36,6 +36,9 @@ typedef struct
   GtkWidget *maximize_frame;
   GtkWidget *maximize_dock_child;
 
+  GdkRGBA    foreground_rgba;
+  GdkRGBA    background_rgba;
+
   guint      busy_count;
 
   guint      reorderable : 1;
@@ -49,9 +52,11 @@ G_DEFINE_TYPE_WITH_PRIVATE (PanelWidget, panel_widget, GTK_TYPE_WIDGET)
 
 enum {
   PROP_0,
+  PROP_BACKGROUND_RGBA,
   PROP_BUSY,
   PROP_CAN_MAXIMIZE,
   PROP_CHILD,
+  PROP_FOREGROUND_RGBA,
   PROP_ICON,
   PROP_ICON_NAME,
   PROP_MODIFIED,
@@ -63,6 +68,7 @@ enum {
 };
 
 static GParamSpec *properties [N_PROPS];
+static const GdkRGBA transparent;
 
 static void
 panel_widget_unmaximize_action (GtkWidget  *widget,
@@ -109,6 +115,14 @@ panel_widget_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_BACKGROUND_RGBA:
+      g_value_set_boxed (value, panel_widget_get_background_rgba (self));
+      break;
+
+    case PROP_FOREGROUND_RGBA:
+      g_value_set_boxed (value, panel_widget_get_foreground_rgba (self));
+      break;
+
     case PROP_BUSY:
       g_value_set_boolean (value, panel_widget_get_busy (self));
       break;
@@ -164,6 +178,14 @@ panel_widget_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_BACKGROUND_RGBA:
+      panel_widget_set_background_rgba (self, g_value_get_boxed (value));
+      break;
+
+    case PROP_FOREGROUND_RGBA:
+      panel_widget_set_foreground_rgba (self, g_value_get_boxed (value));
+      break;
+
     case PROP_CAN_MAXIMIZE:
       panel_widget_set_can_maximize (self, g_value_get_boolean (value));
       break;
@@ -214,6 +236,40 @@ panel_widget_class_init (PanelWidgetClass *klass)
   object_class->dispose = panel_widget_dispose;
   object_class->get_property = panel_widget_get_property;
   object_class->set_property = panel_widget_set_property;
+
+  /**
+   * PanelWidget:background-rgba:
+   *
+   * The "background-rgba" property denotes a background rgba color that is
+   * similar to the widget's contents.
+   *
+   * This can be used by #PanelFrameHeader implementations to more closely
+   * match the content with accent colors. #PanelFrameHeaderBar uses this
+   * to match the background of the bar with the content.
+   */
+  properties [PROP_BACKGROUND_RGBA] =
+    g_param_spec_boxed ("background-rgba",
+                        "Background RGBA",
+                        "Background RGBA",
+                        GDK_TYPE_RGBA,
+                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * PanelWidget:foreground-rgba:
+   *
+   * The "foreground-rgba" property denotes a foreground rgba color that is
+   * similar to the widget's contents.
+   *
+   * This can be used by #PanelFrameHeader implementations to more closely
+   * match the content with accent colors. #PanelFrameHeaderBar uses this
+   * to match the foreground of the bar with the content.
+   */
+  properties [PROP_FOREGROUND_RGBA] =
+    g_param_spec_boxed ("foreground-rgba",
+                        "Foreground RGBA",
+                        "Foreground RGBA",
+                        GDK_TYPE_RGBA,
+                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_BUSY] =
     g_param_spec_boolean ("busy",
@@ -690,4 +746,60 @@ panel_widget_unmark_busy (PanelWidget *self)
 
   if (priv->busy_count == 0)
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BUSY]);
+}
+
+const GdkRGBA *
+panel_widget_get_background_rgba (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  return &priv->background_rgba;
+}
+
+void
+panel_widget_set_background_rgba (PanelWidget   *self,
+                                  const GdkRGBA *background_rgba)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if (background_rgba == NULL)
+    background_rgba = &transparent;
+
+  if (!gdk_rgba_equal (background_rgba, &priv->background_rgba))
+    {
+      priv->background_rgba = *background_rgba;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BACKGROUND_RGBA]);
+    }
+}
+
+const GdkRGBA *
+panel_widget_get_foreground_rgba (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  return &priv->foreground_rgba;
+}
+
+void
+panel_widget_set_foreground_rgba (PanelWidget   *self,
+                                  const GdkRGBA *foreground_rgba)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if (foreground_rgba == NULL)
+    foreground_rgba = &transparent;
+
+  if (!gdk_rgba_equal (foreground_rgba, &priv->foreground_rgba))
+    {
+      priv->foreground_rgba = *foreground_rgba;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_FOREGROUND_RGBA]);
+    }
 }
