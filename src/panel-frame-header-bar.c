@@ -223,6 +223,8 @@ panel_frame_header_bar_dispose (GObject *object)
   panel_frame_header_bar_set_frame (self, NULL);
 
   g_clear_pointer ((GtkWidget **)&self->box, gtk_widget_unparent);
+
+  g_clear_object (&self->visible_child);
   g_clear_object (&self->frame);
   g_clear_object (&self->menu_model);
   g_clear_object (&self->bindings);
