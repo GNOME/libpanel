@@ -73,7 +73,7 @@ panelframe.vertical.drop-after {
 }
 
 
-panelheaderbar button {
+panelframeheaderbar button {
   background: transparent;
   border: none;
   padding: 0px;
@@ -81,11 +81,36 @@ panelheaderbar button {
   border-radius: 0px;
   box-shadow: none;
 }
-panelheaderbar .controls {
+panelframeheaderbar .controls {
   padding-right: 3px;
   padding-left: 3px;
 }
-panelheaderbar .controls button {
+panelframeheaderbar .controls button {
   padding-left: 6px;
   padding-right: 6px;
+}panelframeheaderbar popover row {
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+panelframeheaderbar popover row:not(:selected) {
+  background: none;
+  box-shadow: none;
+}
+panelframeheaderbar popover row .close-button {
+  padding: 0;
+  margin: 0;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 99px;
+  border: none;
+  box-shadow: none;
+  background: none;
+  color: transparent;
+}
+panelframeheaderbar popover row:hover .close-button {
+  background: alpha(@theme_fg_color, .15);
+  color: @theme_fg_color;
+}
+panelframeheaderbar popover row .close-button:active {
+  background: alpha(black, .2);
 }

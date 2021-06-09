@@ -332,7 +332,7 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame-header-bar.ui");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
-  gtk_widget_class_set_css_name (widget_class, "panelheaderbar");
+  gtk_widget_class_set_css_name (widget_class, "panelframeheaderbar");
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, controls);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, end_area);
@@ -429,6 +429,9 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
       if (menu_model != NULL)
         panel_joined_menu_prepend_menu (self->joined_menu, menu_model);
     }
+
+  gtk_label_set_label (self->title, NULL);
+  gtk_image_clear (self->image);
 }
 
 static void
