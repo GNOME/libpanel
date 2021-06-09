@@ -71,3 +71,21 @@ panelframe.vertical.drop-after {
               inset 0 -2px 0 1px #2ec275;
   padding-bottom: 3px;
 }
+
+
+panelheaderbar button {
+  background: transparent;
+  border: none;
+  padding: 0px;
+  margin: 0px;
+  border-radius: 0px;
+  box-shadow: none;
+}
+panelheaderbar .controls {
+  padding-right: 3px;
+  padding-left: 3px;
+}
+panelheaderbar .controls button {
+  padding-left: 6px;
+  padding-right: 6px;
+}

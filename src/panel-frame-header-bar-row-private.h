@@ -1,4 +1,4 @@
-/* libpanel.h
+/* panel-frame-header-bar-row-private.h
  *
  * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
@@ -20,16 +20,17 @@
 
 #pragma once
 
-#define LIBPANEL_INSIDE
-# include "panel-dock.h"
-# include "panel-dock-switcher.h"
-# include "panel-frame.h"
-# include "panel-frame-header.h"
-# include "panel-frame-header-bar.h"
-# include "panel-frame-switcher.h"
-# include "panel-frame-tab-bar.h"
-# include "panel-grid.h"
-# include "panel-grid-column.h"
-# include "panel-init.h"
-# include "panel-widget.h"
-#undef LIBPANEL_INSIDE
+#include <adwaita.h>
+
+G_BEGIN_DECLS
+
+#define PANEL_TYPE_FRAME_HEADER_BAR_ROW (panel_frame_header_bar_row_get_type())
+
+G_DECLARE_FINAL_TYPE (PanelFrameHeaderBarRow, panel_frame_header_bar_row, PANEL, FRAME_HEADER_BAR_ROW, GtkWidget)
+
+GtkWidget  *panel_frame_header_bar_row_new      (void);
+AdwTabPage *panel_frame_header_bar_row_get_page (PanelFrameHeaderBarRow *self);
+void        panel_frame_header_bar_row_set_page (PanelFrameHeaderBarRow *self,
+                                                 AdwTabPage             *page);
+
+G_END_DECLS

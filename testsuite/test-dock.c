@@ -4,12 +4,10 @@ static PanelFrame *
 create_frame_cb (PanelGrid *grid)
 {
   PanelFrame *frame = PANEL_FRAME (panel_frame_new ());
-  PanelFrameHeader *header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
+  PanelFrameHeader *header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
 
-  g_print ("Create frame\n");
-
-  panel_frame_tab_bar_set_start_child (PANEL_FRAME_TAB_BAR (header), gtk_label_new ("Start Child"));
-  panel_frame_tab_bar_set_end_child (PANEL_FRAME_TAB_BAR (header), gtk_label_new ("End Child"));
+  panel_frame_header_bar_set_start_child (PANEL_FRAME_HEADER_BAR (header), gtk_label_new ("Start Child"));
+  panel_frame_header_bar_set_end_child (PANEL_FRAME_HEADER_BAR (header), gtk_label_new ("End Child"));
   panel_frame_set_header (frame, header);
 
   return frame;
@@ -24,7 +22,7 @@ create_document (void)
 
   ret = g_object_new (PANEL_TYPE_WIDGET,
                       "title", title,
-                      "icon-name", "text-x-document-symbolic",
+                      "icon-name", "text-x-generic-symbolic",
                       "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
                                              "child", g_object_new (GTK_TYPE_TEXT_VIEW,
                                                                     "buffer", g_object_new (GTK_TYPE_TEXT_BUFFER,
