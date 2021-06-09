@@ -25,7 +25,7 @@
 #include "panel-binding-group-private.h"
 #include "panel-frame-header-bar.h"
 #include "panel-frame-header-bar-row-private.h"
-#include "panel-frame.h"
+#include "panel-frame-private.h"
 
 struct _PanelFrameHeaderBar
 {
@@ -154,6 +154,9 @@ notify_visible_child_cb (PanelFrameHeaderBar *self,
 
   if (widget == NULL)
     gtk_menu_button_popdown (self->title_button);
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.close", widget != NULL);
+  gtk_widget_set_sensitive (GTK_WIDGET (self->title_button), widget != NULL);
 }
 
 static void
@@ -192,6 +195,21 @@ panel_frame_header_bar_set_frame (PanelFrameHeaderBar *self,
     }
 
   g_object_notify (G_OBJECT (self), "frame");
+}
+
+static void
+page_close_action (GtkWidget  *widget,
+                   const char *action_name,
+                   GVariant   *param)
+{
+  PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)widget;
+  AdwTabView *tab_view;
+
+  g_assert (PANEL_IS_FRAME_HEADER (self));
+
+  if (self->frame != NULL &&
+      (tab_view = _panel_frame_get_tab_view (self->frame)))
+    adw_tab_view_close_page (tab_view, adw_tab_view_get_selected_page (tab_view));
 }
 
 static void
@@ -320,6 +338,8 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, setup_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, bind_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, unbind_row_cb);
+
+  gtk_widget_class_install_action (widget_class, "page.close", NULL, page_close_action);
 }
 
 static void
@@ -329,6 +349,8 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   GtkWidget *box;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.close", FALSE);
 
   /* Because GtkMenuButton does not allow us to specify children within
    * the label, we have to dive into it and modify it directly.
