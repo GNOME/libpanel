@@ -81,4 +81,15 @@
       </object>
     </child>
   </object>
+  <menu id="page_menu">
+    <section>
+      <attribute name="label">Page</attribute>
+      <item>
+        <attribute name="label">Maximize Page</attribute>
+        <attribute name="action">page.maximize</attribute>
+        <attribute name="accel">&lt;shift&gt;F11</attribute>
+        <attribute name="icon-name">view-fullscreen-symbolic</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>

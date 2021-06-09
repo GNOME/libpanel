@@ -32,9 +32,10 @@ typedef struct
   char       *title;
   char       *icon_name;
   GIcon      *icon;
+  GMenuModel *menu_model;
 
-  GtkWidget *maximize_frame;
-  GtkWidget *maximize_dock_child;
+  GtkWidget  *maximize_frame;
+  GtkWidget  *maximize_dock_child;
 
   GdkRGBA    foreground_rgba;
   GdkRGBA    background_rgba;
@@ -59,6 +60,7 @@ enum {
   PROP_FOREGROUND_RGBA,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_MENU_MODEL,
   PROP_MODIFIED,
   PROP_NEEDS_ATTENTION,
   PROP_KIND,
@@ -69,6 +71,29 @@ enum {
 
 static GParamSpec *properties [N_PROPS];
 static const GdkRGBA transparent;
+
+static void
+panel_widget_update_actions (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_assert (PANEL_IS_WIDGET (self));
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self),
+                                 "page.maximize",
+                                 !priv->maximized && panel_widget_get_can_maximize (self));
+  gtk_widget_action_set_enabled (GTK_WIDGET (self),
+                                 "page.unmaximize",
+                                 priv->maximized);
+}
+
+static void
+panel_widget_maximize_action (GtkWidget  *widget,
+                              const char *action_name,
+                              GVariant   *param)
+{
+  panel_widget_maximize (PANEL_WIDGET (widget));
+}
 
 static void
 panel_widget_unmaximize_action (GtkWidget  *widget,
@@ -101,6 +126,7 @@ panel_widget_dispose (GObject *object)
   g_clear_pointer (&priv->title, g_free);
   g_clear_pointer (&priv->child, gtk_widget_unparent);
   g_clear_object (&priv->icon);
+  g_clear_object (&priv->menu_model);
 
   G_OBJECT_CLASS (panel_widget_parent_class)->dispose (object);
 }
@@ -141,6 +167,10 @@ panel_widget_get_property (GObject    *object,
 
     case PROP_ICON_NAME:
       g_value_set_string (value, panel_widget_get_icon_name (self));
+      break;
+
+    case PROP_MENU_MODEL:
+      g_value_set_object (value, panel_widget_get_menu_model (self));
       break;
 
     case PROP_MODIFIED:
@@ -200,6 +230,10 @@ panel_widget_set_property (GObject      *object,
 
     case PROP_ICON_NAME:
       panel_widget_set_icon_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_MENU_MODEL:
+      panel_widget_set_menu_model (self, g_value_get_object (value));
       break;
 
     case PROP_MODIFIED:
@@ -306,6 +340,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          "unknown",
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  properties [PROP_MENU_MODEL] =
+    g_param_spec_object ("menu-model",
+                         "Menu Model",
+                         "Menu Model",
+                         G_TYPE_MENU_MODEL,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
   properties [PROP_MODIFIED] =
     g_param_spec_boolean ("modified",
                           "Modified",
@@ -346,7 +387,9 @@ panel_widget_class_init (PanelWidgetClass *klass)
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
 
-  gtk_widget_class_install_action (widget_class, "panel.unmaximize", NULL, panel_widget_unmaximize_action);
+  gtk_widget_class_install_action (widget_class, "page.maximize", NULL, panel_widget_maximize_action);
+  gtk_widget_class_install_action (widget_class, "page.unmaximize", NULL, panel_widget_unmaximize_action);
+
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_Escape, 0, "panel.unmaximize", NULL);
 
   /* Ensure we have quarks for known types */
@@ -361,7 +404,7 @@ panel_widget_init (PanelWidget *self)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "panel.unmaximize", FALSE);
+  panel_widget_update_actions (self);
 
   priv->kind = g_quark_from_static_string (PANEL_WIDGET_KIND_UNKNOWN);
   priv->reorderable = TRUE;
@@ -584,6 +627,7 @@ panel_widget_set_can_maximize (PanelWidget *self,
   if (priv->can_maximize != can_maximize)
     {
       priv->can_maximize = can_maximize;
+      panel_widget_update_actions (self);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_MAXIMIZE]);
     }
 }
@@ -610,7 +654,8 @@ panel_widget_maximize (PanelWidget *self)
     return;
 
   priv->maximized = TRUE;
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "panel.unmaximize", priv->maximized);
+
+  panel_widget_update_actions (self);
 
   g_object_ref (self);
 
@@ -639,7 +684,8 @@ panel_widget_unmaximize (PanelWidget *self)
     return;
 
   priv->maximized = FALSE;
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "panel.unmaximize", priv->maximized);
+
+  panel_widget_update_actions (self);
 
   g_object_ref (self);
 
@@ -802,4 +848,38 @@ panel_widget_set_foreground_rgba (PanelWidget   *self,
       priv->foreground_rgba = *foreground_rgba;
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_FOREGROUND_RGBA]);
     }
+}
+
+/**
+ * panel_widget_get_menu_model:
+ * @self: a #PanelWidget
+ *
+ * Gets the #GMenuModel for the widget.
+ *
+ * #PanelFrameHeader may use this model to display additional options
+ * for the page to the user via menus.
+ *
+ * Returns: (transfer none) (nullable): a #GMenuModel
+ */
+GMenuModel *
+panel_widget_get_menu_model (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  return priv->menu_model;
+}
+
+void
+panel_widget_set_menu_model (PanelWidget *self,
+                             GMenuModel  *menu_model)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+  g_return_if_fail (!menu_model || G_IS_MENU_MODEL (menu_model));
+
+  if (g_set_object (&priv->menu_model, menu_model))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_MENU_MODEL]);
 }

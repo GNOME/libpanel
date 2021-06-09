@@ -1,5 +1,7 @@
 #include <libpanel.h>
 
+static GMenuModel *menu_model;
+
 static PanelFrame *
 create_frame_cb (PanelGrid *grid)
 {
@@ -21,8 +23,10 @@ create_document (void)
   PanelWidget *ret;
 
   ret = g_object_new (PANEL_TYPE_WIDGET,
+                      "can-maximize", TRUE,
                       "title", title,
                       "icon-name", "text-x-generic-symbolic",
+                      "menu-model", menu_model,
                       "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
                                              "child", g_object_new (GTK_TYPE_TEXT_VIEW,
                                                                     "buffer", g_object_new (GTK_TYPE_TEXT_BUFFER,
@@ -76,6 +80,8 @@ main (int argc,
   gtk_builder_cscope_add_callback_symbol (GTK_BUILDER_CSCOPE (scope), "add_clicked_cb", G_CALLBACK (add_clicked_cb));
   gtk_builder_add_from_file (builder, filename, &error);
   g_assert_no_error (error);
+
+  menu_model = G_MENU_MODEL (gtk_builder_get_object (builder, "page_menu"));
 
   add_child (PANEL_GRID (gtk_builder_get_object (builder, "grid")));
 
