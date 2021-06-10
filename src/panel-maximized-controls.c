@@ -33,27 +33,10 @@ struct _PanelMaximizedControls
 
 G_DEFINE_TYPE (PanelMaximizedControls, panel_maximized_controls, GTK_TYPE_WIDGET)
 
-enum {
-  CLOSE,
-  N_SIGNALS
-};
-
-static guint signals [N_SIGNALS];
-
 GtkWidget *
 panel_maximized_controls_new (void)
 {
   return g_object_new (PANEL_TYPE_MAXIMIZED_CONTROLS, NULL);
-}
-
-static void
-panel_maximized_controls_close_clicked_cb (PanelMaximizedControls *self,
-                                           GtkButton              *button)
-{
-  g_assert (PANEL_IS_MAXIMIZED_CONTROLS (self));
-  g_assert (GTK_IS_BUTTON (button));
-
-  g_signal_emit (self, signals [CLOSE], 0);
 }
 
 static gboolean
@@ -82,15 +65,6 @@ panel_maximized_controls_class_init (PanelMaximizedControlsClass *klass)
 
   widget_class->grab_focus = panel_maximized_controls_grab_focus;
 
-  signals [CLOSE] =
-    g_signal_new ("close",
-                  G_TYPE_FROM_CLASS (klass),
-                  G_SIGNAL_RUN_LAST,
-                  0,
-                  NULL, NULL,
-                  NULL,
-                  G_TYPE_NONE, 0);
-
   gtk_widget_class_set_css_name (widget_class, "panelmaximizedcontrols");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
 }
@@ -102,16 +76,11 @@ panel_maximized_controls_init (PanelMaximizedControls *self)
   gtk_widget_set_parent (GTK_WIDGET (self->box), GTK_WIDGET (self));
 
   self->close = GTK_BUTTON (gtk_button_new ());
+  gtk_actionable_set_action_name (GTK_ACTIONABLE (self->close), "page.unmaximize");
   gtk_button_set_icon_name (self->close, "view-restore-symbolic");
   gtk_widget_set_tooltip_text (GTK_WIDGET (self->close), _("Restore panel to previous location"));
   gtk_widget_set_can_focus (GTK_WIDGET (self->close), TRUE);
   gtk_widget_add_css_class (GTK_WIDGET (self->close), "circular");
   gtk_widget_add_css_class (GTK_WIDGET (self->close), "close");
   gtk_box_append (self->box, GTK_WIDGET (self->close));
-
-  g_signal_connect_object (self->close,
-                           "clicked",
-                           G_CALLBACK (panel_maximized_controls_close_clicked_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
 }

@@ -84,9 +84,6 @@ panel_widget_update_actions (PanelWidget *self)
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
                                  "page.maximize",
                                  !priv->maximized && panel_widget_get_can_maximize (self));
-  gtk_widget_action_set_enabled (GTK_WIDGET (self),
-                                 "page.unmaximize",
-                                 priv->maximized);
 }
 
 static void
@@ -95,14 +92,6 @@ panel_widget_maximize_action (GtkWidget  *widget,
                               GVariant   *param)
 {
   panel_widget_maximize (PANEL_WIDGET (widget));
-}
-
-static void
-panel_widget_unmaximize_action (GtkWidget  *widget,
-                                const char *action_name,
-                                GVariant   *param)
-{
-  panel_widget_unmaximize (PANEL_WIDGET (widget));
 }
 
 /**
@@ -390,9 +379,6 @@ panel_widget_class_init (PanelWidgetClass *klass)
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
 
   gtk_widget_class_install_action (widget_class, "page.maximize", NULL, panel_widget_maximize_action);
-  gtk_widget_class_install_action (widget_class, "page.unmaximize", NULL, panel_widget_unmaximize_action);
-
-  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_Escape, 0, "panel.unmaximize", NULL);
 
   /* Ensure we have quarks for known types */
   g_quark_from_static_string (PANEL_WIDGET_KIND_ANY);

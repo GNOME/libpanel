@@ -173,16 +173,25 @@ panel_dock_get_child_position_cb (PanelDock     *self,
 }
 
 static void
-panel_dock_controls_close_cb (PanelDock              *self,
-                              PanelMaximizedControls *controls)
+page_unmaximize_action (GtkWidget  *widget,
+                        const char *action_name,
+                        GVariant   *param)
 {
+  PanelDock *self = (PanelDock *)widget;
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
   g_assert (PANEL_IS_DOCK (self));
-  g_assert (PANEL_IS_MAXIMIZED_CONTROLS (controls));
 
   if (priv->maximized != NULL)
-    panel_widget_unmaximize (priv->maximized);
+    {
+      PanelWidget *page = g_object_ref (priv->maximized);
+
+      panel_widget_unmaximize (page);
+      panel_widget_raise (page);
+      gtk_widget_grab_focus (GTK_WIDGET (page));
+
+      g_object_unref (page);
+    }
 }
 
 static void
@@ -374,6 +383,10 @@ panel_dock_class_init (PanelDockClass *klass)
                   NULL, NULL, NULL,
                   G_TYPE_NONE, 1, PANEL_TYPE_WIDGET);
 
+  gtk_widget_class_install_action (widget_class, "page.unmaximize", NULL, page_unmaximize_action);
+
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F11, GDK_SHIFT_MASK, "page.unmaximize", NULL);
+
   gtk_widget_class_set_css_name (widget_class, "paneldock");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
 }
@@ -398,11 +411,6 @@ panel_dock_init (PanelDock *self)
   gtk_widget_set_halign (GTK_WIDGET (priv->controls), GTK_ALIGN_END);
   gtk_widget_set_valign (GTK_WIDGET (priv->controls), GTK_ALIGN_START);
   gtk_widget_hide (GTK_WIDGET (priv->controls));
-  g_signal_connect_object (priv->controls,
-                           "close",
-                           G_CALLBACK (panel_dock_controls_close_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
   gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->controls));
 }
 
@@ -906,9 +914,11 @@ _panel_dock_set_maximized (PanelDock   *self,
       gtk_overlay_remove_overlay (priv->overlay, GTK_WIDGET (priv->controls));
       gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->controls));
       gtk_widget_show (GTK_WIDGET (priv->controls));
-      gtk_widget_grab_focus (GTK_WIDGET (priv->controls));
+      gtk_widget_grab_focus (GTK_WIDGET (widget));
       g_object_unref (priv->controls);
     }
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.unmaximize", !!priv->maximized);
 }
 
 void
