@@ -57,5 +57,10 @@ PANEL_AVAILABLE_IN_ALL
 GtkSelectionModel *panel_frame_get_pages         (PanelFrame       *self);
 PANEL_AVAILABLE_IN_ALL
 guint              panel_frame_get_n_pages       (PanelFrame       *self);
+PANEL_AVAILABLE_IN_ALL
+GtkWidget         *panel_frame_get_placeholder   (PanelFrame       *self);
+PANEL_AVAILABLE_IN_ALL
+void               panel_frame_set_placeholder   (PanelFrame       *self,
+                                                  GtkWidget        *placeholder);
 
 G_END_DECLS

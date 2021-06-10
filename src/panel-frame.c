@@ -37,6 +37,8 @@ struct _PanelFrame
   PanelFrameHeader *header;
   GtkWidget        *box;
   AdwTabView       *tab_view;
+  GtkWidget        *placeholder;
+  GtkStack         *stack;
 };
 
 #define SIZE_AT_END 50
@@ -47,6 +49,7 @@ G_DEFINE_TYPE_WITH_CODE (PanelFrame, panel_frame, GTK_TYPE_WIDGET,
 enum {
   PROP_0,
   PROP_EMPTY,
+  PROP_PLACEHOLDER,
   PROP_VISIBLE_CHILD,
   N_PROPS,
 
@@ -243,6 +246,11 @@ panel_frame_notify_selected_page_cb (PanelFrame *self,
   if (self->header)
     panel_frame_header_page_changed (self->header, visible_child);
 
+  if (self->placeholder && visible_child == NULL)
+    gtk_stack_set_visible_child (self->stack, self->placeholder);
+  else
+    gtk_stack_set_visible_child (self->stack, GTK_WIDGET (self->tab_view));
+
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
 }
 
@@ -335,6 +343,7 @@ panel_frame_dispose (GObject *object)
   PanelFrame *self = (PanelFrame *)object;
 
   panel_frame_set_header (self, NULL);
+  panel_frame_set_placeholder (self, NULL);
 
   g_clear_pointer (&self->box, gtk_widget_unparent);
 
@@ -363,6 +372,10 @@ panel_frame_get_property (GObject    *object,
       g_value_set_enum (value, gtk_orientable_get_orientation (GTK_ORIENTABLE (self->box)));
       break;
 
+    case PROP_PLACEHOLDER:
+      g_value_set_object (value, panel_frame_get_placeholder (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -386,6 +399,10 @@ panel_frame_set_property (GObject      *object,
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->box), g_value_get_enum (value));
       if (GTK_IS_ORIENTABLE (self->header))
         gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header), !g_value_get_enum (value));
+      break;
+
+    case PROP_PLACEHOLDER:
+      panel_frame_set_placeholder (self, g_value_get_object (value));
       break;
 
     default:
@@ -413,6 +430,13 @@ panel_frame_class_init (PanelFrameClass *klass)
                           TRUE,
                           (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
+  properties [PROP_PLACEHOLDER] =
+    g_param_spec_object ("placeholder",
+                         "Placeholder",
+                         "Placeholder",
+                         PANEL_TYPE_WIDGET,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
   properties [PROP_VISIBLE_CHILD] =
     g_param_spec_object ("visible-child",
                          "Visible Child",
@@ -428,6 +452,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame.ui");
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);
+  gtk_widget_class_bind_template_child (widget_class, PanelFrame, stack);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, tab_view);
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
@@ -483,7 +508,7 @@ panel_frame_init (PanelFrame *self)
                            "notify::selected-page",
                            G_CALLBACK (panel_frame_notify_selected_page_cb),
                            self,
-                           G_CONNECT_SWAPPED);
+                           G_CONNECT_AFTER | G_CONNECT_SWAPPED);
 
   panel_frame_set_header (self, PANEL_FRAME_HEADER (panel_frame_switcher_new ()));
 
@@ -544,7 +569,7 @@ panel_frame_get_empty (PanelFrame *self)
 {
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
-  return adw_tab_view_get_n_pages (self->tab_view) == 0;
+  return adw_tab_view_get_selected_page (self->tab_view) == NULL;
 }
 
 PanelWidget *
@@ -674,4 +699,56 @@ panel_frame_get_n_pages (PanelFrame *self)
   g_return_val_if_fail (PANEL_IS_FRAME (self), 0);
 
   return adw_tab_view_get_n_pages (self->tab_view);
+}
+
+/**
+ * panel_frame_get_placeholder:
+ * @self: a #PanelFrame
+ *
+ * Gets the placeholder widget, if any.
+ *
+ * Returns: (nullable) (transfer none): a #GtkWidget or %NULL
+ */
+GtkWidget *
+panel_frame_get_placeholder (PanelFrame *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+
+  return self->placeholder;
+}
+
+/**
+ * panel_frame_set_placeholder:
+ * @self: a #PanelFrame
+ * @placeholder: (nullable): a #GtkWidget or %NULL
+ *
+ * Sets the placeholder widget for the frame.
+ *
+ * The placeholder widget is displayed when there are no pages
+ * to display in the frame.
+ */
+void
+panel_frame_set_placeholder (PanelFrame *self,
+                             GtkWidget  *placeholder)
+{
+  g_return_if_fail (PANEL_IS_FRAME (self));
+  g_return_if_fail (!placeholder || GTK_IS_WIDGET (placeholder));
+
+  if (self->placeholder == placeholder)
+    return;
+
+  if (self->placeholder)
+    gtk_stack_remove (self->stack, self->placeholder);
+
+  self->placeholder = placeholder;
+
+  if (self->placeholder)
+    gtk_stack_add_named (self->stack, self->placeholder, "placeholder");
+
+  if (self->placeholder && !panel_frame_get_visible_child (self))
+    gtk_stack_set_visible_child (self->stack, self->placeholder);
+  else
+    gtk_stack_set_visible_child (self->stack, GTK_WIDGET (self->tab_view));
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_PLACEHOLDER]);
 }

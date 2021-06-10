@@ -5,9 +5,16 @@
       <object class="GtkBox" id="box">
         <property name="orientation">vertical</property>
         <child>
-          <object class="AdwTabView" id="tab_view">
-            <property name="hexpand">true</property>
-            <property name="vexpand">true</property>
+          <object class="GtkStack" id="stack">
+            <child>
+              <object class="AdwTabView" id="tab_view">
+                <property name="hexpand">true</property>
+                <property name="vexpand">true</property>
+                <layout>
+                  <property name="name">pages</property>
+                </layout>
+              </object>
+            </child>
           </object>
         </child>
       </object>
