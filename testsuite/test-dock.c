@@ -22,12 +22,27 @@ create_frame_cb (PanelGrid *grid)
   return frame;
 }
 
+static GtkWidget *
+get_default_focus (GtkWidget *page,
+                   GtkWidget *text_view)
+{
+  g_assert (GTK_IS_TEXT_VIEW (text_view));
+  return text_view;
+}
+
 static PanelWidget *
 create_document (void)
 {
   static guint count;
   char *title = g_strdup_printf ("Untitled Document %u", ++count);
   PanelWidget *ret;
+  GtkTextView *text_view;
+
+  text_view = g_object_new (GTK_TYPE_TEXT_VIEW,
+                            "buffer", g_object_new (GTK_TYPE_TEXT_BUFFER,
+                                                    "text", "Hello libpanel!",
+                                                    NULL),
+                            NULL);
 
   ret = g_object_new (PANEL_TYPE_WIDGET,
                       "can-maximize", TRUE,
@@ -37,13 +52,13 @@ create_document (void)
                       "foreground-rgba", &black,
                       "background-rgba", &white,
                       "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
-                                             "child", g_object_new (GTK_TYPE_TEXT_VIEW,
-                                                                    "buffer", g_object_new (GTK_TYPE_TEXT_BUFFER,
-                                                                                            "text", "Hello libpanel!",
-                                                                                            NULL),
-                                                                    NULL),
+                                             "child", text_view,
                                              NULL),
                       NULL);
+  g_signal_connect (ret,
+                    "get-default-focus",
+                    G_CALLBACK (get_default_focus),
+                    text_view);
 
   g_free (title);
 
