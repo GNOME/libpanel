@@ -32,23 +32,33 @@ PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelFrameHeaderBar, panel_frame_header_bar, PANEL, FRAME_HEADER_BAR, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget      *panel_frame_header_bar_new              (void);
+GtkWidget      *panel_frame_header_bar_new                 (void);
 PANEL_AVAILABLE_IN_ALL
-GMenuModel     *panel_frame_header_bar_get_menu_model   (PanelFrameHeaderBar *self);
+GMenuModel     *panel_frame_header_bar_get_menu_model      (PanelFrameHeaderBar *self);
 PANEL_AVAILABLE_IN_ALL
-void            panel_frame_header_bar_set_menu_model   (PanelFrameHeaderBar *self,
-                                                         GMenuModel          *model);
+void            panel_frame_header_bar_set_menu_model      (PanelFrameHeaderBar *self,
+                                                            GMenuModel          *model);
 PANEL_AVAILABLE_IN_ALL
-GtkPopoverMenu *panel_frame_header_bar_get_menu_popover (PanelFrameHeaderBar *self);
+GtkPopoverMenu *panel_frame_header_bar_get_menu_popover    (PanelFrameHeaderBar *self);
 PANEL_AVAILABLE_IN_ALL
-GtkWidget      *panel_frame_header_bar_get_start_child  (PanelFrameHeaderBar *self);
+GtkWidget      *panel_frame_header_bar_get_start_child     (PanelFrameHeaderBar *self);
 PANEL_AVAILABLE_IN_ALL
-void            panel_frame_header_bar_set_start_child  (PanelFrameHeaderBar *self,
-                                                         GtkWidget           *start_child);
+void            panel_frame_header_bar_set_start_child     (PanelFrameHeaderBar *self,
+                                                            GtkWidget           *start_child);
 PANEL_AVAILABLE_IN_ALL
-GtkWidget      *panel_frame_header_bar_get_end_child    (PanelFrameHeaderBar *self);
+GtkWidget      *panel_frame_header_bar_get_end_child       (PanelFrameHeaderBar *self);
 PANEL_AVAILABLE_IN_ALL
-void            panel_frame_header_bar_set_end_child    (PanelFrameHeaderBar *self,
-                                                         GtkWidget           *end_child);
+void            panel_frame_header_bar_set_end_child       (PanelFrameHeaderBar *self,
+                                                            GtkWidget           *end_child);
+PANEL_AVAILABLE_IN_ALL
+const GdkRGBA  *panel_frame_header_bar_get_foreground_rgba (PanelFrameHeaderBar *self);
+PANEL_AVAILABLE_IN_ALL
+void            panel_frame_header_bar_set_foreground_rgba (PanelFrameHeaderBar *self,
+                                                            const GdkRGBA       *foreground_rgba);
+PANEL_AVAILABLE_IN_ALL
+const GdkRGBA  *panel_frame_header_bar_get_background_rgba (PanelFrameHeaderBar *self);
+PANEL_AVAILABLE_IN_ALL
+void            panel_frame_header_bar_set_background_rgba (PanelFrameHeaderBar *self,
+                                                            const GdkRGBA       *background_rgba);
 
 G_END_DECLS

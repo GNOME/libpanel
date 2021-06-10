@@ -37,6 +37,7 @@ struct _PanelFrameHeaderBar
   GMenuModel        *menu_model;
   PanelWidget       *visible_child;
   PanelJoinedMenu   *joined_menu;
+  GtkCssProvider    *css_provider;
 
   GMenuModel        *frame_menu;
   GtkBox            *box;
@@ -50,6 +51,14 @@ struct _PanelFrameHeaderBar
   GtkLabel          *title;
   GtkLabel          *modified;
   GtkImage          *image;
+
+  GdkRGBA            background_rgba;
+  GdkRGBA            foreground_rgba;
+
+  guint              update_css_handler;
+
+  guint              background_rgba_set : 1;
+  guint              foreground_rgba_set : 1;
 };
 
 static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
@@ -59,15 +68,18 @@ G_DEFINE_TYPE_WITH_CODE (PanelFrameHeaderBar, panel_frame_header_bar, GTK_TYPE_W
 
 enum {
   PROP_0,
+  PROP_BACKGROUND_RGBA,
+  PROP_END_CHILD,
+  PROP_FOREGROUND_RGBA,
   PROP_MENU_MODEL,
   PROP_START_CHILD,
-  PROP_END_CHILD,
   N_PROPS,
 
   PROP_FRAME,
 };
 
 static GParamSpec *properties [N_PROPS];
+static GQuark css_quark;
 
 /**
  * panel_frame_header_bar_new:
@@ -132,6 +144,108 @@ unbind_row_cb (GtkSignalListItemFactory *factory,
 }
 
 static void
+update_css_providers_recurse (GtkWidget           *widget,
+                              PanelFrameHeaderBar *self)
+{
+  /* Stop at popovers */
+  if (GTK_IS_NATIVE (widget))
+    return;
+
+  if (!g_object_get_qdata (G_OBJECT (widget), css_quark))
+    {
+      GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
+      gtk_style_context_add_provider (style_context,
+                                      GTK_STYLE_PROVIDER (self->css_provider),
+                                      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+      g_object_set_qdata (G_OBJECT (widget), css_quark, self->css_provider);
+    }
+
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    update_css_providers_recurse (child, self);
+}
+
+static gboolean
+panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
+{
+  GString *str = NULL;
+
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+  g_assert (self->css_provider != NULL);
+  g_assert (GTK_IS_CSS_PROVIDER (self->css_provider));
+
+  str = g_string_new (NULL);
+
+  /*
+   * We set various styles on this provider so that we can update multiple
+   * widgets using the same CSS style. That includes ourself, various buttons,
+   * labels, and some images.
+   */
+
+  if (self->background_rgba_set)
+    {
+      gchar *bgstr = gdk_rgba_to_string (&self->background_rgba);
+
+      g_string_append        (str, "panelframeheaderbar {\n");
+      g_string_append        (str, "  background: none;\n");
+      g_string_append_printf (str, "  background-color: %s;\n", bgstr);
+      g_string_append        (str, "  transition: background-color 400ms;\n");
+      g_string_append        (str, "  transition-timing-function: ease;\n");
+      g_string_append_printf (str, "  border-bottom: 1px solid shade(%s,0.9);\n", bgstr);
+      g_string_append        (str, "}\n");
+      g_string_append        (str, "button { background: transparent; }\n");
+      g_string_append        (str, "button:hover, button:checked {\n");
+      g_string_append_printf (str, "  background: none; background-color: shade(%s,.85); }\n", bgstr);
+
+      /* only use foreground when background is set */
+      if (self->foreground_rgba_set)
+        {
+          static const gchar *names[] = { "image", "label" };
+          gchar *fgstr = gdk_rgba_to_string (&self->foreground_rgba);
+
+          for (guint i = 0; i < G_N_ELEMENTS (names); i++)
+            {
+              g_string_append_printf (str, "%s {\n", names[i]);
+              g_string_append        (str, "  -gtk-icon-shadow: none;\n");
+              g_string_append        (str, "  text-shadow: none;\n");
+              g_string_append_printf (str, "  text-shadow: 0 -1px alpha(%s,0.05);\n", fgstr);
+              g_string_append_printf (str, "  color: %s;\n", fgstr);
+              g_string_append        (str, "}\n");
+            }
+
+          g_free (fgstr);
+        }
+
+      g_free (bgstr);
+    }
+
+  /* Use -1 for length so CSS provider knows the string is NULL terminated
+   * and there-by avoid a string copy.
+   */
+  gtk_css_provider_load_from_data (self->css_provider, str->str, -1);
+
+  self->update_css_handler = 0;
+
+  g_string_free (str, TRUE);
+
+  return G_SOURCE_REMOVE;
+}
+
+static void
+panel_frame_header_bar_queue_update_css (PanelFrameHeaderBar *self)
+{
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+
+  if (self->update_css_handler == 0)
+    self->update_css_handler =
+      g_idle_add_full (G_PRIORITY_HIGH,
+                       (GSourceFunc)panel_frame_header_bar_update_css,
+                       g_object_ref (self),
+                       g_object_unref);
+}
+
+static void
 panel_frame_header_bar_set_visible_child (PanelFrameHeaderBar *self,
                                           PanelWidget         *widget)
 {
@@ -139,7 +253,16 @@ panel_frame_header_bar_set_visible_child (PanelFrameHeaderBar *self,
   g_return_if_fail (!widget || PANEL_IS_WIDGET (widget));
 
   if (g_set_object (&self->visible_child, widget))
-    panel_binding_group_set_source (self->bindings, widget);
+    {
+      panel_binding_group_set_source (self->bindings, widget);
+
+      if (widget == NULL)
+        {
+          self->foreground_rgba_set = FALSE;
+          self->background_rgba_set = FALSE;
+          panel_frame_header_bar_queue_update_css (self);
+        }
+    }
 }
 
 static void
@@ -220,6 +343,8 @@ panel_frame_header_bar_dispose (GObject *object)
 {
   PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)object;
 
+  g_clear_handle_id (&self->update_css_handler, g_source_remove);
+
   panel_frame_header_bar_set_frame (self, NULL);
 
   g_clear_pointer ((GtkWidget **)&self->box, gtk_widget_unparent);
@@ -227,6 +352,7 @@ panel_frame_header_bar_dispose (GObject *object)
   g_clear_object (&self->visible_child);
   g_clear_object (&self->frame);
   g_clear_object (&self->menu_model);
+  g_clear_object (&self->css_provider);
   g_clear_object (&self->bindings);
   g_clear_object (&self->joined_menu);
 
@@ -243,6 +369,14 @@ panel_frame_header_bar_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_BACKGROUND_RGBA:
+      g_value_set_boxed (value, panel_frame_header_bar_get_background_rgba (self));
+      break;
+
+    case PROP_FOREGROUND_RGBA:
+      g_value_set_boxed (value, panel_frame_header_bar_get_foreground_rgba (self));
+      break;
+
     case PROP_FRAME:
       g_value_set_object (value, self->frame);
       break;
@@ -274,6 +408,14 @@ panel_frame_header_bar_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_BACKGROUND_RGBA:
+      panel_frame_header_bar_set_background_rgba (self, g_value_get_boxed (value));
+      break;
+
+    case PROP_FOREGROUND_RGBA:
+      panel_frame_header_bar_set_foreground_rgba (self, g_value_get_boxed (value));
+      break;
+
     case PROP_FRAME:
       panel_frame_header_bar_set_frame (self, g_value_get_object (value));
       break;
@@ -304,6 +446,35 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   object_class->dispose = panel_frame_header_bar_dispose;
   object_class->get_property = panel_frame_header_bar_get_property;
   object_class->set_property = panel_frame_header_bar_set_property;
+
+  /**
+   * PanelFrameHeaderBar:background-rgba:
+   *
+   * The "background-rgba" property can be used to set the background
+   * color of the header. This should be set to the
+   * #PanelWidget:background-rgba of the active view.
+   *
+   * Set to %NULL to unset the background-rgba.
+   */
+  properties [PROP_BACKGROUND_RGBA] =
+    g_param_spec_boxed ("background-rgba",
+                        "Background RGBA",
+                        "The background color to use for the header",
+                        GDK_TYPE_RGBA,
+                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * PanelFrameHeaderBar:foreground-rgba:
+   *
+   * Sets the foreground color to use when
+   * #PanelFrameHeaderBar:background-rgba is used for the background.
+   */
+  properties [PROP_FOREGROUND_RGBA] =
+    g_param_spec_boxed ("foreground-rgba",
+                        "Foreground RGBA",
+                        "The foreground color to use with background-rgba",
+                        GDK_TYPE_RGBA,
+                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_MENU_MODEL] =
     g_param_spec_object ("menu-model",
@@ -347,6 +518,8 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, unbind_row_cb);
 
   gtk_widget_class_install_action (widget_class, "page.close", NULL, page_close_action);
+
+  css_quark = g_quark_from_static_string ("css-provider");
 }
 
 static void
@@ -354,6 +527,8 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
 {
   GtkWidget *button;
   GtkWidget *box;
+
+  self->css_provider = gtk_css_provider_new ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -394,6 +569,10 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   panel_binding_group_bind (self->bindings, "title", self->title, "label", 0);
   panel_binding_group_bind (self->bindings, "modified", self->modified, "visible", 0);
   panel_binding_group_bind (self->bindings, "icon", self->image, "gicon", 0);
+  panel_binding_group_bind (self->bindings, "background-rgba", self, "background-rgba", 0);
+  panel_binding_group_bind (self->bindings, "foreground-rgba", self, "foreground-rgba", 0);
+
+  update_css_providers_recurse (GTK_WIDGET (self), self);
 }
 
 static gboolean
@@ -561,4 +740,46 @@ panel_frame_header_bar_set_end_child (PanelFrameHeaderBar *self,
     gtk_box_append (self->end_area, end_child);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_END_CHILD]);
+}
+
+const GdkRGBA *
+panel_frame_header_bar_get_background_rgba (PanelFrameHeaderBar *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME_HEADER_BAR (self), NULL);
+
+  return self->background_rgba_set ? &self->background_rgba : NULL;
+}
+
+void
+panel_frame_header_bar_set_background_rgba (PanelFrameHeaderBar *self,
+                                            const GdkRGBA       *background_rgba)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
+
+  self->background_rgba_set = background_rgba != NULL;
+  if (background_rgba)
+    self->background_rgba = *background_rgba;
+  panel_frame_header_bar_queue_update_css (self);
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BACKGROUND_RGBA]);
+}
+
+const GdkRGBA *
+panel_frame_header_bar_get_foreground_rgba (PanelFrameHeaderBar *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME_HEADER_BAR (self), NULL);
+
+  return self->foreground_rgba_set ? &self->foreground_rgba : NULL;
+}
+
+void
+panel_frame_header_bar_set_foreground_rgba (PanelFrameHeaderBar *self,
+                                            const GdkRGBA       *foreground_rgba)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
+
+  self->foreground_rgba_set = foreground_rgba != NULL;
+  if (foreground_rgba)
+    self->foreground_rgba = *foreground_rgba;
+  panel_frame_header_bar_queue_update_css (self);
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_FOREGROUND_RGBA]);
 }

@@ -42,6 +42,8 @@ typedef struct
 
   guint      busy_count;
 
+  guint      background_rgba_set : 1;
+  guint      foreground_rgba_set : 1;
   guint      reorderable : 1;
   guint      can_maximize : 1;
   guint      maximized : 1;
@@ -801,7 +803,7 @@ panel_widget_get_background_rgba (PanelWidget *self)
 
   g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
 
-  return &priv->background_rgba;
+  return priv->background_rgba_set ? &priv->background_rgba : NULL;
 }
 
 void
@@ -811,6 +813,8 @@ panel_widget_set_background_rgba (PanelWidget   *self,
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  priv->background_rgba_set = background_rgba != NULL;
 
   if (background_rgba == NULL)
     background_rgba = &transparent;
@@ -829,7 +833,7 @@ panel_widget_get_foreground_rgba (PanelWidget *self)
 
   g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
 
-  return &priv->foreground_rgba;
+  return priv->foreground_rgba_set ? &priv->foreground_rgba : NULL;
 }
 
 void
@@ -839,6 +843,8 @@ panel_widget_set_foreground_rgba (PanelWidget   *self,
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  priv->foreground_rgba_set = foreground_rgba != NULL;
 
   if (foreground_rgba == NULL)
     foreground_rgba = &transparent;
