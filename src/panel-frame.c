@@ -43,7 +43,10 @@ struct _PanelFrame
 
 #define SIZE_AT_END 50
 
+static void buildable_iface_init (GtkBuildableIface *iface);
+
 G_DEFINE_TYPE_WITH_CODE (PanelFrame, panel_frame, GTK_TYPE_WIDGET,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL))
 
 enum {
@@ -57,6 +60,7 @@ enum {
 };
 
 static GParamSpec *properties [N_PROPS];
+static GtkBuildableIface *parent_buildable;
 
 GtkWidget *
 panel_frame_new (void)
@@ -751,4 +755,23 @@ panel_frame_set_placeholder (PanelFrame *self,
     gtk_stack_set_visible_child (self->stack, GTK_WIDGET (self->tab_view));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_PLACEHOLDER]);
+}
+
+static void
+panel_frame_add_child (GtkBuildable *buildable,
+                       GtkBuilder   *builder,
+                       GObject      *child,
+                       const char   *type)
+{
+  if (PANEL_IS_WIDGET (child))
+    panel_frame_add (PANEL_FRAME (buildable), PANEL_WIDGET (child));
+  else
+    parent_buildable->add_child (buildable, builder, child, type);
+}
+
+static void
+buildable_iface_init (GtkBuildableIface *iface)
+{
+  parent_buildable = g_type_interface_peek_parent (iface);
+  iface->add_child = panel_frame_add_child;
 }
