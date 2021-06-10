@@ -51,7 +51,11 @@ typedef struct
   guint      needs_attention : 1;
 } PanelWidgetPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (PanelWidget, panel_widget, GTK_TYPE_WIDGET)
+static void buildable_iface_init (GtkBuildableIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (PanelWidget, panel_widget, GTK_TYPE_WIDGET,
+                         G_ADD_PRIVATE  (PanelWidget)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init))
 
 enum {
   PROP_0,
@@ -585,9 +589,10 @@ panel_widget_set_child (PanelWidget *self,
   if (priv->child == child)
     return;
 
-  g_clear_pointer (&priv->child, gtk_widget_unparent);
+  if (priv->child)
+    gtk_widget_unparent (priv->child);
   priv->child = child;
-  if (priv->child != NULL)
+  if (priv->child)
     gtk_widget_set_parent (priv->child, GTK_WIDGET (self));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CHILD]);
@@ -988,4 +993,24 @@ panel_widget_focus_default (PanelWidget *self)
     return gtk_widget_grab_focus (default_focus);
 
   return FALSE;
+}
+
+static void
+panel_widget_add_child (GtkBuildable *buildable,
+                        GtkBuilder   *builder,
+                        GObject      *child,
+                        const char   *type)
+{
+  g_assert (PANEL_IS_WIDGET (buildable));
+  g_assert (GTK_IS_BUILDER (builder));
+  g_assert (G_IS_OBJECT (child));
+
+  if (GTK_IS_WIDGET (child))
+    panel_widget_set_child (PANEL_WIDGET (buildable), GTK_WIDGET (child));
+}
+
+static void
+buildable_iface_init (GtkBuildableIface *iface)
+{
+  iface->add_child = panel_widget_add_child;
 }
