@@ -113,5 +113,7 @@ GMenuModel    *panel_widget_get_menu_model      (PanelWidget   *self);
 PANEL_AVAILABLE_IN_ALL
 void           panel_widget_set_menu_model      (PanelWidget   *self,
                                                  GMenuModel    *menu_model);
+PANEL_AVAILABLE_IN_ALL
+void           panel_widget_raise               (PanelWidget   *self);
 
 G_END_DECLS

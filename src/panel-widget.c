@@ -883,3 +883,46 @@ panel_widget_set_menu_model (PanelWidget *self,
   if (g_set_object (&priv->menu_model, menu_model))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_MENU_MODEL]);
 }
+
+void
+panel_widget_raise (PanelWidget *self)
+{
+  GtkWidget *frame;
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if ((frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME)))
+    {
+      GtkWidget *dock_child;
+      GtkWidget *dock;
+
+      panel_frame_set_visible_child (PANEL_FRAME (frame), self);
+
+      if ((dock_child = gtk_widget_get_ancestor (frame, PANEL_TYPE_DOCK_CHILD)) &&
+          (dock = gtk_widget_get_ancestor (dock_child, PANEL_TYPE_DOCK)))
+        {
+          switch (panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)))
+            {
+            case PANEL_DOCK_POSITION_END:
+              panel_dock_set_reveal_end (PANEL_DOCK (dock), TRUE);
+              break;
+
+            case PANEL_DOCK_POSITION_START:
+              panel_dock_set_reveal_start (PANEL_DOCK (dock), TRUE);
+              break;
+
+            case PANEL_DOCK_POSITION_TOP:
+              panel_dock_set_reveal_top (PANEL_DOCK (dock), TRUE);
+              break;
+
+            case PANEL_DOCK_POSITION_BOTTOM:
+              panel_dock_set_reveal_bottom (PANEL_DOCK (dock), TRUE);
+              break;
+
+            case PANEL_DOCK_POSITION_CENTER:
+            default:
+              break;
+            }
+        }
+    }
+}

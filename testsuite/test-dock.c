@@ -51,6 +51,7 @@ add_child (PanelGrid *grid)
 {
   PanelWidget *widget = create_document ();
   panel_grid_add (grid, widget);
+  panel_widget_raise (widget);
 }
 
 static void
