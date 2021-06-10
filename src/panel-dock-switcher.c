@@ -376,17 +376,17 @@ panel_dock_switcher_set_dock (PanelDockSwitcher *self,
       gtk_revealer_set_reveal_child (self->end_revealer,
                                      panel_dock_get_can_reveal_end (self->dock));
 
-      self->top_binding = g_object_bind_property (self->top_button, "active",
-                                                  self->dock, "reveal-top",
+      self->top_binding = g_object_bind_property (self->dock, "reveal-top",
+                                                  self->top_button, "active",
                                                   G_BINDING_BIDIRECTIONAL);
-      self->bottom_binding = g_object_bind_property (self->bottom_button, "active",
-                                                     self->dock, "reveal-bottom",
+      self->bottom_binding = g_object_bind_property (self->dock, "reveal-bottom",
+                                                     self->bottom_button, "active",
                                                      G_BINDING_BIDIRECTIONAL);
-      self->start_binding = g_object_bind_property (self->start_button, "active",
-                                                    self->dock, "reveal-start",
+      self->start_binding = g_object_bind_property (self->dock, "reveal-start",
+                                                    self->start_button, "active",
                                                     G_BINDING_BIDIRECTIONAL);
-      self->end_binding = g_object_bind_property (self->end_button, "active",
-                                                  self->dock, "reveal-end",
+      self->end_binding = g_object_bind_property (self->dock, "reveal-end",
+                                                  self->end_button, "active",
                                                   G_BINDING_BIDIRECTIONAL);
       g_signal_connect_object (self->dock,
                                "panel-drag-begin",
