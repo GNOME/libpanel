@@ -122,5 +122,7 @@ PANEL_AVAILABLE_IN_ALL
 void           panel_widget_raise               (PanelWidget   *self);
 PANEL_AVAILABLE_IN_ALL
 GtkWidget     *panel_widget_get_default_focus   (PanelWidget   *self);
+PANEL_AVAILABLE_IN_ALL
+gboolean       panel_widget_focus_default       (PanelWidget   *self);
 
 G_END_DECLS

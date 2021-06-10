@@ -27,7 +27,7 @@
 #include "panel-maximized-controls-private.h"
 #include "panel-paned-private.h"
 #include "panel-resizer-private.h"
-#include "panel-widget-private.h"
+#include "panel-widget.h"
 
 typedef struct
 {
@@ -216,7 +216,7 @@ page_unmaximize_action (GtkWidget  *widget,
 
       panel_widget_unmaximize (page);
       panel_widget_raise (page);
-      _panel_widget_focus_default (page);
+      panel_widget_focus_default (page);
 
       g_object_unref (page);
     }
@@ -945,7 +945,7 @@ _panel_dock_set_maximized (PanelDock   *self,
       gtk_overlay_remove_overlay (priv->overlay, GTK_WIDGET (priv->controls));
       gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->controls));
       gtk_widget_show (GTK_WIDGET (priv->controls));
-      _panel_widget_focus_default (widget);
+      panel_widget_focus_default (widget);
       g_object_unref (priv->controls);
     }
 }

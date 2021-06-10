@@ -23,7 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
-#include "panel-widget-private.h"
+#include "panel-widget.h"
 
 typedef struct
 {
@@ -976,7 +976,7 @@ panel_widget_get_default_focus (PanelWidget *self)
 }
 
 gboolean
-_panel_widget_focus_default (PanelWidget *self)
+panel_widget_focus_default (PanelWidget *self)
 {
   GtkWidget *default_focus;
 
