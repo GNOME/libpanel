@@ -2,7 +2,7 @@
 
 static GMenuModel *menu_model;
 static GdkRGBA white = {1,1,1,1};
-static GdkRGBA black = {0,0,0,1};
+static GdkRGBA grey;
 
 static PanelFrame *
 create_frame_cb (PanelGrid *grid)
@@ -49,7 +49,7 @@ create_document (void)
                       "title", title,
                       "icon-name", "text-x-generic-symbolic",
                       "menu-model", menu_model,
-                      "foreground-rgba", &black,
+                      "foreground-rgba", &grey,
                       "background-rgba", &white,
                       "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
                                              "child", text_view,
@@ -96,6 +96,8 @@ main (int argc,
 
   gtk_init ();
   panel_init ();
+
+  gdk_rgba_parse (&grey, "#241f31");
 
   main_loop = g_main_loop_new (NULL, FALSE);
   filename = g_build_filename (g_getenv ("G_TEST_SRCDIR"), "test-dock.ui", NULL);
