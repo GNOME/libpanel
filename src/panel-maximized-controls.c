@@ -39,12 +39,6 @@ panel_maximized_controls_new (void)
   return g_object_new (PANEL_TYPE_MAXIMIZED_CONTROLS, NULL);
 }
 
-static gboolean
-panel_maximized_controls_grab_focus (GtkWidget *widget)
-{
-  return gtk_widget_grab_focus (GTK_WIDGET (PANEL_MAXIMIZED_CONTROLS (widget)->close));
-}
-
 static void
 panel_maximized_controls_dispose (GObject *object)
 {
@@ -62,8 +56,6 @@ panel_maximized_controls_class_init (PanelMaximizedControlsClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = panel_maximized_controls_dispose;
-
-  widget_class->grab_focus = panel_maximized_controls_grab_focus;
 
   gtk_widget_class_set_css_name (widget_class, "panelmaximizedcontrols");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
