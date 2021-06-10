@@ -904,6 +904,8 @@ _panel_dock_set_maximized (PanelDock   *self,
 
   priv->maximized = widget;
 
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.unmaximize", !!priv->maximized);
+
   if (priv->maximized)
     {
       gtk_widget_add_css_class (GTK_WIDGET (priv->maximized), "maximized");
@@ -917,8 +919,6 @@ _panel_dock_set_maximized (PanelDock   *self,
       _panel_widget_focus_default (widget);
       g_object_unref (priv->controls);
     }
-
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.unmaximize", !!priv->maximized);
 }
 
 void
