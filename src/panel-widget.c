@@ -589,6 +589,8 @@ panel_widget_set_child (PanelWidget *self,
   priv->child = child;
   if (priv->child != NULL)
     gtk_widget_set_parent (priv->child, GTK_WIDGET (self));
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CHILD]);
 }
 
 gboolean
