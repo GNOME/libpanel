@@ -106,6 +106,9 @@ panelframeheaderbar popover row:hover .close-button {
   background: alpha(@theme_fg_color, .15);
   color: @theme_fg_color;
 }
+panelframeheaderbar popover row:selected:hover .close-button {
+  color: @theme_selected_fg_color;
+}
 panelframeheaderbar popover row .close-button:active {
   background: alpha(black, .2);
 }
