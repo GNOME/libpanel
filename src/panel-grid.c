@@ -90,7 +90,7 @@ panel_grid_dispose (GObject *object)
 {
   PanelGrid *self = (PanelGrid *)object;
 
-  g_clear_pointer ((GtkWidget **)self->columns, gtk_widget_unparent);
+  g_clear_pointer ((GtkWidget **)&self->columns, gtk_widget_unparent);
 
   G_OBJECT_CLASS (panel_grid_parent_class)->dispose (object);
 }
