@@ -23,7 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
-#include "panel-widget.h"
+#include "panel-widget-private.h"
 
 typedef struct
 {
@@ -71,7 +71,13 @@ enum {
   N_PROPS
 };
 
+enum {
+  GET_DEFAULT_FOCUS,
+  N_SIGNALS
+};
+
 static GParamSpec *properties [N_PROPS];
+static guint signals [N_SIGNALS];
 static const GdkRGBA transparent;
 
 static void
@@ -374,6 +380,26 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
+
+  /**
+   * PanelWidget::get-default-focus:
+   * @self: a #PanelWidget
+   *
+   * Gets the default widget to focus within the #PanelWidget. The first
+   * handler for this signal is expected to return a widget, or %NULL if
+   * there is nothing to focus.
+   *
+   * Returns: (transfer none) (nullable): a #GtkWidget within #PanelWidget
+   *   or %NULL.
+   */
+  signals [GET_DEFAULT_FOCUS] =
+    g_signal_new ("get-default-focus",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (PanelWidgetClass, get_default_focus),
+                  g_signal_accumulator_first_wins, NULL,
+                  NULL,
+                  GTK_TYPE_WIDGET, 0);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
@@ -917,4 +943,47 @@ panel_widget_raise (PanelWidget *self)
             }
         }
     }
+}
+
+/**
+ * panel_widget_get_default_focus:
+ * @self: a #PanelWidget
+ *
+ * Discovers the widget that should be focused as the default widget
+ * for the #PanelWidget.
+ *
+ * For example, if you want to focus a text editor by default, you might
+ * return the #GtkTextView inside your widgetry.
+ *
+ * Returns: (transfer none) (nullable): the default widget to focus within
+ *   the #PanelWidget.
+ */
+GtkWidget *
+panel_widget_get_default_focus (PanelWidget *self)
+{
+  GtkWidget *default_focus = NULL;
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  g_signal_emit (self, signals [GET_DEFAULT_FOCUS], 0, &default_focus);
+
+  g_return_val_if_fail (default_focus == NULL ||
+                        GTK_WIDGET (self) == default_focus ||
+                        gtk_widget_is_ancestor (default_focus, GTK_WIDGET (self)),
+                        NULL);
+
+  return default_focus;
+}
+
+gboolean
+_panel_widget_focus_default (PanelWidget *self)
+{
+  GtkWidget *default_focus;
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
+
+  if ((default_focus = panel_widget_get_default_focus (self)))
+    return gtk_widget_grab_focus (default_focus);
+
+  return FALSE;
 }

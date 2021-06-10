@@ -34,6 +34,11 @@ G_DECLARE_DERIVABLE_TYPE (PanelWidget, panel_widget, PANEL, WIDGET, GtkWidget)
 struct _PanelWidgetClass
 {
   GtkWidgetClass parent_instance;
+
+  GtkWidget *(*get_default_focus) (PanelWidget *self);
+
+  /*< private >*/
+  gpointer _reserved[16];
 };
 
 #define PANEL_WIDGET_KIND_ANY      "*"
@@ -115,5 +120,7 @@ void           panel_widget_set_menu_model      (PanelWidget   *self,
                                                  GMenuModel    *menu_model);
 PANEL_AVAILABLE_IN_ALL
 void           panel_widget_raise               (PanelWidget   *self);
+PANEL_AVAILABLE_IN_ALL
+GtkWidget     *panel_widget_get_default_focus   (PanelWidget   *self);
 
 G_END_DECLS
