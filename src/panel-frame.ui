@@ -10,6 +10,7 @@
               <object class="AdwTabView" id="tab_view">
                 <property name="hexpand">true</property>
                 <property name="vexpand">true</property>
+                <signal name="setup-menu" handler="setup_menu_cb"/>
                 <layout>
                   <property name="name">pages</property>
                 </layout>
@@ -20,4 +21,23 @@
       </object>
     </child>
   </template>
+  <menu id="frame_menu">
+    <section>
+      <attribute name="label" translatable="yes">Frame</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Move Page _Left</attribute>
+        <attribute name="action">page.move-left</attribute>
+        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;bracketleft</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Move Page _Right</attribute>
+        <attribute name="action">page.move-right</attribute>
+        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;bracketright</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Close Frame</attribute>
+        <attribute name="action">frame.close</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>

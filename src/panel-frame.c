@@ -26,6 +26,7 @@
 #include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
 #include "panel-grid-private.h"
+#include "panel-joined-menu-private.h"
 #include "panel-paned-private.h"
 #include "panel-scaler-private.h"
 #include "panel-widget.h"
@@ -39,6 +40,7 @@ struct _PanelFrame
   AdwTabView       *tab_view;
   GtkWidget        *placeholder;
   GtkStack         *stack;
+  GMenuModel       *frame_menu;
 };
 
 #define SIZE_AT_END 50
@@ -342,6 +344,34 @@ panel_frame_unroot (GtkWidget *widget)
 }
 
 static void
+setup_menu_cb (AdwTabView *tab_view,
+               AdwTabPage *page)
+{
+  GMenuModel *menu_model = NULL;
+  PanelJoinedMenu *joined;
+
+  g_assert (ADW_IS_TAB_VIEW (tab_view));
+  g_assert (!page || ADW_IS_TAB_PAGE (page));
+
+  joined = PANEL_JOINED_MENU (adw_tab_view_get_menu_model (tab_view));
+
+  /* First remove everything but the last menu (which is our frame menu) */
+  while (panel_joined_menu_get_n_joined (joined) > 1)
+    panel_joined_menu_remove_index (joined, 0);
+
+  if (page != NULL)
+    {
+      GtkWidget *child = adw_tab_page_get_child (page);
+
+      if (PANEL_IS_WIDGET (child))
+        menu_model = panel_widget_get_menu_model (PANEL_WIDGET (child));
+    }
+
+  if (menu_model)
+    panel_joined_menu_prepend_menu (joined, menu_model);
+}
+
+static void
 panel_frame_dispose (GObject *object)
 {
   PanelFrame *self = (PanelFrame *)object;
@@ -458,6 +488,8 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, stack);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, tab_view);
+  gtk_widget_class_bind_template_child (widget_class, PanelFrame, frame_menu);
+  gtk_widget_class_bind_template_callback (widget_class, setup_menu_cb);
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
   gtk_widget_class_install_action (widget_class, "page.move-left", NULL, page_move_left_action);
@@ -473,10 +505,16 @@ panel_frame_class_init (PanelFrameClass *klass)
 static void
 panel_frame_init (PanelFrame *self)
 {
+  PanelJoinedMenu *menu;
   GtkDropTarget *drop_target;
   GType types[] = { PANEL_TYPE_WIDGET };
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  menu = panel_joined_menu_new ();
+  adw_tab_view_set_menu_model (self->tab_view, G_MENU_MODEL (menu));
+  panel_joined_menu_append_menu (menu, self->frame_menu);
+  g_clear_object (&menu);
 
   drop_target = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY | GDK_ACTION_MOVE);
   gtk_drop_target_set_gtypes (drop_target, types, G_N_ELEMENTS (types));
