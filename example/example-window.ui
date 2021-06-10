@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="ExampleWindow" parent="AdwApplicationWindow">
+    <property name="title">Panel Example</property>
+    <property name="default-width">900</property>
+    <property name="default-height">600</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkHeaderBar" id="headerbar">
+            <child>
+              <object class="PanelDockSwitcher" id="dockswitcher">
+                <property name="dock">dock</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="PanelDock" id="dock">
+            <property name="reveal-start">false</property>
+            <property name="reveal-bottom">true</property>
+            <property name="reveal-end">true</property>
+            <property name="vexpand">true</property>
+            <child>
+              <object class="GtkScrolledWindow">
+                <child>
+                  <object class="GtkTextView">
+                    <property name="buffer">
+                      <object class="GtkTextBuffer">
+                        <property name="text">libpanel-example</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="end">
+              <object class="PanelPaned">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="PanelFrame">
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Color</property>
+                        <property name="can-maximize">true</property>
+                        <property name="icon-name">color-select-symbolic</property>
+                        <child>
+                          <object class="GtkColorChooserWidget">
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Swatches</property>
+                        <property name="icon-name">preferences-color-symbolic</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="PanelFrame">
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Adjustments</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Styles</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="PanelFrame">
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Layers</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Channels</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Paths</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="bottom">
+              <object class="PanelPaned">
+                <property name="orientation">horizontal</property>
+                <child>
+                  <object class="PanelFrame">
+                    <property name="orientation">horizontal</property>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="icon-name">video-joined-displays-symbolic</property>
+                        <property name="title">Remote Displays</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkTextView">
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Timeline</property>
+                        <property name="icon-name">slideshow-symbolic</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="start">
+              <object class="PanelPaned">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="PanelFrame">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="icon-name">folder-symbolic</property>
+                        <property name="title">Files</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkTextView">
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="title">Targets</property>
+                        <property name="icon-name">applications-engineering-symbolic</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="PanelFrame">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="icon-name">help-contents-symbolic</property>
+                        <property name="title">Documentation</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkTextView">
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

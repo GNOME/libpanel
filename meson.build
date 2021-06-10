@@ -183,6 +183,7 @@ configure_file(
 
 subdir('data')
 subdir('src')
+subdir('example')
 subdir('testsuite')
 subdir('po')
 

@@ -1,0 +1,1 @@
+option('install-examples', type: 'boolean', value: false, description: 'Install example applications')
