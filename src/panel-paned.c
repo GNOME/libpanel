@@ -33,7 +33,10 @@ struct _PanelPaned
   GtkOrientation orientation;
 };
 
+static void buildable_iface_init (GtkBuildableIface *iface);
+
 G_DEFINE_TYPE_WITH_CODE (PanelPaned, panel_paned, GTK_TYPE_WIDGET,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL))
 
 enum {
@@ -558,4 +561,24 @@ panel_paned_get_nth_child (PanelPaned *self,
     }
 
   return NULL;
+}
+
+static void
+panel_paned_add_child (GtkBuildable *buildable,
+                       GtkBuilder   *builder,
+                       GObject      *child,
+                       const char   *type)
+{
+  if (GTK_IS_WIDGET (child))
+    panel_paned_append (PANEL_PANED (buildable), GTK_WIDGET (child));
+  else
+    g_warning ("Cannot add child of type %s to %s",
+               G_OBJECT_TYPE_NAME (child),
+               G_OBJECT_TYPE_NAME (buildable));
+}
+
+static void
+buildable_iface_init (GtkBuildableIface *iface)
+{
+  iface->add_child = panel_paned_add_child;
 }
