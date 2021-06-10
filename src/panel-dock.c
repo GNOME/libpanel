@@ -78,6 +78,34 @@ panel_dock_new (void)
 }
 
 static void
+notify_can_reveal (PanelDock         *self,
+                   PanelDockPosition  position)
+{
+  switch (position)
+    {
+    case PANEL_DOCK_POSITION_START:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_START]);
+      break;
+
+    case PANEL_DOCK_POSITION_END:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_END]);
+      break;
+
+    case PANEL_DOCK_POSITION_TOP:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_TOP]);
+      break;
+
+    case PANEL_DOCK_POSITION_BOTTOM:
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_BOTTOM]);
+      break;
+
+    case PANEL_DOCK_POSITION_CENTER:
+    default:
+      break;
+    }
+}
+
+static void
 get_grid_positions (PanelDockPosition  position,
                     int               *left,
                     int               *top,
@@ -599,6 +627,7 @@ panel_dock_add_child (GtkBuildable *buildable,
       gtk_grid_attach (priv->grid, GTK_WIDGET (object), left, top, width, height);
     }
 
+  notify_can_reveal (self, position);
   set_reveal (self, position, reveal);
 }
 
@@ -973,30 +1002,6 @@ _panel_dock_add_widget (PanelDock      *self,
   panel_frame_add (frame, widget);
   panel_frame_set_visible_child (frame, widget);
 
-  switch (panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)))
-    {
-    case PANEL_DOCK_POSITION_START:
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_START]);
-      panel_dock_set_reveal_start (self, TRUE);
-      break;
-
-    case PANEL_DOCK_POSITION_END:
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_END]);
-      panel_dock_set_reveal_end (self, TRUE);
-      break;
-
-    case PANEL_DOCK_POSITION_TOP:
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_TOP]);
-      panel_dock_set_reveal_top (self, TRUE);
-      break;
-
-    case PANEL_DOCK_POSITION_BOTTOM:
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_BOTTOM]);
-      panel_dock_set_reveal_bottom (self, TRUE);
-      break;
-
-    case PANEL_DOCK_POSITION_CENTER:
-    default:
-      break;
-    }
+  notify_can_reveal (self, panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)));
+  set_reveal (self, panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)), TRUE);
 }
