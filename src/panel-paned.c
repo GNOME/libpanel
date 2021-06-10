@@ -145,11 +145,15 @@ panel_paned_size_allocate (GtkWidget *widget,
 {
   PanelPaned *self = (PanelPaned *)widget;
   ChildAllocation *allocs;
+  ChildAllocation *last_alloc = NULL;
   GtkOrientation orientation;
   guint n_children = 0;
+  guint n_expand = 0;
   guint i;
   int extra_width = width;
   int extra_height = height;
+  int expand_width;
+  int expand_height;
   int x, y;
 
   g_assert (PANEL_IS_PANED (self));
@@ -174,6 +178,7 @@ panel_paned_size_allocate (GtkWidget *widget,
   allocs = g_newa (ChildAllocation, n_children);
   memset (allocs, 0, sizeof *allocs * n_children);
 
+  /* Give min size to each of the children */
   i = 0;
   for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
        child != NULL;
@@ -196,6 +201,8 @@ panel_paned_size_allocate (GtkWidget *widget,
       child_alloc->alloc.width = child_alloc->min_request.width;
       child_alloc->alloc.height = child_alloc->min_request.height;
 
+      n_expand += gtk_widget_compute_expand (child, orientation);
+
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
         {
           extra_width -= child_alloc->alloc.width;
@@ -208,6 +215,7 @@ panel_paned_size_allocate (GtkWidget *widget,
         }
     }
 
+  /* Now try to distribute extra space for natural size */
   i = 0;
   for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
        child != NULL;
@@ -238,8 +246,13 @@ panel_paned_size_allocate (GtkWidget *widget,
               extra_height -= taken;
             }
         }
+
+      last_alloc = child_alloc;
     }
 
+  /* Now give extra space for those that expand */
+  expand_width = n_expand ? extra_width / n_expand : 0;
+  expand_height = n_expand ? extra_height / n_expand : 0;
   i = n_children;
   for (GtkWidget *child = gtk_widget_get_last_child (GTK_WIDGET (self));
        child != NULL;
@@ -250,18 +263,28 @@ panel_paned_size_allocate (GtkWidget *widget,
       if (!gtk_widget_get_visible (child))
         continue;
 
+      if (!gtk_widget_compute_expand (child, orientation))
+        continue;
+
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
         {
-          child_alloc->alloc.width += extra_width;
-          extra_width = 0;
+          child_alloc->alloc.width += expand_width;
+          extra_width -= expand_width;
         }
       else
         {
-          child_alloc->alloc.height += extra_height;
-          extra_height = 0;
+          child_alloc->alloc.height += expand_height;
+          extra_height -= expand_height;
         }
+    }
 
-      break;
+  /* Give any leftover to the last visible child */
+  if (last_alloc)
+    {
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        last_alloc->alloc.width += extra_width;
+      else
+        last_alloc->alloc.height += extra_height;
     }
 
   i = 0;
