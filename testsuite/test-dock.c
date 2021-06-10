@@ -1,6 +1,8 @@
 #include <libpanel.h>
 
 static GMenuModel *menu_model;
+static GdkRGBA white = {1,1,1,1};
+static GdkRGBA black = {0,0,0,1};
 
 static PanelFrame *
 create_frame_cb (PanelGrid *grid)
@@ -32,6 +34,8 @@ create_document (void)
                       "title", title,
                       "icon-name", "text-x-generic-symbolic",
                       "menu-model", menu_model,
+                      "foreground-rgba", &black,
+                      "background-rgba", &white,
                       "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
                                              "child", g_object_new (GTK_TYPE_TEXT_VIEW,
                                                                     "buffer", g_object_new (GTK_TYPE_TEXT_BUFFER,
