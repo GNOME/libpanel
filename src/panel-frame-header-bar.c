@@ -245,46 +245,6 @@ panel_frame_header_bar_queue_update_css (PanelFrameHeaderBar *self)
 }
 
 static void
-panel_frame_header_bar_set_visible_child (PanelFrameHeaderBar *self,
-                                          PanelWidget         *widget)
-{
-  g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
-  g_return_if_fail (!widget || PANEL_IS_WIDGET (widget));
-
-  if (g_set_object (&self->visible_child, widget))
-    {
-      panel_binding_group_set_source (self->bindings, widget);
-
-      if (widget == NULL)
-        {
-          self->foreground_rgba_set = FALSE;
-          self->background_rgba_set = FALSE;
-          panel_frame_header_bar_queue_update_css (self);
-        }
-    }
-}
-
-static void
-notify_visible_child_cb (PanelFrameHeaderBar *self,
-                         GParamSpec          *pspec,
-                         PanelFrame          *frame)
-{
-  PanelWidget *widget;
-
-  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
-  g_assert (PANEL_IS_FRAME (frame));
-
-  widget = panel_frame_get_visible_child (frame);
-  panel_frame_header_bar_set_visible_child (self, widget);
-
-  if (widget == NULL)
-    gtk_menu_button_popdown (self->title_button);
-
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.close", widget != NULL);
-  gtk_widget_set_sensitive (GTK_WIDGET (self->title_button), widget != NULL);
-}
-
-static void
 panel_frame_header_bar_set_frame (PanelFrameHeaderBar *self,
                                   PanelFrame          *frame)
 {
@@ -296,10 +256,6 @@ panel_frame_header_bar_set_frame (PanelFrameHeaderBar *self,
 
   if (self->frame)
     {
-      panel_frame_header_bar_set_visible_child (self, NULL);
-      g_signal_handlers_disconnect_by_func (self->frame,
-                                            G_CALLBACK (notify_visible_child_cb),
-                                            self);
       gtk_list_view_set_model (self->list_view, NULL);
       g_clear_object (&self->frame);
     }
@@ -308,15 +264,8 @@ panel_frame_header_bar_set_frame (PanelFrameHeaderBar *self,
 
   if (self->frame)
     {
-      g_signal_connect_object (self->frame,
-                               "notify::visible-child",
-                               G_CALLBACK (notify_visible_child_cb),
-                               self,
-                               G_CONNECT_SWAPPED);
       GtkSelectionModel *pages = panel_frame_get_pages (self->frame);
       gtk_list_view_set_model (self->list_view, pages);
-      panel_frame_header_bar_set_visible_child (self,
-                                                panel_frame_get_visible_child (self->frame));
     }
 
   g_object_notify (G_OBJECT (self), "frame");
@@ -594,14 +543,26 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
   g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
   g_assert (!page || PANEL_IS_WIDGET (page));
 
+  gtk_label_set_label (self->title, NULL);
+  gtk_image_clear (self->image);
+
+  if (page == NULL)
+    gtk_menu_button_popdown (self->title_button);
+
+  self->foreground_rgba_set = FALSE;
+  self->background_rgba_set = FALSE;
+  panel_frame_header_bar_queue_update_css (self);
+
+  panel_binding_group_set_source (self->bindings, page);
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.close", page != NULL);
+  gtk_widget_set_sensitive (GTK_WIDGET (self->title_button), page != NULL);
+
   if (self->frame)
     {
       GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
       gtk_menu_button_set_menu_model (self->menu_button, menu_model);
     }
-
-  gtk_label_set_label (self->title, NULL);
-  gtk_image_clear (self->image);
 }
 
 static void
