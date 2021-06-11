@@ -410,9 +410,9 @@ _panel_grid_collapse (PanelGrid *self)
   n_columns = panel_grid_get_n_columns (self);
 
   for (GtkWidget *resizer = gtk_widget_get_first_child (GTK_WIDGET (self->columns));
-       resizer != NULL;
-       resizer = gtk_widget_get_next_sibling (resizer))
+       resizer != NULL;)
     {
+      GtkWidget *next = gtk_widget_get_next_sibling (resizer);
       GtkWidget *column = panel_resizer_get_child (PANEL_RESIZER (resizer));
 
       if (n_columns == 1)
@@ -423,6 +423,8 @@ _panel_grid_collapse (PanelGrid *self)
           _panel_grid_remove_column (self, PANEL_GRID_COLUMN (column));
           n_columns--;
         }
+
+      resizer = next;
     }
 
   _panel_grid_update_closeable (self);
