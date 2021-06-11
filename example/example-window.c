@@ -163,6 +163,9 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_install_action (widget_class, "document.new", NULL, add_document_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_n, GDK_CONTROL_MASK, "document.new", NULL);
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F9, 0, "win.reveal-start", NULL);
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F9, GDK_CONTROL_MASK, "win.reveal-bottom", NULL);
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F9, GDK_SHIFT_MASK, "win.reveal-end", NULL);
 
   gdk_rgba_parse (&white, "#fff");
   gdk_rgba_parse (&grey, "#241f31");
@@ -171,7 +174,19 @@ example_window_class_init (ExampleWindowClass *klass)
 static void
 example_window_init (ExampleWindow *self)
 {
+  g_autoptr(GPropertyAction) reveal_start = NULL;
+  g_autoptr(GPropertyAction) reveal_end = NULL;
+  g_autoptr(GPropertyAction) reveal_bottom = NULL;
+
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  reveal_start = g_property_action_new ("reveal-start", self->dock, "reveal-start");
+  reveal_bottom = g_property_action_new ("reveal-bottom", self->dock, "reveal-bottom");
+  reveal_end = g_property_action_new ("reveal-end", self->dock, "reveal-end");
+
+  g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_start));
+  g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_end));
+  g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_bottom));
 
   example_window_add_document (self);
 }
