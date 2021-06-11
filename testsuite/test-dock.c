@@ -10,8 +10,8 @@ create_frame_cb (PanelGrid *grid)
   PanelFrame *frame = PANEL_FRAME (panel_frame_new ());
   PanelFrameHeader *header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
 
-  panel_frame_header_bar_set_start_child (PANEL_FRAME_HEADER_BAR (header), gtk_label_new ("Start Child"));
-  panel_frame_header_bar_set_end_child (PANEL_FRAME_HEADER_BAR (header), gtk_label_new ("End Child"));
+  panel_frame_header_pack_start (header, 0, gtk_label_new ("Start Child"));
+  panel_frame_header_pack_end (header, 0, gtk_label_new ("End Child"));
   panel_frame_set_header (frame, header);
   panel_frame_set_placeholder (frame,
                                g_object_new (GTK_TYPE_IMAGE,

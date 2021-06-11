@@ -70,9 +70,7 @@ G_DEFINE_TYPE_WITH_CODE (PanelFrameHeaderBar, panel_frame_header_bar, GTK_TYPE_W
 enum {
   PROP_0,
   PROP_BACKGROUND_RGBA,
-  PROP_END_CHILD,
   PROP_FOREGROUND_RGBA,
-  PROP_START_CHILD,
   N_PROPS,
 
   PROP_FRAME,
@@ -347,14 +345,6 @@ panel_frame_header_bar_get_property (GObject    *object,
       g_value_set_object (value, self->frame);
       break;
 
-    case PROP_START_CHILD:
-      g_value_set_object (value, panel_frame_header_bar_get_start_child (self));
-      break;
-
-    case PROP_END_CHILD:
-      g_value_set_object (value, panel_frame_header_bar_get_end_child (self));
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -380,14 +370,6 @@ panel_frame_header_bar_set_property (GObject      *object,
 
     case PROP_FRAME:
       panel_frame_header_bar_set_frame (self, g_value_get_object (value));
-      break;
-
-    case PROP_START_CHILD:
-      panel_frame_header_bar_set_start_child (self, g_value_get_object (value));
-      break;
-
-    case PROP_END_CHILD:
-      panel_frame_header_bar_set_end_child (self, g_value_get_object (value));
       break;
 
     default:
@@ -434,22 +416,7 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
                         GDK_TYPE_RGBA,
                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
-  properties [PROP_START_CHILD] =
-    g_param_spec_object ("start-child",
-                         "Start Child",
-                         "Start Child",
-                         GTK_TYPE_WIDGET,
-                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
-
-  properties [PROP_END_CHILD] =
-    g_param_spec_object ("end-child",
-                         "End Child",
-                         "End Child",
-                         GTK_TYPE_WIDGET,
-                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
-
   g_object_class_override_property (object_class, PROP_FRAME, "frame");
-
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame-header-bar.ui");
@@ -568,11 +535,68 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
     }
 }
 
+#define GET_PRIORITY(w)   GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w),"PRIORITY"))
+#define SET_PRIORITY(w,i) g_object_set_data(G_OBJECT(w),"PRIORITY",GINT_TO_POINTER(i))
+
+static void
+panel_frame_header_bar_pack_start (PanelFrameHeader *header,
+                                   int               priority,
+                                   GtkWidget        *widget)
+{
+  PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)header;
+  GtkWidget *sibling = NULL;
+
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+
+  SET_PRIORITY (widget, priority);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self->start_area));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (priority < GET_PRIORITY(child))
+        break;
+      sibling = child;
+    }
+
+  gtk_box_insert_child_after (self->start_area, widget, sibling);
+
+  update_css_providers_recurse (widget, self);
+}
+
+static void
+panel_frame_header_bar_pack_end (PanelFrameHeader *header,
+                                 int               priority,
+                                 GtkWidget        *widget)
+{
+  PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)header;
+  GtkWidget *sibling = NULL;
+
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+
+  SET_PRIORITY (widget, priority);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self->end_area));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (priority < GET_PRIORITY(child))
+        break;
+      sibling = child;
+    }
+
+  gtk_box_insert_child_after (self->end_area, widget, sibling);
+
+  update_css_providers_recurse (widget, self);
+}
+
 static void
 frame_header_iface_init (PanelFrameHeaderInterface *iface)
 {
   iface->can_drop = panel_frame_header_bar_can_drop;
   iface->page_changed = panel_frame_header_bar_page_changed;
+  iface->pack_start = panel_frame_header_bar_pack_start;
+  iface->pack_end = panel_frame_header_bar_pack_end;
 }
 
 GtkPopoverMenu *
@@ -581,91 +605,6 @@ panel_frame_header_bar_get_menu_popover (PanelFrameHeaderBar *self)
   g_return_val_if_fail (PANEL_IS_FRAME_HEADER_BAR (self), NULL);
 
   return GTK_POPOVER_MENU (gtk_menu_button_get_popover (self->menu_button));
-}
-
-/**
- * panel_frame_header_bar_get_start_child:
- * @self: a #PanelFrameHeaderBar
- *
- * Gets the #PanelFrameHeaderBar:start-child property.
- *
- * This is the child that is placed at the beginning of the header bar.
- *
- * Returns: (transfer none) (nullable): a #GtkWidget or %NULL.
- */
-GtkWidget *
-panel_frame_header_bar_get_start_child (PanelFrameHeaderBar *self)
-{
-  g_return_val_if_fail (PANEL_IS_FRAME_HEADER_BAR (self), NULL);
-
-  return gtk_widget_get_first_child (GTK_WIDGET (self->start_area));
-}
-
-void
-panel_frame_header_bar_set_start_child (PanelFrameHeaderBar *self,
-                                        GtkWidget           *start_child)
-{
-  GtkWidget *prev;
-
-  g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
-  g_return_if_fail (!start_child || GTK_IS_WIDGET (start_child));
-  g_return_if_fail (gtk_widget_get_parent (start_child) == NULL);
-
-  prev = panel_frame_header_bar_get_start_child (self);
-
-  if (prev == start_child)
-    return;
-
-  if (prev != NULL)
-    gtk_box_remove (self->start_area, prev);
-
-  if (start_child)
-    gtk_box_append (self->start_area, start_child);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_START_CHILD]);
-}
-
-/**
- * panel_frame_header_bar_get_end_child:
- * @self: a #PanelFrameHeaderBar
- *
- * Gets the #PanelFrameHeaderBar:end-child property.
- *
- * This is the child that is placed at the end of the header bar
- * but before the menu/close controls.
- *
- * Returns: (transfer none) (nullable): a #GtkWidget or %NULL.
- */
-GtkWidget *
-panel_frame_header_bar_get_end_child (PanelFrameHeaderBar *self)
-{
-  g_return_val_if_fail (PANEL_IS_FRAME_HEADER_BAR (self), NULL);
-
-  return gtk_widget_get_first_child (GTK_WIDGET (self->end_area));
-}
-
-void
-panel_frame_header_bar_set_end_child (PanelFrameHeaderBar *self,
-                                      GtkWidget           *end_child)
-{
-  GtkWidget *prev;
-
-  g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
-  g_return_if_fail (!end_child || GTK_IS_WIDGET (end_child));
-  g_return_if_fail (gtk_widget_get_parent (end_child) == NULL);
-
-  prev = panel_frame_header_bar_get_end_child (self);
-
-  if (prev == end_child)
-    return;
-
-  if (prev != NULL)
-    gtk_box_remove (self->end_area, prev);
-
-  if (end_child)
-    gtk_box_append (self->end_area, end_child);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_END_CHILD]);
 }
 
 const GdkRGBA *

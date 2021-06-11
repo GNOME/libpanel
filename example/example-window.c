@@ -98,6 +98,20 @@ create_frame_cb (PanelGrid *grid)
   PanelFrame *frame = PANEL_FRAME (panel_frame_new ());
   PanelFrameHeader *header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
   panel_frame_set_header (frame, header);
+  panel_frame_header_pack_start (header,
+                                 -100,
+                                 g_object_new (GTK_TYPE_BUTTON,
+                                               "width-request", 40,
+                                               "focus-on-click", FALSE,
+                                               "icon-name", "go-previous-symbolic",
+                                               NULL));
+  panel_frame_header_pack_start (header,
+                                 -50,
+                                 g_object_new (GTK_TYPE_BUTTON,
+                                               "width-request", 40,
+                                               "focus-on-click", FALSE,
+                                               "icon-name", "go-next-symbolic",
+                                               NULL));
   return frame;
 }
 

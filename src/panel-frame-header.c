@@ -101,3 +101,25 @@ panel_frame_header_page_changed (PanelFrameHeader *self,
   if (PANEL_FRAME_HEADER_GET_IFACE (self)->page_changed)
     PANEL_FRAME_HEADER_GET_IFACE (self)->page_changed (self, widget);
 }
+
+void
+panel_frame_header_pack_start (PanelFrameHeader *self,
+                               int               priority,
+                               GtkWidget        *child)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
+  g_return_if_fail (GTK_IS_WIDGET (child));
+
+  PANEL_FRAME_HEADER_GET_IFACE (self)->pack_start (self, priority, child);
+}
+
+void
+panel_frame_header_pack_end (PanelFrameHeader *self,
+                             int               priority,
+                             GtkWidget        *child)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
+  g_return_if_fail (GTK_IS_WIDGET (child));
+
+  PANEL_FRAME_HEADER_GET_IFACE (self)->pack_end (self, priority, child);
+}

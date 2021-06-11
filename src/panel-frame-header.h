@@ -42,6 +42,12 @@ struct _PanelFrameHeaderInterface
                             PanelWidget      *page);
   gboolean (*can_drop)     (PanelFrameHeader *self,
                             PanelWidget      *widget);
+  void     (*pack_start)   (PanelFrameHeader *self,
+                            int               priority,
+                            GtkWidget        *child);
+  void     (*pack_end)     (PanelFrameHeader *self,
+                            int               priority,
+                            GtkWidget        *child);
 };
 
 PANEL_AVAILABLE_IN_ALL
@@ -55,5 +61,13 @@ gboolean    panel_frame_header_can_drop     (PanelFrameHeader *self,
 PANEL_AVAILABLE_IN_ALL
 void        panel_frame_header_page_changed (PanelFrameHeader *self,
                                              PanelWidget      *widget);
+PANEL_AVAILABLE_IN_ALL
+void        panel_frame_header_pack_start   (PanelFrameHeader *self,
+                                             int               priority,
+                                             GtkWidget        *child);
+PANEL_AVAILABLE_IN_ALL
+void        panel_frame_header_pack_end     (PanelFrameHeader *self,
+                                             int               priority,
+                                             GtkWidget        *child);
 
 G_END_DECLS
