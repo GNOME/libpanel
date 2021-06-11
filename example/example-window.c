@@ -32,6 +32,9 @@ struct _ExampleWindow
 
 G_DEFINE_TYPE (ExampleWindow, example_window, ADW_TYPE_APPLICATION_WINDOW)
 
+static GdkRGBA white;
+static GdkRGBA grey;
+
 GtkWidget *
 example_window_new (GtkApplication *application)
 {
@@ -68,6 +71,8 @@ example_window_add_document (ExampleWindow *self)
                          "icon-name", "text-x-generic-symbolic",
                          "menu-model", self->page_menu,
                          "can-maximize", TRUE,
+                         "foreground-rgba", &grey,
+                         "background-rgba", &white,
                          "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
                                                 "child", text_view,
                                                 NULL),
@@ -110,6 +115,9 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_install_action (widget_class, "document.new", NULL, add_document_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_n, GDK_CONTROL_MASK, "document.new", NULL);
+
+  gdk_rgba_parse (&white, "#fff");
+  gdk_rgba_parse (&grey, "#241f31");
 }
 
 static void
