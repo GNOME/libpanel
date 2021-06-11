@@ -771,6 +771,9 @@ _panel_frame_transfer (PanelFrame  *self,
     position = adw_tab_view_get_n_pages (new_frame->tab_view);
 
   adw_tab_view_transfer_page (self->tab_view, page, new_frame->tab_view, position);
+
+  panel_widget_raise (widget);
+  panel_widget_focus_default (widget);
 }
 
 guint
