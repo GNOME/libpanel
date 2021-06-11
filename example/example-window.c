@@ -100,6 +100,7 @@ create_frame_cb (PanelGrid     *grid,
   PanelFrame *frame;
   PanelFrameHeader *header;
   AdwStatusPage *status;
+  GtkGrid *shortcuts;
 
   g_assert (EXAMPLE_IS_WINDOW (self));
 
@@ -108,6 +109,20 @@ create_frame_cb (PanelGrid     *grid,
   status = ADW_STATUS_PAGE (adw_status_page_new ());
   adw_status_page_set_title (status, "Open a File or Terminal");
   adw_status_page_set_icon_name (status, "document-new-symbolic");
+  adw_status_page_set_description (status, "Use the page switcher above or use one of the following:");
+  shortcuts = GTK_GRID (gtk_grid_new ());
+  gtk_grid_set_row_spacing (shortcuts, 6);
+  gtk_grid_set_column_spacing (shortcuts, 32);
+  gtk_widget_set_halign (GTK_WIDGET (shortcuts), GTK_ALIGN_CENTER);
+  gtk_grid_attach (shortcuts, gtk_label_new ("New Document"), 0, 0, 1, 1);
+  gtk_grid_attach (shortcuts, gtk_label_new ("Ctrl+N"), 1, 0, 1, 1);
+  gtk_grid_attach (shortcuts, gtk_label_new ("Close Document"), 0, 1, 1, 1);
+  gtk_grid_attach (shortcuts, gtk_label_new ("Ctrl+W"), 1, 1, 1, 1);
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (shortcuts));
+       child;
+       child = gtk_widget_get_next_sibling (child))
+    gtk_widget_set_halign (child, GTK_ALIGN_START);
+  adw_status_page_set_child (status, GTK_WIDGET (shortcuts));
   panel_frame_set_placeholder (frame, GTK_WIDGET (status));
 
   if (gtk_toggle_button_get_active (self->frame_header_bar))
