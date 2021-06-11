@@ -26,6 +26,7 @@
 
 G_BEGIN_DECLS
 
+GMenuModel *_panel_frame_get_tab_menu (PanelFrame *self);
 AdwTabView *_panel_frame_get_tab_view (PanelFrame *self);
 void        _panel_frame_transfer     (PanelFrame  *self,
                                        PanelWidget *widget,

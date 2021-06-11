@@ -64,6 +64,11 @@
                   <object class="GtkMenuButton" id="menu_button">
                     <property name="focus-on-click">false</property>
                     <property name="icon-name">open-menu-symbolic</property>
+                    <child>
+                      <object class="GtkGestureClick">
+                        <signal name="pressed" handler="menu_clicked_cb"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
@@ -80,23 +85,4 @@
       </object>
     </child>
   </template>
-  <menu id="frame_menu">
-    <section>
-      <attribute name="label" translatable="yes">Frame</attribute>
-      <item>
-        <attribute name="label" translatable="yes">Move Page _Left</attribute>
-        <attribute name="action">page.move-left</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;bracketleft</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Move Page _Right</attribute>
-        <attribute name="action">page.move-right</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;bracketright</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Close Frame</attribute>
-        <attribute name="action">frame.close</attribute>
-      </item>
-    </section>
-  </menu>
 </interface>

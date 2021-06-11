@@ -71,7 +71,6 @@ enum {
   PROP_BACKGROUND_RGBA,
   PROP_END_CHILD,
   PROP_FOREGROUND_RGBA,
-  PROP_MENU_MODEL,
   PROP_START_CHILD,
   N_PROPS,
 
@@ -339,6 +338,23 @@ page_close_action (GtkWidget  *widget,
 }
 
 static void
+menu_clicked_cb (GtkGesture          *gesture,
+                 int                  n_press,
+                 double               x,
+                 double               y,
+                 PanelFrameHeaderBar *self)
+{
+  g_assert (GTK_IS_GESTURE_CLICK (gesture));
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+
+  if (self->frame)
+    {
+      GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
+      gtk_menu_button_set_menu_model (self->menu_button, menu_model);
+    }
+}
+
+static void
 panel_frame_header_bar_dispose (GObject *object)
 {
   PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)object;
@@ -381,10 +397,6 @@ panel_frame_header_bar_get_property (GObject    *object,
       g_value_set_object (value, self->frame);
       break;
 
-    case PROP_MENU_MODEL:
-      g_value_set_object (value, panel_frame_header_bar_get_menu_model (self));
-      break;
-
     case PROP_START_CHILD:
       g_value_set_object (value, panel_frame_header_bar_get_start_child (self));
       break;
@@ -418,10 +430,6 @@ panel_frame_header_bar_set_property (GObject      *object,
 
     case PROP_FRAME:
       panel_frame_header_bar_set_frame (self, g_value_get_object (value));
-      break;
-
-    case PROP_MENU_MODEL:
-      panel_frame_header_bar_set_menu_model (self, g_value_get_object (value));
       break;
 
     case PROP_START_CHILD:
@@ -476,13 +484,6 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
                         GDK_TYPE_RGBA,
                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
-  properties [PROP_MENU_MODEL] =
-    g_param_spec_object ("menu-model",
-                         "Menu Model",
-                         "Menu Model",
-                         G_TYPE_MENU_MODEL,
-                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
-
   properties [PROP_START_CHILD] =
     g_param_spec_object ("start-child",
                          "Start Child",
@@ -507,7 +508,6 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, controls);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, end_area);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, frame_menu);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, list_view);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, menu_button);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, pages_popover);
@@ -516,6 +516,7 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, setup_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, bind_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, unbind_row_cb);
+  gtk_widget_class_bind_template_callback (widget_class, menu_clicked_cb);
 
   gtk_widget_class_install_action (widget_class, "page.close", NULL, page_close_action);
 
@@ -560,11 +561,6 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   button = gtk_widget_get_first_child (GTK_WIDGET (self->title_button));
   gtk_button_set_child (GTK_BUTTON (button), box);
 
-  self->joined_menu = panel_joined_menu_new ();
-  panel_joined_menu_append_menu (self->joined_menu, self->frame_menu);
-  gtk_menu_button_set_menu_model (self->menu_button,
-                                  G_MENU_MODEL (self->joined_menu));
-
   self->bindings = panel_binding_group_new ();
   panel_binding_group_bind (self->bindings, "title", self->title, "label", 0);
   panel_binding_group_bind (self->bindings, "modified", self->modified, "visible", 0);
@@ -598,15 +594,10 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
   g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
   g_assert (!page || PANEL_IS_WIDGET (page));
 
-  while (panel_joined_menu_get_n_joined (self->joined_menu) > 1)
-    panel_joined_menu_remove_index (self->joined_menu, 0);
-
-  if (page != NULL)
+  if (self->frame)
     {
-      GMenuModel *menu_model = panel_widget_get_menu_model (page);
-
-      if (menu_model != NULL)
-        panel_joined_menu_prepend_menu (self->joined_menu, menu_model);
+      GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
+      gtk_menu_button_set_menu_model (self->menu_button, menu_model);
     }
 
   gtk_label_set_label (self->title, NULL);
@@ -618,35 +609,6 @@ frame_header_iface_init (PanelFrameHeaderInterface *iface)
 {
   iface->can_drop = panel_frame_header_bar_can_drop;
   iface->page_changed = panel_frame_header_bar_page_changed;
-}
-
-GMenuModel *
-panel_frame_header_bar_get_menu_model (PanelFrameHeaderBar *self)
-{
-  g_return_val_if_fail (PANEL_IS_FRAME_HEADER_BAR (self), NULL);
-
-  return self->menu_model;
-}
-
-void
-panel_frame_header_bar_set_menu_model (PanelFrameHeaderBar *self,
-                                       GMenuModel          *menu_model)
-{
-  g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
-  g_return_if_fail (!menu_model || G_IS_MENU_MODEL (menu_model));
-
-  if (self->menu_model == menu_model)
-    return;
-
-  if (self->menu_model)
-    panel_joined_menu_remove_menu (self->joined_menu, self->menu_model);
-
-  g_set_object (&self->menu_model, menu_model);
-
-  if (self->menu_model)
-    panel_joined_menu_prepend_menu (self->joined_menu, self->menu_model);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_MENU_MODEL]);
 }
 
 GtkPopoverMenu *

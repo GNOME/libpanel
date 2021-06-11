@@ -813,3 +813,15 @@ buildable_iface_init (GtkBuildableIface *iface)
   parent_buildable = g_type_interface_peek_parent (iface);
   iface->add_child = panel_frame_add_child;
 }
+
+GMenuModel *
+_panel_frame_get_tab_menu (PanelFrame *self)
+{
+  AdwTabPage *page;
+
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+
+  page = adw_tab_view_get_selected_page (self->tab_view);
+  g_signal_emit_by_name (self->tab_view, "setup-menu", page);
+  return adw_tab_view_get_menu_model (self->tab_view);
+}
