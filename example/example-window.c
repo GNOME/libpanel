@@ -97,10 +97,18 @@ static PanelFrame *
 create_frame_cb (PanelGrid     *grid,
                  ExampleWindow *self)
 {
-  PanelFrame *frame = PANEL_FRAME (panel_frame_new ());
+  PanelFrame *frame;
   PanelFrameHeader *header;
+  AdwStatusPage *status;
 
   g_assert (EXAMPLE_IS_WINDOW (self));
+
+  frame = PANEL_FRAME (panel_frame_new ());
+
+  status = ADW_STATUS_PAGE (adw_status_page_new ());
+  adw_status_page_set_title (status, "Open a File or Terminal");
+  adw_status_page_set_icon_name (status, "document-new-symbolic");
+  panel_frame_set_placeholder (frame, GTK_WIDGET (status));
 
   if (gtk_toggle_button_get_active (self->frame_header_bar))
      header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
