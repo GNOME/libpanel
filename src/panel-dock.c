@@ -24,6 +24,8 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-grid-private.h"
+#include "panel-grid-column.h"
 #include "panel-maximized-controls-private.h"
 #include "panel-paned-private.h"
 #include "panel-resizer-private.h"
@@ -1004,4 +1006,46 @@ _panel_dock_add_widget (PanelDock      *self,
 
   notify_can_reveal (self, panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)));
   set_reveal (self, panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)), TRUE);
+}
+
+void
+_panel_dock_remove_frame (PanelDock  *self,
+                          PanelFrame *frame)
+{
+  GtkWidget *parent;
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+  g_return_if_fail (PANEL_IS_FRAME (frame));
+
+  if ((parent = gtk_widget_get_ancestor (GTK_WIDGET (frame), PANEL_TYPE_PANED)))
+    {
+      GtkWidget *grid;
+
+      panel_paned_remove (PANEL_PANED (parent), GTK_WIDGET (frame));
+
+      if ((parent = gtk_widget_get_ancestor (parent, PANEL_TYPE_GRID_COLUMN)) &&
+          panel_grid_column_get_empty (PANEL_GRID_COLUMN (parent)) &&
+          (grid = gtk_widget_get_ancestor (parent, PANEL_TYPE_GRID)) &&
+          panel_grid_get_n_columns (PANEL_GRID (grid)) > 1)
+        _panel_grid_remove_column (PANEL_GRID (grid), PANEL_GRID_COLUMN (parent));
+    }
+}
+
+void
+panel_dock_foreach_frame (PanelDock          *self,
+                          PanelFrameCallback  callback,
+                          gpointer            user_data)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+  g_return_if_fail (callback != NULL);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (priv->grid));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (PANEL_IS_DOCK_CHILD (child))
+        panel_dock_child_foreach_frame (PANEL_DOCK_CHILD (child), callback, user_data);
+    }
 }

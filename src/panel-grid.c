@@ -25,6 +25,7 @@
 #include "panel-grid-column.h"
 #include "panel-grid-private.h"
 #include "panel-paned-private.h"
+#include "panel-resizer-private.h"
 
 struct _PanelGrid
 {
@@ -327,4 +328,40 @@ _panel_grid_prepend_column (PanelGrid *self)
   g_return_if_fail (PANEL_IS_GRID (self));
 
   panel_paned_insert (self->columns, 0, panel_grid_column_new ());
+}
+
+guint
+panel_grid_get_n_columns (PanelGrid *self)
+{
+  g_return_val_if_fail (PANEL_IS_GRID (self), 0);
+
+  return panel_paned_get_n_children (self->columns);
+}
+
+void
+_panel_grid_remove_column (PanelGrid       *self,
+                           PanelGridColumn *column)
+{
+  g_return_if_fail (PANEL_IS_GRID (self));
+  g_return_if_fail (PANEL_IS_GRID_COLUMN (column));
+
+  panel_paned_remove (self->columns, GTK_WIDGET (column));
+}
+
+void
+_panel_grid_foreach_frame (PanelGrid          *self,
+                           PanelFrameCallback  callback,
+                           gpointer            user_data)
+{
+  g_return_if_fail (PANEL_IS_GRID (self));
+  g_return_if_fail (callback != NULL);
+
+  for (GtkWidget *resizer = gtk_widget_get_first_child (GTK_WIDGET (self->columns));
+       resizer != NULL;
+       resizer = gtk_widget_get_next_sibling (resizer))
+    {
+      GtkWidget *column = panel_resizer_get_child (PANEL_RESIZER (resizer));
+
+      panel_grid_column_foreach_frame (PANEL_GRID_COLUMN (column), callback, user_data);
+    }
 }

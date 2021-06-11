@@ -23,6 +23,7 @@
 #include "panel-grid-column.h"
 #include "panel-grid-private.h"
 #include "panel-paned-private.h"
+#include "panel-resizer-private.h"
 
 struct _PanelGridColumn
 {
@@ -130,4 +131,22 @@ panel_grid_column_get_n_rows (PanelGridColumn *self)
   g_return_val_if_fail (PANEL_IS_GRID_COLUMN (self), 0);
 
   return panel_paned_get_n_children (self->rows);
+}
+
+void
+panel_grid_column_foreach_frame (PanelGridColumn    *self,
+                                 PanelFrameCallback  callback,
+                                 gpointer            user_data)
+{
+  g_return_if_fail (PANEL_IS_GRID_COLUMN (self));
+  g_return_if_fail (callback != NULL);
+
+  for (GtkWidget *resizer = gtk_widget_get_first_child (GTK_WIDGET (self->rows));
+       resizer != NULL;
+       resizer = gtk_widget_get_next_sibling (resizer))
+    {
+      GtkWidget *child = panel_resizer_get_child (PANEL_RESIZER (resizer));
+
+      callback (PANEL_FRAME (child), user_data);
+    }
 }

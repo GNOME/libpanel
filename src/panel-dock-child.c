@@ -22,6 +22,7 @@
 
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-grid-private.h"
 #include "panel-paned-private.h"
 #include "panel-resizer-private.h"
 #include "panel-widget.h"
@@ -348,5 +349,39 @@ panel_dock_child_set_dragging (PanelDockChild *self,
         {
           gtk_widget_set_size_request (child, -1, -1);
         }
+    }
+}
+
+void
+panel_dock_child_foreach_frame (PanelDockChild     *self,
+                                PanelFrameCallback  callback,
+                                gpointer            user_data)
+{
+  GtkWidget *child;
+
+  g_return_if_fail (PANEL_IS_DOCK_CHILD (self));
+  g_return_if_fail (callback != NULL);
+
+  if (!(child = panel_resizer_get_child (self->resizer)))
+    return;
+
+  if (PANEL_IS_PANED (child))
+    {
+      for (GtkWidget *desc = gtk_widget_get_first_child (child);
+           desc != NULL;
+           desc = gtk_widget_get_next_sibling (desc))
+        {
+          if (PANEL_IS_RESIZER (desc))
+            {
+              GtkWidget *rchild = panel_resizer_get_child (PANEL_RESIZER (desc));
+
+              if (PANEL_IS_FRAME (rchild))
+                callback (PANEL_FRAME (rchild), user_data);
+            }
+        }
+    }
+  else if (PANEL_IS_GRID (child))
+    {
+      _panel_grid_foreach_frame (PANEL_GRID (child), callback, user_data);
     }
 }

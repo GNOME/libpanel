@@ -430,6 +430,7 @@ panel_paned_remove (PanelPaned *self,
                     gtk_widget_get_parent (resizer) == GTK_WIDGET (self));
   gtk_widget_unparent (resizer);
   panel_paned_update_handles (self);
+  gtk_widget_queue_resize (GTK_WIDGET (self));
 
   /* If we find a dock child, we might have changed it's reveal
    * status and need to propagate that up.

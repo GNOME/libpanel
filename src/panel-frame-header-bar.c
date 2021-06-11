@@ -28,6 +28,7 @@
 #include "panel-frame-header-bar-row-private.h"
 #include "panel-frame-private.h"
 #include "panel-joined-menu-private.h"
+#include "panel-dock-private.h"
 
 struct _PanelFrameHeaderBar
 {
@@ -276,13 +277,26 @@ page_close_action (GtkWidget  *widget,
                    GVariant   *param)
 {
   PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)widget;
+  AdwTabPage *page;
   AdwTabView *tab_view;
+  GtkWidget *dock;
 
   g_assert (PANEL_IS_FRAME_HEADER (self));
 
-  if (self->frame != NULL &&
-      (tab_view = _panel_frame_get_tab_view (self->frame)))
-    adw_tab_view_close_page (tab_view, adw_tab_view_get_selected_page (tab_view));
+  if (self->frame == NULL ||
+      !(tab_view = _panel_frame_get_tab_view (self->frame)))
+    return;
+
+  /* Remove current page if we have one */
+  if ((page = adw_tab_view_get_selected_page (tab_view)))
+    {
+      adw_tab_view_close_page (tab_view, page);
+      return;
+    }
+
+  /* No active page, instead remove the frame */
+  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
+    _panel_dock_remove_frame (PANEL_DOCK (dock), self->frame);
 }
 
 static void
@@ -450,8 +464,6 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.close", FALSE);
-
   /* Because GtkMenuButton does not allow us to specify children within
    * the label, we have to dive into it and modify it directly.
    */
@@ -525,7 +537,6 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
 
   panel_binding_group_set_source (self->bindings, page);
 
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.close", page != NULL);
   gtk_widget_set_sensitive (GTK_WIDGET (self->title_button), page != NULL);
 
   if (self->frame)

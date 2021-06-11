@@ -42,6 +42,8 @@ PANEL_AVAILABLE_IN_ALL
 void             panel_grid_add                    (PanelGrid   *self,
                                                     PanelWidget *widget);
 PANEL_AVAILABLE_IN_ALL
+guint            panel_grid_get_n_columns          (PanelGrid   *self);
+PANEL_AVAILABLE_IN_ALL
 PanelGridColumn *panel_grid_get_column             (PanelGrid   *self,
                                                     guint        column);
 
