@@ -48,15 +48,5 @@ gboolean   panel_frame_tab_bar_get_expand_tabs (PanelFrameTabBar *self);
 PANEL_AVAILABLE_IN_ALL
 void       panel_frame_tab_bar_set_expand_tabs (PanelFrameTabBar *self,
                                                 gboolean          expand_tabs);
-PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_frame_tab_bar_get_start_child (PanelFrameTabBar *self);
-PANEL_AVAILABLE_IN_ALL
-void       panel_frame_tab_bar_set_start_child (PanelFrameTabBar *self,
-                                                GtkWidget        *widget);
-PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_frame_tab_bar_get_end_child   (PanelFrameTabBar *self);
-PANEL_AVAILABLE_IN_ALL
-void       panel_frame_tab_bar_set_end_child   (PanelFrameTabBar *self,
-                                                GtkWidget        *widget);
 
 G_END_DECLS

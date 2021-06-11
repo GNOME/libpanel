@@ -96,7 +96,7 @@ static PanelFrame *
 create_frame_cb (PanelGrid *grid)
 {
   PanelFrame *frame = PANEL_FRAME (panel_frame_new ());
-  PanelFrameHeader *header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
+  PanelFrameHeader *header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
   panel_frame_set_header (frame, header);
   panel_frame_header_pack_start (header,
                                  -100,

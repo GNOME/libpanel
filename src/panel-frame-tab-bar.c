@@ -31,6 +31,8 @@ struct _PanelFrameTabBar
   GtkWidget   parent_instance;
   PanelFrame *frame;
   AdwTabBar  *tab_bar;
+  GtkBox     *start_area;
+  GtkBox     *end_area;
 };
 
 static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
@@ -43,8 +45,6 @@ enum {
   PROP_AUTOHIDE,
   PROP_INVERTED,
   PROP_EXPAND_TABS,
-  PROP_START_CHILD,
-  PROP_END_CHILD,
   N_PROPS,
 
   PROP_FRAME,
@@ -97,11 +97,6 @@ panel_frame_tab_bar_notify_cb (PanelFrameTabBar *self,
       g_object_notify_by_pspec (G_OBJECT (self), relative);
       return;
     }
-
-  if (g_strcmp0 (pspec->name, "start-action-widget") == 0)
-    g_object_notify (G_OBJECT (self), "start-child");
-  else if (g_strcmp0 (pspec->name, "end-action-widget") == 0)
-    g_object_notify (G_OBJECT (self), "end-child");
 }
 
 static void
@@ -200,26 +195,6 @@ panel_frame_tab_bar_class_init (PanelFrameTabBarClass *klass)
   WRAP_BOOLEAN_PROPERTY (PROP_INVERTED, "inverted", "Inverted", FALSE);
 #undef WRAP_BOOLEAN_PROPERTY
 
-  g_object_class_install_property (object_class,
-                                   PROP_START_CHILD,
-                                   g_param_spec_object ("start-child",
-                                                        "Start Child",
-                                                        "The child before the tabs",
-                                                        GTK_TYPE_WIDGET,
-                                                        (G_PARAM_READWRITE |
-                                                         G_PARAM_EXPLICIT_NOTIFY |
-                                                         G_PARAM_STATIC_STRINGS)));
-
-  g_object_class_install_property (object_class,
-                                   PROP_END_CHILD,
-                                   g_param_spec_object ("end-child",
-                                                        "End Child",
-                                                        "The child after the tabs",
-                                                        GTK_TYPE_WIDGET,
-                                                        (G_PARAM_READWRITE |
-                                                         G_PARAM_EXPLICIT_NOTIFY |
-                                                         G_PARAM_STATIC_STRINGS)));
-
   g_object_class_override_property (object_class, PROP_FRAME, "frame");
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
@@ -236,6 +211,12 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
                            self,
                            G_CONNECT_SWAPPED);
   gtk_widget_set_parent (GTK_WIDGET (self->tab_bar), GTK_WIDGET (self));
+
+  self->start_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
+  adw_tab_bar_set_start_action_widget (self->tab_bar, GTK_WIDGET (self->start_area));
+
+  self->end_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
+  adw_tab_bar_set_end_action_widget (self->tab_bar, GTK_WIDGET (self->end_area));
 }
 
 static gboolean
@@ -252,76 +233,63 @@ panel_frame_tab_bar_can_drop (PanelFrameHeader *header,
   return g_strcmp0 (kind, PANEL_WIDGET_KIND_DOCUMENT) == 0;
 }
 
+#define GET_PRIORITY(w)   GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w),"PRIORITY"))
+#define SET_PRIORITY(w,i) g_object_set_data(G_OBJECT(w),"PRIORITY",GINT_TO_POINTER(i))
+
+static void
+panel_frame_tab_bar_pack_start (PanelFrameHeader *header,
+                                int               priority,
+                                GtkWidget        *widget)
+{
+  PanelFrameTabBar *self = (PanelFrameTabBar *)header;
+  GtkWidget *sibling = NULL;
+
+  g_assert (PANEL_IS_FRAME_TAB_BAR (self));
+
+  SET_PRIORITY (widget, priority);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self->start_area));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (priority < GET_PRIORITY(child))
+        break;
+      sibling = child;
+    }
+
+  gtk_box_insert_child_after (self->start_area, widget, sibling);
+}
+
+static void
+panel_frame_tab_bar_pack_end (PanelFrameHeader *header,
+                              int               priority,
+                              GtkWidget        *widget)
+{
+  PanelFrameTabBar *self = (PanelFrameTabBar *)header;
+  GtkWidget *sibling = NULL;
+
+  g_assert (PANEL_IS_FRAME_TAB_BAR (self));
+
+  SET_PRIORITY (widget, priority);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self->end_area));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (priority < GET_PRIORITY(child))
+        break;
+      sibling = child;
+    }
+
+  gtk_box_insert_child_after (self->end_area, widget, sibling);
+}
+
 static void
 frame_header_iface_init (PanelFrameHeaderInterface *iface)
 {
   iface->can_drop = panel_frame_tab_bar_can_drop;
-}
-
-/**
- * panel_frame_tab_bar_get_start_child:
- * @self: a #PanelFrameTabBar
- *
- * Gets the start-child that is placed before the tabs, if any.
- *
- * Returns: (transfer none) (nullable): a #GtkWidget or %NULL
- */
-GtkWidget *
-panel_frame_tab_bar_get_start_child (PanelFrameTabBar *self)
-{
-  g_return_val_if_fail (PANEL_IS_FRAME_TAB_BAR (self), NULL);
-
-  return adw_tab_bar_get_start_action_widget (self->tab_bar);
-}
-
-/**
- * panel_frame_tab_bar_set_start_child:
- * @self: a #PanelFrameTabBar
- * @start_child: (nullable): a #GtkWidget or %NULL
- *
- * Sets the start-child that is placed before the tabs.
- */
-void
-panel_frame_tab_bar_set_start_child (PanelFrameTabBar *self,
-                                     GtkWidget        *start_child)
-{
-  g_return_if_fail (PANEL_IS_FRAME_TAB_BAR (self));
-  g_return_if_fail (!start_child || GTK_IS_WIDGET (start_child));
-
-  return adw_tab_bar_set_start_action_widget (self->tab_bar, start_child);
-}
-
-/**
- * panel_frame_tab_bar_get_end_child:
- * @self: a #PanelFrameTabBar
- *
- * Gets the end-child that is placed after the tabs, if any.
- *
- * Returns: (transfer none) (nullable): a #GtkWidget or %NULL
- */
-GtkWidget *
-panel_frame_tab_bar_get_end_child (PanelFrameTabBar *self)
-{
-  g_return_val_if_fail (PANEL_IS_FRAME_TAB_BAR (self), NULL);
-
-  return adw_tab_bar_get_end_action_widget (self->tab_bar);
-}
-
-/**
- * panel_frame_tab_bar_set_end_child:
- * @self: a #PanelFrameTabBar
- * @end_child: (nullable): a #GtkWidget or %NULL
- *
- * Sets the end-child that is placed before the tabs.
- */
-void
-panel_frame_tab_bar_set_end_child (PanelFrameTabBar *self,
-                                   GtkWidget        *end_child)
-{
-  g_return_if_fail (PANEL_IS_FRAME_TAB_BAR (self));
-  g_return_if_fail (!end_child || GTK_IS_WIDGET (end_child));
-
-  return adw_tab_bar_set_end_action_widget (self->tab_bar, end_child);
+  iface->pack_start = panel_frame_tab_bar_pack_start;
+  iface->pack_end = panel_frame_tab_bar_pack_end;
 }
 
 #define WRAP_BOOLEAN_PROPERTY(name) \
