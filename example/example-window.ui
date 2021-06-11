@@ -21,6 +21,25 @@
                 <property name="tooltip-text">Create new document (Ctrl+n)</property>
               </object>
             </child>
+            <child type="end">
+              <object class="GtkBox">
+                <style>
+                  <class name="linked"/>
+                </style>
+                <child>
+                  <object class="GtkToggleButton" id="frame_header_bar">
+                    <property name="active">true</property>
+                    <property name="label">Header Bar</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="frame_tab_bar">
+                    <property name="group">frame_header_bar</property>
+                    <property name="label">Tab Bar</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>

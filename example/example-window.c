@@ -28,6 +28,7 @@ struct _ExampleWindow
   PanelDock *dock;
   PanelGrid *grid;
   GMenuModel *page_menu;
+  GtkToggleButton *frame_header_bar;
 };
 
 G_DEFINE_TYPE (ExampleWindow, example_window, ADW_TYPE_APPLICATION_WINDOW)
@@ -93,10 +94,19 @@ add_document_action (GtkWidget  *widget,
 }
 
 static PanelFrame *
-create_frame_cb (PanelGrid *grid)
+create_frame_cb (PanelGrid     *grid,
+                 ExampleWindow *self)
 {
   PanelFrame *frame = PANEL_FRAME (panel_frame_new ());
-  PanelFrameHeader *header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
+  PanelFrameHeader *header;
+
+  g_assert (EXAMPLE_IS_WINDOW (self));
+
+  if (gtk_toggle_button_get_active (self->frame_header_bar))
+     header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
+  else
+     header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
+
   panel_frame_set_header (frame, header);
   panel_frame_header_pack_start (header,
                                  -100,
@@ -124,6 +134,7 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, dock);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, grid);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, page_menu);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, frame_header_bar);
   gtk_widget_class_bind_template_callback (widget_class, create_frame_cb);
 
   gtk_widget_class_install_action (widget_class, "document.new", NULL, add_document_action);
