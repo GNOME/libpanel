@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include <adwaita.h>
+#include <glib/gi18n.h>
 
 #include "panel-binding-group-private.h"
 #include "panel-frame-header-bar.h"
@@ -496,6 +497,7 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
                               "valign", GTK_ALIGN_BASELINE,
                               "xalign", 0.0f,
                               "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
+                              "label", _("No Open Pages"),
                               "width-chars", 5,
                               NULL);
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->title));
@@ -543,11 +545,12 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
   g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
   g_assert (!page || PANEL_IS_WIDGET (page));
 
-  gtk_label_set_label (self->title, NULL);
-  gtk_image_clear (self->image);
-
   if (page == NULL)
-    gtk_menu_button_popdown (self->title_button);
+    {
+      gtk_label_set_label (self->title, _("No Open Pages"));
+      gtk_image_clear (self->image);
+      gtk_menu_button_popdown (self->title_button);
+    }
 
   self->foreground_rgba_set = FALSE;
   self->background_rgba_set = FALSE;
