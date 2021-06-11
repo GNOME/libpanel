@@ -25,21 +25,22 @@
 
 G_BEGIN_DECLS
 
-PanelFrame *_panel_grid_create_frame   (PanelGrid          *self);
-gboolean    _panel_grid_get_position   (PanelGrid          *self,
-                                        GtkWidget          *widget,
-                                        guint              *column,
-                                        guint              *row);
-void        _panel_grid_reposition     (PanelGrid          *self,
-                                        GtkWidget          *widget,
-                                        guint               column,
-                                        guint               row);
-void        _panel_grid_prepend_column (PanelGrid          *self);
-void        _panel_grid_remove_column  (PanelGrid          *self,
-                                        PanelGridColumn    *column);
-void        _panel_grid_foreach_frame  (PanelGrid          *self,
-                                        PanelFrameCallback  callback,
-                                        gpointer            user_data);
-void        _panel_grid_collapse       (PanelGrid          *self);
+PanelFrame *_panel_grid_create_frame     (PanelGrid          *self);
+gboolean    _panel_grid_get_position     (PanelGrid          *self,
+                                          GtkWidget          *widget,
+                                          guint              *column,
+                                          guint              *row);
+void        _panel_grid_reposition       (PanelGrid          *self,
+                                          GtkWidget          *widget,
+                                          guint               column,
+                                          guint               row);
+void        _panel_grid_prepend_column   (PanelGrid          *self);
+void        _panel_grid_remove_column    (PanelGrid          *self,
+                                          PanelGridColumn    *column);
+void        _panel_grid_foreach_frame    (PanelGrid          *self,
+                                          PanelFrameCallback  callback,
+                                          gpointer            user_data);
+void        _panel_grid_collapse         (PanelGrid          *self);
+void        _panel_grid_update_closeable (PanelGrid          *self);
 
 G_END_DECLS

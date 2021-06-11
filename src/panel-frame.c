@@ -596,6 +596,7 @@ panel_frame_add (PanelFrame  *self,
                  PanelWidget *panel)
 {
   AdwTabPage *page;
+  GtkWidget *grid;
   gboolean empty;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
@@ -611,6 +612,9 @@ panel_frame_add (PanelFrame  *self,
 
   g_assert (!panel_frame_get_empty (self));
 
+  if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
+    _panel_grid_update_closeable (PANEL_GRID (grid));
+
   panel_frame_update_actions (self);
 
   if (empty)
@@ -622,6 +626,7 @@ panel_frame_remove (PanelFrame  *self,
                     PanelWidget *panel)
 {
   GtkWidget *dock_child;
+  GtkWidget *grid;
   AdwTabPage *page;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
@@ -640,6 +645,9 @@ panel_frame_remove (PanelFrame  *self,
             g_object_notify (G_OBJECT (dock_child), "empty");
         }
     }
+
+  if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
+    _panel_grid_update_closeable (PANEL_GRID (grid));
 
   panel_frame_update_actions (self);
 }
@@ -759,6 +767,7 @@ _panel_frame_transfer (PanelFrame  *self,
                        int          position)
 {
   AdwTabPage *page;
+  GtkWidget *grid;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (widget));
@@ -771,6 +780,11 @@ _panel_frame_transfer (PanelFrame  *self,
     position = adw_tab_view_get_n_pages (new_frame->tab_view);
 
   adw_tab_view_transfer_page (self->tab_view, page, new_frame->tab_view, position);
+
+  if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
+    _panel_grid_update_closeable (PANEL_GRID (grid));
+
+  panel_frame_update_actions (self);
 
   panel_widget_raise (widget);
   panel_widget_focus_default (widget);

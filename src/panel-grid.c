@@ -328,6 +328,7 @@ _panel_grid_prepend_column (PanelGrid *self)
   g_return_if_fail (PANEL_IS_GRID (self));
 
   panel_paned_insert (self->columns, 0, panel_grid_column_new ());
+  _panel_grid_update_closeable (self);
 }
 
 guint
@@ -346,6 +347,7 @@ _panel_grid_remove_column (PanelGrid       *self,
   g_return_if_fail (PANEL_IS_GRID_COLUMN (column));
 
   panel_paned_remove (self->columns, GTK_WIDGET (column));
+  _panel_grid_update_closeable (self);
 }
 
 void
@@ -422,6 +424,14 @@ _panel_grid_collapse (PanelGrid *self)
           n_columns--;
         }
     }
+
+  _panel_grid_update_closeable (self);
+}
+
+void
+_panel_grid_update_closeable (PanelGrid *self)
+{
+  g_return_if_fail (PANEL_IS_GRID (self));
 
   /* If there is a single frame open, we don't want to allow closing it */
   if (_panel_grid_has_single_frame (self))
