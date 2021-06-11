@@ -74,7 +74,7 @@
                 <child>
                   <object class="GtkButton" id="close_button">
                     <property name="focus-on-click">false</property>
-                    <property name="action-name">page.close</property>
+                    <property name="action-name">frame.close-page-or-frame</property>
                     <property name="icon-name">window-close-symbolic</property>
                   </object>
                 </child>

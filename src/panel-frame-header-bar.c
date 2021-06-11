@@ -272,34 +272,6 @@ panel_frame_header_bar_set_frame (PanelFrameHeaderBar *self,
 }
 
 static void
-page_close_action (GtkWidget  *widget,
-                   const char *action_name,
-                   GVariant   *param)
-{
-  PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)widget;
-  AdwTabPage *page;
-  AdwTabView *tab_view;
-  GtkWidget *dock;
-
-  g_assert (PANEL_IS_FRAME_HEADER (self));
-
-  if (self->frame == NULL ||
-      !(tab_view = _panel_frame_get_tab_view (self->frame)))
-    return;
-
-  /* Remove current page if we have one */
-  if ((page = adw_tab_view_get_selected_page (tab_view)))
-    {
-      adw_tab_view_close_page (tab_view, page);
-      return;
-    }
-
-  /* No active page, instead remove the frame */
-  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_remove_frame (PANEL_DOCK (dock), self->frame);
-}
-
-static void
 menu_clicked_cb (GtkGesture          *gesture,
                  int                  n_press,
                  double               x,
@@ -448,8 +420,6 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, bind_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, unbind_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, menu_clicked_cb);
-
-  gtk_widget_class_install_action (widget_class, "page.close", NULL, page_close_action);
 
   css_quark = g_quark_from_static_string ("css-provider");
 }

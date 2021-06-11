@@ -86,20 +86,7 @@ panel_grid_column_get_most_recent_frame (PanelGridColumn *self)
 
   /* TODO: Actually track with MRU */
 
-  if (panel_grid_column_get_empty (self))
-    {
-      GtkWidget *grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID);
-      PanelFrame *frame;
-
-      if (grid != NULL)
-        frame = _panel_grid_create_frame (PANEL_GRID (grid));
-      else
-        frame = PANEL_FRAME (panel_frame_new ());
-
-      panel_paned_append (self->rows, GTK_WIDGET (frame));
-    }
-
-  return PANEL_FRAME (panel_paned_get_nth_child (self->rows, 0));
+  return panel_grid_column_get_row (self, 0);
 }
 
 PanelFrame *

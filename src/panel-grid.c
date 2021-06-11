@@ -382,6 +382,22 @@ has_pages (PanelGridColumn *column)
   return has_page;
 }
 
+static gboolean
+_panel_grid_has_single_frame (PanelGrid *self)
+{
+  g_assert (PANEL_IS_GRID (self));
+
+  return panel_grid_get_n_columns (self) == 1 &&
+         panel_grid_column_get_n_rows (panel_grid_get_column (self, 0)) == 1;
+}
+
+static void
+adjust_can_close_frame (PanelFrame *frame,
+                        gpointer    user_data)
+{
+  _panel_frame_set_closeable (frame, !!user_data);
+}
+
 void
 _panel_grid_collapse (PanelGrid *self)
 {
@@ -406,4 +422,14 @@ _panel_grid_collapse (PanelGrid *self)
           n_columns--;
         }
     }
+
+  /* If there is a single frame open, we don't want to allow closing it */
+  if (_panel_grid_has_single_frame (self))
+    _panel_grid_foreach_frame (self,
+                               adjust_can_close_frame,
+                               GUINT_TO_POINTER (FALSE));
+  else
+    _panel_grid_foreach_frame (self,
+                               adjust_can_close_frame,
+                               GUINT_TO_POINTER (TRUE));
 }
