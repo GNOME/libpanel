@@ -63,6 +63,9 @@ panel_resizer_drag_begin_cb (PanelResizer   *self,
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
 
+  if (self->child == NULL)
+    return;
+
   if ((dock_child = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK_CHILD)) &&
       panel_dock_child_get_dragging (PANEL_DOCK_CHILD (dock_child)))
     goto deny_sequence;
@@ -110,9 +113,15 @@ start_drag:
 
   if (self->position == PANEL_DOCK_POSITION_START ||
       self->position == PANEL_DOCK_POSITION_END)
-    self->drag_orig_size = child_alloc.width + handle_alloc.width;
+    {
+      self->drag_orig_size = child_alloc.width + handle_alloc.width;
+      gtk_widget_set_hexpand (self->child, FALSE);
+    }
   else
-    self->drag_orig_size = child_alloc.height + handle_alloc.height;
+    {
+      self->drag_orig_size = child_alloc.height + handle_alloc.height;
+      gtk_widget_set_vexpand (self->child, FALSE);
+    }
 }
 
 static void
@@ -198,6 +207,8 @@ panel_resizer_measure (GtkWidget      *widget,
 
       if (self->drag_position > *minimum)
         *natural = self->drag_position;
+      else if (self->drag_position < *minimum)
+        *natural = *minimum;
 
       if (gtk_widget_get_visible (GTK_WIDGET (self->handle)))
         {
