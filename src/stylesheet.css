@@ -1,5 +1,5 @@
 panelframe panelframeswitcher {
-  margin: 6px;
+  padding: 6px;
 }
 paneldockchild:not(.center) {
   background-color: @theme_bg_color;

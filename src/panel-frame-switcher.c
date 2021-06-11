@@ -19,6 +19,7 @@
 
 #include "config.h"
 
+#include "panel-binding-group-private.h"
 #include "panel-dock-private.h"
 #include "panel-frame-private.h"
 #include "panel-frame-header.h"
@@ -37,12 +38,22 @@
 
 struct _PanelFrameSwitcher
 {
-  GtkWidget parent_instance;
+  GtkWidget          parent_instance;
 
+  PanelBindingGroup *bindings;
+  GtkCssProvider    *css_provider;
   PanelFrame        *frame;
   GtkSelectionModel *pages;
   GHashTable        *buttons;
   PanelWidget       *drag_panel;
+
+  GdkRGBA            foreground_rgba;
+  GdkRGBA            background_rgba;
+
+  guint              update_css_handler;
+
+  guint              foreground_rgba_set : 1;
+  guint              background_rgba_set : 1;
 };
 
 struct _PanelFrameSwitcherClass
@@ -55,17 +66,21 @@ static PanelFrame *panel_frame_switcher_get_frame (PanelFrameSwitcher        *se
 static void        panel_frame_switcher_set_frame (PanelFrameSwitcher        *self,
                                                    PanelFrame                *frame);
 
+G_DEFINE_TYPE_WITH_CODE (PanelFrameSwitcher, panel_frame_switcher, GTK_TYPE_WIDGET,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL)
+                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, frame_header_iface_init))
+
 enum {
   PROP_0,
+  PROP_FOREGROUND_RGBA,
+  PROP_BACKGROUND_RGBA,
   N_PROPS,
 
   PROP_FRAME,
   PROP_ORIENTATION,
 };
 
-G_DEFINE_TYPE_WITH_CODE (PanelFrameSwitcher, panel_frame_switcher, GTK_TYPE_WIDGET,
-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL)
-                         G_IMPLEMENT_INTERFACE (PANEL_TYPE_FRAME_HEADER, frame_header_iface_init))
+static GParamSpec *properties [N_PROPS];
 
 static void
 panel_frame_switcher_init (PanelFrameSwitcher *switcher)
@@ -73,6 +88,15 @@ panel_frame_switcher_init (PanelFrameSwitcher *switcher)
   GtkLayoutManager *layout_manager;
 
   switcher->buttons = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, NULL);
+
+  switcher->bindings = panel_binding_group_new ();
+  panel_binding_group_bind (switcher->bindings, "background-rgba", switcher, "background-rgba", 0);
+  panel_binding_group_bind (switcher->bindings, "foreground-rgba", switcher, "foreground-rgba", 0);
+
+  switcher->css_provider = gtk_css_provider_new ();
+  gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (switcher)),
+                                  GTK_STYLE_PROVIDER (switcher->css_provider),
+                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
   gtk_widget_add_css_class (GTK_WIDGET (switcher), "linked");
 
@@ -626,6 +650,14 @@ panel_frame_switcher_get_property (GObject    *object,
       g_value_set_object (value, panel_frame_switcher_get_frame (switcher));
       break;
 
+    case PROP_BACKGROUND_RGBA:
+      g_value_set_boxed (value, panel_frame_switcher_get_background_rgba (switcher));
+      break;
+
+    case PROP_FOREGROUND_RGBA:
+      g_value_set_boxed (value, panel_frame_switcher_get_foreground_rgba (switcher));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -659,6 +691,14 @@ panel_frame_switcher_set_property (GObject      *object,
       panel_frame_switcher_set_frame (switcher, g_value_get_object (value));
       break;
 
+    case PROP_BACKGROUND_RGBA:
+      panel_frame_switcher_set_background_rgba (switcher, g_value_get_boxed (value));
+      break;
+
+    case PROP_FOREGROUND_RGBA:
+      panel_frame_switcher_set_foreground_rgba (switcher, g_value_get_boxed (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -670,6 +710,9 @@ panel_frame_switcher_dispose (GObject *object)
 {
   PanelFrameSwitcher *switcher = PANEL_FRAME_SWITCHER (object);
 
+  g_clear_handle_id (&switcher->update_css_handler, g_source_remove);
+  g_clear_object (&switcher->css_provider);
+  g_clear_object (&switcher->bindings);
   unset_frame (switcher);
 
   G_OBJECT_CLASS (panel_frame_switcher_parent_class)->dispose (object);
@@ -695,6 +738,22 @@ panel_frame_switcher_class_init (PanelFrameSwitcherClass *class)
   object_class->set_property = panel_frame_switcher_set_property;
   object_class->dispose = panel_frame_switcher_dispose;
   object_class->finalize = panel_frame_switcher_finalize;
+
+  properties [PROP_BACKGROUND_RGBA] =
+    g_param_spec_boxed ("background-rgba",
+                        "Background RGBA",
+                        "Background RGBA",
+                        GDK_TYPE_RGBA,
+                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_FOREGROUND_RGBA] =
+    g_param_spec_boxed ("foreground-rgba",
+                        "Foreground RGBA",
+                        "Foreground RGBA",
+                        GDK_TYPE_RGBA,
+                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   g_object_class_override_property (object_class, PROP_FRAME, "frame");
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
@@ -733,8 +792,123 @@ panel_frame_switcher_can_drop (PanelFrameHeader *header,
   return g_strcmp0 (kind, PANEL_WIDGET_KIND_DOCUMENT) != 0;
 }
 
+static gboolean
+panel_frame_switcher_update_css (PanelFrameSwitcher *self)
+{
+  GString *str = NULL;
+
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+  g_assert (self->css_provider != NULL);
+  g_assert (GTK_IS_CSS_PROVIDER (self->css_provider));
+
+  str = g_string_new (NULL);
+
+  /*
+   * We set various styles on this provider so that we can update multiple
+   * widgets using the same CSS style. That includes ourself, various buttons,
+   * labels, and some images.
+   */
+
+  if (self->background_rgba_set)
+    {
+      gchar *bgstr = gdk_rgba_to_string (&self->background_rgba);
+
+      g_string_append        (str, "panelframeswitcher {\n");
+      g_string_append        (str, "  background: none;\n");
+      g_string_append_printf (str, "  background-color: %s;\n", bgstr);
+      g_string_append        (str, "  transition: background-color 400ms;\n");
+      g_string_append        (str, "  transition-timing-function: ease;\n");
+      g_string_append        (str, "}\n");
+
+      g_free (bgstr);
+    }
+
+  /* Use -1 for length so CSS provider knows the string is NULL terminated
+   * and there-by avoid a string copy.
+   */
+  gtk_css_provider_load_from_data (self->css_provider, str->str, -1);
+
+  self->update_css_handler = 0;
+
+  g_string_free (str, TRUE);
+
+  return G_SOURCE_REMOVE;
+}
+
+static void
+panel_frame_switcher_queue_update_css (PanelFrameSwitcher *self)
+{
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+
+  if (self->update_css_handler == 0)
+    self->update_css_handler =
+      g_idle_add_full (G_PRIORITY_HIGH,
+                       (GSourceFunc)panel_frame_switcher_update_css,
+                       g_object_ref (self),
+                       g_object_unref);
+}
+
+static void
+panel_frame_switcher_page_changed (PanelFrameHeader *header,
+                                   PanelWidget      *widget)
+{
+  PanelFrameSwitcher *self = (PanelFrameSwitcher *)header;
+
+  g_assert (PANEL_IS_FRAME_HEADER (header));
+  g_assert (!widget || PANEL_IS_WIDGET (widget));
+
+  self->foreground_rgba_set = FALSE;
+  self->background_rgba_set = FALSE;
+  panel_frame_switcher_queue_update_css (self);
+
+  panel_binding_group_set_source (self->bindings, widget);
+}
+
 static void
 frame_header_iface_init (PanelFrameHeaderInterface *iface)
 {
   iface->can_drop = panel_frame_switcher_can_drop;
+  iface->page_changed = panel_frame_switcher_page_changed;
+}
+
+const GdkRGBA *
+panel_frame_switcher_get_background_rgba (PanelFrameSwitcher *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME_SWITCHER (self), NULL);
+
+  return self->background_rgba_set ? &self->background_rgba : NULL;
+}
+
+void
+panel_frame_switcher_set_background_rgba (PanelFrameSwitcher *self,
+                                            const GdkRGBA       *background_rgba)
+{
+  g_return_if_fail (PANEL_IS_FRAME_SWITCHER (self));
+
+  self->background_rgba_set = background_rgba != NULL;
+  if (background_rgba)
+    self->background_rgba = *background_rgba;
+  panel_frame_switcher_queue_update_css (self);
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BACKGROUND_RGBA]);
+}
+
+const GdkRGBA *
+panel_frame_switcher_get_foreground_rgba (PanelFrameSwitcher *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME_SWITCHER (self), NULL);
+
+  return self->foreground_rgba_set ? &self->foreground_rgba : NULL;
+}
+
+void
+panel_frame_switcher_set_foreground_rgba (PanelFrameSwitcher *self,
+                                            const GdkRGBA       *foreground_rgba)
+{
+  g_return_if_fail (PANEL_IS_FRAME_SWITCHER (self));
+
+  self->foreground_rgba_set = foreground_rgba != NULL;
+  if (foreground_rgba)
+    self->foreground_rgba = *foreground_rgba;
+  panel_frame_switcher_queue_update_css (self);
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_FOREGROUND_RGBA]);
 }
