@@ -1012,23 +1012,20 @@ void
 _panel_dock_remove_frame (PanelDock  *self,
                           PanelFrame *frame)
 {
-  GtkWidget *parent;
+  GtkWidget *paned;
+  GtkWidget *grid;
 
   g_return_if_fail (PANEL_IS_DOCK (self));
   g_return_if_fail (PANEL_IS_FRAME (frame));
 
-  if ((parent = gtk_widget_get_ancestor (GTK_WIDGET (frame), PANEL_TYPE_PANED)))
-    {
-      GtkWidget *grid;
+  /* We must at least be in a paned */
+  if (!(paned = gtk_widget_get_ancestor (GTK_WIDGET (frame), PANEL_TYPE_PANED)))
+    return;
 
-      panel_paned_remove (PANEL_PANED (parent), GTK_WIDGET (frame));
-
-      if ((parent = gtk_widget_get_ancestor (parent, PANEL_TYPE_GRID_COLUMN)) &&
-          panel_grid_column_get_empty (PANEL_GRID_COLUMN (parent)) &&
-          (grid = gtk_widget_get_ancestor (parent, PANEL_TYPE_GRID)) &&
-          panel_grid_get_n_columns (PANEL_GRID (grid)) > 1)
-        _panel_grid_remove_column (PANEL_GRID (grid), PANEL_GRID_COLUMN (parent));
-    }
+  grid = gtk_widget_get_ancestor (paned, PANEL_TYPE_GRID);
+  panel_paned_remove (PANEL_PANED (paned), GTK_WIDGET (frame));
+  if (grid)
+    _panel_grid_collapse (PANEL_GRID (grid));
 }
 
 void

@@ -365,3 +365,45 @@ _panel_grid_foreach_frame (PanelGrid          *self,
       panel_grid_column_foreach_frame (PANEL_GRID_COLUMN (column), callback, user_data);
     }
 }
+
+static void
+has_pages_cb (PanelFrame *frame,
+              gpointer    user_data)
+{
+  gboolean *has_page = user_data;
+  *has_page |= !panel_frame_get_empty (frame);
+}
+
+static gboolean
+has_pages (PanelGridColumn *column)
+{
+  gboolean has_page = FALSE;
+  panel_grid_column_foreach_frame (column, has_pages_cb, &has_page);
+  return has_page;
+}
+
+void
+_panel_grid_collapse (PanelGrid *self)
+{
+  guint n_columns;
+
+  g_return_if_fail (PANEL_IS_GRID (self));
+
+  n_columns = panel_grid_get_n_columns (self);
+
+  for (GtkWidget *resizer = gtk_widget_get_first_child (GTK_WIDGET (self->columns));
+       resizer != NULL;
+       resizer = gtk_widget_get_next_sibling (resizer))
+    {
+      GtkWidget *column = panel_resizer_get_child (PANEL_RESIZER (resizer));
+
+      if (n_columns == 1)
+        break;
+
+      if (!has_pages (PANEL_GRID_COLUMN (column)))
+        {
+          _panel_grid_remove_column (self, PANEL_GRID_COLUMN (column));
+          n_columns--;
+        }
+    }
+}

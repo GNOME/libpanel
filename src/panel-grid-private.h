@@ -40,5 +40,6 @@ void        _panel_grid_remove_column  (PanelGrid          *self,
 void        _panel_grid_foreach_frame  (PanelGrid          *self,
                                         PanelFrameCallback  callback,
                                         gpointer            user_data);
+void        _panel_grid_collapse       (PanelGrid          *self);
 
 G_END_DECLS
