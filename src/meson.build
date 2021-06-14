@@ -37,6 +37,7 @@ libpanel_sources = [
   'panel-paned.c',
   'panel-resizer.c',
   'panel-save-delegate.c',
+  'panel-save-dialog.c',
   'panel-scaler.c',
   'panel-signal-group.c',
   'panel-widget.c',

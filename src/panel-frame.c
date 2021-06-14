@@ -28,8 +28,9 @@
 #include "panel-grid-private.h"
 #include "panel-joined-menu-private.h"
 #include "panel-paned-private.h"
+#include "panel-save-dialog.h"
 #include "panel-scaler-private.h"
-#include "panel-widget.h"
+#include "panel-widget-private.h"
 
 struct _PanelFrame
 {
@@ -249,38 +250,62 @@ close_page_or_frame_action (GtkWidget  *widget,
 }
 
 static void
+panel_frame_save_cb (GObject      *object,
+                     GAsyncResult *result,
+                     gpointer      user_data)
+{
+  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  g_autoptr(PanelFrame) self = user_data;
+  GtkWidget *dock;
+  GtkWidget *grid;
+
+  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (G_IS_ASYNC_RESULT (result));
+  g_assert (PANEL_IS_FRAME (self));
+
+  if (!(grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)) ||
+      !(dock = gtk_widget_get_ancestor (grid, PANEL_TYPE_DOCK)))
+    g_return_if_reached ();
+
+  _panel_dock_remove_frame (PANEL_DOCK (dock), self);
+}
+
+static void
 close_frame_action (GtkWidget  *widget,
                     const char *action_name,
                     GVariant   *param)
 {
   PanelFrame *self = (PanelFrame *)widget;
-  GtkWidget *dock;
-  GtkWidget *grid;
+  GtkWidget *toplevel;
+  GtkWidget *dialog;
+  guint n_pages;
 
   g_assert (PANEL_IS_FRAME (self));
 
   if (!self->closeable)
     g_return_if_reached ();
 
-  if (!(grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)) ||
-      !(dock = gtk_widget_get_ancestor (grid, PANEL_TYPE_DOCK)))
-    g_return_if_reached ();
+  toplevel = gtk_widget_get_ancestor (widget, GTK_TYPE_WINDOW);
 
-#if 0
-  PanelWidget *visible_child;
-  while ((visible_child = panel_frame_get_visible_child (self)))
+  dialog = panel_save_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (toplevel));
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+
+  n_pages = panel_frame_get_n_pages (self);
+
+  for (guint i = 0; i < n_pages; i++)
     {
-      /* TODO: This should collect the modified pages and request
-       *       to the user that they be saved/etc.
-       */
-      AdwTabPage *page;
+      PanelWidget *page = panel_frame_get_page (self, i);
 
-      page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (visible_child));
-      adw_tab_view_close_page (self->tab_view, page);
+      if (_panel_widget_can_save (page))
+        panel_save_dialog_add_delegate (PANEL_SAVE_DIALOG (dialog),
+                                        panel_widget_get_save_delegate (page));
     }
-#endif
 
-  _panel_dock_remove_frame (PANEL_DOCK (dock), self);
+  panel_save_dialog_run_async (PANEL_SAVE_DIALOG (dialog),
+                               NULL,
+                               panel_frame_save_cb,
+                               g_object_ref (self));
 }
 
 static void
@@ -835,6 +860,21 @@ panel_frame_get_n_pages (PanelFrame *self)
   g_return_val_if_fail (PANEL_IS_FRAME (self), 0);
 
   return adw_tab_view_get_n_pages (self->tab_view);
+}
+
+PanelWidget *
+panel_frame_get_page (PanelFrame *self,
+                      guint       n)
+{
+  AdwTabPage *page;
+
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+  g_return_val_if_fail (n < panel_frame_get_n_pages (self), NULL);
+
+  if ((page = adw_tab_view_get_nth_page (self->tab_view, n)))
+    return PANEL_WIDGET (adw_tab_page_get_child (page));
+
+  return NULL;
 }
 
 /**

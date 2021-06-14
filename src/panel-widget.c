@@ -1068,3 +1068,13 @@ panel_widget_set_save_delegate (PanelWidget       *self,
   if (g_set_object (&priv->save_delegate, save_delegate))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SAVE_DELEGATE]);
 }
+
+gboolean
+_panel_widget_can_save (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
+
+  return priv->modified && priv->save_delegate != NULL;
+}
