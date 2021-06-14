@@ -249,6 +249,41 @@ close_page_or_frame_action (GtkWidget  *widget,
 }
 
 static void
+close_frame_action (GtkWidget  *widget,
+                    const char *action_name,
+                    GVariant   *param)
+{
+  PanelFrame *self = (PanelFrame *)widget;
+  GtkWidget *dock;
+  GtkWidget *grid;
+
+  g_assert (PANEL_IS_FRAME (self));
+
+  if (!self->closeable)
+    g_return_if_reached ();
+
+  if (!(grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)) ||
+      !(dock = gtk_widget_get_ancestor (grid, PANEL_TYPE_DOCK)))
+    g_return_if_reached ();
+
+#if 0
+  PanelWidget *visible_child;
+  while ((visible_child = panel_frame_get_visible_child (self)))
+    {
+      /* TODO: This should collect the modified pages and request
+       *       to the user that they be saved/etc.
+       */
+      AdwTabPage *page;
+
+      page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (visible_child));
+      adw_tab_view_close_page (self->tab_view, page);
+    }
+#endif
+
+  _panel_dock_remove_frame (PANEL_DOCK (dock), self);
+}
+
+static void
 panel_frame_update_actions (PanelFrame *self)
 {
   GtkWidget *grid;
@@ -266,6 +301,9 @@ panel_frame_update_actions (PanelFrame *self)
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
                                  "frame.close-page-or-frame",
                                  grid && (visible_child || self->closeable));
+  gtk_widget_action_set_enabled (GTK_WIDGET (self),
+                                 "frame.close",
+                                 grid && self->closeable);
 }
 
 static void
@@ -528,6 +566,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_install_action (widget_class, "page.move-left", NULL, page_move_left_action);
   gtk_widget_class_install_action (widget_class, "page.maximize", NULL, page_maximize_action);
   gtk_widget_class_install_action (widget_class, "frame.close-page-or-frame", NULL, close_page_or_frame_action);
+  gtk_widget_class_install_action (widget_class, "frame.close", NULL, close_frame_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceright, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-right", NULL);
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceleft, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-left", NULL);
