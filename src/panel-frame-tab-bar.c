@@ -28,11 +28,12 @@
 
 struct _PanelFrameTabBar
 {
-  GtkWidget   parent_instance;
-  PanelFrame *frame;
-  AdwTabBar  *tab_bar;
-  GtkBox     *start_area;
-  GtkBox     *end_area;
+  GtkWidget      parent_instance;
+  PanelFrame    *frame;
+  AdwTabBar     *tab_bar;
+  GtkBox        *start_area;
+  GtkBox        *end_area;
+  GtkMenuButton *menu_button;
 };
 
 static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
@@ -73,9 +74,16 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
   if (g_set_object (&self->frame, frame))
     {
       AdwTabView *view = NULL;
+      GMenuModel *menu_model = NULL;
 
-      view = frame ? _panel_frame_get_tab_view (frame) : NULL;
+      if (frame != NULL)
+        {
+          view = _panel_frame_get_tab_view (frame);
+          menu_model = _panel_frame_get_tab_menu (frame);
+        }
+
       adw_tab_bar_set_view (self->tab_bar, view);
+      gtk_menu_button_set_menu_model (self->menu_button, menu_model);
 
       g_object_notify (G_OBJECT (self), "frame");
     }
@@ -96,6 +104,23 @@ panel_frame_tab_bar_notify_cb (PanelFrameTabBar *self,
     {
       g_object_notify_by_pspec (G_OBJECT (self), relative);
       return;
+    }
+}
+
+static void
+menu_clicked_cb (GtkGesture       *gesture,
+                 int               n_press,
+                 double            x,
+                 double            y,
+                 PanelFrameTabBar *self)
+{
+  g_assert (GTK_IS_GESTURE_CLICK (gesture));
+  g_assert (PANEL_IS_FRAME_TAB_BAR (self));
+
+  if (self->frame)
+    {
+      GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
+      gtk_menu_button_set_menu_model (self->menu_button, menu_model);
     }
 }
 
@@ -203,6 +228,9 @@ panel_frame_tab_bar_class_init (PanelFrameTabBarClass *klass)
 static void
 panel_frame_tab_bar_init (PanelFrameTabBar *self)
 {
+  GtkEventController *controller;
+  GtkBox *box;
+
   self->tab_bar = ADW_TAB_BAR (adw_tab_bar_new ());
   adw_tab_bar_set_autohide (self->tab_bar, FALSE);
   g_signal_connect_object (self->tab_bar,
@@ -215,8 +243,20 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
   self->start_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
   adw_tab_bar_set_start_action_widget (self->tab_bar, GTK_WIDGET (self->start_area));
 
+  box = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
+  adw_tab_bar_set_end_action_widget (self->tab_bar, GTK_WIDGET (box));
+
+  self->menu_button = GTK_MENU_BUTTON (gtk_menu_button_new ());
+  gtk_menu_button_set_icon_name (self->menu_button, "open-menu-symbolic");
+  gtk_box_append (box, GTK_WIDGET (self->menu_button));
+
+  controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
+  g_signal_connect_object (controller, "pressed",
+                           G_CALLBACK (menu_clicked_cb), self, 0);
+  gtk_widget_add_controller (GTK_WIDGET (self), controller);
+
   self->end_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  adw_tab_bar_set_end_action_widget (self->tab_bar, GTK_WIDGET (self->end_area));
+  gtk_box_prepend (box, GTK_WIDGET (self->end_area));
 }
 
 static gboolean
