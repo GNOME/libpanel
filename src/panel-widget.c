@@ -27,28 +27,29 @@
 
 typedef struct
 {
-  GtkWidget  *child;
-  GQuark      kind;
-  char       *title;
-  char       *icon_name;
-  GIcon      *icon;
-  GMenuModel *menu_model;
+  GtkWidget         *child;
+  GQuark             kind;
+  char              *title;
+  char              *icon_name;
+  GIcon             *icon;
+  GMenuModel        *menu_model;
+  PanelSaveDelegate *save_delegate;
 
-  GtkWidget  *maximize_frame;
-  GtkWidget  *maximize_dock_child;
+  GtkWidget         *maximize_frame;
+  GtkWidget         *maximize_dock_child;
 
-  GdkRGBA    foreground_rgba;
-  GdkRGBA    background_rgba;
+  GdkRGBA           foreground_rgba;
+  GdkRGBA           background_rgba;
 
-  guint      busy_count;
+  guint             busy_count;
 
-  guint      background_rgba_set : 1;
-  guint      foreground_rgba_set : 1;
-  guint      reorderable : 1;
-  guint      can_maximize : 1;
-  guint      maximized : 1;
-  guint      modified : 1;
-  guint      needs_attention : 1;
+  guint             background_rgba_set : 1;
+  guint             foreground_rgba_set : 1;
+  guint             reorderable : 1;
+  guint             can_maximize : 1;
+  guint             maximized : 1;
+  guint             modified : 1;
+  guint             needs_attention : 1;
 } PanelWidgetPrivate;
 
 static void buildable_iface_init (GtkBuildableIface *iface);
@@ -71,6 +72,7 @@ enum {
   PROP_NEEDS_ATTENTION,
   PROP_KIND,
   PROP_REORDERABLE,
+  PROP_SAVE_DELEGATE,
   PROP_TITLE,
   N_PROPS
 };
@@ -128,6 +130,7 @@ panel_widget_dispose (GObject *object)
   g_clear_pointer (&priv->child, gtk_widget_unparent);
   g_clear_object (&priv->icon);
   g_clear_object (&priv->menu_model);
+  g_clear_object (&priv->save_delegate);
 
   G_OBJECT_CLASS (panel_widget_parent_class)->dispose (object);
 }
@@ -194,6 +197,10 @@ panel_widget_get_property (GObject    *object,
       g_value_set_boolean (value, panel_widget_get_needs_attention (self));
       break;
 
+    case PROP_SAVE_DELEGATE:
+      g_value_set_object (value, panel_widget_get_save_delegate (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -255,6 +262,10 @@ panel_widget_set_property (GObject      *object,
 
     case PROP_NEEDS_ATTENTION:
       panel_widget_set_needs_attention (self, g_value_get_boolean (value));
+      break;
+
+    case PROP_SAVE_DELEGATE:
+      panel_widget_set_save_delegate (self, g_value_get_object (value));
       break;
 
     default:
@@ -382,6 +393,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           "Needs Attention",
                           FALSE,
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_SAVE_DELEGATE] =
+    g_param_spec_object ("save-delegate",
+                         "Save Delegate",
+                         "A save delegate to perform a save operation on the page",
+                         PANEL_TYPE_SAVE_DELEGATE,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
@@ -1013,4 +1031,40 @@ static void
 buildable_iface_init (GtkBuildableIface *iface)
 {
   iface->add_child = panel_widget_add_child;
+}
+
+/**
+ * panel_widget_get_save_delegate:
+ * @self: a #PanelWidget
+ *
+ * Gets the #PanelWidget:save-delegate property.
+ *
+ * The save delegate may be used to perform save operations on the
+ * content within the widget.
+ *
+ * Document editors might use this to save the file to disk.
+ *
+ * Returns: (transfer none) (nullable): a #PanelSaveDelegate or %NULL
+ */
+PanelSaveDelegate *
+panel_widget_get_save_delegate (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  return priv->save_delegate;
+}
+
+void
+panel_widget_set_save_delegate (PanelWidget       *self,
+                                PanelSaveDelegate *save_delegate)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+  g_return_if_fail (!save_delegate || PANEL_IS_SAVE_DELEGATE (save_delegate));
+
+  if (g_set_object (&priv->save_delegate, save_delegate))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SAVE_DELEGATE]);
 }

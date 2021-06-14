@@ -36,6 +36,7 @@ libpanel_sources = [
   'panel-maximized-controls.c',
   'panel-paned.c',
   'panel-resizer.c',
+  'panel-save-delegate.c',
   'panel-scaler.c',
   'panel-signal-group.c',
   'panel-widget.c',
@@ -53,6 +54,7 @@ libpanel_headers = [
   'panel-frame-tab-bar.h',
   'panel-grid.h',
   'panel-grid-column.h',
+  'panel-save-delegate.h',
   'panel-version-macros.h',
   'panel-widget.h',
 ]
