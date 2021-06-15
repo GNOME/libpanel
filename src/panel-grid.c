@@ -59,6 +59,23 @@ panel_grid_new (void)
   return g_object_new (PANEL_TYPE_GRID, NULL);
 }
 
+static void
+panel_grid_reexpand (PanelGrid *self)
+{
+  guint n_columns;
+
+  g_return_if_fail (PANEL_IS_GRID (self));
+
+  n_columns = panel_grid_get_n_columns (self);
+
+  for (guint i = 0; i < n_columns; i++)
+    {
+      PanelGridColumn *column = panel_grid_get_column (self, i);
+
+      gtk_widget_set_hexpand (GTK_WIDGET (column), TRUE);
+    }
+}
+
 static PanelFrame *
 panel_grid_real_create_frame (PanelGrid *self)
 {
@@ -135,7 +152,8 @@ panel_grid_init (PanelGrid *self)
   self->columns = PANEL_PANED (panel_paned_new ());
   gtk_orientable_set_orientation (GTK_ORIENTABLE (self->columns), GTK_ORIENTATION_HORIZONTAL);
   gtk_widget_set_parent (GTK_WIDGET (self->columns), GTK_WIDGET (self));
-  panel_paned_append (self->columns, panel_grid_column_new ());
+
+  _panel_grid_prepend_column (self);
 }
 
 PanelGridColumn *
@@ -149,8 +167,8 @@ panel_grid_get_most_recent_column (PanelGrid *self)
 
   if (!(column = panel_paned_get_nth_child (self->columns, 0)))
     {
-      column = panel_grid_column_new ();
-      panel_paned_append (self->columns, column);
+      _panel_grid_prepend_column (self);
+      column = panel_paned_get_nth_child (self->columns, 0);
     }
 
   return PANEL_GRID_COLUMN (column);
@@ -204,6 +222,8 @@ panel_grid_add_child (GtkBuildable *buildable,
         panel_paned_remove (self->columns, column);
 
       panel_paned_append (self->columns, GTK_WIDGET (child));
+      panel_grid_reexpand (self);
+      _panel_grid_update_closeable (self);
     }
   else if (PANEL_IS_WIDGET (child))
     {
@@ -285,6 +305,8 @@ panel_grid_get_column (PanelGrid *self,
     {
       GtkWidget *column_widget = panel_grid_column_new ();
       panel_paned_append (self->columns, column_widget);
+      panel_grid_reexpand (self);
+      _panel_grid_update_closeable (self);
     }
 
   child = panel_paned_get_nth_child (self->columns, column);
@@ -335,6 +357,7 @@ _panel_grid_prepend_column (PanelGrid *self)
   g_return_if_fail (PANEL_IS_GRID (self));
 
   panel_paned_insert (self->columns, 0, panel_grid_column_new ());
+  panel_grid_reexpand (self);
   _panel_grid_update_closeable (self);
 }
 
@@ -354,6 +377,7 @@ _panel_grid_remove_column (PanelGrid       *self,
   g_return_if_fail (PANEL_IS_GRID_COLUMN (column));
 
   panel_paned_remove (self->columns, GTK_WIDGET (column));
+  panel_grid_reexpand (self);
   _panel_grid_update_closeable (self);
 }
 
