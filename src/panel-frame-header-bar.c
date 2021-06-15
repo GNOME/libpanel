@@ -189,7 +189,7 @@ update_css_providers_recurse (GtkWidget           *widget,
       GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
       gtk_style_context_add_provider (style_context,
                                       GTK_STYLE_PROVIDER (self->css_provider),
-                                      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+                                      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION-1);
       g_object_set_qdata (G_OBJECT (widget), css_quark, self->css_provider);
     }
 
@@ -220,16 +220,11 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
     {
       gchar *bgstr = gdk_rgba_to_string (&self->background_rgba);
 
-      g_string_append        (str, "panelframeheaderbar {\n");
-      g_string_append        (str, "  background: none;\n");
-      g_string_append_printf (str, "  background-color: %s;\n", bgstr);
-      g_string_append        (str, "  transition: background-color 400ms;\n");
-      g_string_append        (str, "  transition-timing-function: ease;\n");
-      g_string_append_printf (str, "  border-bottom: 1px solid shade(%s,0.9);\n", bgstr);
+      g_string_append        (str, "panelframeheaderbar {");
+      g_string_append_printf (str, "  background-color: %s;", bgstr);
+      g_string_append_printf (str, "  border-bottom: 1px solid shade(%s,0.9);", bgstr);
       g_string_append        (str, "}\n");
-      g_string_append        (str, "button { background: transparent; border: none; }\n");
-      g_string_append        (str, "button:hover, button:checked {\n");
-      g_string_append_printf (str, "  background: none; background-color: shade(%s,.85); }\n", bgstr);
+      g_string_append_printf (str, "button:hover, button:checked { background-color: shade(%s,.85); }", bgstr);
 
       /* only use foreground when background is set */
       if (self->foreground_rgba_set)

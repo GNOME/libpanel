@@ -60,7 +60,7 @@ panel_init (void)
   gtk_css_provider_load_from_resource (css_provider, "/org/gnome/libpanel/stylesheet.css");
   gtk_style_context_add_provider_for_display (gdk_display_get_default (),
                                               GTK_STYLE_PROVIDER (css_provider),
-                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION-1);
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION-2);
 }
 
 void
