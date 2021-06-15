@@ -31,6 +31,7 @@ struct _PanelSaveDialog
   GtkHeaderBar        *headerbar;
   AdwPreferencesGroup *list;
   GTask               *task;
+  guint                count;
 };
 
 G_DEFINE_TYPE (PanelSaveDialog, panel_save_dialog, GTK_TYPE_DIALOG)
@@ -129,6 +130,8 @@ panel_save_dialog_add_delegate (PanelSaveDialog   *self,
   g_return_if_fail (PANEL_IS_SAVE_DIALOG (self));
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (delegate));
 
+  self->count++;
+
   row = ADW_ACTION_ROW (adw_action_row_new ());
   adw_preferences_group_add (self->list, GTK_WIDGET (row));
 }
@@ -146,6 +149,12 @@ panel_save_dialog_run_async (PanelSaveDialog     *self,
 
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_save_dialog_run_async);
+
+  if (self->count == 0)
+    {
+      g_task_return_boolean (task, TRUE);
+      return;
+    }
 
   if (self->task)
     {
