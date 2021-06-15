@@ -456,6 +456,7 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
                                  "single-line-mode", TRUE,
                                  "width-chars", 1,
                                  "max-width-chars", 1,
+                                 "label", "•",
                                  NULL);
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->modified));
   button = gtk_widget_get_first_child (GTK_WIDGET (self->title_button));
@@ -497,6 +498,7 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
   if (page == NULL)
     {
       gtk_label_set_label (self->title, _("No Open Pages"));
+      gtk_widget_hide (GTK_WIDGET (self->modified));
       gtk_image_clear (self->image);
       gtk_menu_button_popdown (self->title_button);
     }
