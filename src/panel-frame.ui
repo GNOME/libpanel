@@ -35,6 +35,14 @@
         <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;bracketright</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">Move Page _Up</attribute>
+        <attribute name="action">page.move-up</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Move Page _Down</attribute>
+        <attribute name="action">page.move-down</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">Close Frame</attribute>
         <attribute name="action">frame.close</attribute>
       </item>

@@ -34,7 +34,8 @@ gboolean    _panel_grid_get_position     (PanelGrid          *self,
 void        _panel_grid_reposition       (PanelGrid          *self,
                                           GtkWidget          *widget,
                                           guint               column,
-                                          guint               row);
+                                          guint               row,
+                                          gboolean            force_row);
 void        _panel_grid_prepend_column   (PanelGrid          *self);
 void        _panel_grid_remove_column    (PanelGrid          *self,
                                           PanelGridColumn    *column);

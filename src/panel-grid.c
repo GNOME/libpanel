@@ -296,7 +296,8 @@ void
 _panel_grid_reposition (PanelGrid *self,
                         GtkWidget *widget,
                         guint      column,
-                        guint      row)
+                        guint      row,
+                        gboolean   force_row)
 {
   GtkWidget *frame;
   PanelFrame *new_frame;
@@ -310,11 +311,17 @@ _panel_grid_reposition (PanelGrid *self,
       !(column_widget = panel_grid_get_column (self, column)))
     g_return_if_reached ();
 
-  n_rows = panel_grid_column_get_n_rows (column_widget);
-  if (row >= n_rows)
-    row = n_rows ? n_rows - 1 : 0;
+  if (!force_row)
+    {
+      n_rows = panel_grid_column_get_n_rows (column_widget);
+      if (row >= n_rows)
+        row = n_rows ? n_rows - 1 : 0;
+    }
 
   new_frame = panel_grid_column_get_row (column_widget, row);
+
+  if (frame == GTK_WIDGET (new_frame))
+    g_return_if_reached ();
 
   _panel_frame_transfer (PANEL_FRAME (frame),
                          PANEL_WIDGET (widget),

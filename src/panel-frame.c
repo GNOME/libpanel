@@ -26,6 +26,7 @@
 #include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
 #include "panel-grid-private.h"
+#include "panel-grid-column-private.h"
 #include "panel-joined-menu-private.h"
 #include "panel-paned-private.h"
 #include "panel-save-dialog.h"
@@ -329,6 +330,8 @@ panel_frame_update_actions (PanelFrame *self)
 
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-right", grid  && visible_child);
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-left", grid && visible_child);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-down", grid && visible_child);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-up", grid && visible_child);
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.maximize",
                                  grid && visible_child && panel_widget_get_can_maximize (visible_child));
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
@@ -396,7 +399,11 @@ page_move_right_action (GtkWidget  *widget,
 
   if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)) &&
       _panel_grid_get_position (PANEL_GRID (grid), widget, &column, &row))
-    _panel_grid_reposition (PANEL_GRID (grid), GTK_WIDGET (visible_child), column + 1, row);
+    _panel_grid_reposition (PANEL_GRID (grid),
+                            GTK_WIDGET (visible_child),
+                            column + 1,
+                            row,
+                            FALSE);
 }
 
 static void
@@ -423,7 +430,69 @@ page_move_left_action (GtkWidget  *widget,
           column = 1;
         }
 
-      _panel_grid_reposition (PANEL_GRID (grid), GTK_WIDGET (visible_child), column - 1, row);
+      _panel_grid_reposition (PANEL_GRID (grid),
+                              GTK_WIDGET (visible_child),
+                              column - 1,
+                              row,
+                              FALSE);
+    }
+}
+
+static void
+page_move_down_action (GtkWidget  *widget,
+                       const char *action_name,
+                       GVariant   *param)
+{
+  PanelWidget *visible_child;
+  GtkWidget *grid;
+  guint column;
+  guint row;
+
+  g_assert (PANEL_IS_FRAME (widget));
+
+  if (!(visible_child = panel_frame_get_visible_child (PANEL_FRAME (widget))))
+    g_return_if_reached ();
+
+  if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)) &&
+      _panel_grid_get_position (PANEL_GRID (grid), widget, &column, &row))
+    _panel_grid_reposition (PANEL_GRID (grid),
+                            GTK_WIDGET (visible_child),
+                            column,
+                            row + 1,
+                            TRUE);
+}
+
+static void
+page_move_up_action (GtkWidget  *widget,
+                     const char *action_name,
+                     GVariant   *param)
+{
+  PanelWidget *visible_child;
+  GtkWidget *grid;
+  GtkWidget *grid_column;
+  guint column;
+  guint row;
+
+  g_assert (PANEL_IS_FRAME (widget));
+
+  if (!(visible_child = panel_frame_get_visible_child (PANEL_FRAME (widget))))
+    g_return_if_reached ();
+
+  if ((grid_column = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID_COLUMN)) &&
+      (grid = gtk_widget_get_ancestor (grid_column, PANEL_TYPE_GRID)) &&
+      _panel_grid_get_position (PANEL_GRID (grid), widget, &column, &row))
+    {
+      if (row == 0)
+        {
+          _panel_grid_column_prepend_frame (PANEL_GRID_COLUMN (grid_column));
+          row++;
+        }
+
+      _panel_grid_reposition (PANEL_GRID (grid),
+                              GTK_WIDGET (visible_child),
+                              column,
+                              row - 1,
+                              TRUE);
     }
 }
 
@@ -597,6 +666,8 @@ panel_frame_class_init (PanelFrameClass *klass)
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
   gtk_widget_class_install_action (widget_class, "page.move-left", NULL, page_move_left_action);
+  gtk_widget_class_install_action (widget_class, "page.move-down", NULL, page_move_down_action);
+  gtk_widget_class_install_action (widget_class, "page.move-up", NULL, page_move_up_action);
   gtk_widget_class_install_action (widget_class, "page.maximize", NULL, page_maximize_action);
   gtk_widget_class_install_action (widget_class, "frame.close-page-or-frame", NULL, close_page_or_frame_action);
   gtk_widget_class_install_action (widget_class, "frame.close", NULL, close_frame_action);

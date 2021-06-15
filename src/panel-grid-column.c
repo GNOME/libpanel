@@ -20,8 +20,8 @@
 
 #include "config.h"
 
-#include "panel-grid-column.h"
 #include "panel-grid-private.h"
+#include "panel-grid-column-private.h"
 #include "panel-paned-private.h"
 #include "panel-resizer-private.h"
 
@@ -136,4 +136,19 @@ panel_grid_column_foreach_frame (PanelGridColumn    *self,
 
       callback (PANEL_FRAME (child), user_data);
     }
+}
+
+void
+_panel_grid_column_prepend_frame (PanelGridColumn *self)
+{
+  PanelFrame *frame;
+  PanelGrid *grid;
+
+  g_return_if_fail (PANEL_IS_GRID_COLUMN (self));
+
+  if (!(grid = PANEL_GRID (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID))))
+    g_return_if_reached ();
+
+  frame = _panel_grid_create_frame (grid);
+  panel_paned_prepend (self->rows, GTK_WIDGET (frame));
 }
