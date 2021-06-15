@@ -256,12 +256,20 @@ panel_frame_save_cb (GObject      *object,
 {
   PanelSaveDialog *dialog = (PanelSaveDialog *)object;
   g_autoptr(PanelFrame) self = user_data;
+  g_autoptr(GError) error = NULL;
   GtkWidget *dock;
   GtkWidget *grid;
 
   g_assert (PANEL_IS_SAVE_DIALOG (dialog));
   g_assert (G_IS_ASYNC_RESULT (result));
   g_assert (PANEL_IS_FRAME (self));
+
+  if (!panel_save_dialog_run_finish (dialog, result, &error))
+    {
+      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        g_warning ("%s", error->message);
+      return;
+    }
 
   if (!(grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)) ||
       !(dock = gtk_widget_get_ancestor (grid, PANEL_TYPE_DOCK)))
