@@ -29,6 +29,7 @@
             </child>
             <child>
               <object class="GtkMenuButton" id="title_button">
+                <property name="sensitive">false</property>
                 <property name="focus-on-click">false</property>
                 <property name="has-frame">false</property>
                 <property name="hexpand">true</property>
