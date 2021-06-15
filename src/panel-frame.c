@@ -74,6 +74,19 @@ panel_frame_new (void)
   return g_object_new (PANEL_TYPE_FRAME, NULL);
 }
 
+static GtkWidget *
+create_frame (PanelFrame *self)
+{
+  GtkWidget *grid;
+
+  g_assert (PANEL_IS_FRAME (self));
+
+  if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
+    return GTK_WIDGET (_panel_grid_create_frame (PANEL_GRID (grid)));
+  else
+    return panel_frame_new ();
+}
+
 static void
 panel_frame_notify_value_cb (PanelFrame    *self,
                              GParamSpec    *pspec,
@@ -200,7 +213,7 @@ panel_frame_drop_cb (PanelFrame    *self,
     {
       GtkWidget *new_frame;
 
-      new_frame = panel_frame_new ();
+      new_frame = create_frame (self);
       gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
       panel_paned_insert_after (PANEL_PANED (paned), new_frame, GTK_WIDGET (self));
       target = PANEL_FRAME (new_frame);
