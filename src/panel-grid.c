@@ -401,31 +401,14 @@ adjust_can_close_frame (PanelFrame *frame,
 }
 
 void
-_panel_grid_collapse (PanelGrid *self)
+_panel_grid_collapse (PanelGrid       *self,
+                      PanelGridColumn *column)
 {
-  guint n_columns;
-
   g_return_if_fail (PANEL_IS_GRID (self));
+  g_return_if_fail (PANEL_IS_GRID_COLUMN (column));
 
-  n_columns = panel_grid_get_n_columns (self);
-
-  for (GtkWidget *resizer = gtk_widget_get_first_child (GTK_WIDGET (self->columns));
-       resizer != NULL;)
-    {
-      GtkWidget *next = gtk_widget_get_next_sibling (resizer);
-      GtkWidget *column = panel_resizer_get_child (PANEL_RESIZER (resizer));
-
-      if (n_columns == 1)
-        break;
-
-      if (!has_pages (PANEL_GRID_COLUMN (column)))
-        {
-          _panel_grid_remove_column (self, PANEL_GRID_COLUMN (column));
-          n_columns--;
-        }
-
-      resizer = next;
-    }
+  if (!has_pages (column))
+    _panel_grid_remove_column (self, PANEL_GRID_COLUMN (column));
 
   _panel_grid_update_closeable (self);
 }

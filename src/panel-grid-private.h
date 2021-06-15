@@ -22,6 +22,7 @@
 
 #include "panel-dock.h"
 #include "panel-grid.h"
+#include "panel-grid-column.h"
 
 G_BEGIN_DECLS
 
@@ -40,7 +41,8 @@ void        _panel_grid_remove_column    (PanelGrid          *self,
 void        _panel_grid_foreach_frame    (PanelGrid          *self,
                                           PanelFrameCallback  callback,
                                           gpointer            user_data);
-void        _panel_grid_collapse         (PanelGrid          *self);
+void        _panel_grid_collapse         (PanelGrid          *self,
+                                          PanelGridColumn    *column);
 void        _panel_grid_update_closeable (PanelGrid          *self);
 
 G_END_DECLS
