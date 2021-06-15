@@ -264,9 +264,23 @@
     <section>
       <attribute name="label">Page</attribute>
       <item>
-        <attribute name="label">Maximize Page</attribute>
+        <attribute name="label">Maximize</attribute>
         <attribute name="action">page.maximize</attribute>
         <attribute name="accel">&lt;shift&gt;F11</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Save</attribute>
+        <attribute name="action">page.save</attribute>
+        <attribute name="accel">&lt;control&gt;s</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Close</attribute>
+        <attribute name="action">page.close</attribute>
+        <attribute name="accel">&lt;control&gt;w</attribute>
       </item>
     </section>
   </menu>
