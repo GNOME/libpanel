@@ -93,6 +93,26 @@ panel_frame_header_bar_new (void)
   return g_object_new (PANEL_TYPE_FRAME_HEADER_BAR, NULL);
 }
 
+static gboolean
+boolean_to_italics (GBinding     *binding,
+                    const GValue *from_value,
+                    GValue       *to_value,
+                    gpointer      user_data)
+{
+  static PangoAttrList *attrs;
+
+  if (attrs == NULL)
+    {
+      attrs = pango_attr_list_new ();
+      pango_attr_list_insert (attrs, pango_attr_style_new (PANGO_STYLE_ITALIC));
+    }
+
+  if (g_value_get_boolean (from_value))
+    g_value_set_boxed (to_value, attrs);
+
+  return TRUE;
+}
+
 static void
 setup_row_cb (GtkSignalListItemFactory *factory,
               GtkListItem              *list_item,
@@ -465,6 +485,9 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   self->bindings = panel_binding_group_new ();
   panel_binding_group_bind (self->bindings, "title", self->title, "label", 0);
   panel_binding_group_bind (self->bindings, "modified", self->modified, "visible", 0);
+  panel_binding_group_bind_full (self->bindings, "modified",
+                                 self->title, "attributes",
+                                 0, boolean_to_italics, NULL, NULL, NULL);
   panel_binding_group_bind (self->bindings, "icon", self->image, "gicon", 0);
   panel_binding_group_bind (self->bindings, "background-rgba", self, "background-rgba", 0);
   panel_binding_group_bind (self->bindings, "foreground-rgba", self, "foreground-rgba", 0);
