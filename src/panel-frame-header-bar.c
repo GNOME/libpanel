@@ -661,6 +661,7 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
   if (page == NULL)
     {
       gtk_label_set_label (self->title, _("No Open Pages"));
+      gtk_label_set_attributes (self->title, NULL);
       gtk_widget_hide (GTK_WIDGET (self->modified));
       gtk_image_clear (self->image);
       gtk_menu_button_popdown (self->title_button);
