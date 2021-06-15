@@ -29,6 +29,7 @@
 #include "panel-frame-private.h"
 #include "panel-joined-menu-private.h"
 #include "panel-dock-private.h"
+#include "panel-scaler-private.h"
 
 struct _PanelFrameHeaderBar
 {
@@ -53,6 +54,9 @@ struct _PanelFrameHeaderBar
   GtkLabel          *title;
   GtkLabel          *modified;
   GtkImage          *image;
+  GtkButton         *drag_button;
+
+  PanelWidget       *drag_panel;
 
   GdkRGBA            background_rgba;
   GdkRGBA            foreground_rgba;
@@ -318,6 +322,102 @@ menu_clicked_cb (GtkGesture          *gesture,
     }
 }
 
+#define MAX_WIDTH  250.0
+#define MAX_HEIGHT 250.0
+
+static GdkContentProvider *
+drag_prepare_cb (PanelFrameHeaderBar *self,
+                 double               x,
+                 double               y,
+                 GtkDragSource       *drag_source)
+{
+  PanelWidget *visible_child;
+
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+  g_assert (GTK_IS_DRAG_SOURCE (drag_source));
+
+  if (self->frame == NULL ||
+      !(visible_child = panel_frame_get_visible_child (self->frame)) ||
+      !PANEL_IS_WIDGET (visible_child) ||
+      !panel_widget_get_reorderable (visible_child))
+    return NULL;
+
+  self->drag_panel = visible_child;
+
+  return gdk_content_provider_new_typed (PANEL_TYPE_WIDGET, visible_child);
+}
+
+static void
+drag_begin_cb (PanelFrameHeaderBar *self,
+               GdkDrag             *drag,
+               GtkDragSource       *drag_source)
+{
+  g_autoptr(GdkPaintable) paintable = NULL;
+  GtkWidget *dock;
+
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+  g_assert (GDK_IS_DRAG (drag));
+  g_assert (GTK_IS_DRAG_SOURCE (drag_source));
+
+  if ((paintable = gtk_widget_paintable_new (GTK_WIDGET (self->drag_panel))))
+    {
+      int width = gdk_paintable_get_intrinsic_width (paintable);
+      int height = gdk_paintable_get_intrinsic_height (paintable);
+      double ratio;
+
+      if (width <= MAX_WIDTH && height <= MAX_HEIGHT)
+        ratio = 1.0;
+      else if (width > height)
+        ratio = width / MAX_WIDTH;
+      else
+        ratio = height / MAX_HEIGHT;
+
+      if (ratio != 1.0)
+        {
+          GdkPaintable *tmp = paintable;
+          paintable = panel_scaler_new (paintable, ratio);
+          g_clear_object (&tmp);
+        }
+    }
+  else
+    {
+      GtkIconTheme *icon_theme;
+      const char *icon_name;
+      int scale;
+
+      icon_theme = gtk_icon_theme_get_for_display (gtk_widget_get_display (GTK_WIDGET (self)));
+      icon_name = panel_widget_get_icon_name (PANEL_WIDGET (self->drag_panel));
+      scale = gtk_widget_get_scale_factor (GTK_WIDGET (self));
+
+      if (icon_name)
+        paintable = GDK_PAINTABLE (gtk_icon_theme_lookup_icon (icon_theme, icon_name, NULL, 32, scale, GTK_TEXT_DIR_NONE,  0));
+    }
+
+  if (paintable != NULL)
+    gtk_drag_source_set_icon (drag_source, paintable, 0, 0);
+
+  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
+    _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+}
+
+static void
+drag_end_cb (PanelFrameHeaderBar *self,
+             GdkDrag             *drag,
+             gboolean             delete_data,
+             GtkDragSource       *drag_source)
+{
+  GtkWidget *dock;
+
+  g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
+  g_assert (GDK_IS_DRAG (drag));
+  g_assert (GTK_IS_DRAG_SOURCE (drag_source));
+
+  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
+    _panel_dock_end_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+
+  self->drag_panel = NULL;
+}
+
 static void
 panel_frame_header_bar_dispose (GObject *object)
 {
@@ -440,6 +540,7 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_set_css_name (widget_class, "panelframeheaderbar");
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, box);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, controls);
+  gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, drag_button);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, end_area);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, list_view);
   gtk_widget_class_bind_template_child (widget_class, PanelFrameHeaderBar, menu_button);
@@ -450,6 +551,9 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, bind_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, unbind_row_cb);
   gtk_widget_class_bind_template_callback (widget_class, menu_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, drag_begin_cb);
+  gtk_widget_class_bind_template_callback (widget_class, drag_end_cb);
+  gtk_widget_class_bind_template_callback (widget_class, drag_prepare_cb);
 
   css_quark = g_quark_from_static_string ("css-provider");
 }
@@ -463,6 +567,8 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   self->css_provider = gtk_css_provider_new ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  gtk_widget_set_cursor_from_name (GTK_WIDGET (self->drag_button), "grab");
 
   /* Because GtkMenuButton does not allow us to specify children within
    * the label, we have to dive into it and modify it directly.
@@ -536,6 +642,8 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
       gtk_image_clear (self->image);
       gtk_menu_button_popdown (self->title_button);
     }
+
+  gtk_widget_set_visible (GTK_WIDGET (self->drag_button), page != NULL);
 
   self->foreground_rgba_set = FALSE;
   self->background_rgba_set = FALSE;
