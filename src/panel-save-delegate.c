@@ -91,7 +91,7 @@ panel_save_delegate_real_save_finish (PanelSaveDelegate  *self,
   return g_task_propagate_boolean (G_TASK (result), error);
 }
 
-static void
+static gboolean
 panel_save_delegate_real_save (PanelSaveDelegate *self,
                                GTask             *task)
 {
@@ -103,6 +103,8 @@ panel_save_delegate_real_save (PanelSaveDelegate *self,
                              G_IO_ERROR,
                              G_IO_ERROR_NOT_SUPPORTED,
                              "Saving is not supported");
+
+  return TRUE;
 }
 
 static void
@@ -291,14 +293,16 @@ panel_save_delegate_class_init (PanelSaveDelegateClass *klass)
    *
    * The caller is expected to complete @task with a boolean when the
    * save operation has completed.
+   *
+   * Returns: %TRUE if the operation was handled.
    */
   signals [SAVE] = g_signal_new ("save",
                                  G_TYPE_FROM_CLASS (klass),
                                  G_SIGNAL_RUN_LAST,
                                  G_STRUCT_OFFSET (PanelSaveDelegateClass, save),
-                                 g_signal_accumulator_first_wins, NULL,
+                                 g_signal_accumulator_true_handled, NULL,
                                  NULL,
-                                 G_TYPE_NONE, 1, G_TYPE_TASK);
+                                 G_TYPE_BOOLEAN, 1, G_TYPE_TASK);
 }
 
 static void

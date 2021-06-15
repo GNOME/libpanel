@@ -42,7 +42,7 @@ struct _PanelSaveDelegateClass
   gboolean (*save_finish) (PanelSaveDelegate  *self,
                            GAsyncResult       *result,
                            GError            **error);
-  void     (*save)        (PanelSaveDelegate  *self,
+  gboolean (*save)        (PanelSaveDelegate  *self,
                            GTask              *task);
 
   /*< private >*/
