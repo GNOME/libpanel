@@ -91,6 +91,14 @@ panelframeheaderbar button:checked {
 panelframeheaderbar button:active {
   background-color: shade(@theme_bg_color, 0.8);
 }
+panelframeheaderbar menubutton button {
+  transition-duration: 0;
+}
+panelframeheaderbar:backdrop label,
+panelframeheaderbar:backdrop image {
+  opacity: 0.5;
+  transition: 200ms ease-out;
+}
 panelframeheaderbar .controls {
   padding-right: 3px;
   padding-left: 3px;
