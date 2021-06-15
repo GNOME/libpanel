@@ -29,6 +29,7 @@
 #include "panel-grid-column-private.h"
 #include "panel-joined-menu-private.h"
 #include "panel-paned-private.h"
+#include "panel-save-delegate.h"
 #include "panel-save-dialog.h"
 #include "panel-scaler-private.h"
 #include "panel-widget-private.h"
@@ -235,6 +236,24 @@ panel_frame_drop_cb (PanelFrame    *self,
 }
 
 static void
+page_save_action (GtkWidget  *widget,
+                  const char *action_name,
+                  GVariant   *param)
+{
+  PanelFrame *self = (PanelFrame *)widget;
+  PanelWidget *visible_child;
+  PanelSaveDelegate *save_delegate;
+
+  g_assert (PANEL_IS_FRAME (self));
+
+  if (!(visible_child = panel_frame_get_visible_child (self)) ||
+      !_panel_widget_can_save (visible_child) ||
+      !(save_delegate = panel_widget_get_save_delegate (visible_child)))
+    g_return_if_reached ();
+
+}
+
+static void
 close_page_or_frame_action (GtkWidget  *widget,
                             const char *action_name,
                             GVariant   *param)
@@ -347,6 +366,8 @@ panel_frame_update_actions (PanelFrame *self)
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-up", grid && visible_child);
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.maximize",
                                  grid && visible_child && panel_widget_get_can_maximize (visible_child));
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.save",
+                                 visible_child && _panel_widget_can_save (visible_child));
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
                                  "frame.close-page-or-frame",
                                  grid && (visible_child || self->closeable));
@@ -682,6 +703,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_install_action (widget_class, "page.move-down", NULL, page_move_down_action);
   gtk_widget_class_install_action (widget_class, "page.move-up", NULL, page_move_up_action);
   gtk_widget_class_install_action (widget_class, "page.maximize", NULL, page_maximize_action);
+  gtk_widget_class_install_action (widget_class, "page.save", NULL, page_save_action);
   gtk_widget_class_install_action (widget_class, "frame.close-page-or-frame", NULL, close_page_or_frame_action);
   gtk_widget_class_install_action (widget_class, "frame.close", NULL, close_frame_action);
 
