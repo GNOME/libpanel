@@ -227,7 +227,7 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
       g_string_append        (str, "  transition-timing-function: ease;\n");
       g_string_append_printf (str, "  border-bottom: 1px solid shade(%s,0.9);\n", bgstr);
       g_string_append        (str, "}\n");
-      g_string_append        (str, "button { background: transparent; }\n");
+      g_string_append        (str, "button { background: transparent; border: none; }\n");
       g_string_append        (str, "button:hover, button:checked {\n");
       g_string_append_printf (str, "  background: none; background-color: shade(%s,.85); }\n", bgstr);
 
