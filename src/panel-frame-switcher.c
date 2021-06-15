@@ -816,8 +816,6 @@ panel_frame_switcher_update_css (PanelFrameSwitcher *self)
       g_string_append        (str, "panelframeswitcher {\n");
       g_string_append        (str, "  background: none;\n");
       g_string_append_printf (str, "  background-color: %s;\n", bgstr);
-      g_string_append        (str, "  transition: background-color 400ms;\n");
-      g_string_append        (str, "  transition-timing-function: ease;\n");
       g_string_append        (str, "}\n");
 
       g_free (bgstr);

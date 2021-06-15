@@ -224,7 +224,8 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
       g_string_append_printf (str, "  background-color: %s;", bgstr);
       g_string_append_printf (str, "  border-bottom: 1px solid shade(%s,0.9);", bgstr);
       g_string_append        (str, "}\n");
-      g_string_append_printf (str, "button:hover, button:checked { background-color: shade(%s,.85); }", bgstr);
+      g_string_append_printf (str, "button:hover, button:checked { background-color: shade(%s,.9); }", bgstr);
+      g_string_append_printf (str, "button:active { background-color: shade(%s,.8); }", bgstr);
 
       /* only use foreground when background is set */
       if (self->foreground_rgba_set)
