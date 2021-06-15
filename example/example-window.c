@@ -75,6 +75,7 @@ example_window_add_document (ExampleWindow *self)
                             NULL);
   widget = g_object_new (PANEL_TYPE_WIDGET,
                          "title", title,
+                         "kind", PANEL_WIDGET_KIND_DOCUMENT,
                          "icon-name", "text-x-generic-symbolic",
                          "menu-model", self->page_menu,
                          "can-maximize", TRUE,
