@@ -65,28 +65,60 @@ panel_frame_tab_bar_new (void)
 }
 
 static void
+on_pages_items_changed_cb (PanelFrameTabBar  *self,
+                           guint              position,
+                           guint              removed,
+                           guint              added,
+                           GtkSelectionModel *model)
+{
+  g_assert (PANEL_IS_FRAME_TAB_BAR (self));
+  g_assert (GTK_IS_SELECTION_MODEL (model));
+
+}
+
+static void
 panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
                                PanelFrame       *frame)
 {
   g_assert (PANEL_IS_FRAME_TAB_BAR (self));
   g_assert (!frame || PANEL_IS_FRAME (frame));
 
-  if (g_set_object (&self->frame, frame))
+  if (self->frame == frame)
+    return;
+
+  if (self->frame)
     {
-      AdwTabView *view = NULL;
-      GMenuModel *menu_model = NULL;
+      AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
+      GtkSelectionModel *pages = adw_tab_view_get_pages (tab_view);
 
-      if (frame != NULL)
-        {
-          view = _panel_frame_get_tab_view (frame);
-          menu_model = _panel_frame_get_tab_menu (frame);
-        }
+      g_signal_handlers_disconnect_by_func (pages,
+                                            G_CALLBACK (on_pages_items_changed_cb),
+                                            self);
 
-      adw_tab_bar_set_view (self->tab_bar, view);
-      gtk_menu_button_set_menu_model (self->menu_button, menu_model);
-
-      g_object_notify (G_OBJECT (self), "frame");
+      adw_tab_bar_set_view (self->tab_bar, NULL);
+      gtk_menu_button_set_menu_model (self->menu_button, NULL);
+      g_clear_object (&self->frame);
     }
+
+  g_set_object (&self->frame, frame);
+
+  if (self->frame)
+    {
+      GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
+      AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
+      GtkSelectionModel *pages = adw_tab_view_get_pages (tab_view);
+
+      g_signal_connect_object (pages,
+                               "items-changed",
+                               G_CALLBACK (on_pages_items_changed_cb),
+                               self,
+                               G_CONNECT_SWAPPED | G_CONNECT_AFTER);
+
+      gtk_menu_button_set_menu_model (self->menu_button, menu_model);
+      adw_tab_bar_set_view (self->tab_bar, tab_view);
+    }
+
+  g_object_notify (G_OBJECT (self), "frame");
 }
 
 static void
@@ -129,8 +161,9 @@ panel_frame_tab_bar_dispose (GObject *object)
 {
   PanelFrameTabBar *self = (PanelFrameTabBar *)object;
 
+  panel_frame_tab_bar_set_frame (self, NULL);
+
   g_clear_pointer ((GtkWidget **)&self->tab_bar, gtk_widget_unparent);
-  g_clear_object (&self->frame);
 
   G_OBJECT_CLASS (panel_frame_tab_bar_parent_class)->dispose (object);
 }
