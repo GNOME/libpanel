@@ -23,7 +23,6 @@
   </template>
   <menu id="frame_menu">
     <section>
-      <attribute name="label" translatable="yes">Frame</attribute>
       <item>
         <attribute name="label" translatable="yes">Move Page _Left</attribute>
         <attribute name="action">page.move-left</attribute>
@@ -42,6 +41,8 @@
         <attribute name="label" translatable="yes">Move Page _Down</attribute>
         <attribute name="action">page.move-down</attribute>
       </item>
+    </section>
+    <section>
       <item>
         <attribute name="label" translatable="yes">Close Frame</attribute>
         <attribute name="action">frame.close</attribute>
