@@ -113,6 +113,20 @@ boolean_to_italics (GBinding     *binding,
   return TRUE;
 }
 
+static gboolean
+boolean_to_modified (GBinding     *binding,
+                     const GValue *from_value,
+                     GValue       *to_value,
+                     gpointer      user_data)
+{
+  if (g_value_get_boolean (from_value))
+    g_value_set_static_string (to_value, "•");
+  else
+    g_value_set_static_string (to_value, "");
+
+  return TRUE;
+}
+
 static void
 setup_row_cb (GtkSignalListItemFactory *factory,
               GtkListItem              *list_item,
@@ -459,6 +473,14 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
    */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   gtk_widget_set_halign (box, GTK_ALIGN_CENTER);
+  self->modified = g_object_new (GTK_TYPE_LABEL,
+                                 "valign", GTK_ALIGN_BASELINE,
+                                 "xalign", 0.0f,
+                                 "single-line-mode", TRUE,
+                                 "width-chars", 1,
+                                 "max-width-chars", 1,
+                                 NULL);
+  gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->modified));
   self->image = GTK_IMAGE (gtk_image_new ());
   gtk_widget_set_valign (GTK_WIDGET (self->image), GTK_ALIGN_BASELINE);
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->image));
@@ -470,22 +492,14 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
                               "width-chars", 5,
                               NULL);
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->title));
-  self->modified = g_object_new (GTK_TYPE_LABEL,
-                                 "valign", GTK_ALIGN_BASELINE,
-                                 "xalign", 0.0f,
-                                 "single-line-mode", TRUE,
-                                 "width-chars", 1,
-                                 "max-width-chars", 1,
-                                 "label", "•",
-                                 "visible", FALSE,
-                                 NULL);
-  gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->modified));
   button = gtk_widget_get_first_child (GTK_WIDGET (self->title_button));
   gtk_button_set_child (GTK_BUTTON (button), box);
 
   self->bindings = panel_binding_group_new ();
   panel_binding_group_bind (self->bindings, "title", self->title, "label", 0);
-  panel_binding_group_bind (self->bindings, "modified", self->modified, "visible", 0);
+  panel_binding_group_bind_full (self->bindings, "modified",
+                                 self->modified, "label",
+                                 0, boolean_to_modified, NULL, NULL, NULL);
   panel_binding_group_bind_full (self->bindings, "modified",
                                  self->title, "attributes",
                                  0, boolean_to_italics, NULL, NULL, NULL);
