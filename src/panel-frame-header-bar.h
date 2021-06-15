@@ -50,5 +50,10 @@ const GdkRGBA  *panel_frame_header_bar_get_background_rgba (PanelFrameHeaderBar 
 PANEL_AVAILABLE_IN_ALL
 void            panel_frame_header_bar_set_background_rgba (PanelFrameHeaderBar *self,
                                                             const GdkRGBA       *background_rgba);
+PANEL_AVAILABLE_IN_ALL
+gboolean        panel_frame_header_bar_get_show_icon       (PanelFrameHeaderBar *self);
+PANEL_AVAILABLE_IN_ALL
+void            panel_frame_header_bar_set_show_icon       (PanelFrameHeaderBar *self,
+                                                            gboolean             show_icon);
 
 G_END_DECLS

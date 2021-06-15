@@ -39,6 +39,7 @@ G_DEFINE_TYPE (PanelFrameHeaderBarRow, panel_frame_header_bar_row, GTK_TYPE_WIDG
 enum {
   PROP_0,
   PROP_PAGE,
+  PROP_SHOW_ICON,
   N_PROPS
 };
 
@@ -99,6 +100,10 @@ panel_frame_header_bar_row_get_property (GObject    *object,
       g_value_set_object (value, panel_frame_header_bar_row_get_page (self));
       break;
 
+    case PROP_SHOW_ICON:
+      g_value_set_boolean (value, gtk_widget_get_visible (GTK_WIDGET (self->image)));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -116,6 +121,10 @@ panel_frame_header_bar_row_set_property (GObject      *object,
     {
     case PROP_PAGE:
       panel_frame_header_bar_row_set_page (self, g_value_get_object (value));
+      break;
+
+    case PROP_SHOW_ICON:
+      gtk_widget_set_visible (GTK_WIDGET (self->image), g_value_get_boolean (value));
       break;
 
     default:
@@ -139,6 +148,13 @@ panel_frame_header_bar_row_class_init (PanelFrameHeaderBarRowClass *klass)
                          "Page",
                          ADW_TYPE_TAB_PAGE,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_SHOW_ICON] =
+    g_param_spec_boolean ("show-icon",
+                          "Show Icon",
+                          "Show Icon",
+                          TRUE,
+                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 

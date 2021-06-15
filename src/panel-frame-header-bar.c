@@ -65,6 +65,7 @@ struct _PanelFrameHeaderBar
 
   guint              background_rgba_set : 1;
   guint              foreground_rgba_set : 1;
+  guint              show_icon : 1;
 };
 
 static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
@@ -76,6 +77,7 @@ enum {
   PROP_0,
   PROP_BACKGROUND_RGBA,
   PROP_FOREGROUND_RGBA,
+  PROP_SHOW_ICON,
   N_PROPS,
 
   PROP_FRAME,
@@ -136,11 +138,16 @@ setup_row_cb (GtkSignalListItemFactory *factory,
               GtkListItem              *list_item,
               PanelFrameHeaderBar      *self)
 {
+  GtkWidget *child;
+
   g_assert (GTK_IS_SIGNAL_LIST_ITEM_FACTORY (factory));
   g_assert (GTK_IS_LIST_ITEM (list_item));
   g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
 
-  gtk_list_item_set_child (list_item, panel_frame_header_bar_row_new ());
+  child = panel_frame_header_bar_row_new ();
+  g_object_bind_property (self, "show-icon", child, "show-icon", G_BINDING_SYNC_CREATE);
+
+  gtk_list_item_set_child (list_item, child);
 }
 
 
@@ -461,6 +468,10 @@ panel_frame_header_bar_get_property (GObject    *object,
       g_value_set_object (value, self->frame);
       break;
 
+    case PROP_SHOW_ICON:
+      g_value_set_boolean (value, panel_frame_header_bar_get_show_icon (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -486,6 +497,10 @@ panel_frame_header_bar_set_property (GObject      *object,
 
     case PROP_FRAME:
       panel_frame_header_bar_set_frame (self, g_value_get_object (value));
+      break;
+
+    case PROP_SHOW_ICON:
+      panel_frame_header_bar_set_show_icon (self, g_value_get_boolean (value));
       break;
 
     default:
@@ -531,6 +546,13 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
                         "The foreground color to use with background-rgba",
                         GDK_TYPE_RGBA,
                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_SHOW_ICON] =
+    g_param_spec_boolean ("show-icon",
+                          "Show Icon",
+                          "Show Icon",
+                          FALSE,
+                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   g_object_class_override_property (object_class, PROP_FRAME, "frame");
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -585,6 +607,7 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->modified));
   self->image = GTK_IMAGE (gtk_image_new ());
   gtk_widget_set_valign (GTK_WIDGET (self->image), GTK_ALIGN_BASELINE);
+  g_object_bind_property (self, "show-icon", self->image, "visible", G_BINDING_SYNC_CREATE);
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->image));
   self->title = g_object_new (GTK_TYPE_LABEL,
                               "valign", GTK_ALIGN_BASELINE,
@@ -772,4 +795,27 @@ panel_frame_header_bar_set_foreground_rgba (PanelFrameHeaderBar *self,
     self->foreground_rgba = *foreground_rgba;
   panel_frame_header_bar_queue_update_css (self);
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_FOREGROUND_RGBA]);
+}
+
+gboolean
+panel_frame_header_bar_get_show_icon (PanelFrameHeaderBar *self)
+{
+  g_return_val_if_fail (PANEL_IS_FRAME_HEADER_BAR (self), FALSE);
+
+  return self->show_icon;
+}
+
+void
+panel_frame_header_bar_set_show_icon (PanelFrameHeaderBar *self,
+                                      gboolean             show_icon)
+{
+  g_return_if_fail (PANEL_IS_FRAME_HEADER_BAR (self));
+
+  show_icon = !!show_icon;
+
+  if (show_icon != self->show_icon)
+    {
+      self->show_icon = show_icon;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SHOW_ICON]);
+    }
 }
