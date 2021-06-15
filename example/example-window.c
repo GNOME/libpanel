@@ -57,11 +57,17 @@ example_window_add_document (ExampleWindow *self)
   static guint count;
   PanelWidget *widget;
   GtkWidget *text_view;
+  PanelSaveDelegate *save_delegate;
   char *title;
 
   g_return_if_fail (EXAMPLE_IS_WINDOW (self));
 
   title = g_strdup_printf ("Untitled Document %u", ++count);
+
+  save_delegate = panel_save_delegate_new ();
+  panel_save_delegate_set_title (save_delegate, title);
+  panel_save_delegate_set_subtitle (save_delegate, "~/Documents");
+
   text_view = g_object_new (GTK_TYPE_TEXT_VIEW,
                             "buffer", g_object_new (GTK_TYPE_TEXT_BUFFER,
                                                     "text", title,
@@ -74,6 +80,8 @@ example_window_add_document (ExampleWindow *self)
                          "can-maximize", TRUE,
                          "foreground-rgba", &grey,
                          "background-rgba", &white,
+                         "save-delegate", save_delegate,
+                         "modified", TRUE,
                          "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
                                                 "child", text_view,
                                                 NULL),
@@ -83,6 +91,8 @@ example_window_add_document (ExampleWindow *self)
   panel_grid_add (self->grid, widget);
   panel_widget_raise (widget);
   panel_widget_focus_default (widget);
+
+  g_object_unref (save_delegate);
 }
 
 static void
