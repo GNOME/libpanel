@@ -667,6 +667,7 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
       gtk_menu_button_popdown (self->title_button);
     }
 
+  gtk_widget_set_sensitive (GTK_WIDGET (self->menu_button), page != NULL);
   gtk_widget_set_visible (GTK_WIDGET (self->drag_button), page != NULL);
 
   self->foreground_rgba_set = FALSE;
