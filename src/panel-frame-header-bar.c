@@ -477,6 +477,7 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
                                  "width-chars", 1,
                                  "max-width-chars", 1,
                                  "label", "•",
+                                 "visible", FALSE,
                                  NULL);
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->modified));
   button = gtk_widget_get_first_child (GTK_WIDGET (self->title_button));
