@@ -7,9 +7,6 @@
         <child>
           <object class="GtkBox">
             <child>
-              <object class="GtkBox" id="start_area"/>
-            </child>
-            <child>
               <object class="GtkButton" id="drag_button">
                 <property name="focus-on-click">false</property>
                 <property name="icon-name">list-drag-handle-symbolic</property>
@@ -26,6 +23,9 @@
                   </object>
                 </child>
               </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="start_area"/>
             </child>
             <child>
               <object class="GtkMenuButton" id="title_button">
