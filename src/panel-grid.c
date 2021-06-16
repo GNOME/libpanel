@@ -237,9 +237,17 @@ panel_grid_get_most_recent_column (PanelGrid *self)
 
   g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
 
-  /* TODO: actually track w/ MRU */
+  if (self->frame_mru.head != NULL)
+    {
+      GtkWidget *frame = g_queue_peek_head (&self->frame_mru);
+      column = gtk_widget_get_ancestor (frame, PANEL_TYPE_GRID_COLUMN);
+    }
+  else
+    {
+      column = panel_paned_get_nth_child (self->columns, 0);
+    }
 
-  if (!(column = panel_paned_get_nth_child (self->columns, 0)))
+  if (column == NULL)
     {
       _panel_grid_prepend_column (self);
       column = panel_paned_get_nth_child (self->columns, 0);
@@ -255,7 +263,8 @@ panel_grid_get_most_recent_frame (PanelGrid *self)
 
   g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
 
-  /* TODO: actually track w/ MRU */
+  if (self->frame_mru.head != NULL)
+    return g_queue_peek_head (&self->frame_mru);
 
   column = panel_grid_get_most_recent_column (self);
   return panel_grid_column_get_most_recent_frame (column);
