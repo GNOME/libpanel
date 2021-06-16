@@ -44,6 +44,8 @@ struct _PanelFrame
   GtkWidget        *placeholder;
   GtkStack         *stack;
   GMenuModel       *frame_menu;
+  GtkOverlay       *overlay;
+  GtkWidget        *focus_highlight;
 
   guint             closeable : 1;
 };
@@ -543,7 +545,12 @@ panel_frame_root (GtkWidget *widget)
 static void
 panel_frame_unroot (GtkWidget *widget)
 {
+  GtkWidget *grid;
+
   g_assert (PANEL_IS_FRAME (widget));
+
+  if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)))
+    _panel_grid_drop_frame_mru (PANEL_GRID (grid), PANEL_FRAME (widget));
 
   GTK_WIDGET_CLASS (panel_frame_parent_class)->unroot (widget);
 
@@ -640,6 +647,19 @@ panel_frame_set_property (GObject      *object,
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->box), g_value_get_enum (value));
       if (GTK_IS_ORIENTABLE (self->header))
         gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header), !g_value_get_enum (value));
+
+      if (g_value_get_enum (value) == GTK_ORIENTATION_HORIZONTAL)
+        {
+          gtk_widget_set_size_request (self->focus_highlight, -1, 2);
+          gtk_widget_set_halign (self->focus_highlight, GTK_ALIGN_FILL);
+          gtk_widget_set_valign (self->focus_highlight, GTK_ALIGN_START);
+        }
+      else
+        {
+          gtk_widget_set_size_request (self->focus_highlight, 2, -1);
+          gtk_widget_set_halign (self->focus_highlight, GTK_ALIGN_START);
+          gtk_widget_set_valign (self->focus_highlight, GTK_ALIGN_FILL);
+        }
       break;
 
     case PROP_PLACEHOLDER:
@@ -693,6 +713,8 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame.ui");
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);
+  gtk_widget_class_bind_template_child (widget_class, PanelFrame, focus_highlight);
+  gtk_widget_class_bind_template_child (widget_class, PanelFrame, overlay);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, stack);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, tab_view);
   gtk_widget_class_bind_template_child (widget_class, PanelFrame, frame_menu);
@@ -909,7 +931,8 @@ panel_frame_set_header (PanelFrame       *self,
     {
       panel_frame_header_page_changed (self->header, NULL);
       panel_frame_header_set_frame (self->header, NULL);
-      g_clear_pointer ((GtkWidget **)&self->header, gtk_widget_unparent);
+      gtk_overlay_set_child (self->overlay, NULL);
+      self->header = NULL;
     }
 
   self->header = header;
@@ -921,12 +944,14 @@ panel_frame_set_header (PanelFrame       *self,
       if (GTK_IS_ORIENTABLE (self->header))
         gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header),
                                         !gtk_orientable_get_orientation (GTK_ORIENTABLE (self->box)));
-      gtk_box_prepend (GTK_BOX (self->box), GTK_WIDGET (self->header));
+      gtk_overlay_set_child (self->overlay, GTK_WIDGET (self->header));
 
       panel_frame_header_set_frame (self->header, self);
 
       if (visible_child)
         panel_frame_header_page_changed (self->header, visible_child);
+
+      gtk_widget_add_css_class (GTK_WIDGET (self->header), "header");
     }
 }
 

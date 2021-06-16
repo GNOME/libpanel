@@ -49,6 +49,9 @@ panelmaximizedcontrols button.close {
   box-shadow: 0 0 3px @borders;
 }
 
+panelgrid.multi-column panelframe.has-focus .focus-highlight {
+  background-color: shade(@theme_bg_color, 0.8);
+}
 panelframe.vertical panelwidget {
   margin-left: 1px;
   margin-right: 1px;

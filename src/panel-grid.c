@@ -32,6 +32,8 @@ struct _PanelGrid
   GtkWidget   parent_instance;
 
   PanelPaned *columns;
+
+  GQueue      frame_mru;
 };
 
 static void buildable_iface_init (GtkBuildableIface *iface);
@@ -104,6 +106,76 @@ _panel_grid_create_frame (PanelGrid *self)
 }
 
 static void
+panel_grid_update_focus (PanelGrid *self)
+{
+  GtkWidget *first;
+  GtkWidget *second;
+
+  g_assert (PANEL_IS_GRID (self));
+
+  /* We only need to update head and second nodes because
+   * the focus was always the head, and may now be the second.
+   */
+  first = g_queue_peek_nth (&self->frame_mru, 0);
+  second = g_queue_peek_nth (&self->frame_mru, 1);
+
+  if (second)
+    gtk_widget_remove_css_class (second, "has-focus");
+
+  if (first)
+    gtk_widget_add_css_class (first, "has-focus");
+}
+
+void
+_panel_grid_drop_frame_mru (PanelGrid  *self,
+                            PanelFrame *frame)
+{
+  g_assert (PANEL_IS_GRID (self));
+  g_assert (PANEL_IS_FRAME (frame));
+
+  g_queue_remove (&self->frame_mru, frame);
+  panel_grid_update_focus (self);
+}
+
+static void
+on_set_focus_cb (PanelGrid  *self,
+                 GParamSpec *pspec,
+                 GtkWindow  *window)
+{
+  GtkWidget *focus;
+  GtkWidget *frame;
+
+  g_assert (PANEL_IS_GRID (self));
+  g_assert (GTK_IS_WINDOW (window));
+
+  if ((focus = gtk_window_get_focus (window)) &&
+      (frame = gtk_widget_get_ancestor (focus, PANEL_TYPE_FRAME)))
+    {
+      g_queue_remove (&self->frame_mru, frame);
+      g_queue_push_head (&self->frame_mru, frame);
+      panel_grid_update_focus (self);
+    }
+}
+
+static void
+panel_grid_root (GtkWidget *widget)
+{
+  PanelGrid *self = (PanelGrid *)widget;
+  GtkRoot *root;
+
+  g_assert (PANEL_IS_GRID (self));
+
+  GTK_WIDGET_CLASS (panel_grid_parent_class)->root (widget);
+
+  if (GTK_IS_WINDOW ((root = gtk_widget_get_root (widget))))
+    g_signal_connect_object (root,
+                             "notify::focus-widget",
+                             G_CALLBACK (on_set_focus_cb),
+                             self,
+                             G_CONNECT_SWAPPED);
+}
+
+static void
 panel_grid_dispose (GObject *object)
 {
   PanelGrid *self = (PanelGrid *)object;
@@ -120,6 +192,8 @@ panel_grid_class_init (PanelGridClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = panel_grid_dispose;
+
+  widget_class->root = panel_grid_root;
 
   /**
    * PanelGrid::create-frame:
@@ -309,6 +383,9 @@ panel_grid_get_column (PanelGrid *self,
       _panel_grid_update_closeable (self);
     }
 
+  if (column > 0)
+    gtk_widget_add_css_class (GTK_WIDGET (self), "multi-column");
+
   child = panel_paned_get_nth_child (self->columns, column);
   g_return_val_if_fail (PANEL_IS_GRID_COLUMN (child), NULL);
   return PANEL_GRID_COLUMN (child);
@@ -440,6 +517,9 @@ _panel_grid_collapse (PanelGrid       *self,
 
   if (!has_pages (column))
     _panel_grid_remove_column (self, PANEL_GRID_COLUMN (column));
+
+  if (panel_grid_get_n_columns (self) < 2)
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "multi-column");
 
   _panel_grid_update_closeable (self);
 }
