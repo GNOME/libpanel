@@ -105,8 +105,8 @@ _panel_grid_create_frame (PanelGrid *self)
   return frame;
 }
 
-static void
-panel_grid_update_focus (PanelGrid *self)
+void
+_panel_grid_update_focus (PanelGrid *self)
 {
   GtkWidget *first;
   GtkWidget *second;
@@ -134,7 +134,7 @@ _panel_grid_drop_frame_mru (PanelGrid  *self,
   g_assert (PANEL_IS_FRAME (frame));
 
   g_queue_remove (&self->frame_mru, frame);
-  panel_grid_update_focus (self);
+  _panel_grid_update_focus (self);
 }
 
 static void
@@ -153,7 +153,7 @@ on_set_focus_cb (PanelGrid  *self,
     {
       g_queue_remove (&self->frame_mru, frame);
       g_queue_push_head (&self->frame_mru, frame);
-      panel_grid_update_focus (self);
+      _panel_grid_update_focus (self);
     }
 }
 

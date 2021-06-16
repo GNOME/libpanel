@@ -47,5 +47,6 @@ void        _panel_grid_collapse         (PanelGrid          *self,
 void        _panel_grid_update_closeable (PanelGrid          *self);
 void        _panel_grid_drop_frame_mru   (PanelGrid          *self,
                                           PanelFrame         *frame);
+void        _panel_grid_update_focus     (PanelGrid          *self);
 
 G_END_DECLS

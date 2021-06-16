@@ -971,10 +971,15 @@ _panel_frame_transfer (PanelFrame  *self,
 {
   AdwTabPage *page;
   GtkWidget *grid;
+  GtkWidget *window;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (widget));
   g_return_if_fail (PANEL_IS_FRAME (new_frame));
+
+  /* First clear focus so that we ensure updating current frame */
+  if ((window = gtk_widget_get_ancestor (GTK_WIDGET (self), GTK_TYPE_WINDOW)))
+    gtk_window_set_focus (GTK_WINDOW (window), NULL);
 
   if (!(page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (widget))))
     g_return_if_reached ();
@@ -991,6 +996,9 @@ _panel_frame_transfer (PanelFrame  *self,
 
   panel_widget_raise (widget);
   panel_widget_focus_default (widget);
+
+  if (grid)
+    _panel_grid_update_focus (PANEL_GRID (grid));
 }
 
 guint
