@@ -270,17 +270,45 @@ panel_grid_get_most_recent_frame (PanelGrid *self)
   return panel_grid_column_get_most_recent_frame (column);
 }
 
+static void
+get_empty_frame_cb (PanelFrame *frame,
+                    gpointer    user_data)
+{
+  PanelFrame **empty = user_data;
+
+  if (*empty == NULL && panel_frame_get_empty (frame))
+    *empty = frame;
+}
+
+static PanelFrame *
+panel_grid_get_empty_frame (PanelGrid *self)
+{
+  PanelFrame *ret = NULL;
+
+  g_assert (PANEL_IS_GRID (self));
+
+  _panel_grid_foreach_frame (self, get_empty_frame_cb, &ret);
+
+  return ret;
+}
+
 void
 panel_grid_add (PanelGrid   *self,
                 PanelWidget *widget)
 {
   PanelFrame *frame;
+  PanelFrame *empty;
 
   g_return_if_fail (PANEL_IS_GRID (self));
   g_return_if_fail (PANEL_IS_WIDGET (widget));
 
   frame = panel_grid_get_most_recent_frame (self);
-  panel_frame_add (frame, widget);
+  empty = panel_grid_get_empty_frame (self);
+
+  if (empty)
+    panel_frame_add (empty, widget);
+  else
+    panel_frame_add (frame, widget);
 }
 
 static void
