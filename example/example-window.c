@@ -51,6 +51,26 @@ get_default_focus_cb (GtkWidget *widget,
   return text_view;
 }
 
+static gboolean
+on_save_cb (PanelSaveDelegate *delegate,
+            GTask             *task,
+            PanelWidget       *widget)
+{
+  g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
+  g_assert (G_IS_TASK (task));
+  g_assert (PANEL_IS_WIDGET (widget));
+
+  // actually do the save here, ideally asynchronously
+
+  g_print ("Actually save the file\n");
+
+  panel_widget_set_modified (widget, FALSE);
+  panel_save_delegate_set_progress (delegate, 1.0);
+  g_task_return_boolean (task, TRUE);
+
+  return TRUE;
+}
+
 static void
 example_window_add_document (ExampleWindow *self)
 {
@@ -58,21 +78,23 @@ example_window_add_document (ExampleWindow *self)
   PanelWidget *widget;
   GtkWidget *text_view;
   PanelSaveDelegate *save_delegate;
+  GtkTextBuffer *buffer;
   char *title;
 
   g_return_if_fail (EXAMPLE_IS_WINDOW (self));
 
   title = g_strdup_printf ("Untitled Document %u", ++count);
+  buffer = g_object_new (GTK_TYPE_TEXT_BUFFER,
+                         "text", title,
+                         NULL);
+  text_view = g_object_new (GTK_TYPE_TEXT_VIEW,
+                            "buffer", buffer,
+                            NULL);
 
   save_delegate = panel_save_delegate_new ();
   panel_save_delegate_set_title (save_delegate, title);
   panel_save_delegate_set_subtitle (save_delegate, "~/Documents");
 
-  text_view = g_object_new (GTK_TYPE_TEXT_VIEW,
-                            "buffer", g_object_new (GTK_TYPE_TEXT_BUFFER,
-                                                    "text", title,
-                                                    NULL),
-                            NULL);
   widget = g_object_new (PANEL_TYPE_WIDGET,
                          "title", title,
                          "kind", PANEL_WIDGET_KIND_DOCUMENT,
@@ -87,13 +109,22 @@ example_window_add_document (ExampleWindow *self)
                                                 "child", text_view,
                                                 NULL),
                          NULL);
-  g_signal_connect (widget, "get-default-focus", G_CALLBACK (get_default_focus_cb), text_view);
+
+  g_signal_connect (widget,
+                    "get-default-focus",
+                    G_CALLBACK (get_default_focus_cb),
+                    text_view);
+  g_signal_connect (save_delegate,
+                    "save",
+                    G_CALLBACK (on_save_cb),
+                    widget);
 
   panel_grid_add (self->grid, widget);
   panel_widget_raise (widget);
   panel_widget_focus_default (widget);
 
   g_object_unref (save_delegate);
+  g_object_unref (buffer);
 }
 
 static void
