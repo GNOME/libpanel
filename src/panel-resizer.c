@@ -122,6 +122,10 @@ start_drag:
       self->drag_orig_size = child_alloc.height + handle_alloc.height;
       gtk_widget_set_vexpand (self->child, FALSE);
     }
+
+  self->drag_position = self->drag_orig_size;
+
+  gtk_widget_queue_resize (GTK_WIDGET (self));
 }
 
 static void
