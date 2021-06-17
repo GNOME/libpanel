@@ -253,6 +253,7 @@ page_save_action (GtkWidget  *widget,
       !(save_delegate = panel_widget_get_save_delegate (visible_child)))
     g_return_if_reached ();
 
+  panel_save_delegate_save_async (save_delegate, NULL, NULL, NULL);
 }
 
 static void
