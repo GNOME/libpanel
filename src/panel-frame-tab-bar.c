@@ -278,6 +278,7 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
   gtk_box_prepend (vbox, GTK_WIDGET (self->tab_bar));
 
   hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
+  gtk_widget_add_css_class (GTK_WIDGET(hbox), "action-bar");
   gtk_box_append (vbox, GTK_WIDGET (hbox));
 
   self->start_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));

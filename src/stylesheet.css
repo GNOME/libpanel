@@ -79,10 +79,10 @@ panelframe.vertical.drop-after {
   padding-bottom: 3px;
 }
 
-panelframeheaderbar {
+panelframe .frameheader .action-bar {
   border-bottom: 1px solid shade(@theme_bg_color, 0.9);
 }
-panelframeheaderbar button {
+panelframe .frameheader .action-bar button {
   background-image: none;
   background: transparent;
   padding: 3px 6px;
@@ -91,34 +91,34 @@ panelframeheaderbar button {
   border: none;
   box-shadow: none;
 }
-panelframeheaderbar button:hover,
-panelframeheaderbar button:checked {
+panelframe .frameheader .action-bar button:hover,
+panelframe .frameheader .action-bar button:checked {
   background-color: shade(@theme_bg_color, 0.9);
 }
-panelframeheaderbar button:active {
+panelframe .frameheader .action-bar button:active {
   background-color: shade(@theme_bg_color, 0.8);
 }
-panelframeheaderbar menubutton button {
+panelframe .frameheader .action-bar menubutton button {
   transition-duration: 0;
 }
-panelframeheaderbar:backdrop label,
-panelframeheaderbar:backdrop image {
+panelframe .frameheader .action-bar:backdrop label,
+panelframe .frameheader .action-bar:backdrop image {
   opacity: 0.5;
   transition: 200ms ease-out;
 }
-panelframeheaderbar .controls {
+panelframe .frameheader .action-bar .controls {
   padding-right: 3px;
   padding-left: 3px;
 }
-panelframeheaderbar popover row {
+panelframe .frameheader .action-bar popover row {
   padding: 3px 6px;
   border-radius: 4px;
 }
-panelframeheaderbar popover row:not(:selected) {
+panelframe .frameheader .action-bar popover row:not(:selected) {
   background: none;
   box-shadow: none;
 }
-panelframeheaderbar popover row .close-button {
+panelframe .frameheader .action-bar popover row .close-button {
   padding: 0;
   margin: 0;
   min-width: 24px;
@@ -129,13 +129,13 @@ panelframeheaderbar popover row .close-button {
   background: none;
   color: transparent;
 }
-panelframeheaderbar popover row:hover .close-button {
+panelframe .frameheader .action-bar popover row:hover .close-button {
   background: alpha(@theme_fg_color, .15);
   color: @theme_fg_color;
 }
-panelframeheaderbar popover row:selected:hover .close-button {
+panelframe .frameheader .action-bar popover row:selected:hover .close-button {
   color: @theme_selected_fg_color;
 }
-panelframeheaderbar popover row .close-button:active {
+panelframe .frameheader .action-bar popover row .close-button:active {
   background: alpha(black, .2);
 }

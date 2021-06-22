@@ -43,6 +43,8 @@ panel_frame_header_set_frame (PanelFrameHeader *self,
   g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
   g_return_if_fail (!frame || PANEL_IS_FRAME (frame));
 
+  gtk_widget_add_css_class (GTK_WIDGET (self), "frameheader");
+
   g_object_set (self, "frame", frame, NULL);
 }
 

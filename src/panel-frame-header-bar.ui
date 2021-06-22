@@ -4,6 +4,9 @@
     <child>
       <object class="GtkBox" id="box">
         <property name="orientation">vertical</property>
+        <style>
+          <class name="action-bar"/>
+        </style>
         <child>
           <object class="GtkBox">
             <child>
