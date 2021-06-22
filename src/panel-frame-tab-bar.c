@@ -262,7 +262,11 @@ static void
 panel_frame_tab_bar_init (PanelFrameTabBar *self)
 {
   GtkEventController *controller;
-  GtkBox *box;
+  GtkBox *vbox;
+  GtkBox *hbox;
+
+  vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
+  gtk_widget_set_parent (GTK_WIDGET (vbox), GTK_WIDGET (self));
 
   self->tab_bar = ADW_TAB_BAR (adw_tab_bar_new ());
   adw_tab_bar_set_autohide (self->tab_bar, FALSE);
@@ -271,25 +275,28 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
                            G_CALLBACK (panel_frame_tab_bar_notify_cb),
                            self,
                            G_CONNECT_SWAPPED);
-  gtk_widget_set_parent (GTK_WIDGET (self->tab_bar), GTK_WIDGET (self));
+  gtk_box_prepend (vbox, GTK_WIDGET (self->tab_bar));
+
+  hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
+  gtk_box_append (vbox, GTK_WIDGET (hbox));
 
   self->start_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  adw_tab_bar_set_start_action_widget (self->tab_bar, GTK_WIDGET (self->start_area));
+  gtk_widget_set_hexpand (GTK_WIDGET (self->start_area), TRUE);
+  gtk_box_prepend (hbox, GTK_WIDGET (self->start_area));
 
-  box = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  adw_tab_bar_set_end_action_widget (self->tab_bar, GTK_WIDGET (box));
+  self->end_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
+  gtk_widget_set_hexpand (GTK_WIDGET (self->end_area), TRUE);
+  gtk_box_append (hbox, GTK_WIDGET (self->end_area));
 
   self->menu_button = GTK_MENU_BUTTON (gtk_menu_button_new ());
   gtk_menu_button_set_icon_name (self->menu_button, "open-menu-symbolic");
-  gtk_box_append (box, GTK_WIDGET (self->menu_button));
+  gtk_box_append (hbox, GTK_WIDGET (self->menu_button));
 
   controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
   g_signal_connect_object (controller, "pressed",
                            G_CALLBACK (menu_clicked_cb), self, 0);
   gtk_widget_add_controller (GTK_WIDGET (self), controller);
 
-  self->end_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  gtk_box_prepend (box, GTK_WIDGET (self->end_area));
 }
 
 static gboolean
