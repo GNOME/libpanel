@@ -23,7 +23,7 @@ pkgconfigdir = join_paths(libdir, 'pkgconfig')
 # Check dependencies
 glib_req_version = '2.68'
 gtk_req_version = '4.3'
-adwaita_req_version = '1.1'
+adwaita_req_version = '1.0'
 
 glib_req = '>= @0@'.format(glib_req_version)
 gtk_req = '>= @0@'.format(gtk_req_version)
