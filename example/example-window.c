@@ -191,9 +191,25 @@ create_frame_cb (PanelGrid     *grid,
 }
 
 static void
+example_window_constructed (GObject *object)
+{
+  ExampleWindow *self = (ExampleWindow *)object;
+  PanelGridColumn *column;
+  PanelFrame *frame;
+
+  G_OBJECT_CLASS (example_window_parent_class)->constructed (object);
+
+  column = panel_grid_get_column (self->grid, 0);
+  frame = panel_grid_column_get_row (column, 0);
+}
+
+static void
 example_window_class_init (ExampleWindowClass *klass)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+  object_class->constructed = example_window_constructed;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/example-window.ui");
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, dock);
@@ -229,6 +245,4 @@ example_window_init (ExampleWindow *self)
   g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_start));
   g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_end));
   g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_bottom));
-
-  example_window_add_document (self);
 }
