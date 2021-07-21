@@ -305,7 +305,7 @@ panel_frame_header_bar_set_frame (PanelFrameHeaderBar *self,
 
   if (self->frame)
     {
-      GtkSelectionModel *pages = panel_frame_get_pages (self->frame);
+      g_autoptr(GtkSelectionModel) pages = panel_frame_get_pages (self->frame);
       gtk_list_view_set_model (self->list_view, pages);
     }
 

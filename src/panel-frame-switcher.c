@@ -274,7 +274,7 @@ panel_frame_switcher_click_pressed_cb (PanelFrameSwitcher *self,
   if (n_presses == 2)
     {
       GtkWidget *child = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
-      GListModel *pages;
+      g_autoptr(GListModel) pages = NULL;
       AdwTabPage *page;
       guint i = 0;
 

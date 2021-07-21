@@ -89,7 +89,7 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
   if (self->frame)
     {
       AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
-      GtkSelectionModel *pages = adw_tab_view_get_pages (tab_view);
+      g_autoptr(GtkSelectionModel) pages = adw_tab_view_get_pages (tab_view);
 
       g_signal_handlers_disconnect_by_func (pages,
                                             G_CALLBACK (on_pages_items_changed_cb),
@@ -106,7 +106,7 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
     {
       GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
       AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
-      GtkSelectionModel *pages = adw_tab_view_get_pages (tab_view);
+      g_autoptr(GtkSelectionModel) pages = adw_tab_view_get_pages (tab_view);
 
       g_signal_connect_object (pages,
                                "items-changed",

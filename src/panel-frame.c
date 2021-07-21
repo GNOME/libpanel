@@ -956,6 +956,14 @@ panel_frame_set_header (PanelFrame       *self,
     }
 }
 
+/**
+ * panel_frame_get_pages:
+ * @self: a #PanelFrame
+ *
+ * Get the pages for the frame.
+ *
+ * Returns: (transfer full): a #GtkSelectionModel
+ */
 GtkSelectionModel *
 panel_frame_get_pages (PanelFrame *self)
 {
