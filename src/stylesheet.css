@@ -79,7 +79,7 @@ panelframe.vertical.drop-after {
   padding-bottom: 3px;
 }
 
-panelframe .frameheader .action-bar {
+panelframeheaderbar {
   border-bottom: 1px solid shade(@theme_bg_color, 0.9);
 }
 panelframe .frameheader .action-bar button {
