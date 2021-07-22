@@ -72,6 +72,35 @@ on_save_cb (PanelSaveDelegate *delegate,
 }
 
 static void
+apply_theme_color (GtkSettings *settings,
+                   PanelWidget *widget)
+{
+  static GdkRGBA black = {0,0,0,1};
+  gboolean dark;
+
+  g_object_get (settings, "gtk-application-prefer-dark-theme", &dark, NULL);
+
+  if (dark)
+    {
+      panel_widget_set_background_rgba (widget, &black);
+      panel_widget_set_foreground_rgba (widget, &white);
+    }
+  else
+    {
+      panel_widget_set_background_rgba (widget, &white);
+      panel_widget_set_foreground_rgba (widget, &grey);
+    }
+}
+
+static void
+notify_prefer_dark_theme_cb (GtkSettings *settings,
+                             GParamSpec  *pspec,
+                             PanelWidget *widget)
+{
+  apply_theme_color (settings, widget);
+}
+
+static void
 example_window_add_document (ExampleWindow *self)
 {
   static guint count;
@@ -79,6 +108,7 @@ example_window_add_document (ExampleWindow *self)
   GtkWidget *text_view;
   PanelSaveDelegate *save_delegate;
   GtkTextBuffer *buffer;
+  GtkSettings *settings;
   char *title;
 
   g_return_if_fail (EXAMPLE_IS_WINDOW (self));
@@ -101,14 +131,19 @@ example_window_add_document (ExampleWindow *self)
                          "icon-name", "text-x-generic-symbolic",
                          "menu-model", self->page_menu,
                          "can-maximize", TRUE,
-                         "foreground-rgba", &grey,
-                         "background-rgba", &white,
                          "save-delegate", save_delegate,
                          "modified", TRUE,
                          "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
                                                 "child", text_view,
                                                 NULL),
                          NULL);
+
+  settings = gtk_settings_get_default ();
+  g_signal_connect_object (settings,
+                           "notify::gtk-application-prefer-dark-theme",
+                           G_CALLBACK (notify_prefer_dark_theme_cb),
+                           widget, 0);
+  apply_theme_color (settings, widget);
 
   g_signal_connect (widget,
                     "get-default-focus",
