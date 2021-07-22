@@ -80,6 +80,7 @@ panelframe.vertical.drop-after {
 }
 
 panelframeheaderbar {
+  background: @theme_bg_color;
   border-bottom: 1px solid shade(@theme_bg_color, 0.9);
 }
 panelframe .frameheader .action-bar button {
