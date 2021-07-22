@@ -120,7 +120,7 @@ panelframe .frameheader .action-bar popover row:not(:selected) {
 }
 panelframe .frameheader .action-bar popover row .close-button {
   padding: 0;
-  margin: 0;
+  margin: 3px 0;
   min-width: 24px;
   min-height: 24px;
   border-radius: 99px;
@@ -136,6 +136,9 @@ panelframe .frameheader .action-bar popover row:hover .close-button {
 panelframe .frameheader .action-bar popover row:selected:hover .close-button {
   color: @theme_selected_fg_color;
 }
+panelframe .frameheader .action-bar popover row .close-button:hover {
+  background: alpha(black, .3);
+}
 panelframe .frameheader .action-bar popover row .close-button:active {
-  background: alpha(black, .2);
+  background: alpha(black, .5);
 }
