@@ -229,13 +229,11 @@ static void
 example_window_constructed (GObject *object)
 {
   ExampleWindow *self = (ExampleWindow *)object;
-  PanelGridColumn *column;
-  PanelFrame *frame;
 
   G_OBJECT_CLASS (example_window_parent_class)->constructed (object);
 
-  column = panel_grid_get_column (self->grid, 0);
-  frame = panel_grid_column_get_row (column, 0);
+  /* Create 0,0 frame */
+  (void)panel_grid_column_get_row (panel_grid_get_column (self->grid, 0), 0);
 }
 
 static void
