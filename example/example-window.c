@@ -203,9 +203,9 @@ create_frame_cb (PanelGrid     *grid,
   panel_frame_set_placeholder (frame, GTK_WIDGET (status));
 
   if (gtk_toggle_button_get_active (self->frame_header_bar))
-     header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
+    header = PANEL_FRAME_HEADER (panel_frame_header_bar_new ());
   else
-     header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
+    header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
 
   panel_frame_set_header (frame, header);
   panel_frame_header_pack_start (header,
