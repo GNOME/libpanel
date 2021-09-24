@@ -1,6 +1,6 @@
 project('libpanel', 'c',
-          version: '4.0.0',
-    meson_version: '>= 0.55.0',
+          version: '1.0.0-alpha0',
+    meson_version: '>= 0.59.1',
   default_options: [ 'warning_level=2', 'c_std=gnu11' ],
 )
 
