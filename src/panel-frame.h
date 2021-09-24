@@ -31,7 +31,15 @@ G_BEGIN_DECLS
 #define PANEL_TYPE_FRAME (panel_frame_get_type())
 
 PANEL_AVAILABLE_IN_ALL
-G_DECLARE_FINAL_TYPE (PanelFrame, panel_frame, PANEL, FRAME, GtkWidget)
+G_DECLARE_DERIVABLE_TYPE (PanelFrame, panel_frame, PANEL, FRAME, GtkWidget)
+
+struct _PanelFrameClass
+{
+  GtkWidgetClass parent_class;
+
+  /*< private >*/
+  gpointer _reserved[8];
+};
 
 PANEL_AVAILABLE_IN_ALL
 GtkWidget         *panel_frame_new               (void);

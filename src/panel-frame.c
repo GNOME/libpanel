@@ -34,10 +34,8 @@
 #include "panel-scaler-private.h"
 #include "panel-widget-private.h"
 
-struct _PanelFrame
+typedef struct
 {
-  GtkWidget         parent_instance;
-
   PanelFrameHeader *header;
   GtkWidget        *box;
   AdwTabView       *tab_view;
@@ -48,13 +46,14 @@ struct _PanelFrame
   GtkWidget        *focus_highlight;
 
   guint             closeable : 1;
-};
+} PanelFramePrivate;
 
 #define SIZE_AT_END 50
 
 static void buildable_iface_init (GtkBuildableIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (PanelFrame, panel_frame, GTK_TYPE_WIDGET,
+                         G_ADD_PRIVATE (PanelFrame)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL))
 
@@ -95,6 +94,7 @@ panel_frame_notify_value_cb (PanelFrame    *self,
                              GParamSpec    *pspec,
                              GtkDropTarget *drop_target)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   const GValue *value;
   PanelWidget *panel;
 
@@ -107,7 +107,7 @@ panel_frame_notify_value_cb (PanelFrame    *self,
     return;
 
   if (!panel_widget_get_reorderable (panel) ||
-      (self->header && !panel_frame_header_can_drop (self->header, panel)))
+      (priv->header && !panel_frame_header_can_drop (priv->header, panel)))
     gtk_drop_target_reject (drop_target);
 }
 
@@ -175,6 +175,7 @@ panel_frame_drop_cb (PanelFrame    *self,
                      GtkDropTarget *drop_target)
 {
   PanelFrame *target = self;
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   GtkWidget *paned;
   GtkWidget *src_paned;
   PanelWidget *panel;
@@ -192,7 +193,7 @@ panel_frame_drop_cb (PanelFrame    *self,
       !(panel = g_value_get_object (value)) ||
       !(frame = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_FRAME)) ||
       !panel_widget_get_reorderable (panel) ||
-      (self->header && !panel_frame_header_can_drop (self->header, panel)))
+      (priv->header && !panel_frame_header_can_drop (priv->header, panel)))
     return FALSE;
 
   orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
@@ -262,6 +263,7 @@ close_page_or_frame_action (GtkWidget  *widget,
                             GVariant   *param)
 {
   PanelFrame *self = (PanelFrame *)widget;
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   PanelWidget *visible_child;
   GtkWidget *grid;
 
@@ -274,10 +276,10 @@ close_page_or_frame_action (GtkWidget  *widget,
     {
       AdwTabPage *page;
 
-      page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (visible_child));
-      adw_tab_view_close_page (self->tab_view, page);
+      page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (visible_child));
+      adw_tab_view_close_page (priv->tab_view, page);
     }
-  else if (self->closeable)
+  else if (priv->closeable)
     {
       GtkWidget *dock = gtk_widget_get_ancestor (grid, PANEL_TYPE_DOCK);
 
@@ -320,13 +322,14 @@ close_frame_action (GtkWidget  *widget,
                     GVariant   *param)
 {
   PanelFrame *self = (PanelFrame *)widget;
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   GtkWidget *toplevel;
   GtkWidget *dialog;
   guint n_pages;
 
   g_assert (PANEL_IS_FRAME (self));
 
-  if (!self->closeable)
+  if (!priv->closeable)
     g_return_if_reached ();
 
   toplevel = gtk_widget_get_ancestor (widget, GTK_TYPE_WINDOW);
@@ -355,8 +358,9 @@ close_frame_action (GtkWidget  *widget,
 static void
 panel_frame_update_actions (PanelFrame *self)
 {
-  GtkWidget *grid;
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   PanelWidget *visible_child;
+  GtkWidget *grid;
 
   g_assert (PANEL_IS_FRAME (self));
 
@@ -373,10 +377,10 @@ panel_frame_update_actions (PanelFrame *self)
                                  visible_child && _panel_widget_can_save (visible_child));
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
                                  "frame.close-page-or-frame",
-                                 grid && (visible_child || self->closeable));
+                                 grid && (visible_child || priv->closeable));
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
                                  "frame.close",
-                                 grid && self->closeable);
+                                 grid && priv->closeable);
 }
 
 static void
@@ -384,6 +388,7 @@ panel_frame_notify_selected_page_cb (PanelFrame *self,
                                      GParamSpec *pspec,
                                      AdwTabView *tab_view)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   PanelWidget *visible_child;
 
   g_assert (PANEL_IS_FRAME (self));
@@ -393,13 +398,13 @@ panel_frame_notify_selected_page_cb (PanelFrame *self,
 
   panel_frame_update_actions (self);
 
-  if (self->header)
-    panel_frame_header_page_changed (self->header, visible_child);
+  if (priv->header)
+    panel_frame_header_page_changed (priv->header, visible_child);
 
-  if (self->placeholder && visible_child == NULL)
-    gtk_stack_set_visible_child (self->stack, self->placeholder);
+  if (priv->placeholder && visible_child == NULL)
+    gtk_stack_set_visible_child (priv->stack, priv->placeholder);
   else
-    gtk_stack_set_visible_child (self->stack, GTK_WIDGET (self->tab_view));
+    gtk_stack_set_visible_child (priv->stack, GTK_WIDGET (priv->tab_view));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
 }
@@ -590,11 +595,12 @@ static void
 panel_frame_dispose (GObject *object)
 {
   PanelFrame *self = (PanelFrame *)object;
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
 
   panel_frame_set_header (self, NULL);
   panel_frame_set_placeholder (self, NULL);
 
-  g_clear_pointer (&self->box, gtk_widget_unparent);
+  g_clear_pointer (&priv->box, gtk_widget_unparent);
 
   G_OBJECT_CLASS (panel_frame_parent_class)->dispose (object);
 }
@@ -606,6 +612,7 @@ panel_frame_get_property (GObject    *object,
                           GParamSpec *pspec)
 {
   PanelFrame *self = PANEL_FRAME (object);
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
 
   switch (prop_id)
     {
@@ -618,7 +625,7 @@ panel_frame_get_property (GObject    *object,
       break;
 
     case PROP_ORIENTATION:
-      g_value_set_enum (value, gtk_orientable_get_orientation (GTK_ORIENTABLE (self->box)));
+      g_value_set_enum (value, gtk_orientable_get_orientation (GTK_ORIENTABLE (priv->box)));
       break;
 
     case PROP_PLACEHOLDER:
@@ -637,6 +644,7 @@ panel_frame_set_property (GObject      *object,
                           GParamSpec   *pspec)
 {
   PanelFrame *self = PANEL_FRAME (object);
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
 
   switch (prop_id)
     {
@@ -645,21 +653,21 @@ panel_frame_set_property (GObject      *object,
       break;
 
     case PROP_ORIENTATION:
-      gtk_orientable_set_orientation (GTK_ORIENTABLE (self->box), g_value_get_enum (value));
-      if (GTK_IS_ORIENTABLE (self->header))
-        gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header), !g_value_get_enum (value));
+      gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->box), g_value_get_enum (value));
+      if (GTK_IS_ORIENTABLE (priv->header))
+        gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->header), !g_value_get_enum (value));
 
       if (g_value_get_enum (value) == GTK_ORIENTATION_HORIZONTAL)
         {
-          gtk_widget_set_size_request (self->focus_highlight, -1, 2);
-          gtk_widget_set_halign (self->focus_highlight, GTK_ALIGN_FILL);
-          gtk_widget_set_valign (self->focus_highlight, GTK_ALIGN_START);
+          gtk_widget_set_size_request (priv->focus_highlight, -1, 2);
+          gtk_widget_set_halign (priv->focus_highlight, GTK_ALIGN_FILL);
+          gtk_widget_set_valign (priv->focus_highlight, GTK_ALIGN_START);
         }
       else
         {
-          gtk_widget_set_size_request (self->focus_highlight, 2, -1);
-          gtk_widget_set_halign (self->focus_highlight, GTK_ALIGN_START);
-          gtk_widget_set_valign (self->focus_highlight, GTK_ALIGN_FILL);
+          gtk_widget_set_size_request (priv->focus_highlight, 2, -1);
+          gtk_widget_set_halign (priv->focus_highlight, GTK_ALIGN_START);
+          gtk_widget_set_valign (priv->focus_highlight, GTK_ALIGN_FILL);
         }
       break;
 
@@ -713,12 +721,12 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_set_css_name (widget_class, "panelframe");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-frame.ui");
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, box);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, focus_highlight);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, overlay);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, stack);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, tab_view);
-  gtk_widget_class_bind_template_child (widget_class, PanelFrame, frame_menu);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, box);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, focus_highlight);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, overlay);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, stack);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, tab_view);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, frame_menu);
   gtk_widget_class_bind_template_callback (widget_class, setup_menu_cb);
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
@@ -740,6 +748,7 @@ panel_frame_class_init (PanelFrameClass *klass)
 static void
 panel_frame_init (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   PanelJoinedMenu *menu;
   GtkDropTarget *drop_target;
   GType types[] = { PANEL_TYPE_WIDGET };
@@ -747,8 +756,8 @@ panel_frame_init (PanelFrame *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   menu = panel_joined_menu_new ();
-  adw_tab_view_set_menu_model (self->tab_view, G_MENU_MODEL (menu));
-  panel_joined_menu_append_menu (menu, self->frame_menu);
+  adw_tab_view_set_menu_model (priv->tab_view, G_MENU_MODEL (menu));
+  panel_joined_menu_append_menu (menu, priv->frame_menu);
   g_clear_object (&menu);
 
   drop_target = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY | GDK_ACTION_MOVE);
@@ -781,7 +790,7 @@ panel_frame_init (PanelFrame *self)
                            G_CONNECT_SWAPPED);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 
-  g_signal_connect_object (self->tab_view,
+  g_signal_connect_object (priv->tab_view,
                            "notify::selected-page",
                            G_CALLBACK (panel_frame_notify_selected_page_cb),
                            self,
@@ -796,6 +805,7 @@ void
 panel_frame_add (PanelFrame  *self,
                  PanelWidget *panel)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   AdwTabPage *page;
   GtkWidget *grid;
   gboolean empty;
@@ -804,7 +814,7 @@ panel_frame_add (PanelFrame  *self,
   g_return_if_fail (PANEL_IS_WIDGET (panel));
 
   empty = panel_frame_get_empty (self);
-  page = adw_tab_view_add_page (self->tab_view, GTK_WIDGET (panel), NULL);
+  page = adw_tab_view_add_page (priv->tab_view, GTK_WIDGET (panel), NULL);
 
   g_object_bind_property (panel, "title", page, "title", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "icon", page, "icon", G_BINDING_SYNC_CREATE);
@@ -826,6 +836,7 @@ void
 panel_frame_remove (PanelFrame  *self,
                     PanelWidget *panel)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   GtkWidget *dock_child;
   GtkWidget *grid;
   AdwTabPage *page;
@@ -833,8 +844,8 @@ panel_frame_remove (PanelFrame  *self,
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
 
-  page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (panel));
-  adw_tab_view_close_page (self->tab_view, page);
+  page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (panel));
+  adw_tab_view_close_page (priv->tab_view, page);
 
   if (panel_frame_get_empty (self))
     {
@@ -856,19 +867,22 @@ panel_frame_remove (PanelFrame  *self,
 gboolean
 panel_frame_get_empty (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
-  return adw_tab_view_get_selected_page (self->tab_view) == NULL;
+  return adw_tab_view_get_selected_page (priv->tab_view) == NULL;
 }
 
 PanelWidget *
 panel_frame_get_visible_child (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   AdwTabPage *page;
 
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
-  page = adw_tab_view_get_selected_page (self->tab_view);
+  page = adw_tab_view_get_selected_page (priv->tab_view);
 
   return page ? PANEL_WIDGET (adw_tab_page_get_child (page)) : NULL;
 }
@@ -877,21 +891,24 @@ void
 panel_frame_set_visible_child (PanelFrame  *self,
                                PanelWidget *widget)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   AdwTabPage *page;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (widget));
 
-  if ((page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (widget))))
-    adw_tab_view_set_selected_page (self->tab_view, page);
+  if ((page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (widget))))
+    adw_tab_view_set_selected_page (priv->tab_view, page);
 }
 
 AdwTabView *
 _panel_frame_get_tab_view (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
-  return self->tab_view;
+  return priv->tab_view;
 }
 
 /**
@@ -905,10 +922,12 @@ _panel_frame_get_tab_view (PanelFrame *self)
 PanelFrameHeader *
 panel_frame_get_header (PanelFrame *self)
 {
-  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
-  g_return_val_if_fail (PANEL_IS_FRAME_HEADER (self->header), NULL);
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
 
-  return self->header;
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+  g_return_val_if_fail (PANEL_IS_FRAME_HEADER (priv->header), NULL);
+
+  return priv->header;
 }
 
 /**
@@ -922,37 +941,39 @@ void
 panel_frame_set_header (PanelFrame       *self,
                         PanelFrameHeader *header)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (!header || PANEL_IS_FRAME_HEADER (header));
 
-  if (self->header == header)
+  if (priv->header == header)
     return;
 
-  if (self->header != NULL)
+  if (priv->header != NULL)
     {
-      panel_frame_header_page_changed (self->header, NULL);
-      panel_frame_header_set_frame (self->header, NULL);
-      gtk_overlay_set_child (self->overlay, NULL);
-      self->header = NULL;
+      panel_frame_header_page_changed (priv->header, NULL);
+      panel_frame_header_set_frame (priv->header, NULL);
+      gtk_overlay_set_child (priv->overlay, NULL);
+      priv->header = NULL;
     }
 
-  self->header = header;
+  priv->header = header;
 
-  if (self->header != NULL)
+  if (priv->header != NULL)
     {
       PanelWidget *visible_child = panel_frame_get_visible_child (self);
 
-      if (GTK_IS_ORIENTABLE (self->header))
-        gtk_orientable_set_orientation (GTK_ORIENTABLE (self->header),
-                                        !gtk_orientable_get_orientation (GTK_ORIENTABLE (self->box)));
-      gtk_overlay_set_child (self->overlay, GTK_WIDGET (self->header));
+      if (GTK_IS_ORIENTABLE (priv->header))
+        gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->header),
+                                        !gtk_orientable_get_orientation (GTK_ORIENTABLE (priv->box)));
+      gtk_overlay_set_child (priv->overlay, GTK_WIDGET (priv->header));
 
-      panel_frame_header_set_frame (self->header, self);
+      panel_frame_header_set_frame (priv->header, self);
 
       if (visible_child)
-        panel_frame_header_page_changed (self->header, visible_child);
+        panel_frame_header_page_changed (priv->header, visible_child);
 
-      gtk_widget_add_css_class (GTK_WIDGET (self->header), "header");
+      gtk_widget_add_css_class (GTK_WIDGET (priv->header), "header");
     }
 }
 
@@ -967,9 +988,11 @@ panel_frame_set_header (PanelFrame       *self,
 GtkSelectionModel *
 panel_frame_get_pages (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
-  return adw_tab_view_get_pages (self->tab_view);
+  return adw_tab_view_get_pages (priv->tab_view);
 }
 
 void
@@ -978,6 +1001,8 @@ _panel_frame_transfer (PanelFrame  *self,
                        PanelFrame  *new_frame,
                        int          position)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  PanelFramePrivate *new_priv = panel_frame_get_instance_private (new_frame);
   AdwTabPage *page;
   GtkWidget *grid;
   GtkWidget *window;
@@ -990,13 +1015,13 @@ _panel_frame_transfer (PanelFrame  *self,
   if ((window = gtk_widget_get_ancestor (GTK_WIDGET (self), GTK_TYPE_WINDOW)))
     gtk_window_set_focus (GTK_WINDOW (window), NULL);
 
-  if (!(page = adw_tab_view_get_page (self->tab_view, GTK_WIDGET (widget))))
+  if (!(page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (widget))))
     g_return_if_reached ();
 
   if (position < 0)
-    position = adw_tab_view_get_n_pages (new_frame->tab_view);
+    position = adw_tab_view_get_n_pages (new_priv->tab_view);
 
-  adw_tab_view_transfer_page (self->tab_view, page, new_frame->tab_view, position);
+  adw_tab_view_transfer_page (priv->tab_view, page, new_priv->tab_view, position);
 
   if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
     _panel_grid_update_closeable (PANEL_GRID (grid));
@@ -1013,21 +1038,24 @@ _panel_frame_transfer (PanelFrame  *self,
 guint
 panel_frame_get_n_pages (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_val_if_fail (PANEL_IS_FRAME (self), 0);
 
-  return adw_tab_view_get_n_pages (self->tab_view);
+  return adw_tab_view_get_n_pages (priv->tab_view);
 }
 
 PanelWidget *
 panel_frame_get_page (PanelFrame *self,
                       guint       n)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   AdwTabPage *page;
 
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
   g_return_val_if_fail (n < panel_frame_get_n_pages (self), NULL);
 
-  if ((page = adw_tab_view_get_nth_page (self->tab_view, n)))
+  if ((page = adw_tab_view_get_nth_page (priv->tab_view, n)))
     return PANEL_WIDGET (adw_tab_page_get_child (page));
 
   return NULL;
@@ -1044,9 +1072,11 @@ panel_frame_get_page (PanelFrame *self,
 GtkWidget *
 panel_frame_get_placeholder (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
-  return self->placeholder;
+  return priv->placeholder;
 }
 
 /**
@@ -1063,24 +1093,26 @@ void
 panel_frame_set_placeholder (PanelFrame *self,
                              GtkWidget  *placeholder)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (!placeholder || GTK_IS_WIDGET (placeholder));
 
-  if (self->placeholder == placeholder)
+  if (priv->placeholder == placeholder)
     return;
 
-  if (self->placeholder)
-    gtk_stack_remove (self->stack, self->placeholder);
+  if (priv->placeholder)
+    gtk_stack_remove (priv->stack, priv->placeholder);
 
-  self->placeholder = placeholder;
+  priv->placeholder = placeholder;
 
-  if (self->placeholder)
-    gtk_stack_add_named (self->stack, self->placeholder, "placeholder");
+  if (priv->placeholder)
+    gtk_stack_add_named (priv->stack, priv->placeholder, "placeholder");
 
-  if (self->placeholder && !panel_frame_get_visible_child (self))
-    gtk_stack_set_visible_child (self->stack, self->placeholder);
+  if (priv->placeholder && !panel_frame_get_visible_child (self))
+    gtk_stack_set_visible_child (priv->stack, priv->placeholder);
   else
-    gtk_stack_set_visible_child (self->stack, GTK_WIDGET (self->tab_view));
+    gtk_stack_set_visible_child (priv->stack, GTK_WIDGET (priv->tab_view));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_PLACEHOLDER]);
 }
@@ -1107,22 +1139,25 @@ buildable_iface_init (GtkBuildableIface *iface)
 GMenuModel *
 _panel_frame_get_tab_menu (PanelFrame *self)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   AdwTabPage *page;
 
   g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
 
-  page = adw_tab_view_get_selected_page (self->tab_view);
-  g_signal_emit_by_name (self->tab_view, "setup-menu", page);
-  return adw_tab_view_get_menu_model (self->tab_view);
+  page = adw_tab_view_get_selected_page (priv->tab_view);
+  g_signal_emit_by_name (priv->tab_view, "setup-menu", page);
+  return adw_tab_view_get_menu_model (priv->tab_view);
 }
 
 void
 _panel_frame_set_closeable (PanelFrame  *self,
                             gboolean     closeable)
 {
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_FRAME (self));
 
-  self->closeable = !!closeable;
+  priv->closeable = !!closeable;
 
   panel_frame_update_actions (self);
 }
