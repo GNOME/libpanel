@@ -811,6 +811,8 @@ panel_frame_switcher_update_css (PanelFrameSwitcher *self)
 
   if (self->background_rgba_set)
     {
+#if 0
+      /* FIXME: Make work with updated css style */
       gchar *bgstr = gdk_rgba_to_string (&self->background_rgba);
 
       g_string_append        (str, "panelframeswitcher {\n");
@@ -819,6 +821,7 @@ panel_frame_switcher_update_css (PanelFrameSwitcher *self)
       g_string_append        (str, "}\n");
 
       g_free (bgstr);
+#endif
     }
 
   /* Use -1 for length so CSS provider knows the string is NULL terminated

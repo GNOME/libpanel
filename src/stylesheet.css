@@ -1,145 +1,84 @@
+/* For unified header/content style add "borderless" style to window */
+window.borderless headerbar {
+ box-shadow: none;
+}
+window.borderless:not(:backdrop) > contents {
+ background: linear-gradient(#dad6d2, @theme_bg_color 25%);
+}
+
+/* paneldockswitcher */
+paneldockswitcher > box > revealer > button {
+  margin-right: 3px;
+}
+paneldockswitcher > box > revealer:last-child > button {
+  margin-right: 0px;
+}
+
+/* Until we can fix these properly */
+panelframe list,
+panelframe textview,
+panelframe textview text {
+ background: transparent;
+}
+
+/* hide for now */
+paneldockchild > revealer > widget > widget > separator {
+ color: transparent;
+ background: transparent;
+}
+
+paneldockchild.start panelpaned {
+ margin: 0 0 6px 6px;
+}
+
+paneldockchild.end panelpaned {
+ margin: 0 6px 6px 0;
+}
+
+paneldockchild.bottom panelpaned {
+ margin: 0 6px 6px 6px;
+}
+
+paneldockchild.center panelgrid {
+ margin: 0 6px 6px 6px;
+ border: 1px solid @borders;
+ border-radius: 7px;
+ background-color: @theme_base_color;
+}
+
+paneldockchild.bottom panelpaned,
+paneldockchild.end panelpaned,
+paneldockchild.start panelpaned {
+ border: 1px solid @borders;
+ border-radius: 7px;
+ background-color: @theme_base_color;
+}
+
+panelframe {
+ border-color: @borders;
+ border-style: solid;
+}
+
 panelframe panelframeswitcher {
-  padding: 6px;
-}
-paneldockchild:not(.center) {
-  background-color: @theme_bg_color;
-}
-paneldockswitcher box.linked revealer:first-child button {
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-right-width: 0px;
-}
-paneldockswitcher box.linked revealer:last-child button {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-}
-paneldockswitcher box.linked revealer:not(:first-child):not(:last-child) button {
-  border-radius: 0px;
-  border-right-width: 0px;
+ padding: 6px;
+ background: transparent;
 }
 
-panelwidget {
-  background-color: @theme_bg_color;
-}
-panelgrid panelwidget {
-  background-color: transparent;
-}
-panelwidget.maximized {
-  margin: 24px;
-  border-radius: 5px;
-  box-shadow: 0 0 32px 50px alpha(@borders,.3),
-              0 1px 3px 1px rgba(0,0,0,.35);
-  border: 1px solid shade(@borders, 0.9);
-}
-panelwidget.maximized:backdrop {
-  box-shadow: none;
-  border: 1px solid alpha(@borders, 0.5);
-  transition: 200ms ease-out;
+panelgrid panelgridcolumn panelframe panelframeheaderbar {
+ background-color: transparent;
+ border-bottom: transparent;
+ padding: 4px;
 }
 
-panelwidget listview {
-  background: transparent;
+panelframeheaderbar button:not(:hover):not(:active) {
+ background: transparent;
 }
 
-panelmaximizedcontrols {
-  margin-right: 6px;
-  margin-top: 6px;
-}
-panelmaximizedcontrols button.close {
-  box-shadow: 0 0 3px @borders;
+panelframeheaderbar button {
+ margin: 0 1px;
+ padding: 0px;
 }
 
-panelgrid.multi-column panelframe.has-focus .focus-highlight {
-  background-color: shade(@theme_bg_color, 0.8);
-}
-panelframe.vertical panelwidget {
-  margin-left: 1px;
-  margin-right: 1px;
-}
-panelframe.horizontal panelwidget {
-  margin-top: 1px;
-  margin-bottom: 1px;
-}
-
-/* TODO: There is no variable for this, need theme variants */
-panelframe:drop(active) {
-  outline: 3px solid @borders;
-  outline-offset: -3px;
-}
-panelframe.horizontal.drop-after {
-  box-shadow: inset 0 0 0 1px #2ec275,
-              inset -1px 0 0 1px #2ec275,
-              inset -2px 0 0 1px #2ec275;
-  padding-right: 3px;
-}
-panelframe.vertical.drop-after {
-  box-shadow: inset 0 0 0 1px #2ec275,
-              inset 0 -1px 0 1px #2ec275,
-              inset 0 -2px 0 1px #2ec275;
-  padding-bottom: 3px;
-}
-
-panelframeheaderbar {
-  background: @theme_bg_color;
-  border-bottom: 1px solid shade(@theme_bg_color, 0.9);
-}
-panelframe .frameheader .action-bar button {
-  background-image: none;
-  background: transparent;
-  padding: 3px 6px;
-  margin: 0;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-}
-panelframe .frameheader .action-bar button:hover,
-panelframe .frameheader .action-bar button:checked {
-  background-color: shade(@theme_bg_color, 0.9);
-}
-panelframe .frameheader .action-bar button:active {
-  background-color: shade(@theme_bg_color, 0.8);
-}
-panelframe .frameheader .action-bar menubutton button {
-  transition-duration: 0;
-}
-panelframe .frameheader .action-bar:backdrop label,
-panelframe .frameheader .action-bar:backdrop image {
-  opacity: 0.5;
-  transition: 200ms ease-out;
-}
-panelframe .frameheader .action-bar .controls {
-  padding-right: 3px;
-  padding-left: 3px;
-}
-panelframe .frameheader .action-bar popover row {
-  padding: 3px 6px;
-  border-radius: 4px;
-}
-panelframe .frameheader .action-bar popover row:not(:selected) {
-  background: none;
-  box-shadow: none;
-}
-panelframe .frameheader .action-bar popover row .close-button {
-  padding: 0;
-  margin: 3px 0;
-  min-width: 24px;
-  min-height: 24px;
-  border-radius: 99px;
-  border: none;
-  box-shadow: none;
-  background: none;
-  color: transparent;
-}
-panelframe .frameheader .action-bar popover row:hover .close-button {
-  background: alpha(@theme_fg_color, .15);
-  color: @theme_fg_color;
-}
-panelframe .frameheader .action-bar popover row:selected:hover .close-button {
-  color: @theme_selected_fg_color;
-}
-panelframe .frameheader .action-bar popover row .close-button:hover {
-  background: alpha(black, .3);
-}
-panelframe .frameheader .action-bar popover row .close-button:active {
-  background: alpha(black, .5);
+panelframeswitcher {
+ background: transparent;
 }

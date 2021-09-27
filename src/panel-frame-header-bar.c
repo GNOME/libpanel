@@ -229,6 +229,8 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
 
   if (self->background_rgba_set)
     {
+#if 0
+      /* FIXME: make this work with styling tweaks */
       gchar *bgstr = gdk_rgba_to_string (&self->background_rgba);
 
       g_string_append        (str, "panelframeheaderbar {");
@@ -258,6 +260,7 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
         }
 
       g_free (bgstr);
+#endif
     }
 
   /* Use -1 for length so CSS provider knows the string is NULL terminated

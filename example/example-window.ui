@@ -4,6 +4,9 @@
     <property name="title">Panel Example</property>
     <property name="default-width">900</property>
     <property name="default-height">600</property>
+    <style>
+      <class name="borderless"/>
+    </style>
     <child>
       <object class="GtkBox">
         <property name="orientation">vertical</property>
@@ -255,6 +258,13 @@
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <style>
+              <class name="statusbar"/>
+            </style>
           </object>
         </child>
       </object>

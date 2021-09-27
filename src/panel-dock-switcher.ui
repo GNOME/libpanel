@@ -4,9 +4,6 @@
     <child>
       <object class="GtkBox" id="box">
         <property name="orientation">horizontal</property>
-        <style>
-          <class name="linked"/>
-        </style>
         <child>
           <object class="GtkRevealer" id="start_revealer">
             <property name="transition-type">slide-right</property>
@@ -15,7 +12,7 @@
             <child>
               <object class="GtkToggleButton" id="start_button">
                 <property name="icon-name">panel-left-symbolic</property>
-                <property name="width-request">60</property>
+                <property name="width-request">48</property>
                 <child>
                   <object class="GtkDropControllerMotion">
                     <signal name="enter" handler="drag_enter_cb"/>
@@ -34,7 +31,7 @@
             <child>
               <object class="GtkToggleButton" id="top_button">
                 <property name="icon-name">panel-top-symbolic</property>
-                <property name="width-request">60</property>
+                <property name="width-request">48</property>
                 <child>
                   <object class="GtkDropControllerMotion">
                     <signal name="enter" handler="drag_enter_cb"/>
@@ -53,7 +50,7 @@
             <child>
               <object class="GtkToggleButton" id="bottom_button">
                 <property name="icon-name">panel-bottom-symbolic</property>
-                <property name="width-request">60</property>
+                <property name="width-request">48</property>
                 <child>
                   <object class="GtkDropControllerMotion">
                     <signal name="enter" handler="drag_enter_cb"/>
@@ -72,7 +69,7 @@
             <child>
               <object class="GtkToggleButton" id="end_button">
                 <property name="icon-name">panel-right-symbolic</property>
-                <property name="width-request">60</property>
+                <property name="width-request">48</property>
                 <child>
                   <object class="GtkDropControllerMotion">
                     <signal name="enter" handler="drag_enter_cb"/>
