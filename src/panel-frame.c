@@ -755,6 +755,20 @@ panel_frame_init (PanelFrame *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
+  /* Locate GtkStack within tab view and alter homogeneous
+   * values so that we have more flexibility in sizing.
+   */
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (priv->tab_view));
+       child;
+       child = gtk_widget_get_next_sibling (GTK_WIDGET (child)))
+    {
+      if (GTK_IS_STACK (child))
+        {
+          gtk_stack_set_hhomogeneous (GTK_STACK (child), FALSE);
+          gtk_stack_set_vhomogeneous (GTK_STACK (child), FALSE);
+        }
+    }
+
   menu = panel_joined_menu_new ();
   adw_tab_view_set_menu_model (priv->tab_view, G_MENU_MODEL (menu));
   panel_joined_menu_append_menu (menu, priv->frame_menu);
