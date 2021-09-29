@@ -388,6 +388,8 @@ static void
 panel_paned_init (PanelPaned *self)
 {
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
+
+  _panel_dock_update_orientation (GTK_WIDGET (self), self->orientation);
 }
 
 static void
