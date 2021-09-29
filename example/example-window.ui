@@ -17,6 +17,11 @@
                 <property name="dock">dock</property>
               </object>
             </child>
+            <child type="title">
+              <object class="GtkButton">
+                <property name="width-request">300</property>
+              </object>
+            </child>
             <child>
               <object class="GtkButton">
                 <property name="action-name">document.new</property>
