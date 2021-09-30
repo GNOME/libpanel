@@ -118,6 +118,8 @@ example_window_add_document (ExampleWindow *self)
                          "text", title,
                          NULL);
   text_view = g_object_new (GTK_TYPE_TEXT_VIEW,
+                            "left-margin", 6,
+                            "top-margin", 6,
                             "buffer", buffer,
                             NULL);
 
