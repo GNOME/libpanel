@@ -65,3 +65,39 @@ panelframe panelframeswitcher button {
   min-height: 24px;
   border-top: 1px solid @borders;
 }
+
+
+panelframe .frameheader .action-bar popover row {
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+panelframe .frameheader .action-bar popover row:selected {
+  font-weight: bold;
+}
+panelframe .frameheader .action-bar popover row:selected:not(:hover) {
+  background: transparent;
+}
+panelframe .frameheader .action-bar popover row .close-button {
+  padding: 0;
+  margin: 3px 0;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 99px;
+  border: none;
+  box-shadow: none;
+  background: none;
+  color: transparent;
+}
+panelframe .frameheader .action-bar popover row:hover .close-button {
+  background: alpha(@theme_fg_color, .15);
+  color: @theme_fg_color;
+}
+panelframe .frameheader .action-bar popover row:selected:hover .close-button {
+  color: @theme_selected_fg_color;
+}
+panelframe .frameheader .action-bar popover row .close-button:hover {
+  background: alpha(black, .3);
+}
+panelframe .frameheader .action-bar popover row .close-button:active {
+  background: alpha(black, .5);
+}
