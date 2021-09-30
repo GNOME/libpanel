@@ -1,10 +1,4 @@
-/* For unified header/content style add "borderless" style to window */
-window.borderless headerbar {
- box-shadow: none;
-}
-window.borderless:not(:backdrop) > contents {
- background: linear-gradient(#dad6d2, @theme_bg_color 25%);
-}
+@define-color sidebar_color shade(@theme_bg_color, 0.96);
 
 /* paneldockswitcher */
 paneldockswitcher > box > revealer > button {
@@ -14,71 +8,60 @@ paneldockswitcher > box > revealer:last-child > button {
   margin-right: 0px;
 }
 
-/* Until we can fix these properly */
-panelframe list,
-panelframe textview,
-panelframe textview text {
- background: transparent;
-}
-
-/* hide for now */
-paneldockchild > revealer > widget > widget > separator {
- color: transparent;
- background: transparent;
-}
-
-paneldockchild.start panelpaned {
- margin: 0 0 6px 6px;
-}
-
-paneldockchild.end panelpaned {
- margin: 0 6px 6px 0;
-}
-
-paneldockchild.bottom panelpaned {
- margin: 0 6px 6px 6px;
-}
-
-paneldockchild.center panelgrid {
- margin: 0 6px 6px 6px;
- border: 1px solid @borders;
- border-radius: 7px;
- background-color: @theme_base_color;
-}
-
-paneldockchild.bottom panelpaned,
-paneldockchild.end panelpaned,
-paneldockchild.start panelpaned {
- border: 1px solid @borders;
- border-radius: 7px;
- background-color: @theme_base_color;
-}
-
-panelframe {
- border-color: @borders;
- border-style: solid;
-}
-
-panelframe panelframeswitcher {
- padding: 6px;
- background: transparent;
-}
-
-panelgrid panelgridcolumn panelframe panelframeheaderbar {
- background-color: transparent;
- border-bottom: transparent;
- padding: 4px;
+panelframeheaderbar button {
+  border-color: transparent;
+  padding: 0;
+  margin: 3px 6px;
 }
 
 panelframeheaderbar button:not(:hover):not(:active) {
  background: transparent;
 }
 
-panelframeheaderbar button {
- margin: 0 1px;
- padding: 0px;
+.bottom panelpaned textview text,
+.start panelpaned textview text,
+.end panelpaned textview text {
+  background: transparent;
 }
 
-panelframeswitcher {
- background: transparent;
+.bottom panelpaned panelframe textview,
+.end panelpaned panelframe textview,
+.start panelpaned panelframe textview {
+  background: @sidebar_color;
+}
+
+.bottom panelpaned panelframe list,
+.end panelpaned panelframe list,
+.start panelpaned panelframe list {
+  background: @sidebar_color;
+}
+
+panelpaned.vertical panelframe panelframeswitcher {
+  background: @sidebar_color;
+  padding: 0px 6px;
+}
+
+panelpaned.horizontal panelframe panelframeswitcher {
+  background: @sidebar_color;
+  padding: 6px 0px;
+}
+
+panelframe panelframeswitcher button:active {
+  color: alpha(currentColor, .75);
+}
+
+panelframe panelframeswitcher button:checked {
+  color: @theme_fg_color;
+}
+
+panelframe panelframeswitcher button {
+  padding: 0;
+  margin: 3px 6px;
+  color: alpha(currentColor, .5);
+  background: transparent;
+}
+
+.statusbar {
+  min-height: 24px;
+  border-top: 1px solid @borders;
 }

@@ -229,13 +229,11 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
 
   if (self->background_rgba_set)
     {
-#if 0
       /* FIXME: make this work with styling tweaks */
       gchar *bgstr = gdk_rgba_to_string (&self->background_rgba);
 
       g_string_append        (str, "panelframeheaderbar {");
       g_string_append_printf (str, "  background-color: %s;", bgstr);
-      g_string_append_printf (str, "  border-bottom: 1px solid shade(%s,0.9);", bgstr);
       g_string_append        (str, "}\n");
       g_string_append_printf (str, "button:hover, button:checked { background-color: shade(%s,.9); }", bgstr);
       g_string_append_printf (str, "button:active { background-color: shade(%s,.8); }", bgstr);
@@ -260,7 +258,6 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
         }
 
       g_free (bgstr);
-#endif
     }
 
   /* Use -1 for length so CSS provider knows the string is NULL terminated
