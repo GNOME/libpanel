@@ -57,6 +57,7 @@ struct _PanelFrameHeaderBar
   GtkButton         *drag_button;
 
   PanelWidget       *drag_panel;
+  GtkWidget         *drag_dock;
 
   GdkRGBA            background_rgba;
   GdkRGBA            foreground_rgba;
@@ -404,7 +405,10 @@ drag_begin_cb (PanelFrameHeaderBar *self,
     gtk_drag_source_set_icon (drag_source, paintable, 0, 0);
 
   if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+    {
+      _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+      g_set_weak_pointer (&self->drag_dock, dock);
+    }
 }
 
 static void
@@ -413,16 +417,15 @@ drag_end_cb (PanelFrameHeaderBar *self,
              gboolean             delete_data,
              GtkDragSource       *drag_source)
 {
-  GtkWidget *dock;
-
   g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
   g_assert (GDK_IS_DRAG (drag));
   g_assert (GTK_IS_DRAG_SOURCE (drag_source));
 
-  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_end_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+  if (self->drag_dock)
+    _panel_dock_end_drag (PANEL_DOCK (self->drag_dock), PANEL_WIDGET (self->drag_panel));
 
   self->drag_panel = NULL;
+  g_clear_weak_pointer (&self->drag_dock);
 }
 
 static void
