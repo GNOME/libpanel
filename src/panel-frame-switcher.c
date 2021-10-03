@@ -46,6 +46,7 @@ struct _PanelFrameSwitcher
   GtkSelectionModel *pages;
   GHashTable        *buttons;
   PanelWidget       *drag_panel;
+  PanelDock         *drag_dock;
 
   GdkRGBA            foreground_rgba;
   GdkRGBA            background_rgba;
@@ -396,7 +397,10 @@ panel_frame_switcher_drag_begin_cb (PanelFrameSwitcher *self,
     gtk_drag_source_set_icon (source, paintable, 0, 0);
 
   if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+    {
+      g_set_weak_pointer (&self->drag_dock, PANEL_DOCK (dock));
+      _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+    }
 }
 
 static void
@@ -405,16 +409,15 @@ panel_frame_switcher_drag_end_cb (PanelFrameSwitcher *self,
                                   gboolean            delete_data,
                                   GtkDragSource      *source)
 {
-  GtkWidget *dock;
-
   g_assert (GTK_IS_DRAG_SOURCE (source));
   g_assert (GDK_IS_DRAG (drag));
   g_assert (PANEL_IS_FRAME_SWITCHER (self));
 
-  if ((dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK)))
-    _panel_dock_end_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
+  if (self->drag_dock)
+    _panel_dock_end_drag (self->drag_dock, PANEL_WIDGET (self->drag_panel));
 
   self->drag_panel = NULL;
+  g_clear_weak_pointer (&self->drag_dock);
 }
 
 static void
