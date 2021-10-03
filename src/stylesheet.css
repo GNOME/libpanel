@@ -1,23 +1,5 @@
 @define-color sidebar_color shade(@theme_bg_color, 0.96);
 
-/* paneldockswitcher */
-paneldockswitcher > box > revealer > button {
-  margin-right: 3px;
-}
-paneldockswitcher > box > revealer:last-child > button {
-  margin-right: 0px;
-}
-
-panelframeheaderbar button {
-  border-color: transparent;
-  padding: 0;
-  margin: 3px 6px;
-}
-
-panelframeheaderbar button:not(:hover):not(:active) {
- background: transparent;
-}
-
 .bottom panelpaned textview text,
 .start panelpaned textview text,
 .end panelpaned textview text {
@@ -36,28 +18,29 @@ panelframeheaderbar button:not(:hover):not(:active) {
   background: @sidebar_color;
 }
 
-panelpaned.vertical panelframe panelframeswitcher {
-  background: @sidebar_color;
-  padding: 0px 6px;
+panelframeheaderbar button:not(:hover):not(:checked) {
+  background: transparent;
 }
 
-panelpaned.horizontal panelframe panelframeswitcher {
-  background: @sidebar_color;
-  padding: 6px 0px;
-}
-
-panelframe panelframeswitcher button:active {
-  color: alpha(currentColor, .75);
-}
-
-panelframe panelframeswitcher button:checked {
-  color: @theme_fg_color;
-}
-
-panelframe panelframeswitcher button {
+panelframeheaderbar button {
   padding: 0;
   margin: 3px 6px;
-  color: alpha(currentColor, .5);
+}
+
+panelpaned panelframe panelframeswitcher {
+  background: @sidebar_color;
+  padding: 0 2px;
+}
+
+
+panelframe panelframeswitcher button {
+  padding: 0 6px;
+  margin: 3px 1px;
+  border-radius: 5px;
+  border-color: transparent;
+}
+
+panelframe panelframeswitcher button:not(:hover):not(:checked) {
   background: transparent;
 }
 
