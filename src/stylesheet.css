@@ -1,5 +1,12 @@
 @define-color sidebar_color shade(@theme_bg_color, 0.96);
 
+paneldockswitcher button {
+  margin-right: 1px;
+}
+paneldockswitcher revealer:last-child button {
+  margin-right: 0;
+}
+
 .bottom panelpaned textview text,
 .start panelpaned textview text,
 .end panelpaned textview text {
@@ -58,12 +65,6 @@ panelframe panelframeswitcher button:not(:hover):not(:checked) {
   background: transparent;
 }
 
-.statusbar {
-  min-height: 24px;
-  border-top: 1px solid @borders;
-}
-
-
 panelframe .frameheader .action-bar popover row {
   padding: 3px 6px;
   border-radius: 4px;
@@ -97,4 +98,15 @@ panelframe .frameheader .action-bar popover row .close-button:hover {
 }
 panelframe .frameheader .action-bar popover row .close-button:active {
   background: alpha(black, .5);
+}
+
+
+.statusbar {
+  min-height: 24px;
+  border-top: 1px solid @borders;
+}
+.statusbar button {
+  border-radius: 0;
+  padding: 3px 6px;
+  background: transparent;
 }
