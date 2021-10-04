@@ -14,13 +14,8 @@
           <object class="GtkHeaderBar" id="headerbar">
             <child type="start">
               <object class="GtkMenuButton">
-                <child>
-                  <object class="GtkImage">
-                    <property name="margin-start">12</property>
-                    <property name="margin-end">12</property>
-                    <property name="icon-name">document-open-symbolic</property>
-                  </object>
-                </child>
+                <property name="always-show-arrow">true</property>
+                <property name="icon-name">document-open-symbolic</property>
               </object>
             </child>
             <child type="start">
@@ -319,8 +314,6 @@
                 <property name="direction">up</property>
                 <property name="can-focus">false</property>
                 <property name="menu-model">vcs_menu</property>
-                <property name="margin-start">6</property>
-                <property name="margin-end">6</property>
                 <child>
                   <object class="GtkBox">
                     <property name="spacing">6</property>
@@ -376,6 +369,13 @@
             </child>
             <child>
               <object class="GtkLabel">
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
+                <property name="label">Indexing sources …</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
                 <property name="hexpand">true</property>
               </object>
             </child>
@@ -385,22 +385,15 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
-                <property name="label">UTF-8</property>
-                <property name="margin-start">9</property>
-                <property name="margin-end">9</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSeparator">
-                <property name="orientation">vertical</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">C</property>
-                <property name="margin-start">9</property>
-                <property name="margin-end">9</property>
+              <object class="GtkMenuButton">
+                <property name="direction">up</property>
+                <property name="can-focus">false</property>
+                <property name="menu-model">encoding_menu</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">UTF-8</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -412,12 +405,10 @@
               <object class="GtkMenuButton">
                 <property name="can-focus">false</property>
                 <property name="direction">up</property>
-                <property name="menu-model">crlf_menu</property>
+                <property name="menu-model">syntax_menu</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">LF</property>
-                    <property name="margin-start">9</property>
-                    <property name="margin-end">9</property>
+                    <property name="label">C</property>
                   </object>
                 </child>
               </object>
@@ -428,10 +419,15 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
-                <property name="label">Sp 2, In 2</property>
-                <property name="margin-start">9</property>
-                <property name="margin-end">9</property>
+              <object class="GtkMenuButton">
+                <property name="focusable">false</property>
+                <property name="direction">up</property>
+                <property name="menu-model">crlf_menu</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">LF</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -440,10 +436,68 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
-                <property name="label">Ln 1, Col 1</property>
-                <property name="margin-start">9</property>
-                <property name="margin-end">9</property>
+              <object class="GtkMenuButton">
+                <property name="focusable">false</property>
+                <property name="direction">up</property>
+                <property name="menu-model">tabs_v_spaces_menu</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">2:2 Spaces</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="orientation">vertical</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="focusable">false</property>
+                <property name="focus-on-click">false</property>
+                <property name="direction">up</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <property name="width-request">200</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="margin-bottom">12</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
+                            <property name="label">Go to Line</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton">
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="width-chars">5</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="width-request">75</property>
+                            <property name="halign">end</property>
+                            <property name="label">Go</property>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">Ln 1, Col 1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -514,6 +568,7 @@
   </menu>
   <menu id="crlf_menu">
     <section>
+      <attribute name="label">Line Ending</attribute>
       <item>
         <attribute name="label">Linux (LF)</attribute>
         <attribute name="action">newline.type('lf')</attribute>
@@ -526,6 +581,100 @@
         <attribute name="label">Mac Classic (CR)</attribute>
         <attribute name="action">newline.type('cr')</attribute>
       </item>
+    </section>
+  </menu>
+  <menu id="encoding_menu">
+    <section>
+      <attribute name="label">Encoding</attribute>
+      <item>
+        <attribute name="label">UTF-8</attribute>
+      </item>
+      <item>
+        <attribute name="label">ASCII</attribute>
+      </item>
+      <item>
+        <attribute name="label">Western (ISO 8895-1)</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="syntax_menu">
+    <section>
+      <attribute name="label">Highlight Mode</attribute>
+      <item>
+        <attribute name="label">C</attribute>
+      </item>
+      <item>
+        <attribute name="label">C++</attribute>
+      </item>
+      <item>
+        <attribute name="label">CSS</attribute>
+      </item>
+      <item>
+        <attribute name="label">HTML</attribute>
+      </item>
+      <item>
+        <attribute name="label">JavaScript</attribute>
+      </item>
+      <item>
+        <attribute name="label">Python</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="tabs_v_spaces_menu">
+    <section>
+      <attribute name="label">Indentation</attribute>
+      <item>
+        <attribute name="label">Tabs</attribute>
+        <attribute name="action">indent.style('tabs')</attribute>
+        <attribute name="role">radio</attribute>
+      </item>
+      <item>
+        <attribute name="label">Spaces</attribute>
+        <attribute name="action">indent.style('spaces')</attribute>
+        <attribute name="role">radio</attribute>
+      </item>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label">Spaces per Tab</attribute>
+        <section>
+          <item>
+            <attribute name="label">2</attribute>
+          </item>
+          <item>
+            <attribute name="label">3</attribute>
+          </item>
+          <item>
+            <attribute name="label">4</attribute>
+          </item>
+          <item>
+            <attribute name="label">5</attribute>
+          </item>
+          <item>
+            <attribute name="label">8</attribute>
+          </item>
+        </section>
+      </submenu>
+      <submenu>
+        <attribute name="label">Indentation Size</attribute>
+        <section>
+          <item>
+            <attribute name="label">2</attribute>
+          </item>
+          <item>
+            <attribute name="label">3</attribute>
+          </item>
+          <item>
+            <attribute name="label">4</attribute>
+          </item>
+          <item>
+            <attribute name="label">5</attribute>
+          </item>
+          <item>
+            <attribute name="label">8</attribute>
+          </item>
+        </section>
+      </submenu>
     </section>
   </menu>
 </interface>
