@@ -104,9 +104,14 @@ panelframe .frameheader .action-bar popover row .close-button:active {
 .statusbar {
   min-height: 24px;
   border-top: 1px solid @borders;
+  font-size: 0.833em;
 }
 .statusbar button {
   border-radius: 0;
   padding: 3px 6px;
   background: transparent;
+  padding: 0;
+}
+.statusbar button label {
+  font-weight: normal;
 }

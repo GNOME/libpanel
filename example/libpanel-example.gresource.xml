@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/">
     <file>example-window.ui</file>
+    <file>builder-vcs-branch-symbolic.svg</file>
   </gresource>
 </gresources>
