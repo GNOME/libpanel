@@ -5,7 +5,7 @@
     <property name="default-width">900</property>
     <property name="default-height">600</property>
     <style>
-      <class name="borderless"/>
+      <class name="devel"/>
     </style>
     <child>
       <object class="GtkBox">
