@@ -42,6 +42,7 @@ libpanel_sources = [
   'panel-save-dialog.c',
   'panel-scaler.c',
   'panel-signal-group.c',
+  'panel-statusbar.c',
   'panel-widget.c',
 ]
 
@@ -58,6 +59,7 @@ libpanel_headers = [
   'panel-grid.h',
   'panel-grid-column.h',
   'panel-save-delegate.h',
+  'panel-statusbar.h',
   'panel-version-macros.h',
   'panel-widget.h',
 ]

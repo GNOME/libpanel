@@ -32,6 +32,7 @@
 #include "panel-init.h"
 #include "panel-paned-private.h"
 #include "panel-resources.h"
+#include "panel-statusbar.h"
 #include "panel-widget.h"
 
 static GtkCssProvider *css_provider;
@@ -54,6 +55,7 @@ panel_init (void)
   g_type_ensure (PANEL_TYPE_GRID);
   g_type_ensure (PANEL_TYPE_GRID_COLUMN);
   g_type_ensure (PANEL_TYPE_PANED);
+  g_type_ensure (PANEL_TYPE_STATUSBAR);
   g_type_ensure (PANEL_TYPE_WIDGET);
 
   css_provider = gtk_css_provider_new ();

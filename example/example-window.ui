@@ -305,10 +305,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
-            <style>
-              <class name="statusbar"/>
-            </style>
+          <object class="PanelStatusbar">
             <child>
               <object class="GtkMenuButton">
                 <property name="direction">up</property>

@@ -110,21 +110,21 @@ panelframe .frameheader .action-bar popover row .close-button:active {
 }
 
 
-.statusbar {
+panelstatusbar {
   min-height: 24px;
   border-top: 1px solid @borders;
   font-size: 0.833em;
 }
-.statusbar > menubutton > button,
-.statusbar > button {
+panelstatusbar > menubutton > button,
+panelstatusbar > button {
   border-radius: 0;
   padding: 0 9px;
 }
-.statusbar > menubutton > button:not(:hover):not(:checked),
-.statusbar > button:not(:hover):not(:checked) {
+panelstatusbar > menubutton > button:not(:hover):not(:checked),
+panelstatusbar > button:not(:hover):not(:checked) {
   background: transparent;
 }
-.statusbar > menubutton > button label,
-.statusbar > button label {
+panelstatusbar > menubutton > button label,
+panelstatusbar > button label {
   font-weight: normal;
 }
