@@ -300,7 +300,7 @@
             <child>
               <object class="GtkImage">
                 <property name="resource">/warnings-symbolic.svg</property>
-                <property name="margin-start">6</property>
+                <property name="margin-start">9</property>
                 <property name="margin-end">6</property>
               </object>
             </child>
@@ -320,7 +320,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">1</property>
-                <property name="margin-end">6</property>
+                <property name="margin-end">9</property>
               </object>
             </child>
             <child>
@@ -341,8 +341,20 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">UTF-8</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="orientation">vertical</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">C</property>
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
               </object>
             </child>
             <child>
@@ -353,8 +365,8 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">LF</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
               </object>
             </child>
             <child>
@@ -365,8 +377,8 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">Sp 2, In 2</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
               </object>
             </child>
             <child>
@@ -377,8 +389,8 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">Ln 1, Col 1</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
               </object>
             </child>
             <child>
@@ -389,8 +401,8 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">INS</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
               </object>
             </child>
           </object>
