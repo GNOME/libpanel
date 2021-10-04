@@ -115,12 +115,16 @@ panelframe .frameheader .action-bar popover row .close-button:active {
   border-top: 1px solid @borders;
   font-size: 0.833em;
 }
-.statusbar button {
+.statusbar > menubutton > button,
+.statusbar > button {
   border-radius: 0;
-  padding: 3px 6px;
-  background: transparent;
-  padding: 0;
+  padding: 0 9px;
 }
-.statusbar button label {
+.statusbar > menubutton > button:not(:hover):not(:checked),
+.statusbar > button:not(:hover):not(:checked) {
+  background: transparent;
+}
+.statusbar > menubutton > button label,
+.statusbar > button label {
   font-weight: normal;
 }
