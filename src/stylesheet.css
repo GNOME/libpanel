@@ -25,12 +25,17 @@ paneldockswitcher revealer:last-child button {
   background: @sidebar_color;
 }
 
+panelframeheaderbar > box {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
 panelframeheaderbar button:not(:hover):not(:checked) {
   background: transparent;
 }
 
 panelframeheaderbar button {
-  padding: 0;
+  padding: 0 3px;
   margin: 3px 1px;
 }
 
