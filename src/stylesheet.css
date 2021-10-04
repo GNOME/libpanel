@@ -31,7 +31,7 @@ panelframeheaderbar button:not(:hover):not(:checked) {
 
 panelframeheaderbar button {
   padding: 0;
-  margin: 3px 6px;
+  margin: 3px 1px;
 }
 
 panelpaned panelframe panelframeswitcher {
