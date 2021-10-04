@@ -293,6 +293,42 @@
               </object>
             </child>
             <child>
+              <object class="GtkSeparator">
+                <property name="orientation">vertical</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="resource">/warnings-symbolic.svg</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">3</property>
+                <property name="margin-end">3</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="resource">/errors-symbolic.svg</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">1</property>
+                <property name="margin-end">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="orientation">vertical</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkLabel">
                 <property name="hexpand">true</property>
               </object>
@@ -305,6 +341,18 @@
             <child>
               <object class="GtkLabel">
                 <property name="label">UTF-8</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="orientation">vertical</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">LF</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
               </object>
