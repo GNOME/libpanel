@@ -25,47 +25,51 @@ paneldockswitcher revealer:last-child button {
   background: @sidebar_color;
 }
 
+panelframe panelframeheaderbar,
+panelframe panelframeheaderbar,
+paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframeheaderbar {
+ border-top: 2px solid transparent;
+}
+panelframe.has-focus panelframeheaderbar {
+ border-top: 2px solid @borders;
+}
 panelframeheaderbar > box {
   margin-left: 6px;
   margin-right: 6px;
 }
-
 panelframeheaderbar button:not(:hover):not(:checked) {
   background: transparent;
 }
-
 panelframeheaderbar button {
   padding: 0 3px;
   margin: 3px 1px;
 }
 
+paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher {
+  border-top: 2px solid transparent;
+}
+
 panelpaned panelframe panelframeswitcher {
   background: @sidebar_color;
 }
-
 panelpaned.vertical panelframe panelframeswitcher {
   padding: 0 2px;
 }
-
 panelpaned.horizontal panelframe panelframeswitcher {
   padding: 2px 0;
 }
-
 panelpaned.vertical panelframe panelframeswitcher button {
   padding: 0 6px;
   margin: 3px 1px;
 }
-
 panelpaned.horizontal panelframe panelframeswitcher button {
   padding: 6px 0;
   margin: 1px 3px;
 }
-
 panelframe panelframeswitcher button {
   border-radius: 5px;
   border-color: transparent;
 }
-
 panelframe panelframeswitcher button:not(:hover):not(:checked) {
   background: transparent;
 }
