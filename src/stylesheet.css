@@ -26,12 +26,13 @@ paneldockswitcher revealer:last-child button {
 }
 
 panelframe panelframeheaderbar,
-panelframe panelframeheaderbar,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframeheaderbar {
- border-top: 2px solid transparent;
+  border-top: 2px solid transparent;
+  border-bottom: 1px solid alpha(@borders,.6);
+  padding-bottom: 2px;
 }
 panelframe.has-focus panelframeheaderbar {
- border-top: 2px solid @borders;
+  border-top: 2px solid @borders;
 }
 panelframeheaderbar > box {
   margin-left: 6px;
@@ -45,18 +46,26 @@ panelframeheaderbar button {
   margin: 3px 1px;
 }
 
-paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher {
+paneldockchild.end panelpaned.vertical panelresizer panelframe panelframeswitcher,
+paneldockchild.start panelpaned.vertical panelresizer panelframe panelframeswitcher {
   border-top: 2px solid transparent;
 }
-
+paneldockchild.bottom panelpaned.horizontal panelresizer panelframe panelframeswitcher,
+paneldockchild.top panelpaned.horizontal panelresizer panelframe panelframeswitcher {
+  border-left: 2px solid transparent;
+}
+paneldockchild.end panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher,
+paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher {
+  border-bottom: 1px solid alpha(@borders,.6);
+}
 panelpaned panelframe panelframeswitcher {
   background: @sidebar_color;
 }
-panelpaned.vertical panelframe panelframeswitcher {
-  padding: 0 2px;
-}
 panelpaned.horizontal panelframe panelframeswitcher {
-  padding: 2px 0;
+  padding: 4px 4px 4px 0;
+}
+panelpaned.vertical panelframe panelframeswitcher {
+  padding: 0 4px 2px 4px;
 }
 panelpaned.vertical panelframe panelframeswitcher button {
   padding: 0 6px;
