@@ -33,7 +33,6 @@ on_activate_cb (GtkApplication *app)
 static void
 on_startup_cb (GtkApplication *app)
 {
-  adw_init ();
   panel_init ();
 }
 
@@ -44,7 +43,7 @@ main (int argc,
   GApplication *app;
   int ret;
 
-  app = g_object_new (GTK_TYPE_APPLICATION,
+  app = g_object_new (ADW_TYPE_APPLICATION,
                       "application-id", "org.gnome.libpanel.example",
                       NULL);
   g_signal_connect (app,
