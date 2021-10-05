@@ -7,22 +7,26 @@ paneldockswitcher revealer:last-child button {
   margin-right: 0;
 }
 
-.bottom panelpaned textview text,
-.start panelpaned textview text,
-.end panelpaned textview text {
+paneldockchild.bottom,
+paneldockchild.end,
+paneldockchild.start,
+paneldockchild.top {
+  background: @sidebar_color;
+}
+
+paneldockchild.bottom panelpaned textview text,
+paneldockchild.bottom panelpaned panelframe textview,
+paneldockchild.bottom panelpaned panelframe list,
+paneldockchild.end panelpaned textview text,
+paneldockchild.end panelpaned panelframe list,
+paneldockchild.end panelpaned panelframe textview,
+paneldockchild.start panelpaned textview text,
+paneldockchild.start panelpaned panelframe list,
+paneldockchild.start panelpaned panelframe textview,
+paneldockchild.top panelpaned textview text,
+paneldockchild.top panelpaned panelframe list,
+paneldockchild.top panelpaned panelframe textview {
   background: transparent;
-}
-
-.bottom panelpaned panelframe textview,
-.end panelpaned panelframe textview,
-.start panelpaned panelframe textview {
-  background: @sidebar_color;
-}
-
-.bottom panelpaned panelframe list,
-.end panelpaned panelframe list,
-.start panelpaned panelframe list {
-  background: @sidebar_color;
 }
 
 panelframe panelframeheaderbar,
