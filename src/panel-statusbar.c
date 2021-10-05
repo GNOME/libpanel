@@ -46,6 +46,10 @@ static void
 panel_statusbar_dispose (GObject *object)
 {
   PanelStatusbar *self = (PanelStatusbar *)object;
+  GtkWidget *child;
+
+  while ((child = gtk_widget_get_first_child (GTK_WIDGET (self))))
+    gtk_widget_unparent (child);
 
   G_OBJECT_CLASS (panel_statusbar_parent_class)->dispose (object);
 }
