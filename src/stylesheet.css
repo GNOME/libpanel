@@ -1,4 +1,4 @@
-@define-color sidebar_color shade(@theme_bg_color, 0.96);
+@define-color sidebar_color mix(@borders, @theme_bg_color, 0.95);
 
 paneldockswitcher button {
   margin-right: 1px;
