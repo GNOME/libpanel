@@ -309,7 +309,6 @@
             <child>
               <object class="GtkMenuButton">
                 <property name="direction">up</property>
-                <property name="can-focus">false</property>
                 <property name="menu-model">vcs_menu</property>
                 <child>
                   <object class="GtkBox">
@@ -384,7 +383,6 @@
             <child>
               <object class="GtkMenuButton">
                 <property name="direction">up</property>
-                <property name="can-focus">false</property>
                 <property name="menu-model">encoding_menu</property>
                 <child>
                   <object class="GtkLabel">
@@ -399,15 +397,25 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuButton">
-                <property name="can-focus">false</property>
-                <property name="direction">up</property>
-                <property name="menu-model">syntax_menu</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="label">C</property>
+              <object class="GtkDropDown">
+                <property name="enable-search">true</property>
+                <property name="expression">
+                  <lookup name="string" type="GtkStringObject"/>
+                </property>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item>C</item>
+                      <item>C++</item>
+                      <item>CSS</item>
+                      <item>HTML</item>
+                      <item>JavaScript</item>
+                      <item>Python</item>
+                      <item>Ruby</item>
+                      <item>XML</item>
+                    </items>
                   </object>
-                </child>
+                </property>
               </object>
             </child>
             <child>
