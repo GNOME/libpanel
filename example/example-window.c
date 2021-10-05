@@ -35,6 +35,7 @@ G_DEFINE_TYPE (ExampleWindow, example_window, ADW_TYPE_APPLICATION_WINDOW)
 
 static GdkRGBA white;
 static GdkRGBA grey;
+static GdkRGBA black;
 
 GtkWidget *
 example_window_new (GtkApplication *application)
@@ -72,32 +73,18 @@ on_save_cb (PanelSaveDelegate *delegate,
 }
 
 static void
-apply_theme_color (GtkSettings *settings,
-                   PanelWidget *widget)
+apply_theme_color (PanelWidget *widget)
 {
-  static GdkRGBA black = {0,0,0,1};
-  gboolean dark;
-
-  g_object_get (settings, "gtk-application-prefer-dark-theme", &dark, NULL);
-
-  if (dark)
+  if (adw_style_manager_get_dark (adw_style_manager_get_default ()))
     {
-      panel_widget_set_background_rgba (widget, &black);
+      panel_widget_set_background_rgba (widget, &grey);
       panel_widget_set_foreground_rgba (widget, &white);
     }
   else
     {
       panel_widget_set_background_rgba (widget, &white);
-      panel_widget_set_foreground_rgba (widget, &grey);
+      panel_widget_set_foreground_rgba (widget, &black);
     }
-}
-
-static void
-notify_prefer_dark_theme_cb (GtkSettings *settings,
-                             GParamSpec  *pspec,
-                             PanelWidget *widget)
-{
-  apply_theme_color (settings, widget);
 }
 
 static void
@@ -108,7 +95,6 @@ example_window_add_document (ExampleWindow *self)
   GtkWidget *text_view;
   PanelSaveDelegate *save_delegate;
   GtkTextBuffer *buffer;
-  GtkSettings *settings;
   char *title;
 
   g_return_if_fail (EXAMPLE_IS_WINDOW (self));
@@ -140,12 +126,12 @@ example_window_add_document (ExampleWindow *self)
                                                 NULL),
                          NULL);
 
-  settings = gtk_settings_get_default ();
-  g_signal_connect_object (settings,
-                           "notify::gtk-application-prefer-dark-theme",
-                           G_CALLBACK (notify_prefer_dark_theme_cb),
-                           widget, 0);
-  apply_theme_color (settings, widget);
+  g_signal_connect_object (adw_style_manager_get_default (),
+                           "notify",
+                           G_CALLBACK (apply_theme_color),
+                           widget,
+                           G_CONNECT_SWAPPED);
+  apply_theme_color (widget);
 
   g_signal_connect (widget,
                     "get-default-focus",
@@ -261,7 +247,8 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F9, GDK_SHIFT_MASK, "win.reveal-end", NULL);
 
   gdk_rgba_parse (&white, "#fff");
-  gdk_rgba_parse (&grey, "#241f31");
+  gdk_rgba_parse (&grey, "#1e1e1e");
+  gdk_rgba_parse (&black, "#000");
 }
 
 static void
