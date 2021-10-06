@@ -105,8 +105,9 @@ panelframe panelframeswitcher button {
   border-color: transparent;
   margin: 1px;
 }
-panelframe panelframeswitcher button:not(:hover):not(:checked) {
+panelframe panelframeswitcher button:not(:hover):not(:checked):not(:active) {
   background: transparent;
+  color: alpha(currentColor, 0.75);
 }
 
 panelframe .frameheader .action-bar popover row {
