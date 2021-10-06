@@ -594,7 +594,6 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
                               "valign", GTK_ALIGN_BASELINE,
                               "xalign", 0.0f,
                               "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
-                              "label", _("No Open Pages"),
                               "width-chars", 5,
                               NULL);
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->image));
@@ -640,7 +639,7 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
 
   if (page == NULL)
     {
-      gtk_label_set_label (self->title, _("No Open Pages"));
+      gtk_label_set_label (self->title, NULL);
       gtk_label_set_attributes (self->title, NULL);
       gtk_widget_hide (GTK_WIDGET (self->modified));
       gtk_image_clear (self->image);
