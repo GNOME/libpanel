@@ -98,6 +98,10 @@
                     <property name="focus-on-click">false</property>
                     <property name="action-name">frame.close-page-or-frame</property>
                     <property name="icon-name">window-close-symbolic</property>
+                    <property name="valign">center</property>
+                    <style>
+                      <class name="circular"/>
+                    </style>
                   </object>
                 </child>
               </object>

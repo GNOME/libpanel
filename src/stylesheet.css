@@ -43,25 +43,34 @@ panelframe.has-focus panelframeheaderbar {
   border-top: 2px solid @borders;
 }
 panelframeheaderbar > box {
-  margin-left: 6px;
-  margin-right: 6px;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 panelframeheaderbar button:not(:hover):not(:checked) {
   background: transparent;
 }
 panelframeheaderbar button {
-  padding: 3px;
-  margin: 0 1px;
+  padding: 2px 6px;
+  margin: 1px;
   font-weight: normal;
   border-radius: 7px;
 }
-panelframeheaderbar .controls {
+panelgrid panelframeheaderbar .controls {
   margin-right: 4px;
 }
-panelframeheaderbar button.circular {
-  padding: 3px;
-  min-height: 18px;
-  min-width: 18px;
+panelgrid panelresizer:last-child > panelgridcolumn panelframeheaderbar .controls {
+  /* align with window close button on right-most */
+  margin-right: 8px;
+}
+panelframeheaderbar .controls button.circular {
+  padding: 0px;
+  margin: 0px;
+  min-height: 8px;
+  min-width: 8px;
+  border-radius: 9999px;
+}
+panelframeheaderbar .controls button.circular image {
+  margin: 4px;
 }
 
 paneldockchild.end panelpaned.vertical panelresizer panelframe panelframeswitcher,
@@ -80,22 +89,21 @@ panelpaned panelframe panelframeswitcher {
   background: @sidebar_color;
 }
 panelpaned.horizontal panelframe panelframeswitcher {
-  padding: 4px 4px 4px 0;
+  padding: 2px 2px 2px 0;
 }
 panelpaned.vertical panelframe panelframeswitcher {
   padding: 0 2px 2px 2px;
 }
 panelpaned.vertical panelframe panelframeswitcher button {
-  padding: 3px 6px;
-  margin: 0 1px;
+  padding: 2px 6px;
 }
 panelpaned.horizontal panelframe panelframeswitcher button {
-  padding: 6px 0;
-  margin: 1px 3px;
+  padding: 6px 2px;
 }
 panelframe panelframeswitcher button {
-  border-radius: 5px;
+  border-radius: 7px;
   border-color: transparent;
+  margin: 1px;
 }
 panelframe panelframeswitcher button:not(:hover):not(:checked) {
   background: transparent;
