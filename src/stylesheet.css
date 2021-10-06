@@ -52,6 +52,7 @@ panelframeheaderbar button:not(:hover):not(:checked) {
 panelframeheaderbar button {
   padding: 0 3px;
   margin: 3px 1px;
+  font-weight: normal;
 }
 
 paneldockchild.end panelpaned.vertical panelresizer panelframe panelframeswitcher,
