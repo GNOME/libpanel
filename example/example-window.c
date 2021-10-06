@@ -195,6 +195,9 @@ create_frame_cb (PanelGrid     *grid,
   else
     header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
 
+  if (PANEL_IS_FRAME_HEADER_BAR (header))
+    panel_frame_header_bar_set_show_icon (PANEL_FRAME_HEADER_BAR (header), TRUE);
+
   panel_frame_set_header (frame, header);
   panel_frame_header_pack_start (header,
                                  -100,
