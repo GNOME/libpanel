@@ -101,26 +101,6 @@ panel_frame_header_bar_new (void)
 }
 
 static gboolean
-boolean_to_italics (GBinding     *binding,
-                    const GValue *from_value,
-                    GValue       *to_value,
-                    gpointer      user_data)
-{
-  static PangoAttrList *attrs;
-
-  if (attrs == NULL)
-    {
-      attrs = pango_attr_list_new ();
-      pango_attr_list_insert (attrs, pango_attr_style_new (PANGO_STYLE_ITALIC));
-    }
-
-  if (g_value_get_boolean (from_value))
-    g_value_set_boxed (to_value, attrs);
-
-  return TRUE;
-}
-
-static gboolean
 boolean_to_modified (GBinding     *binding,
                      const GValue *from_value,
                      GValue       *to_value,
@@ -599,7 +579,7 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
    * the label, we have to dive into it and modify it directly.
    */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_widget_set_halign (box, GTK_ALIGN_CENTER);
+  gtk_widget_set_halign (box, GTK_ALIGN_START);
   self->modified = g_object_new (GTK_TYPE_LABEL,
                                  "valign", GTK_ALIGN_BASELINE,
                                  "xalign", 0.0f,
@@ -607,11 +587,9 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
                                  "width-chars", 1,
                                  "max-width-chars", 1,
                                  NULL);
-  gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->modified));
   self->image = GTK_IMAGE (gtk_image_new ());
   gtk_widget_set_valign (GTK_WIDGET (self->image), GTK_ALIGN_BASELINE);
   g_object_bind_property (self, "show-icon", self->image, "visible", G_BINDING_SYNC_CREATE);
-  gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->image));
   self->title = g_object_new (GTK_TYPE_LABEL,
                               "valign", GTK_ALIGN_BASELINE,
                               "xalign", 0.0f,
@@ -619,7 +597,9 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
                               "label", _("No Open Pages"),
                               "width-chars", 5,
                               NULL);
+  gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->image));
   gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->title));
+  gtk_box_append (GTK_BOX (box), GTK_WIDGET (self->modified));
   button = gtk_widget_get_first_child (GTK_WIDGET (self->title_button));
   gtk_button_set_child (GTK_BUTTON (button), box);
 
@@ -628,9 +608,6 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   panel_binding_group_bind_full (self->bindings, "modified",
                                  self->modified, "label",
                                  0, boolean_to_modified, NULL, NULL, NULL);
-  panel_binding_group_bind_full (self->bindings, "modified",
-                                 self->title, "attributes",
-                                 0, boolean_to_italics, NULL, NULL, NULL);
   panel_binding_group_bind (self->bindings, "icon", self->image, "gicon", 0);
   panel_binding_group_bind (self->bindings, "background-rgba", self, "background-rgba", 0);
   panel_binding_group_bind (self->bindings, "foreground-rgba", self, "foreground-rgba", 0);
