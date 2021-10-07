@@ -168,3 +168,11 @@ panelstatusbar > menubutton > button label,
 panelstatusbar > button label {
   font-weight: normal;
 }
+
+panelframe .header tabbox tab button {
+ min-height: 0;
+}
+
+panelframe .header tabbar > revealer:first-child > box:first-child {
+ min-height: 34px;
+}
