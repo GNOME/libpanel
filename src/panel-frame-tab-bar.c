@@ -256,6 +256,7 @@ panel_frame_tab_bar_class_init (PanelFrameTabBarClass *klass)
   g_object_class_override_property (object_class, PROP_FRAME, "frame");
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
+  gtk_widget_class_set_css_name (widget_class, "panelframetabbar");
 }
 
 static void
