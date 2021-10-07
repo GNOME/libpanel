@@ -166,6 +166,7 @@ create_frame_cb (PanelGrid     *grid,
   PanelFrameHeader *header;
   AdwStatusPage *status;
   GtkGrid *shortcuts;
+  GtkWidget *child;
 
   g_assert (EXAMPLE_IS_WINDOW (self));
 
@@ -183,7 +184,7 @@ create_frame_cb (PanelGrid     *grid,
   gtk_grid_attach (shortcuts, gtk_label_new ("Ctrl+N"), 1, 0, 1, 1);
   gtk_grid_attach (shortcuts, gtk_label_new ("Close Document"), 0, 1, 1, 1);
   gtk_grid_attach (shortcuts, gtk_label_new ("Ctrl+W"), 1, 1, 1, 1);
-  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (shortcuts));
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (shortcuts));
        child;
        child = gtk_widget_get_next_sibling (child))
     gtk_widget_set_halign (child, GTK_ALIGN_START);
@@ -201,18 +202,22 @@ create_frame_cb (PanelGrid     *grid,
   panel_frame_set_header (frame, header);
   panel_frame_header_pack_start (header,
                                  -100,
-                                 g_object_new (GTK_TYPE_BUTTON,
-                                               "width-request", 40,
-                                               "focus-on-click", FALSE,
-                                               "icon-name", "go-previous-symbolic",
-                                               NULL));
+                                 (child = g_object_new (GTK_TYPE_BUTTON,
+                                                        "width-request", 40,
+                                                        "focus-on-click", FALSE,
+                                                        "icon-name", "go-previous-symbolic",
+                                                        NULL)));
+  gtk_widget_add_css_class (child, "flat");
+
   panel_frame_header_pack_start (header,
                                  -50,
-                                 g_object_new (GTK_TYPE_BUTTON,
-                                               "width-request", 40,
-                                               "focus-on-click", FALSE,
-                                               "icon-name", "go-next-symbolic",
-                                               NULL));
+                                 (child = g_object_new (GTK_TYPE_BUTTON,
+                                                        "width-request", 40,
+                                                        "focus-on-click", FALSE,
+                                                        "icon-name", "go-next-symbolic",
+                                                        NULL)));
+  gtk_widget_add_css_class (child, "flat");
+
   return frame;
 }
 
