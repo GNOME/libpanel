@@ -34,6 +34,7 @@ static void
 on_startup_cb (GtkApplication *app)
 {
   panel_init ();
+  gtk_icon_theme_add_resource_path (gtk_icon_theme_get_for_display (gdk_display_get_default ()), "/icons");
 }
 
 int

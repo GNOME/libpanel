@@ -296,7 +296,7 @@
                                             <property name="spacing">12</property>
                                             <child>
                                               <object class="GtkImage">
-                                                <property name="resource">/builder-vcs-branch-symbolic.svg</property>
+                                                <property name="icon-name">builder-vcs-branch-symbolic</property>
                                               </object>
                                             </child>
                                             <child>
@@ -324,7 +324,7 @@
                                             <property name="spacing">12</property>
                                             <child>
                                               <object class="GtkImage">
-                                                <property name="resource">/builder-build-symbolic.svg</property>
+                                                <property name="icon-name">builder-build-symbolic</property>
                                               </object>
                                             </child>
                                             <child>
@@ -352,7 +352,7 @@
                                             <property name="spacing">12</property>
                                             <child>
                                               <object class="GtkImage">
-                                                <property name="resource">/builder-unit-tests-symbolic.svg</property>
+                                                <property name="icon-name">builder-unit-tests-symbolic</property>
                                               </object>
                                             </child>
                                             <child>
@@ -454,7 +454,7 @@
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="resource">/builder-vcs-branch-symbolic.svg</property>
+                        <property name="icon-name">builder-vcs-branch-symbolic</property>
                       </object>
                     </child>
                     <child>
@@ -473,7 +473,7 @@
             </child>
             <child>
               <object class="GtkImage">
-                <property name="resource">/warnings-symbolic.svg</property>
+                <property name="icon-name">warnings-symbolic</property>
                 <property name="margin-start">9</property>
                 <property name="margin-end">6</property>
               </object>
@@ -486,7 +486,7 @@
             </child>
             <child>
               <object class="GtkImage">
-                <property name="resource">/errors-symbolic.svg</property>
+                <property name="icon-name">errors-symbolic</property>
                 <property name="margin-start">6</property>
                 <property name="margin-end">6</property>
               </object>
