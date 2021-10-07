@@ -575,6 +575,7 @@
             <child>
               <object class="GtkDropDown">
                 <property name="enable-search">true</property>
+                <property name="show-arrow">false</property>
                 <property name="expression">
                   <lookup name="string" type="GtkStringObject"/>
                 </property>
