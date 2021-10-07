@@ -1083,7 +1083,10 @@ _panel_dock_remove_frame (PanelDock  *self,
 
   /* We must at least be in a paned */
   if (!(paned = gtk_widget_get_ancestor (GTK_WIDGET (frame), PANEL_TYPE_PANED)))
-    return;
+    {
+      g_warning ("Attempt to remove frame not in a PanelPaned");
+      return;
+    }
 
   grid_column = gtk_widget_get_ancestor (paned, PANEL_TYPE_GRID_COLUMN);
   grid = gtk_widget_get_ancestor (grid_column, PANEL_TYPE_GRID);
