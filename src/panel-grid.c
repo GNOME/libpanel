@@ -549,13 +549,20 @@ void
 _panel_grid_collapse (PanelGrid       *self,
                       PanelGridColumn *column)
 {
+  guint n_columns;
+
   g_return_if_fail (PANEL_IS_GRID (self));
   g_return_if_fail (PANEL_IS_GRID_COLUMN (column));
 
-  if (!has_pages (column))
-    _panel_grid_remove_column (self, PANEL_GRID_COLUMN (column));
+  n_columns = panel_grid_get_n_columns (self);
 
-  if (panel_grid_get_n_columns (self) < 2)
+  if (!has_pages (column) && n_columns > 1)
+    {
+      _panel_grid_remove_column (self, PANEL_GRID_COLUMN (column));
+      n_columns--;
+    }
+
+  if (n_columns < 2)
     gtk_widget_remove_css_class (GTK_WIDGET (self), "multi-column");
 
   _panel_grid_update_closeable (self);
