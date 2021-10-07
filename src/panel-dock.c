@@ -43,6 +43,11 @@ typedef struct
   guint reveal_end : 1;
   guint reveal_top : 1;
   guint reveal_bottom : 1;
+
+  int start_width;
+  int end_width;
+  int top_height;
+  int bottom_height;
 } PanelDockPrivate;
 
 static void buildable_iface_init (GtkBuildableIface *iface);
@@ -61,6 +66,10 @@ enum {
   PROP_CAN_REVEAL_END,
   PROP_CAN_REVEAL_START,
   PROP_CAN_REVEAL_TOP,
+  PROP_START_WIDTH,
+  PROP_END_WIDTH,
+  PROP_TOP_HEIGHT,
+  PROP_BOTTOM_HEIGHT,
   N_PROPS
 };
 
@@ -309,6 +318,22 @@ panel_dock_set_property (GObject      *object,
       panel_dock_set_reveal_top (self, g_value_get_boolean (value));
       break;
 
+    case PROP_START_WIDTH:
+      panel_dock_set_start_width (self, g_value_get_int (value));
+      break;
+
+    case PROP_END_WIDTH:
+      panel_dock_set_end_width (self, g_value_get_int (value));
+      break;
+
+    case PROP_TOP_HEIGHT:
+      panel_dock_set_top_height (self, g_value_get_int (value));
+      break;
+
+    case PROP_BOTTOM_HEIGHT:
+      panel_dock_set_bottom_height (self, g_value_get_int (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -379,6 +404,34 @@ panel_dock_class_init (PanelDockClass *klass)
                           "Can reveal end",
                           FALSE,
                           (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_START_WIDTH] =
+    g_param_spec_int ("start-width",
+                      "Start Width",
+                      "Start Width",
+                      -1, G_MAXINT, -1,
+                      (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_END_WIDTH] =
+    g_param_spec_int ("end-width",
+                      "End Width",
+                      "End Width",
+                      -1, G_MAXINT, -1,
+                      (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_TOP_HEIGHT] =
+    g_param_spec_int ("top-height",
+                      "Top Height",
+                      "Top Height",
+                      -1, G_MAXINT, -1,
+                      (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_BOTTOM_HEIGHT] =
+    g_param_spec_int ("bottom-height",
+                      "Bottom Height",
+                      "Bottom Height",
+                      -1, G_MAXINT, -1,
+                      (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
@@ -558,6 +611,7 @@ panel_dock_add_child (GtkBuildable *buildable,
   int top;
   int width;
   int height;
+  int drag_position = -1;
 
   g_assert (PANEL_IS_DOCK (self));
   g_assert (GTK_IS_BUILDER (builder));
@@ -570,21 +624,25 @@ panel_dock_add_child (GtkBuildable *buildable,
     {
       position = PANEL_DOCK_POSITION_START;
       reveal = priv->reveal_start;
+      drag_position = priv->start_width;
     }
   else if (g_strcmp0 (type, "end") == 0)
     {
       position = PANEL_DOCK_POSITION_END;
       reveal = priv->reveal_end;
+      drag_position = priv->end_width;
     }
   else if (g_strcmp0 (type, "top") == 0)
     {
       position = PANEL_DOCK_POSITION_TOP;
       reveal = priv->reveal_top;
+      drag_position = priv->top_height;
     }
   else if (g_strcmp0 (type, "bottom") == 0)
     {
       position = PANEL_DOCK_POSITION_BOTTOM;
       reveal = priv->reveal_bottom;
+      drag_position = priv->bottom_height;
     }
   else
     {
@@ -597,6 +655,8 @@ panel_dock_add_child (GtkBuildable *buildable,
   if (!PANEL_IS_DOCK_CHILD (object))
     {
       GtkWidget *dock_child = get_or_create_dock_child (self, position, left, top, width, height);
+
+      panel_dock_child_set_drag_position (PANEL_DOCK_CHILD (dock_child), drag_position);
 
       if (position != PANEL_DOCK_POSITION_CENTER && PANEL_IS_WIDGET (object))
         {
@@ -626,6 +686,8 @@ panel_dock_add_child (GtkBuildable *buildable,
     }
   else
     {
+      if (drag_position != -1)
+        panel_dock_child_set_drag_position (PANEL_DOCK_CHILD (object), drag_position);
       gtk_grid_attach (priv->grid, GTK_WIDGET (object), left, top, width, height);
     }
 
@@ -1050,4 +1112,73 @@ panel_dock_foreach_frame (PanelDock          *self,
       if (PANEL_IS_DOCK_CHILD (child))
         panel_dock_child_foreach_frame (PANEL_DOCK_CHILD (child), callback, user_data);
     }
+}
+
+static void
+panel_dock_set_panel_size (PanelDock         *self,
+                           PanelDockPosition  position,
+                           int                size)
+{
+  g_return_if_fail (PANEL_IS_DOCK (self));
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (!PANEL_IS_DOCK_CHILD (child))
+        continue;
+
+      if (panel_dock_child_get_position (PANEL_DOCK_CHILD (child)) != position)
+        continue;
+
+      panel_dock_child_set_drag_position (PANEL_DOCK_CHILD (child), size);
+    }
+}
+
+void
+panel_dock_set_start_width (PanelDock *self,
+                            int        width)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+
+  priv->start_width = width;
+  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_START, width);
+}
+
+void
+panel_dock_set_end_width (PanelDock *self,
+                          int        width)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+
+  priv->end_width = width;
+  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_END, width);
+}
+
+void
+panel_dock_set_top_height (PanelDock *self,
+                           int        height)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+
+  priv->top_height = height;
+  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_TOP, height);
+}
+
+void
+panel_dock_set_bottom_height (PanelDock *self,
+                              int        height)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+
+  priv->bottom_height = height;
+  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_BOTTOM, height);
 }

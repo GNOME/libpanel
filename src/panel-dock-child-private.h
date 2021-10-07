@@ -30,20 +30,22 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (PanelDockChild, panel_dock_child, PANEL, DOCK_CHILD, GtkWidget)
 
-GtkWidget         *panel_dock_child_new              (PanelDockPosition   position);
-PanelDockPosition  panel_dock_child_get_position     (PanelDockChild     *self);
-GtkWidget         *panel_dock_child_get_child        (PanelDockChild     *self);
-void               panel_dock_child_set_child        (PanelDockChild     *self,
-                                                      GtkWidget          *child);
-gboolean           panel_dock_child_get_reveal_child (PanelDockChild     *self);
-void               panel_dock_child_set_reveal_child (PanelDockChild     *self,
-                                                      gboolean            reveal_child);
-gboolean           panel_dock_child_get_empty        (PanelDockChild     *self);
-gboolean           panel_dock_child_get_dragging     (PanelDockChild     *self);
-void               panel_dock_child_set_dragging     (PanelDockChild     *self,
-                                                      gboolean            dragging);
-void               panel_dock_child_foreach_frame    (PanelDockChild     *self,
-                                                      PanelFrameCallback  callback,
-                                                      gpointer            user_data);
+GtkWidget         *panel_dock_child_new               (PanelDockPosition   position);
+PanelDockPosition  panel_dock_child_get_position      (PanelDockChild     *self);
+GtkWidget         *panel_dock_child_get_child         (PanelDockChild     *self);
+void               panel_dock_child_set_child         (PanelDockChild     *self,
+                                                       GtkWidget          *child);
+gboolean           panel_dock_child_get_reveal_child  (PanelDockChild     *self);
+void               panel_dock_child_set_reveal_child  (PanelDockChild     *self,
+                                                       gboolean            reveal_child);
+gboolean           panel_dock_child_get_empty         (PanelDockChild     *self);
+gboolean           panel_dock_child_get_dragging      (PanelDockChild     *self);
+void               panel_dock_child_set_dragging      (PanelDockChild     *self,
+                                                       gboolean            dragging);
+void               panel_dock_child_foreach_frame     (PanelDockChild     *self,
+                                                       PanelFrameCallback  callback,
+                                                       gpointer            user_data);
+void               panel_dock_child_set_drag_position (PanelDockChild     *self,
+                                                       int                 drag_position);
 
 G_END_DECLS

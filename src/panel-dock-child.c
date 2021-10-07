@@ -385,3 +385,12 @@ panel_dock_child_foreach_frame (PanelDockChild     *self,
       _panel_grid_foreach_frame (PANEL_GRID (child), callback, user_data);
     }
 }
+
+void
+panel_dock_child_set_drag_position (PanelDockChild *self,
+                                    int             drag_position)
+{
+  g_return_if_fail (PANEL_IS_DOCK_CHILD (self));
+
+  panel_resizer_set_drag_position (self->resizer, drag_position);
+}

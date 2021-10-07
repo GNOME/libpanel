@@ -86,6 +86,18 @@ gboolean   panel_dock_get_can_reveal_start  (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
 gboolean   panel_dock_get_can_reveal_end    (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
+void       panel_dock_set_start_width       (PanelDock          *self,
+                                             int                 width);
+PANEL_AVAILABLE_IN_ALL
+void       panel_dock_set_end_width         (PanelDock          *self,
+                                             int                 width);
+PANEL_AVAILABLE_IN_ALL
+void       panel_dock_set_top_height        (PanelDock          *self,
+                                             int                 height);
+PANEL_AVAILABLE_IN_ALL
+void       panel_dock_set_bottom_height     (PanelDock          *self,
+                                             int                 height);
+PANEL_AVAILABLE_IN_ALL
 void       panel_dock_foreach_frame         (PanelDock          *self,
                                              PanelFrameCallback  callback,
                                              gpointer            user_data);

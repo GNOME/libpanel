@@ -94,6 +94,7 @@
             <property name="reveal-start">false</property>
             <property name="reveal-bottom">true</property>
             <property name="reveal-end">false</property>
+            <property name="start-width">250</property>
             <property name="vexpand">true</property>
             <child>
               <object class="PanelGrid" id="grid">
