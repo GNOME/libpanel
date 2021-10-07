@@ -169,10 +169,17 @@ panelstatusbar > button label {
   font-weight: normal;
 }
 
-panelframe .header tabbox tab button {
+panelframe panelframetabbar > overlay > box.focus-handle,
+paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframetabbar box.focus-handle {
+  min-height: 2px;
+  background: transparent;
+}
+panelframe.has-focus panelframetabbar > overlay > box.focus-handle {
+  background: @accent_bg_color;
+}
+panelframe panelframetabbar tabbox tab button {
  min-height: 0;
 }
-
-panelframe .header tabbar > revealer:first-child > box:first-child {
+panelframe panelframetabbar tabbar > revealer:first-child > box:first-child {
  min-height: 34px;
 }

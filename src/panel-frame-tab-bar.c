@@ -28,12 +28,16 @@
 
 struct _PanelFrameTabBar
 {
-  GtkWidget      parent_instance;
-  PanelFrame    *frame;
-  AdwTabBar     *tab_bar;
-  GtkBox        *start_area;
-  GtkBox        *end_area;
-  GtkMenuButton *menu_button;
+  GtkWidget          parent_instance;
+
+  GtkSelectionModel *pages;
+  PanelFrame        *frame;
+
+  GtkOverlay        *overlay;
+  AdwTabBar         *tab_bar;
+  GtkBox            *start_area;
+  GtkBox            *end_area;
+  GtkMenuButton     *menu_button;
 };
 
 static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
@@ -74,6 +78,10 @@ on_pages_items_changed_cb (PanelFrameTabBar  *self,
   g_assert (PANEL_IS_FRAME_TAB_BAR (self));
   g_assert (GTK_IS_SELECTION_MODEL (model));
 
+  if (g_list_model_get_n_items (G_LIST_MODEL (model)) == 0)
+    gtk_widget_show (GTK_WIDGET (self->menu_button));
+  else
+    gtk_widget_hide (GTK_WIDGET (self->menu_button));
 }
 
 static void
@@ -88,10 +96,7 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
 
   if (self->frame)
     {
-      AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
-      g_autoptr(GtkSelectionModel) pages = adw_tab_view_get_pages (tab_view);
-
-      g_signal_handlers_disconnect_by_func (pages,
+      g_signal_handlers_disconnect_by_func (self->pages,
                                             G_CALLBACK (on_pages_items_changed_cb),
                                             self);
 
@@ -101,14 +106,15 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
     }
 
   g_set_object (&self->frame, frame);
+  g_clear_object (&self->pages);
 
   if (self->frame)
     {
-      GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
       AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
-      g_autoptr(GtkSelectionModel) pages = adw_tab_view_get_pages (tab_view);
+      GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
 
-      g_signal_connect_object (pages,
+      self->pages = adw_tab_view_get_pages (tab_view);
+      g_signal_connect_object (self->pages,
                                "items-changed",
                                G_CALLBACK (on_pages_items_changed_cb),
                                self,
@@ -160,10 +166,19 @@ static void
 panel_frame_tab_bar_dispose (GObject *object)
 {
   PanelFrameTabBar *self = (PanelFrameTabBar *)object;
+  GtkWidget *child;
 
   panel_frame_tab_bar_set_frame (self, NULL);
 
-  g_clear_pointer ((GtkWidget **)&self->tab_bar, gtk_widget_unparent);
+  g_assert (self->frame == NULL);
+  g_assert (self->pages == NULL);
+
+  self->tab_bar = NULL;
+  self->start_area = NULL;
+  self->end_area = NULL;
+
+  while ((child = gtk_widget_get_first_child (GTK_WIDGET (self))))
+    gtk_widget_unparent (child);
 
   G_OBJECT_CLASS (panel_frame_tab_bar_parent_class)->dispose (object);
 }
@@ -263,11 +278,16 @@ static void
 panel_frame_tab_bar_init (PanelFrameTabBar *self)
 {
   GtkEventController *controller;
-  GtkBox *vbox;
-  GtkBox *hbox;
+  GtkWidget *box;
 
-  vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
-  gtk_widget_set_parent (GTK_WIDGET (vbox), GTK_WIDGET (self));
+  self->overlay = GTK_OVERLAY (gtk_overlay_new ());
+  gtk_widget_set_parent (GTK_WIDGET (self->overlay), GTK_WIDGET (self));
+
+  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_widget_set_valign (box, GTK_ALIGN_START);
+  gtk_widget_set_hexpand (box, TRUE);
+  gtk_overlay_add_overlay (self->overlay, box);
+  gtk_widget_add_css_class (box, "focus-handle");
 
   self->tab_bar = ADW_TAB_BAR (adw_tab_bar_new ());
   adw_tab_bar_set_autohide (self->tab_bar, FALSE);
@@ -276,29 +296,24 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
                            G_CALLBACK (panel_frame_tab_bar_notify_cb),
                            self,
                            G_CONNECT_SWAPPED);
-  gtk_box_prepend (vbox, GTK_WIDGET (self->tab_bar));
-
-  hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  gtk_widget_add_css_class (GTK_WIDGET(hbox), "action-bar");
-  gtk_box_append (vbox, GTK_WIDGET (hbox));
+  gtk_overlay_set_child (self->overlay, GTK_WIDGET (self->tab_bar));
 
   self->start_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  gtk_widget_set_hexpand (GTK_WIDGET (self->start_area), TRUE);
-  gtk_box_prepend (hbox, GTK_WIDGET (self->start_area));
+  adw_tab_bar_set_start_action_widget (self->tab_bar, GTK_WIDGET (self->start_area));
 
   self->end_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  gtk_widget_set_hexpand (GTK_WIDGET (self->end_area), TRUE);
-  gtk_box_append (hbox, GTK_WIDGET (self->end_area));
+  adw_tab_bar_set_end_action_widget (self->tab_bar, GTK_WIDGET (self->end_area));
 
-  self->menu_button = GTK_MENU_BUTTON (gtk_menu_button_new ());
-  gtk_menu_button_set_icon_name (self->menu_button, "open-menu-symbolic");
-  gtk_box_append (hbox, GTK_WIDGET (self->menu_button));
+  self->menu_button = g_object_new (GTK_TYPE_MENU_BUTTON,
+                                    "icon-name", "open-menu-symbolic",
+                                    "visible", FALSE,
+                                    NULL);
+  gtk_box_append (self->end_area, GTK_WIDGET (self->menu_button));
 
   controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
   g_signal_connect_object (controller, "pressed",
                            G_CALLBACK (menu_clicked_cb), self, 0);
   gtk_widget_add_controller (GTK_WIDGET (self), controller);
-
 }
 
 static gboolean
