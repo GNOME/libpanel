@@ -37,6 +37,7 @@ struct _PanelResizer
   double             drag_orig_size;
   double             drag_position;
 
+  guint              drag_position_set : 1;
   PanelDockPosition  position : 3;
 };
 
@@ -124,6 +125,7 @@ start_drag:
     }
 
   self->drag_position = self->drag_orig_size;
+  self->drag_position_set = TRUE;
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
 }
@@ -209,10 +211,13 @@ panel_resizer_measure (GtkWidget      *widget,
     {
       int handle_min, handle_nat;
 
-      if (self->drag_position > *minimum)
-        *natural = self->drag_position;
-      else if (self->drag_position < *minimum)
-        *natural = *minimum;
+      if (self->drag_position_set)
+        {
+          if (self->drag_position > *minimum)
+            *natural = self->drag_position;
+          else if (self->drag_position < *minimum)
+            *natural = *minimum;
+        }
 
       if (gtk_widget_get_visible (GTK_WIDGET (self->handle)))
         {
