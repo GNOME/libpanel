@@ -220,8 +220,8 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="background-rgba">#fff</property>
-                        <property name="icon-name">video-joined-displays-symbolic</property>
-                        <property name="title">Remote Displays</property>
+                        <property name="icon-name">edit-find-symbolic</property>
+                        <property name="title">Find in Files</property>
                         <property name="can-maximize">true</property>
                         <child>
                           <object class="GtkTextView">
@@ -232,13 +232,51 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="background-rgba">#fff</property>
-                        <property name="title">Timeline</property>
-                        <property name="icon-name">slideshow-symbolic</property>
+                        <property name="title">Terminal</property>
+                        <property name="icon-name">utilities-terminal-symbolic</property>
                         <property name="can-maximize">true</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <child>
-                              <object class="GtkListBox"></object>
+                              <object class="GtkTextView">
+                                <property name="monospace">true</property>
+                                <property name="overwrite">true</property>
+                                <property name="buffer">
+                                  <object class="GtkTextBuffer">
+                                    <property name="text">christian@fedora libpanel]$ </property>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="background-rgba">#000</property>
+                        <property name="title">Build Output</property>
+                        <property name="icon-name">builder-build-symbolic</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkTextView"></object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="PanelWidget">
+                        <property name="background-rgba">#000</property>
+                        <property name="title">Application Output</property>
+                        <property name="icon-name">media-playback-start-symbolic</property>
+                        <property name="can-maximize">true</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkTextView"></object>
                             </child>
                           </object>
                         </child>
@@ -257,8 +295,8 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="background-rgba">#fff</property>
-                        <property name="icon-name">folder-symbolic</property>
-                        <property name="title">Files</property>
+                        <property name="icon-name">view-list-symbolic</property>
+                        <property name="title">Project Tree</property>
                         <property name="can-maximize">true</property>
                         <child>
                           <object class="GtkBox">
@@ -408,8 +446,8 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="background-rgba">#fff</property>
-                        <property name="title">Targets</property>
-                        <property name="icon-name">applications-engineering-symbolic</property>
+                        <property name="title">Build Issues</property>
+                        <property name="icon-name">builder-build-symbolic</property>
                         <property name="can-maximize">true</property>
                         <child>
                           <object class="GtkScrolledWindow">
@@ -420,19 +458,17 @@
                         </child>
                       </object>
                     </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="PanelFrame">
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="PanelWidget">
                         <property name="background-rgba">#fff</property>
-                        <property name="icon-name">help-contents-symbolic</property>
-                        <property name="title">Documentation</property>
+                        <property name="title">TODOs/FIXMEs</property>
+                        <property name="icon-name">object-select-symbolic</property>
                         <property name="can-maximize">true</property>
                         <child>
-                          <object class="GtkTextView">
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkListBox"></object>
+                            </child>
                           </object>
                         </child>
                       </object>
