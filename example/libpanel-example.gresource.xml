@@ -3,6 +3,8 @@
   <gresource prefix="/">
     <file>example-window.ui</file>
     <file>builder-vcs-branch-symbolic.svg</file>
+    <file>builder-build-symbolic.svg</file>
+    <file>builder-unit-tests-symbolic.svg</file>
     <file>errors-symbolic.svg</file>
     <file>warnings-symbolic.svg</file>
   </gresource>

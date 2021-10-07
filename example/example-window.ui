@@ -261,7 +261,146 @@
                         <property name="title">Files</property>
                         <property name="can-maximize">true</property>
                         <child>
-                          <object class="GtkTextView">
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label">Project Tree</property>
+                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">6</property>
+                                <property name="margin-start">6</property>
+                                <property name="margin-end">6</property>
+                                <property name="xalign">0</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                  <attribute name="scale" value="0.833"/>
+                                  <attribute name="foreground-alpha" value="33000"/>
+                                </attributes>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="propagate-natural-height">true</property>
+                                <property name="propagate-natural-width">true</property>
+                                <property name="vexpand">true</property>
+                                <child>
+                                  <object class="GtkListBox">
+                                    <child>
+                                      <object class="GtkListBoxRow">
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="margin-start">6</property>
+                                            <property name="margin-end">6</property>
+                                            <property name="spacing">12</property>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="resource">/builder-vcs-branch-symbolic.svg</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="xalign">0</property>
+                                                <property name="hexpand">true</property>
+                                                <property name="label">Version Control</property>
+                                                <attributes>
+                                                  <attribute name="weight" value="bold"/>
+                                                </attributes>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkListBoxRow">
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="margin-start">6</property>
+                                            <property name="margin-end">6</property>
+                                            <property name="spacing">12</property>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="resource">/builder-build-symbolic.svg</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="xalign">0</property>
+                                                <property name="hexpand">true</property>
+                                                <property name="label">Build Targets</property>
+                                                <attributes>
+                                                  <attribute name="weight" value="bold"/>
+                                                </attributes>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkListBoxRow">
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="margin-start">6</property>
+                                            <property name="margin-end">6</property>
+                                            <property name="spacing">12</property>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="resource">/builder-unit-tests-symbolic.svg</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="xalign">0</property>
+                                                <property name="hexpand">true</property>
+                                                <property name="label">Unit Tests</property>
+                                                <attributes>
+                                                  <attribute name="weight" value="bold"/>
+                                                </attributes>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkListBoxRow">
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="margin-start">6</property>
+                                            <property name="margin-end">6</property>
+                                            <property name="spacing">12</property>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="icon-name">view-list-symbolic</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="xalign">0</property>
+                                                <property name="hexpand">true</property>
+                                                <property name="label">Files</property>
+                                                <attributes>
+                                                  <attribute name="weight" value="bold"/>
+                                                </attributes>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
