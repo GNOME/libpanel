@@ -728,6 +728,14 @@ frame_header_iface_init (PanelFrameHeaderInterface *iface)
   iface->pack_end = panel_frame_header_bar_pack_end;
 }
 
+/**
+ * panel_frame_header_bar_get_menu_popover:
+ * @self: a #PanelFrameHeaderBar
+ *
+ * Gets the menu popover attached to this menubar.
+ *
+ * Returns: (transfer none): a #GtkPopoverMenu
+ */
 GtkPopoverMenu *
 panel_frame_header_bar_get_menu_popover (PanelFrameHeaderBar *self)
 {
@@ -736,6 +744,14 @@ panel_frame_header_bar_get_menu_popover (PanelFrameHeaderBar *self)
   return GTK_POPOVER_MENU (gtk_menu_button_get_popover (self->menu_button));
 }
 
+/**
+ * panel_frame_header_bar_get_background_rgba:
+ * @self: a #PanelFrameHeaderBar
+ *
+ * Gets the background color of the header bar.
+ *
+ * Returns: (nullable): the background color
+ */
 const GdkRGBA *
 panel_frame_header_bar_get_background_rgba (PanelFrameHeaderBar *self)
 {
@@ -744,6 +760,13 @@ panel_frame_header_bar_get_background_rgba (PanelFrameHeaderBar *self)
   return self->background_rgba_set ? &self->background_rgba : NULL;
 }
 
+/**
+ * panel_frame_header_bar_set_background_rgba:
+ * @self: a #PanelFrameHeaderBar
+ * @background_rgba: (nullable): the background color
+ *
+ * Sets the background color of the header bar.
+ */
 void
 panel_frame_header_bar_set_background_rgba (PanelFrameHeaderBar *self,
                                             const GdkRGBA       *background_rgba)
@@ -757,6 +780,14 @@ panel_frame_header_bar_set_background_rgba (PanelFrameHeaderBar *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BACKGROUND_RGBA]);
 }
 
+/**
+ * panel_frame_header_bar_get_foreground_rgba:
+ * @self: a #PanelFrameHeaderBar
+ *
+ * Gets the foreground color of the header bar.
+ *
+ * Returns: (nullable): the foreground color
+ */
 const GdkRGBA *
 panel_frame_header_bar_get_foreground_rgba (PanelFrameHeaderBar *self)
 {
@@ -765,6 +796,13 @@ panel_frame_header_bar_get_foreground_rgba (PanelFrameHeaderBar *self)
   return self->foreground_rgba_set ? &self->foreground_rgba : NULL;
 }
 
+/**
+ * panel_frame_header_bar_set_foreground_rgba:
+ * @self: a #PanelFrameHeaderBar
+ * @foreground_rgba: (nullable): the foreground color
+ *
+ * Sets the foreground color of the header bar.
+ */
 void
 panel_frame_header_bar_set_foreground_rgba (PanelFrameHeaderBar *self,
                                             const GdkRGBA       *foreground_rgba)

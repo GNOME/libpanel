@@ -39,7 +39,7 @@ struct _PanelFrameHeaderInterface
   GTypeInterface parent_iface;
 
   void     (*page_changed) (PanelFrameHeader *self,
-                            PanelWidget      *page);
+                            PanelWidget      *widget);
   gboolean (*can_drop)     (PanelFrameHeader *self,
                             PanelWidget      *widget);
   void     (*pack_start)   (PanelFrameHeader *self,

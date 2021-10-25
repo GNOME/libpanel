@@ -815,6 +815,13 @@ panel_frame_init (PanelFrame *self)
   panel_frame_update_actions (self);
 }
 
+/**
+ * panel_frame_add:
+ * @self: a #PanelFrame
+ * @panel: a widget to add
+ *
+ * Adds a widget to the frame.
+ */
 void
 panel_frame_add (PanelFrame  *self,
                  PanelWidget *panel)
@@ -846,6 +853,13 @@ panel_frame_add (PanelFrame  *self,
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_EMPTY]);
 }
 
+/**
+ * panel_frame_remove:
+ * @self: a #PanelFrame
+ * @panel: a widget to add
+ *
+ * Removes a widget from the frame.
+ */
 void
 panel_frame_remove (PanelFrame  *self,
                     PanelWidget *panel)
@@ -888,6 +902,14 @@ panel_frame_get_empty (PanelFrame *self)
   return adw_tab_view_get_selected_page (priv->tab_view) == NULL;
 }
 
+/**
+ * panel_frame_get_visible_child:
+ * @self: a #PanelFrame
+ *
+ * Gets the widget of the currently visible child.
+ *
+ * Returns: (transfer none) (nullable): a #PanelWidget or %NULL
+ */
 PanelWidget *
 panel_frame_get_visible_child (PanelFrame *self)
 {
@@ -901,6 +923,13 @@ panel_frame_get_visible_child (PanelFrame *self)
   return page ? PANEL_WIDGET (adw_tab_page_get_child (page)) : NULL;
 }
 
+/**
+ * panel_frame_set_visible_child:
+ * @self: a #PanelFrame
+ * @widget: (not nullable): a #PanelWidget
+ *
+ * Sets the current page to the child specified in @widget.
+ */
 void
 panel_frame_set_visible_child (PanelFrame  *self,
                                PanelWidget *widget)
@@ -931,7 +960,7 @@ _panel_frame_get_tab_view (PanelFrame *self)
  *
  * Gets the header for the frame.
  *
- * Returns: (transfer none): a #PanelFrameHeader
+ * Returns: (nullable) (transfer none): a #PanelFrameHeader or %NULL
  */
 PanelFrameHeader *
 panel_frame_get_header (PanelFrame *self)
@@ -947,7 +976,7 @@ panel_frame_get_header (PanelFrame *self)
 /**
  * panel_frame_set_header:
  * @self: a #PanelFrame
- * @header: a #PanelFrameHeader
+ * @header: (nullable): a #PanelFrameHeader
  *
  * Sets the header for the frame, such as a #PanelFrameSwitcher.
  */
@@ -1059,6 +1088,15 @@ panel_frame_get_n_pages (PanelFrame *self)
   return adw_tab_view_get_n_pages (priv->tab_view);
 }
 
+/**
+ * panel_frame_get_page:
+ * @self: a #PanelFrame
+ * @n: the index of the page
+ *
+ * Gets the page with the given index, if any.
+ *
+ * Returns: (nullable) (transfer none): a #PanelWidget or %NULL
+ */
 PanelWidget *
 panel_frame_get_page (PanelFrame *self,
                       guint       n)

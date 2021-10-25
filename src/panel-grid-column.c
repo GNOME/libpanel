@@ -79,6 +79,14 @@ panel_grid_column_get_empty (PanelGridColumn *self)
   return panel_paned_get_n_children (self->rows) == 0;
 }
 
+/**
+ * panel_grid_column_get_most_recent_frame:
+ * @self: a #PanelGridColumn
+ *
+ * Gets the most recently acive frame on a grid column.
+ *
+ * Returns: (transfer none): a #PanelGridFrame
+ */
 PanelFrame *
 panel_grid_column_get_most_recent_frame (PanelGridColumn *self)
 {
@@ -89,6 +97,15 @@ panel_grid_column_get_most_recent_frame (PanelGridColumn *self)
   return panel_grid_column_get_row (self, 0);
 }
 
+/**
+ * panel_grid_column_get_row:
+ * @self: a #PanelGridColumn
+ * @row: the index of the row
+ *
+ * Gets the frame corresponding to a row index.
+ *
+ * Returns: (transfer none): a #PanelGridFrame
+ */
 PanelFrame *
 panel_grid_column_get_row (PanelGridColumn *self,
                            guint            row)
@@ -120,6 +137,14 @@ panel_grid_column_get_n_rows (PanelGridColumn *self)
   return panel_paned_get_n_children (self->rows);
 }
 
+/**
+ * panel_grid_column_foreach_frame:
+ * @self: a #PanelGridColumn
+ * @callback: (not nullable) (scope call): a function to be called on each frame
+ * @user_data: (closure callback): data to pass to @callback
+ *
+ * Invokes a callback for each frame in the grid column.
+ */
 void
 panel_grid_column_foreach_frame (PanelGridColumn    *self,
                                  PanelFrameCallback  callback,

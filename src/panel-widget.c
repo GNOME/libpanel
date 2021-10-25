@@ -331,6 +331,11 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           FALSE,
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelWidget:icon: (nullable):
+   *
+   * The icon for this widget.
+   */
   properties [PROP_ICON] =
     g_param_spec_object ("icon",
                          "Icon",
@@ -338,6 +343,11 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          G_TYPE_ICON,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY |G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelWidget:icon-name: (nullable):
+   *
+   * The icon name for this widget.
+   */
   properties [PROP_ICON_NAME] =
     g_param_spec_string ("icon-name",
                          "Icon Name",
@@ -352,6 +362,12 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          "unknown",
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelWidget:menu-model: (nullable):
+   *
+   * A menu model to display additional options for the page to the user via
+   * menus.
+   */
   properties [PROP_MENU_MODEL] =
     g_param_spec_object ("menu-model",
                          "Menu Model",
@@ -366,6 +382,11 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           FALSE,
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelWidget:title: (nullable):
+   *
+   * The title for this widget.
+   */
   properties [PROP_TITLE] =
     g_param_spec_string ("title",
                          "Title",
@@ -373,6 +394,11 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          NULL,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelWidget:child: (nullable):
+   *
+   * The child inside this widget.
+   */
   properties [PROP_CHILD] =
     g_param_spec_object ("child",
                          "Child",
@@ -394,6 +420,11 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           FALSE,
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelWidget:save-delegate: (nullable):
+   *
+   * The save delegate attached to this widget.
+   */
   properties [PROP_SAVE_DELEGATE] =
     g_param_spec_object ("save-delegate",
                          "Save Delegate",
@@ -446,6 +477,14 @@ panel_widget_init (PanelWidget *self)
   priv->reorderable = TRUE;
 }
 
+/**
+ * panel_widget_get_icon_name:
+ * @self: a #PanelWidget
+ *
+ * Gets the icon name for the widget.
+ *
+ * Returns: (transfer none) (nullable): the icon name or %NULL
+ */
 const char *
 panel_widget_get_icon_name (PanelWidget *self)
 {
@@ -464,6 +503,13 @@ panel_widget_get_icon_name (PanelWidget *self)
   return priv->icon_name;
 }
 
+/**
+ * panel_widget_set_icon_name:
+ * @self: a #PanelWidget
+ * @icon_name: (transfer none) (nullable): the icon name or %NULL
+ *
+ * Sets the icon name for the widget.
+ */
 void
 panel_widget_set_icon_name (PanelWidget *self,
                             const char  *icon_name)
@@ -488,7 +534,7 @@ panel_widget_set_icon_name (PanelWidget *self,
  *
  * Gets a #GIcon for the widget.
  *
- * Returns: (transfer none) (nullable): a #GIcon or NULL
+ * Returns: (transfer none) (nullable): a #GIcon or %NULL
  */
 GIcon *
 panel_widget_get_icon (PanelWidget *self)
@@ -503,6 +549,13 @@ panel_widget_get_icon (PanelWidget *self)
   return priv->icon;
 }
 
+/**
+ * panel_widget_set_icon:
+ * @self: a #PanelWidget
+ * @icon: (transfer none) (nullable): a #GIcon or %NULL
+ *
+ * Sets a #GIcon for the widget.
+ */
 void
 panel_widget_set_icon (PanelWidget *self,
                        GIcon       *icon)
@@ -551,6 +604,14 @@ panel_widget_set_modified (PanelWidget *self,
     }
 }
 
+/**
+ * panel_widget_get_title:
+ * @self: a #PanelWidget
+ *
+ * Gets the title for the widget.
+ *
+ * Returns: (transfer none) (nullable): the title or %NULL
+ */
 const char *
 panel_widget_get_title (PanelWidget *self)
 {
@@ -561,6 +622,13 @@ panel_widget_get_title (PanelWidget *self)
   return priv->title;
 }
 
+/**
+ * panel_widget_set_title:
+ * @self: a #PanelWidget
+ * @title: (transfer none) (nullable): the title or %NULL
+ *
+ * Sets the title for the widget.
+ */
 void
 panel_widget_set_title (PanelWidget *self,
                         const char  *title)
@@ -595,6 +663,13 @@ panel_widget_get_child (PanelWidget *self)
   return priv->child;
 }
 
+/**
+ * panel_widget_set_child:
+ * @self: a #PanelWidget
+ * @child: (nullable): a #GtkWidget or %NULL
+ *
+ * Sets the child widget of the panel.
+ */
 void
 panel_widget_set_child (PanelWidget *self,
                         GtkWidget   *child)
@@ -750,6 +825,13 @@ panel_widget_get_kind (PanelWidget *self)
   return g_quark_to_string (priv->kind);
 }
 
+/**
+ * panel_widget_set_kind:
+ * @self: a #PanelWidget
+ * @kind: (nullable): the kind of this widget
+ *
+ * Sets the kind of the widget.
+ */
 void
 panel_widget_set_kind (PanelWidget *self,
                        const char  *kind)
@@ -833,6 +915,14 @@ panel_widget_unmark_busy (PanelWidget *self)
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BUSY]);
 }
 
+/**
+ * panel_widget_get_background_rgba:
+ * @self: a #PanelWidget
+ *
+ * Gets the background color of the widget.
+ *
+ * Returns: (nullable): the background color
+ */
 const GdkRGBA *
 panel_widget_get_background_rgba (PanelWidget *self)
 {
@@ -843,6 +933,13 @@ panel_widget_get_background_rgba (PanelWidget *self)
   return priv->background_rgba_set ? &priv->background_rgba : NULL;
 }
 
+/**
+ * panel_widget_set_background_rgba:
+ * @self: a #PanelWidget
+ * @background_rgba: (nullable): the background color
+ *
+ * Sets the background color of the widget.
+ */
 void
 panel_widget_set_background_rgba (PanelWidget   *self,
                                   const GdkRGBA *background_rgba)
@@ -863,6 +960,14 @@ panel_widget_set_background_rgba (PanelWidget   *self,
     }
 }
 
+/**
+ * panel_widget_get_foreground_rgba:
+ * @self: a #PanelWidget
+ *
+ * Gets the foreground color of the widget.
+ *
+ * Returns: (nullable): the foreground color
+ */
 const GdkRGBA *
 panel_widget_get_foreground_rgba (PanelWidget *self)
 {
@@ -873,6 +978,13 @@ panel_widget_get_foreground_rgba (PanelWidget *self)
   return priv->foreground_rgba_set ? &priv->foreground_rgba : NULL;
 }
 
+/**
+ * panel_widget_set_foreground_rgba:
+ * @self: a #PanelWidget
+ * @foreground_rgba: (nullable): the foreground color
+ *
+ * Sets the foreground color of the widget.
+ */
 void
 panel_widget_set_foreground_rgba (PanelWidget   *self,
                                   const GdkRGBA *foreground_rgba)
@@ -914,6 +1026,16 @@ panel_widget_get_menu_model (PanelWidget *self)
   return priv->menu_model;
 }
 
+/**
+ * panel_widget_set_menu_model:
+ * @self: a #PanelWidget
+ * @menu_model: (transfer none) (nullable): a #GMenuModel
+ *
+ * Sets the #GMenuModel for the widget.
+ *
+ * #PanelFrameHeader may use this model to display additional options
+ * for the page to the user via menus.
+ */
 void
 panel_widget_set_menu_model (PanelWidget *self,
                              GMenuModel  *menu_model)
@@ -1056,6 +1178,18 @@ panel_widget_get_save_delegate (PanelWidget *self)
   return priv->save_delegate;
 }
 
+/**
+ * panel_widget_set_save_delegate:
+ * @self: a #PanelWidget
+ * @save_delegate: (transfer none) (nullable): a #PanelSaveDelegate or %NULL
+ *
+ * Sets the #PanelWidget:save-delegate property.
+ *
+ * The save delegate may be used to perform save operations on the
+ * content within the widget.
+ *
+ * Document editors might use this to save the file to disk.
+ */
 void
 panel_widget_set_save_delegate (PanelWidget       *self,
                                 PanelSaveDelegate *save_delegate)
