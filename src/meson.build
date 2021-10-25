@@ -135,3 +135,20 @@ libpanel_pc = pkgconfig.generate(libpanel,
 
 install_headers(libpanel_headers,
                 subdir: 'libpanel-@0@'.format(ABI_MAJOR))
+
+libpanel_gir = gnome.generate_gir(libpanel,
+              sources: libpanel_generated_headers +
+                       libpanel_generated_sources +
+                       libpanel_headers +
+                       libpanel_sources,
+            nsversion: ABI_MAJOR,
+            namespace: 'Panel',
+      export_packages: 'libpanel-@0@'.format(ABI_MAJOR),
+               header: 'libpanel.h',
+        symbol_prefix: 'panel',
+    identifier_prefix: 'Panel',
+            link_with: libpanel,
+  include_directories: [include_directories('.')],
+             includes: ['Gtk-4.0', 'Adw-1'],
+              install: true,
+)
