@@ -310,6 +310,14 @@ panel_save_delegate_init (PanelSaveDelegate *self)
 {
 }
 
+/**
+ * panel_save_delegate_get_icon_name:
+ * @self: a #PanelSaveDelegate
+ *
+ * Gets the icon name for the save delegate.
+ *
+ * Returns: (transfer none) (nullable): the icon name or %NULL
+ */
 const char *
 panel_save_delegate_get_icon_name (PanelSaveDelegate *self)
 {
@@ -326,6 +334,13 @@ panel_save_delegate_get_icon_name (PanelSaveDelegate *self)
   return priv->icon_name;
 }
 
+/**
+ * panel_save_delegate_set_icon_name:
+ * @self: a #PanelSaveDelegate
+ * @icon: (transfer none) (nullable): the icon name or %NULL
+ *
+ * Sets the icon name for the save delegate. Pass %NULL to unset.
+ */
 void
 panel_save_delegate_set_icon_name (PanelSaveDelegate *self,
                                    const char        *icon_name)
@@ -346,6 +361,14 @@ panel_save_delegate_set_icon_name (PanelSaveDelegate *self,
     }
 }
 
+/**
+ * panel_save_delegate_get_subtitle:
+ * @self: a #PanelSaveDelegate
+ *
+ * Gets the subtitle for the save delegate.
+ *
+ * Returns: (transfer none) (nullable): the subtitle or %NULL
+ */
 const char *
 panel_save_delegate_get_subtitle (PanelSaveDelegate *self)
 {
@@ -356,6 +379,13 @@ panel_save_delegate_get_subtitle (PanelSaveDelegate *self)
   return priv->subtitle;
 }
 
+/**
+ * panel_save_delegate_set_subtitle:
+ * @self: a #PanelSaveDelegate
+ * @subtitle: (transfer none) (nullable): the subtitle or %NULL
+ *
+ * Sets the subtitle for the save delegate. Pass %NULL to unset.
+ */
 void
 panel_save_delegate_set_subtitle (PanelSaveDelegate *self,
                                   const char        *subtitle)
@@ -372,6 +402,14 @@ panel_save_delegate_set_subtitle (PanelSaveDelegate *self,
     }
 }
 
+/**
+ * panel_save_delegate_get_title:
+ * @self: a #PanelSaveDelegate
+ *
+ * Gets the title for the save delegate.
+ *
+ * Returns: (transfer none) (nullable): the title or %NULL
+ */
 const char *
 panel_save_delegate_get_title (PanelSaveDelegate *self)
 {
@@ -382,6 +420,13 @@ panel_save_delegate_get_title (PanelSaveDelegate *self)
   return priv->title;
 }
 
+/**
+ * panel_save_delegate_set_title:
+ * @self: a #PanelSaveDelegate
+ * @title: (transfer none) (nullable): the title or %NULL
+ *
+ * Sets the title for the save delegate. Pass %NULL to unset.
+ */
 void
 panel_save_delegate_set_title (PanelSaveDelegate *self,
                                const char        *title)
@@ -464,6 +509,13 @@ panel_save_delegate_get_icon (PanelSaveDelegate *self)
   return priv->icon;
 }
 
+/**
+ * panel_save_delegate_set_icon:
+ * @self: a #PanelSaveDelegate
+ * @icon: (transfer none) (nullable): a #GIcon or %NULL
+ *
+ * Sets the #GIcon for the save delegate. Pass %NULL to unset.
+ */
 void
 panel_save_delegate_set_icon (PanelSaveDelegate *self,
                               GIcon             *icon)

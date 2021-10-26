@@ -28,6 +28,11 @@ G_DEFINE_INTERFACE (PanelFrameHeader, panel_frame_header, GTK_TYPE_WIDGET)
 static void
 panel_frame_header_default_init (PanelFrameHeaderInterface *iface)
 {
+  /**
+   * PanelFrameHeader:frame:
+   *
+   * The frame the header is attached to, or %NULL.
+   */
   g_object_interface_install_property (iface,
                                        g_param_spec_object ("frame",
                                                             "Frame",
@@ -36,6 +41,13 @@ panel_frame_header_default_init (PanelFrameHeaderInterface *iface)
                                                             (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
 }
 
+/**
+ * panel_frame_header_set_frame:
+ * @self: a #PanelFrameHeader
+ * @frame: (transfer none) (nullable): a #PanelFrame or %NULL
+ *
+ * Sets the frame the header is attached to.
+ */
 void
 panel_frame_header_set_frame (PanelFrameHeader *self,
                               PanelFrame       *frame)

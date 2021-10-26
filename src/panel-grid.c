@@ -230,6 +230,14 @@ panel_grid_init (PanelGrid *self)
   _panel_grid_prepend_column (self);
 }
 
+/**
+ * panel_grid_get_most_recent_column:
+ * @self: a #PanelGrid
+ *
+ * Gets the most recently acive column on a grid.
+ *
+ * Returns: (transfer none): a #PanelGridColumn
+ */
 PanelGridColumn *
 panel_grid_get_most_recent_column (PanelGrid *self)
 {
@@ -256,6 +264,14 @@ panel_grid_get_most_recent_column (PanelGrid *self)
   return PANEL_GRID_COLUMN (column);
 }
 
+/**
+ * panel_grid_get_most_recent_frame:
+ * @self: a #PanelGrid
+ *
+ * Gets the most recently acive frame on a grid.
+ *
+ * Returns: (transfer none): a #PanelGridFrame
+ */
 PanelFrame *
 panel_grid_get_most_recent_frame (PanelGrid *self)
 {
@@ -404,6 +420,15 @@ _panel_grid_get_position (PanelGrid *self,
   return FALSE;
 }
 
+/**
+ * panel_grid_get_column:
+ * @self: a #PanelGrid
+ * @column: a column index
+ *
+ * Gets the #PanelGridColumn for a column index.
+ *
+ * Returns: (transfer none): a #PanelGridColumn
+ */
 PanelGridColumn *
 panel_grid_get_column (PanelGrid *self,
                        guint      column)

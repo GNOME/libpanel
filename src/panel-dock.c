@@ -1098,6 +1098,14 @@ _panel_dock_remove_frame (PanelDock  *self,
                           PANEL_GRID_COLUMN (grid_column));
 }
 
+/**
+ * panel_dock_foreach_frame:
+ * @self: a #PanelDock
+ * @callback: (not nullable) (scope call): a function to be called on each frame
+ * @user_data: (closure callback): data to pass to @callback
+ *
+ * Invokes a callback for each frame in the dock.
+ */
 void
 panel_dock_foreach_frame (PanelDock          *self,
                           PanelFrameCallback  callback,

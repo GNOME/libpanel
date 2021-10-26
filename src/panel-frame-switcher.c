@@ -875,6 +875,14 @@ frame_header_iface_init (PanelFrameHeaderInterface *iface)
   iface->page_changed = panel_frame_switcher_page_changed;
 }
 
+/**
+ * panel_frame_switcher_get_background_rgba:
+ * @self: a #PanelFrameSwitcher
+ *
+ * Gets the background color of the switcher.
+ *
+ * Returns: (nullable): the background color
+ */
 const GdkRGBA *
 panel_frame_switcher_get_background_rgba (PanelFrameSwitcher *self)
 {
@@ -883,6 +891,13 @@ panel_frame_switcher_get_background_rgba (PanelFrameSwitcher *self)
   return self->background_rgba_set ? &self->background_rgba : NULL;
 }
 
+/**
+ * panel_frame_switcher_set_background_rgba:
+ * @self: a #PanelFrameSwitcher
+ * @background_rgba: (nullable): the background color
+ *
+ * Sets the background color of the switcher.
+ */
 void
 panel_frame_switcher_set_background_rgba (PanelFrameSwitcher *self,
                                             const GdkRGBA       *background_rgba)
@@ -896,6 +911,14 @@ panel_frame_switcher_set_background_rgba (PanelFrameSwitcher *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_BACKGROUND_RGBA]);
 }
 
+/**
+ * panel_frame_switcher_get_foreground_rgba:
+ * @self: a #PanelFrameSwitcher
+ *
+ * Gets the foreground color of the switcher.
+ *
+ * Returns: (nullable): the foreground color
+ */
 const GdkRGBA *
 panel_frame_switcher_get_foreground_rgba (PanelFrameSwitcher *self)
 {
@@ -904,6 +927,13 @@ panel_frame_switcher_get_foreground_rgba (PanelFrameSwitcher *self)
   return self->foreground_rgba_set ? &self->foreground_rgba : NULL;
 }
 
+/**
+ * panel_frame_switcher_set_foreground_rgba:
+ * @self: a #PanelFrameSwitcher
+ * @foreground_rgba: (nullable): the foreground color
+ *
+ * Sets the foreground color of the switcher.
+ */
 void
 panel_frame_switcher_set_foreground_rgba (PanelFrameSwitcher *self,
                                             const GdkRGBA       *foreground_rgba)
