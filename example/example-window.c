@@ -28,6 +28,7 @@ struct _ExampleWindow
   PanelDock *dock;
   PanelGrid *grid;
   GMenuModel *page_menu;
+  GtkDropDown *language;
   GtkToggleButton *frame_header_bar;
 };
 
@@ -245,6 +246,7 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, grid);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, page_menu);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, frame_header_bar);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, language);
   gtk_widget_class_bind_template_callback (widget_class, create_frame_cb);
 
   gtk_widget_class_install_action (widget_class, "document.new", NULL, add_document_action);
@@ -275,4 +277,13 @@ example_window_init (ExampleWindow *self)
   g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_start));
   g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_end));
   g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (reveal_bottom));
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self->language));
+       child;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      /* Override to force upwards */
+      if (GTK_IS_POPOVER (child))
+        gtk_popover_set_position (GTK_POPOVER (child), GTK_POS_TOP);
+    }
 }

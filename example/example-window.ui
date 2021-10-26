@@ -573,7 +573,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkDropDown">
+              <object class="GtkDropDown" id="language">
                 <property name="enable-search">true</property>
                 <property name="show-arrow">false</property>
                 <property name="expression">
