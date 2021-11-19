@@ -20,6 +20,7 @@
 
 #include <libpanel.h>
 
+#include "example-page.h"
 #include "example-window.h"
 
 struct _ExampleWindow
@@ -44,13 +45,6 @@ example_window_new (GtkApplication *application)
   return g_object_new (EXAMPLE_TYPE_WINDOW,
                        "application", application,
                        NULL);
-}
-
-static GtkWidget *
-get_default_focus_cb (GtkWidget *widget,
-                      GtkWidget *text_view)
-{
-  return text_view;
 }
 
 static gboolean
@@ -93,28 +87,18 @@ example_window_add_document (ExampleWindow *self)
 {
   static guint count;
   PanelWidget *widget;
-  GtkWidget *text_view;
   PanelSaveDelegate *save_delegate;
-  GtkTextBuffer *buffer;
   char *title;
 
   g_return_if_fail (EXAMPLE_IS_WINDOW (self));
 
   title = g_strdup_printf ("Untitled Document %u", ++count);
-  buffer = g_object_new (GTK_TYPE_TEXT_BUFFER,
-                         "text", title,
-                         NULL);
-  text_view = g_object_new (GTK_TYPE_TEXT_VIEW,
-                            "left-margin", 6,
-                            "top-margin", 6,
-                            "buffer", buffer,
-                            NULL);
 
   save_delegate = panel_save_delegate_new ();
   panel_save_delegate_set_title (save_delegate, title);
   panel_save_delegate_set_subtitle (save_delegate, "~/Documents");
 
-  widget = g_object_new (PANEL_TYPE_WIDGET,
+  widget = g_object_new (EXAMPLE_TYPE_PAGE,
                          "title", title,
                          "kind", PANEL_WIDGET_KIND_DOCUMENT,
                          "icon-name", "text-x-generic-symbolic",
@@ -122,9 +106,6 @@ example_window_add_document (ExampleWindow *self)
                          "can-maximize", TRUE,
                          "save-delegate", save_delegate,
                          "modified", TRUE,
-                         "child", g_object_new (GTK_TYPE_SCROLLED_WINDOW,
-                                                "child", text_view,
-                                                NULL),
                          NULL);
 
   g_signal_connect_object (adw_style_manager_get_default (),
@@ -134,10 +115,6 @@ example_window_add_document (ExampleWindow *self)
                            G_CONNECT_SWAPPED);
   apply_theme_color (widget);
 
-  g_signal_connect (widget,
-                    "get-default-focus",
-                    G_CALLBACK (get_default_focus_cb),
-                    text_view);
   g_signal_connect (save_delegate,
                     "save",
                     G_CALLBACK (on_save_cb),
@@ -148,7 +125,7 @@ example_window_add_document (ExampleWindow *self)
   panel_widget_focus_default (widget);
 
   g_object_unref (save_delegate);
-  g_object_unref (buffer);
+  g_free (title);
 }
 
 static void
