@@ -543,6 +543,10 @@
               <object class="GtkLabel" id="command_bar">
                 <property name="margin-start">9</property>
                 <property name="margin-end">9</property>
+                <property name="valign">baseline</property>
+                <attributes>
+                  <attribute name="family" value="Monospace"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -554,6 +558,10 @@
               <object class="GtkLabel" id="command">
                 <property name="margin-start">9</property>
                 <property name="margin-end">9</property>
+                <property name="valign">baseline</property>
+                <attributes>
+                  <attribute name="family" value="Monospace"/>
+                </attributes>
               </object>
             </child>
             <child>
