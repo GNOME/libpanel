@@ -54,8 +54,8 @@ on_vim_notify_cb (ExamplePage  *self,
                   GParamSpec   *pspec,
                   GtkIMContext *im_context)
 {
-  if (g_strcmp0 (pspec->name, "command-bar") == 0 ||
-      g_strcmp0 (pspec->name, "command") == 0)
+  if (g_strcmp0 (pspec->name, "command-bar-text") == 0 ||
+      g_strcmp0 (pspec->name, "command-text") == 0)
     g_object_notify (G_OBJECT (self), pspec->name);
 }
 
