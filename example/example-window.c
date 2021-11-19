@@ -31,6 +31,8 @@ struct _ExampleWindow
   GMenuModel *page_menu;
   GtkDropDown *language;
   GtkToggleButton *frame_header_bar;
+  GtkLabel *command;
+  GtkLabel *command_bar;
 };
 
 G_DEFINE_TYPE (ExampleWindow, example_window, ADW_TYPE_APPLICATION_WINDOW)
@@ -123,6 +125,12 @@ example_window_add_document (ExampleWindow *self)
   panel_grid_add (self->grid, widget);
   panel_widget_raise (widget);
   panel_widget_focus_default (widget);
+
+  /* You really want to use a BindingGroup or something for this
+   * to only connect to the active page.
+   */
+  g_object_bind_property (widget, "command-bar-text", self->command_bar, "label", 0);
+  g_object_bind_property (widget, "command-text", self->command, "label", 0);
 
   g_object_unref (save_delegate);
   g_free (title);
@@ -224,6 +232,8 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, page_menu);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, frame_header_bar);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, language);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command_bar);
   gtk_widget_class_bind_template_callback (widget_class, create_frame_cb);
 
   gtk_widget_class_install_action (widget_class, "document.new", NULL, add_document_action);

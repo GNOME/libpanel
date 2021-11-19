@@ -540,15 +540,20 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="command_bar">
                 <property name="margin-start">9</property>
                 <property name="margin-end">9</property>
-                <property name="label">Indexing sources …</property>
               </object>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="hexpand">true</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="command">
+                <property name="margin-start">9</property>
+                <property name="margin-end">9</property>
               </object>
             </child>
             <child>
