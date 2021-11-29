@@ -34,11 +34,6 @@ G_DECLARE_FINAL_TYPE (PanelFrameHeaderBar, panel_frame_header_bar, PANEL, FRAME_
 PANEL_AVAILABLE_IN_ALL
 GtkWidget      *panel_frame_header_bar_new                 (void);
 PANEL_AVAILABLE_IN_ALL
-GMenuModel     *panel_frame_header_bar_get_menu_model      (PanelFrameHeaderBar *self);
-PANEL_AVAILABLE_IN_ALL
-void            panel_frame_header_bar_set_menu_model      (PanelFrameHeaderBar *self,
-                                                            GMenuModel          *model);
-PANEL_AVAILABLE_IN_ALL
 GtkPopoverMenu *panel_frame_header_bar_get_menu_popover    (PanelFrameHeaderBar *self);
 PANEL_AVAILABLE_IN_ALL
 const GdkRGBA  *panel_frame_header_bar_get_foreground_rgba (PanelFrameHeaderBar *self);
