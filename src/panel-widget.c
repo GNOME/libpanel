@@ -332,7 +332,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
-   * PanelWidget:icon: (nullable):
+   * PanelWidget:icon:
    *
    * The icon for this widget.
    */
@@ -344,7 +344,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY |G_PARAM_STATIC_STRINGS));
 
   /**
-   * PanelWidget:icon-name: (nullable):
+   * PanelWidget:icon-name:
    *
    * The icon name for this widget.
    */
@@ -363,7 +363,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
-   * PanelWidget:menu-model: (nullable):
+   * PanelWidget:menu-model:
    *
    * A menu model to display additional options for the page to the user via
    * menus.
@@ -383,7 +383,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
-   * PanelWidget:title: (nullable):
+   * PanelWidget:title:
    *
    * The title for this widget.
    */
@@ -395,7 +395,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
-   * PanelWidget:child: (nullable):
+   * PanelWidget:child:
    *
    * The child inside this widget.
    */
@@ -421,7 +421,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
-   * PanelWidget:save-delegate: (nullable):
+   * PanelWidget:save-delegate:
    *
    * The save delegate attached to this widget.
    */
