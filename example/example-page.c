@@ -162,6 +162,7 @@ example_page_init (ExamplePage *self)
                              self,
                              G_CONNECT_SWAPPED);
     event_controller = gtk_event_controller_key_new ();
+    gtk_event_controller_set_propagation_phase (event_controller, GTK_PHASE_CAPTURE);
     gtk_event_controller_key_set_im_context (GTK_EVENT_CONTROLLER_KEY (event_controller),
                                              self->im_context);
     gtk_widget_add_controller (GTK_WIDGET (self->text_view), event_controller);
