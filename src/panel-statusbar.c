@@ -34,7 +34,7 @@ enum {
   N_PROPS
 };
 
-static GParamSpec *properties [N_PROPS];
+G_GNUC_UNUSED static GParamSpec *properties [N_PROPS];
 
 GtkWidget *
 panel_statusbar_new (void)
@@ -60,7 +60,7 @@ panel_statusbar_get_property (GObject    *object,
                               GValue     *value,
                               GParamSpec *pspec)
 {
-  PanelStatusbar *self = PANEL_STATUSBAR (object);
+  G_GNUC_UNUSED PanelStatusbar *self = PANEL_STATUSBAR (object);
 
   switch (prop_id)
     {
@@ -75,7 +75,7 @@ panel_statusbar_set_property (GObject      *object,
                               const GValue *value,
                               GParamSpec   *pspec)
 {
-  PanelStatusbar *self = PANEL_STATUSBAR (object);
+  G_GNUC_UNUSED PanelStatusbar *self = PANEL_STATUSBAR (object);
 
   switch (prop_id)
     {
