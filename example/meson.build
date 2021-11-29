@@ -22,5 +22,5 @@ libpanel_example = executable('libpanel-example',
   libpanel_example_sources + libpanel_example_gresources,
   dependencies: [libpanel_dep, gtksourceview_dep],
   install: get_option('install-examples'),
-  c_args: libpanel_example_cargs,
+  c_args: libpanel_example_cargs + deprecation_args,
 )

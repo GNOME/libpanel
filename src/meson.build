@@ -93,6 +93,7 @@ libpanel_static = static_library('panel',
            dependencies: libpanel_deps,
   gnu_symbol_visibility: 'hidden',
               link_args: release_link_args,
+                 c_args: deprecation_args,
 )
 
 libpanel_static_dep = declare_dependency(
@@ -108,6 +109,7 @@ libpanel = shared_library('panel-@0@'.format(ABI_MAJOR),
                 version: '@0@.0.0'.format(ABI_MAJOR),
         darwin_versions: '1.0',
               link_args: release_link_args,
+                 c_args: deprecation_args,
 )
 
 libpanel_dep = declare_dependency(

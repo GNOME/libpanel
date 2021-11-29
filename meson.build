@@ -54,13 +54,15 @@ if gtk_minor % 2 == 1
 endif
 
 # Compiler flags and warnings
-global_c_args = [
-  '-DLIBPANEL_COMPILATION',
-  '-DG_LOG_DOMAIN="libpanel"',
+deprecation_args = [
   '-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_@0@_@1@'.format(glib_major, glib_minor),
   '-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_@0@_@1@'.format(glib_major, glib_minor),
   '-DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_@0@_@1@'.format(gtk_major, gtk_minor),
   '-DGDK_VERSION_MAX_ALLOWED=GDK_VERSION_@0@_@1@'.format(gtk_major, gtk_minor),
+]
+global_c_args = [
+  '-DLIBPANEL_COMPILATION',
+  '-DG_LOG_DOMAIN="libpanel"',
 ]
 if cc.get_id() == 'msvc'
   test_c_args = [
