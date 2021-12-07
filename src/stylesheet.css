@@ -1,5 +1,3 @@
-@define-color sidebar_color mix(@borders, @theme_bg_color, 0.95);
-
 paneldockswitcher button {
   margin-right: 1px;
 }
@@ -11,7 +9,8 @@ paneldockchild.bottom,
 paneldockchild.end,
 paneldockchild.start,
 paneldockchild.top {
-  background: @sidebar_color;
+  background: @view_bg_color;
+  color: @view_fg_color;
 }
 
 paneldockchild.bottom panelpaned textview text,
@@ -86,7 +85,8 @@ paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe pan
   border-bottom: 1px solid alpha(@borders,.6);
 }
 panelpaned panelframe panelframeswitcher {
-  background: @sidebar_color;
+  background: @view_bg_color;
+  color: @view_fg_color;
 }
 panelpaned.horizontal panelframe panelframeswitcher {
   padding: 2px 2px 2px 0;
