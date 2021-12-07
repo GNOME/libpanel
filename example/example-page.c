@@ -128,6 +128,50 @@ example_page_class_init (ExamplePageClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
+#ifdef HAVE_GTKSOURCEVIEW
+static void
+notify_style_scheme_cb (ExamplePage     *self,
+                        GParamSpec      *pspec,
+                        GtkSourceBuffer *buffer)
+{
+  GtkSourceStyleScheme *scheme = gtk_source_buffer_get_style_scheme (buffer);
+  GtkSourceStyle *text;
+
+  if (scheme)
+    {
+      text = gtk_source_style_scheme_get_style (scheme, "text");
+
+      if (text != NULL)
+        {
+          g_autofree char *fg = NULL;
+          g_autofree char *bg = NULL;
+          gboolean fg_set = FALSE;
+          gboolean bg_set = FALSE;
+          GdkRGBA rgba;
+
+          g_object_get (text,
+                        "foreground", &fg,
+                        "foreground-set", &fg_set,
+                        "background", &bg,
+                        "background-set", &bg_set,
+                        NULL);
+
+          if (bg_set && bg)
+            {
+              gdk_rgba_parse (&rgba, bg);
+              panel_widget_set_background_rgba (PANEL_WIDGET (self), &rgba);
+            }
+
+          if (fg_set && fg)
+            {
+              gdk_rgba_parse (&rgba, fg);
+              panel_widget_set_foreground_rgba (PANEL_WIDGET (self), &rgba);
+            }
+        }
+    }
+}
+#endif
+
 static void
 example_page_init (ExamplePage *self)
 {
@@ -147,6 +191,12 @@ example_page_init (ExamplePage *self)
 
     self->text_view = GTK_TEXT_VIEW (gtk_source_view_new ());
     buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (self->text_view));
+
+    g_signal_connect_object (buffer,
+                             "notify::style-scheme",
+                             G_CALLBACK (notify_style_scheme_cb),
+                             self,
+                             G_CONNECT_SWAPPED);
 
     gtk_source_view_set_show_line_numbers (GTK_SOURCE_VIEW (self->text_view), TRUE);
 

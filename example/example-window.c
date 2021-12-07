@@ -70,21 +70,6 @@ on_save_cb (PanelSaveDelegate *delegate,
 }
 
 static void
-apply_theme_color (PanelWidget *widget)
-{
-  if (adw_style_manager_get_dark (adw_style_manager_get_default ()))
-    {
-      panel_widget_set_background_rgba (widget, &grey);
-      panel_widget_set_foreground_rgba (widget, &white);
-    }
-  else
-    {
-      panel_widget_set_background_rgba (widget, &white);
-      panel_widget_set_foreground_rgba (widget, &black);
-    }
-}
-
-static void
 example_window_add_document (ExampleWindow *self)
 {
   static guint count;
@@ -109,13 +94,6 @@ example_window_add_document (ExampleWindow *self)
                          "save-delegate", save_delegate,
                          "modified", TRUE,
                          NULL);
-
-  g_signal_connect_object (adw_style_manager_get_default (),
-                           "notify",
-                           G_CALLBACK (apply_theme_color),
-                           widget,
-                           G_CONNECT_SWAPPED);
-  apply_theme_color (widget);
 
   g_signal_connect (save_delegate,
                     "save",
