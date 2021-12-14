@@ -23,7 +23,7 @@
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
 #include "panel-grid-private.h"
-#include "panel-paned-private.h"
+#include "panel-paned.h"
 #include "panel-resizer-private.h"
 #include "panel-widget.h"
 

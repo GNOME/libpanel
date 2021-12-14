@@ -24,7 +24,7 @@
 
 #include "panel-dock-child-private.h"
 #include "panel-dock-private.h"
-#include "panel-paned-private.h"
+#include "panel-paned.h"
 #include "panel-resizer-private.h"
 
 struct _PanelPaned

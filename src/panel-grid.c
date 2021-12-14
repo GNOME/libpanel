@@ -24,7 +24,7 @@
 #include "panel-frame-tab-bar.h"
 #include "panel-grid-column.h"
 #include "panel-grid-private.h"
-#include "panel-paned-private.h"
+#include "panel-paned.h"
 #include "panel-resizer-private.h"
 
 struct _PanelGrid

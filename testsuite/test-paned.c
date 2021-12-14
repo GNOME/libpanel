@@ -1,6 +1,6 @@
 #include <libpanel.h>
 
-#include "panel-paned-private.h"
+#include "panel-paned.h"
 
 int
 main (int argc,

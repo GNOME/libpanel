@@ -28,7 +28,7 @@
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
 #include "panel-joined-menu-private.h"
-#include "panel-paned-private.h"
+#include "panel-paned.h"
 #include "panel-save-delegate.h"
 #include "panel-save-dialog.h"
 #include "panel-scaler-private.h"

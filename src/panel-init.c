@@ -30,7 +30,7 @@
 #include "panel-grid.h"
 #include "panel-grid-column.h"
 #include "panel-init.h"
-#include "panel-paned-private.h"
+#include "panel-paned.h"
 #include "panel-resources.h"
 #include "panel-statusbar.h"
 #include "panel-widget.h"

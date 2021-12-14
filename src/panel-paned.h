@@ -22,26 +22,37 @@
 
 #include <gtk/gtk.h>
 
+#include "panel-version-macros.h"
+
 G_BEGIN_DECLS
 
 #define PANEL_TYPE_PANED (panel_paned_get_type())
 
+PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelPaned, panel_paned, PANEL, PANED, GtkWidget)
 
+PANEL_AVAILABLE_IN_ALL
 GtkWidget *panel_paned_new            (void);
+PANEL_AVAILABLE_IN_ALL
 void       panel_paned_append         (PanelPaned *self,
                                        GtkWidget  *child);
+PANEL_AVAILABLE_IN_ALL
 void       panel_paned_prepend        (PanelPaned *self,
                                        GtkWidget  *child);
+PANEL_AVAILABLE_IN_ALL
 void       panel_paned_insert         (PanelPaned *self,
                                        int         position,
                                        GtkWidget  *child);
+PANEL_AVAILABLE_IN_ALL
 void       panel_paned_insert_after   (PanelPaned *self,
                                        GtkWidget  *child,
                                        GtkWidget  *sibling);
+PANEL_AVAILABLE_IN_ALL
 void       panel_paned_remove         (PanelPaned *self,
                                        GtkWidget  *child);
+PANEL_AVAILABLE_IN_ALL
 guint      panel_paned_get_n_children (PanelPaned *self);
+PANEL_AVAILABLE_IN_ALL
 GtkWidget *panel_paned_get_nth_child  (PanelPaned *self,
                                        guint       nth);
 

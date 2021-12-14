@@ -22,7 +22,7 @@
 
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
-#include "panel-paned-private.h"
+#include "panel-paned.h"
 #include "panel-resizer-private.h"
 
 struct _PanelGridColumn

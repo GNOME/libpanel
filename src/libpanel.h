@@ -31,6 +31,7 @@
 # include "panel-grid.h"
 # include "panel-grid-column.h"
 # include "panel-init.h"
+# include "panel-paned.h"
 # include "panel-save-delegate.h"
 # include "panel-statusbar.h"
 # include "panel-widget.h"
