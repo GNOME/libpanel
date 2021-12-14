@@ -85,6 +85,7 @@ example_page_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    #ifdef HAVE_GTKSOURCEVIEW
     case PROP_COMMAND_TEXT:
       if (self->im_context)
         g_value_set_string (value, gtk_source_vim_im_context_get_command_text (GTK_SOURCE_VIM_IM_CONTEXT (self->im_context)));
@@ -94,6 +95,7 @@ example_page_get_property (GObject    *object,
       if (self->im_context)
         g_value_set_string (value, gtk_source_vim_im_context_get_command_bar_text (GTK_SOURCE_VIM_IM_CONTEXT (self->im_context)));
       break;
+    #endif
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -111,6 +113,7 @@ example_page_class_init (ExamplePageClass *klass)
   object_class->dispose = example_page_dispose;
   object_class->get_property = example_page_get_property;
 
+  #ifdef HAVE_GTKSOURCEVIEW
   properties [PROP_COMMAND_TEXT] =
     g_param_spec_string ("command-text",
                          "Command Text",
@@ -124,6 +127,7 @@ example_page_class_init (ExamplePageClass *klass)
                          "Command Bar Text",
                          NULL,
                          (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+  #endif
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
