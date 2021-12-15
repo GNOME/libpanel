@@ -151,21 +151,21 @@ panelstatusbar {
   border-top: 1px solid @borders;
   font-size: 0.833em;
 }
-panelstatusbar > dropdown > button,
-panelstatusbar > menubutton > button,
-panelstatusbar > button {
+panelstatusbar > box > box > dropdown > button,
+panelstatusbar > box > box > menubutton > button,
+panelstatusbar > box > box > button {
   min-width: 8px;
   border-radius: 0;
   padding: 0 9px;
 }
-panelstatusbar > dropdown > button:not(:hover):not(:checked),
-panelstatusbar > menubutton > button:not(:hover):not(:checked),
-panelstatusbar > button:not(:hover):not(:checked) {
+panelstatusbar > box > box > dropdown > button:not(:hover):not(:checked),
+panelstatusbar > box > box > menubutton > button:not(:hover):not(:checked),
+panelstatusbar > box > box > button:not(:hover):not(:checked) {
   background: transparent;
 }
-panelstatusbar > dropdown > button label,
-panelstatusbar > menubutton > button label,
-panelstatusbar > button label {
+panelstatusbar > box > box > dropdown > button label,
+panelstatusbar > box > box > menubutton > button label,
+panelstatusbar > box > box > button label {
   font-weight: normal;
 }
 

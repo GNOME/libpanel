@@ -32,6 +32,15 @@ PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelStatusbar, panel_statusbar, PANEL, STATUSBAR, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_statusbar_new (void);
+GtkWidget *panel_statusbar_new        (void);
+PANEL_AVAILABLE_IN_ALL
+void       panel_statusbar_add_prefix (PanelStatusbar *self,
+                                       GtkWidget      *widget);
+PANEL_AVAILABLE_IN_ALL
+void       panel_statusbar_add_suffix (PanelStatusbar *self,
+                                       GtkWidget      *widget);
+PANEL_AVAILABLE_IN_ALL
+void       panel_statusbar_remove     (PanelStatusbar *self,
+                                       GtkWidget      *widget);
 
 G_END_DECLS
