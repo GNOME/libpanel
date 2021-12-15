@@ -545,6 +545,15 @@ panel_paned_get_n_children (PanelPaned *self)
   return count;
 }
 
+/**
+ * panel_paned_get_nth_child:
+ * @self: a #PanelPaned
+ * @nth: the child position
+ *
+ * Gets the child at position @nth.
+ *
+ * Returns: (transfer none) (nullable): a #GtkWidget or %NULL
+ */
 GtkWidget *
 panel_paned_get_nth_child (PanelPaned *self,
                            guint       nth)
