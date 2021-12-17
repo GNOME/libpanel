@@ -159,10 +159,13 @@ panelstatusbar {
 }
 panelstatusbar > * {
   border-right: 1px solid @borders;
+  padding-left: 9px;
+  padding-right: 9px;
 }
 panelstatusbar > *:last-child {
   border-right: none;
 }
+panelstatusbar > menubutton,
 panelstatusbar > dropdown {
   padding: 0;
 }
