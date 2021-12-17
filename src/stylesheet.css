@@ -69,7 +69,8 @@ panelframeheaderbar .controls button.circular {
   border-radius: 9999px;
 }
 panelframeheaderbar .controls button.circular image {
-  margin: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 paneldockchild.end panelpaned.vertical panelresizer panelframe panelframeswitcher,
@@ -110,17 +111,22 @@ panelframe panelframeswitcher button:not(:hover):not(:checked):not(:active) {
   color: alpha(currentColor, 0.75);
 }
 
-panelframe .frameheader .action-bar popover row {
-  padding: 3px 6px;
-  border-radius: 4px;
+panelframe .frameheader .action-bar popover.menu.pages-popover row {
+  padding: 0 6px 0 12px;
+  border-radius: 6px;
+  min-width: 40px;
+  min-height: 32px;
 }
-panelframe .frameheader .action-bar popover row:selected {
-  font-weight: bold;
-}
-panelframe .frameheader .action-bar popover row:selected:not(:hover) {
+panelframe .frameheader .action-bar popover.menu.pages-popover row:selected:not(:hover) {
   background: transparent;
 }
-panelframe .frameheader .action-bar popover row .close-button {
+panelframe .frameheader .action-bar popover.menu.pages-popover row check {
+  opacity: 0;
+}
+panelframe .frameheader .action-bar popover.menu.pages-popover row:selected check {
+  opacity: 1;
+}
+panelframe .frameheader .action-bar popover.menu.pages-popover row .close-button {
   padding: 0;
   margin: 3px 0;
   min-width: 24px;
@@ -131,18 +137,14 @@ panelframe .frameheader .action-bar popover row .close-button {
   background: none;
   color: transparent;
 }
-panelframe .frameheader .action-bar popover row:hover .close-button {
-  background: alpha(@theme_fg_color, .15);
+panelframe .frameheader .action-bar popover.menu.pages-popover row:hover .close-button {
   color: @theme_fg_color;
 }
-panelframe .frameheader .action-bar popover row:selected:hover .close-button {
-  color: @theme_selected_fg_color;
+panelframe .frameheader .action-bar popover.menu.pages-popover row .close-button:hover {
+  background: alpha(black, .08);
 }
-panelframe .frameheader .action-bar popover row .close-button:hover {
-  background: alpha(black, .3);
-}
-panelframe .frameheader .action-bar popover row .close-button:active {
-  background: alpha(black, .5);
+panelframe .frameheader .action-bar popover.menu.pages-popover row .close-button:active {
+  background: alpha(black, .15);
 }
 panelframe .frameheader tab > button.tab-close-button {
   min-width: 24px;

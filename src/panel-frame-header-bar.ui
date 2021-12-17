@@ -38,10 +38,13 @@
                 <property name="hexpand">true</property>
                 <property name="popover">
                   <object class="GtkPopover" id="pages_popover">
+                    <style>
+                      <class name="pages-popover"/>
+                      <class name="menu"/>
+                    </style>
                     <child>
                       <object class="GtkBox">
                         <property name="orientation">vertical</property>
-                        <property name="spacing">12</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="label" translatable="yes">Open Pages</property>

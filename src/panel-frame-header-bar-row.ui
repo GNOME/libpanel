@@ -5,19 +5,33 @@
       <object class="GtkBox" id="box">
         <property name="spacing">6</property>
         <child>
+          <object class="GtkImage" id="role">
+            <property name="css-name">check</property>
+            <property name="icon-name">object-select-symbolic</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkImage" id="image"/>
         </child>
         <child>
           <object class="GtkLabel" id="label">
             <property name="xalign">0</property>
             <property name="hexpand">true</property>
-            <property name="width-chars">30</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="accel">
+            <!-- TODO -->
+            <property name="css-name">accelerator</property>
+            <property name="xalign">1.0</property>
+            <property name="visible">false</property>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="close">
             <property name="action-name">page.close</property>
             <property name="icon-name">window-close-symbolic</property>
+            <property name="valign">center</property>
             <style>
               <class name="close-button"/>
             </style>

@@ -506,43 +506,35 @@
             <child>
               <object class="GtkBox">
                 <property name="orientation">horizontal</property>
-                <property name="valign">center</property>
+                <property name="spacing">6</property>
                 <child>
                   <object class="GtkImage">
                     <property name="icon-name">warnings-symbolic</property>
-                    <property name="margin-start">9</property>
-                    <property name="margin-end">6</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">3</property>
-                    <property name="yalign">0</property>
-                    <property name="margin-end">3</property>
+                    <property name="label">6</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">errors-symbolic</property>
                     <property name="margin-start">6</property>
-                    <property name="margin-end">6</property>
+                    <property name="icon-name">errors-symbolic</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label">1</property>
-                    <property name="margin-end">9</property>
+                    <property name="label">&lt;a href="http://gnome.org/"&gt;3&lt;/a&gt;</property>
+                    <property name="use-markup">true</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="GtkLabel" id="command_bar">
-                <property name="margin-start">9</property>
-                <property name="margin-end">9</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0</property>
-                <property name="valign">baseline</property>
                 <attributes>
                   <attribute name="family" value="Monospace"/>
                 </attributes>
@@ -551,8 +543,6 @@
             <child type="suffix">
               <object class="GtkLabel">
                 <property name="label">INS</property>
-                <property name="margin-start">9</property>
-                <property name="margin-end">9</property>
               </object>
             </child>
             <child type="suffix">
@@ -667,14 +657,7 @@
             </child>
             <child type="suffix">
               <object class="GtkLabel" id="command">
-                <property name="margin-start">9</property>
-                <property name="margin-end">9</property>
                 <property name="visible">false</property>
-                <property name="valign">baseline</property>
-                <property name="xalign">0</property>
-                <attributes>
-                  <attribute name="family" value="Monospace"/>
-                </attributes>
               </object>
             </child>
           </object>
