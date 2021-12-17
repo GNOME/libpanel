@@ -126,7 +126,6 @@ setup_row_cb (GtkSignalListItemFactory *factory,
   g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
 
   child = panel_frame_header_bar_row_new ();
-  g_object_bind_property (self, "show-icon", child, "show-icon", G_BINDING_SYNC_CREATE);
 
   gtk_list_item_set_child (list_item, child);
 }

@@ -153,7 +153,7 @@ panel_frame_header_bar_row_class_init (PanelFrameHeaderBarRowClass *klass)
     g_param_spec_boolean ("show-icon",
                           "Show Icon",
                           "Show Icon",
-                          TRUE,
+                          FALSE,
                           (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
