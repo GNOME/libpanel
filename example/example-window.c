@@ -69,6 +69,17 @@ on_save_cb (PanelSaveDelegate *delegate,
   return TRUE;
 }
 
+static gboolean
+text_to_visible (GBinding     *binding,
+                 const GValue *from_value,
+                 GValue       *to_value,
+                 gpointer      user_data)
+{
+  const char *str = g_value_get_string (from_value);
+  g_value_set_boolean (to_value, str && *str);
+  return TRUE;
+}
+
 static void
 example_window_add_document (ExampleWindow *self)
 {
@@ -108,6 +119,7 @@ example_window_add_document (ExampleWindow *self)
    * to only connect to the active page.
    */
   g_object_bind_property (widget, "command-bar-text", self->command_bar, "label", 0);
+  g_object_bind_property_full (widget, "command-text", self->command, "visible", 0, text_to_visible, NULL, NULL, NULL);
   g_object_bind_property (widget, "command-text", self->command, "label", 0);
 
   g_object_unref (save_delegate);
