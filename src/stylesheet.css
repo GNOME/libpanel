@@ -144,6 +144,10 @@ panelframe .frameheader .action-bar popover row .close-button:hover {
 panelframe .frameheader .action-bar popover row .close-button:active {
   background: alpha(black, .5);
 }
+panelframe .frameheader tab > button.tab-close-button {
+  min-width: 24px;
+  min-height: 24px;
+}
 
 
 panelstatusbar {
