@@ -139,7 +139,7 @@ libpanel_pc = pkgconfig.generate(libpanel,
 install_headers(libpanel_headers,
                 subdir: 'libpanel-@0@'.format(ABI_MAJOR))
 
-if get_option('introspection').enabled()
+if generate_gir
   libpanel_gir = gnome.generate_gir(libpanel,
                 sources: libpanel_generated_headers +
                          libpanel_generated_sources +
@@ -156,4 +156,15 @@ if get_option('introspection').enabled()
                includes: ['Gtk-4.0', 'Adw-1'],
                 install: true,
   )
+  
+  if generate_vapi
+    gtksource_vapi = gnome.generate_vapi('libpanel',
+          sources: libpanel_gir.get(0),
+          install: true,
+      install_dir: vapidir,
+         packages: [ 'gtk4',
+                     'libadwaita-1'
+                   ],
+    )
+  endif
 endif

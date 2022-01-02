@@ -1,2 +1,14 @@
-option('install-examples', type: 'boolean', value: false, description: 'Install example applications')
-option('introspection', type: 'feature', value: 'enabled', description: 'Enable GObject Introspection')
+option('install-examples', 
+       type: 'boolean', 
+       value: false, 
+       description: 'Install example applications')
+
+option('introspection', 
+       type: 'feature', 
+       value: 'enabled', 
+       description: 'Enable GObject Introspection')
+
+option('vapi',
+       type: 'boolean', 
+       value: true,
+       description: 'Generate vapi data (requires vapigen)')
