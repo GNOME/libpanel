@@ -19,6 +19,8 @@ ABI_MICRO = VERSION.split('.')[2]
 prefix = get_option('prefix')
 libdir = join_paths(prefix, get_option('libdir'))
 pkgconfigdir = join_paths(libdir, 'pkgconfig')
+datadir = join_paths(prefix, get_option('datadir'))
+vapidir = join_paths(datadir, 'vala', 'vapi')
 
 # Check dependencies
 glib_req_version = '2.68'
@@ -156,6 +158,11 @@ if get_option('default_library') != 'static'
     config_h.set('_PANEL_EXTERN', '__attribute__((visibility("default"))) extern')
   endif
 endif
+
+# GObject introspection Options
+gir = find_program('g-ir-scanner', required : get_option('introspection'))
+generate_gir = gir.found() and (not meson.is_cross_build() or get_option('introspection').enabled())
+generate_vapi = generate_gir and get_option('vapi')
 
 # Various optimizations for non-debug builds including disabling of
 # cast checks, asserts, and additional link options.
