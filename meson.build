@@ -1,7 +1,7 @@
 project('libpanel', 'c',
           version: '1.0.0-alpha0',
     meson_version: '>= 0.59.1',
-  default_options: [ 'warning_level=2', 'c_std=gnu11' ],
+  default_options: [ 'warning_level=2', 'c_std=gnu18' ],
 )
 
 gnome = import('gnome')
