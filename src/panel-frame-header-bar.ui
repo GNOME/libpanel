@@ -44,12 +44,14 @@
                     </style>
                     <child>
                       <object class="GtkBox">
+                        <property name="margin-top">6</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="label" translatable="yes">Open Pages</property>
                             <style>
                               <class name="title"/>
+                              <class name="dim-label"/>
                             </style>
                           </object>
                         </child>
