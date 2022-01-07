@@ -701,6 +701,7 @@
   </menu>
   <menu id="add_menu">
     <section>
+      <attribute name="label">Documents</attribute>
       <item>
         <attribute name="label">New Document</attribute>
         <attribute name="action">document.new</attribute>
