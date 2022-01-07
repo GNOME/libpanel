@@ -196,8 +196,22 @@ panelframe.has-focus panelframetabbar > overlay > box.focus-handle {
   background: @accent_bg_color;
 }
 panelframe panelframetabbar tabbox tab button {
- min-height: 0;
+  min-height: 0;
 }
 panelframe panelframetabbar tabbar > revealer:first-child > box:first-child {
- min-height: 34px;
+  min-height: 34px;
+}
+
+/* frame switcher buttons */
+panelframeswitcher button:checked {
+ background: alpha(currentColor, .125);
+}
+panelframeswitcher button:hover {
+ background: alpha(currentColor, .1);
+}
+panelframeswitcher button:hover:checked {
+ background: alpha(currentColor, .15);
+}
+panelframeswitcher button:active:hover {
+ background: alpha(currentColor, .25);
 }
