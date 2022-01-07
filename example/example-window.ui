@@ -14,8 +14,10 @@
           <object class="GtkHeaderBar" id="headerbar">
             <child type="start">
               <object class="GtkMenuButton">
+                <property name="width-request">65</property>
                 <property name="always-show-arrow">true</property>
-                <property name="icon-name">document-open-symbolic</property>
+                <property name="icon-name">list-add-symbolic</property>
+                <property name="menu-model">add_menu</property>
               </object>
             </child>
             <child type="start">
@@ -692,6 +694,15 @@
     <section>
       <item>
         <attribute name="label">Create new document</attribute>
+        <attribute name="action">document.new</attribute>
+        <attribute name="accel">&lt;ctrl&gt;n</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="add_menu">
+    <section>
+      <item>
+        <attribute name="label">New Document</attribute>
         <attribute name="action">document.new</attribute>
         <attribute name="accel">&lt;ctrl&gt;n</attribute>
       </item>
