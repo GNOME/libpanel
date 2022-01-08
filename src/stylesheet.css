@@ -203,15 +203,29 @@ panelframe panelframetabbar tabbar > revealer:first-child > box:first-child {
 }
 
 /* frame switcher buttons */
+panelframeheaderbar button {
+  background: none;
+}
+panelframeheaderbar button:checked,
 panelframeswitcher button:checked {
  background: alpha(currentColor, .125);
 }
+panelframeheaderbar button:hover,
 panelframeswitcher button:hover {
  background: alpha(currentColor, .1);
 }
+panelframeheaderbar button:hover:checked,
 panelframeswitcher button:hover:checked {
  background: alpha(currentColor, .15);
 }
+panelframeheaderbar button:active:hover,
 panelframeswitcher button:active:hover {
  background: alpha(currentColor, .25);
+}
+
+
+panelframeheaderbar image,
+panelframeheaderbar label {
+  -gtk-icon-shadow: none;
+  text-shadow: 0 -1px alpha(currentColor,0.05);
 }

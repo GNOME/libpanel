@@ -167,29 +167,6 @@ unbind_row_cb (GtkSignalListItemFactory *factory,
   panel_frame_header_bar_row_set_page (PANEL_FRAME_HEADER_BAR_ROW (row), NULL);
 }
 
-static void
-update_css_providers_recurse (GtkWidget           *widget,
-                              PanelFrameHeaderBar *self)
-{
-  /* Stop at popovers */
-  if (GTK_IS_NATIVE (widget))
-    return;
-
-  if (!g_object_get_qdata (G_OBJECT (widget), css_quark))
-    {
-      GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
-      gtk_style_context_add_provider (style_context,
-                                      GTK_STYLE_PROVIDER (self->css_provider),
-                                      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION-1);
-      g_object_set_qdata (G_OBJECT (widget), css_quark, self->css_provider);
-    }
-
-  for (GtkWidget *child = gtk_widget_get_first_child (widget);
-       child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    update_css_providers_recurse (child, self);
-}
-
 static gboolean
 panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
 {
@@ -201,39 +178,17 @@ panel_frame_header_bar_update_css (PanelFrameHeaderBar *self)
 
   str = g_string_new (NULL);
 
-  /*
-   * We set various styles on this provider so that we can update multiple
-   * widgets using the same CSS style. That includes ourself, various buttons,
-   * labels, and some images.
-   */
-
   if (self->background_rgba_set)
     {
-      /* FIXME: make this work with styling tweaks */
       gchar *bgstr = gdk_rgba_to_string (&self->background_rgba);
 
-      g_string_append        (str, "panelframeheaderbar {");
-      g_string_append_printf (str, "  background-color: %s;", bgstr);
-      g_string_append        (str, "}\n");
-      g_string_append_printf (str, "button:hover, button:checked { background-color: shade(%s,.9); }", bgstr);
-      g_string_append_printf (str, "button:active { background-color: shade(%s,.8); }", bgstr);
+      g_string_append_printf (str, "panelframeheaderbar { background-color: %s; }", bgstr);
 
       /* only use foreground when background is set */
       if (self->foreground_rgba_set)
         {
-          static const gchar *names[] = { "image", "label" };
           gchar *fgstr = gdk_rgba_to_string (&self->foreground_rgba);
-
-          for (guint i = 0; i < G_N_ELEMENTS (names); i++)
-            {
-              g_string_append_printf (str, "%s {\n", names[i]);
-              g_string_append        (str, "  -gtk-icon-shadow: none;\n");
-              g_string_append        (str, "  text-shadow: none;\n");
-              g_string_append_printf (str, "  text-shadow: 0 -1px alpha(%s,0.05);\n", fgstr);
-              g_string_append_printf (str, "  color: %s;\n", fgstr);
-              g_string_append        (str, "}\n");
-            }
-
+          g_string_append_printf (str, "panelframeheaderbar { color: %s; }", fgstr);
           g_free (fgstr);
         }
 
@@ -569,6 +524,9 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   GtkWidget *box;
 
   self->css_provider = gtk_css_provider_new ();
+  gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (self)),
+                                  GTK_STYLE_PROVIDER (self->css_provider),
+                                  GTK_STYLE_PROVIDER_PRIORITY_THEME+1);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -609,8 +567,6 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   panel_binding_group_bind (self->bindings, "icon", self->image, "gicon", 0);
   panel_binding_group_bind (self->bindings, "background-rgba", self, "background-rgba", 0);
   panel_binding_group_bind (self->bindings, "foreground-rgba", self, "foreground-rgba", 0);
-
-  update_css_providers_recurse (GTK_WIDGET (self), self);
 }
 
 static gboolean
@@ -688,8 +644,6 @@ panel_frame_header_bar_pack_start (PanelFrameHeader *header,
     }
 
   gtk_box_insert_child_after (self->start_area, widget, sibling);
-
-  update_css_providers_recurse (widget, self);
 }
 
 static void
@@ -714,8 +668,6 @@ panel_frame_header_bar_pack_end (PanelFrameHeader *header,
     }
 
   gtk_box_insert_child_after (self->end_area, widget, sibling);
-
-  update_css_providers_recurse (widget, self);
 }
 
 static void
