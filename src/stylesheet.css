@@ -64,8 +64,8 @@ panelgrid panelresizer:last-child > panelgridcolumn panelframeheaderbar .control
 panelframeheaderbar .controls button.circular {
   padding: 0px;
   margin: 0px;
-  min-height: 8px;
-  min-width: 8px;
+  min-height: 24px;
+  min-width: 24px;
   border-radius: 9999px;
 }
 panelframeheaderbar .controls button.circular image {
