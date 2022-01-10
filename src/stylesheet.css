@@ -202,6 +202,20 @@ panelframe panelframetabbar tabbar > revealer:first-child > box:first-child {
   min-height: 34px;
 }
 
+
+panelomnibar {
+  border-radius: 6px;
+  min-height: 28px;
+  padding: 3px 9px;
+  background: alpha(currentColor, .075);
+  transition-property: all;
+  transition-duration: 200ms;
+}
+panelomnibar:hover {
+  background: alpha(currentColor, .125);
+}
+
+
 /* frame switcher buttons */
 panelframeheaderbar button {
   background: none;

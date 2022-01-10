@@ -30,6 +30,7 @@
 #include "panel-grid.h"
 #include "panel-grid-column.h"
 #include "panel-init.h"
+#include "panel-omni-bar.h"
 #include "panel-paned.h"
 #include "panel-resources.h"
 #include "panel-statusbar.h"
@@ -55,6 +56,7 @@ panel_init (void)
   g_type_ensure (PANEL_TYPE_FRAME_SWITCHER);
   g_type_ensure (PANEL_TYPE_GRID);
   g_type_ensure (PANEL_TYPE_GRID_COLUMN);
+  g_type_ensure (PANEL_TYPE_OMNI_BAR);
   g_type_ensure (PANEL_TYPE_PANED);
   g_type_ensure (PANEL_TYPE_STATUSBAR);
   g_type_ensure (PANEL_TYPE_THEME_SELECTOR);
