@@ -68,6 +68,19 @@ libpanel_headers = [
   'panel-widget.h',
 ]
 
+panel_enum_headers = [
+  'panel-dock.h',
+]
+
+libpanel_enums = gnome.mkenums_simple('panel-enums',
+     body_prefix: '#include "config.h"',
+   header_prefix: '#include "panel-version-macros.h"',
+       decorator: '_PANEL_EXTERN',
+         sources: panel_enum_headers,
+  install_header: true,
+     install_dir: lib_header_dir,
+)
+
 libpanel_gresources = gnome.compile_resources(
   'panel-resources',
   'libpanel.gresource.xml',
@@ -76,11 +89,13 @@ libpanel_gresources = gnome.compile_resources(
 
 libpanel_generated_sources = [
   libpanel_gresources[0],
+  libpanel_enums[0],
 ]
 
 libpanel_generated_headers = [
   panel_version_h,
   libpanel_gresources[1],
+  libpanel_enums[1],
 ]
 
 libpanel_deps = [

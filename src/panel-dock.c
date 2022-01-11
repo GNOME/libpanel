@@ -733,6 +733,28 @@ panel_dock_get_reveal_top (PanelDock *self)
   return priv->reveal_top;
 }
 
+gboolean
+panel_dock_get_reveal_edge (PanelDock         *self,
+                            PanelDockPosition  edge)
+{
+  g_return_val_if_fail (PANEL_IS_DOCK (self), FALSE);
+
+  switch (edge)
+    {
+    case PANEL_DOCK_POSITION_END:
+      return panel_dock_get_reveal_end (self);
+    case PANEL_DOCK_POSITION_TOP:
+      return panel_dock_get_reveal_top (self);
+    case PANEL_DOCK_POSITION_BOTTOM:
+      return panel_dock_get_reveal_bottom (self);
+    case PANEL_DOCK_POSITION_START:
+      return panel_dock_get_reveal_start (self);
+    case PANEL_DOCK_POSITION_CENTER:
+    default:
+      g_return_val_if_reached (FALSE);
+    }
+}
+
 void
 panel_dock_set_reveal_bottom (PanelDock *self,
                               gboolean   reveal_bottom)
@@ -785,6 +807,37 @@ panel_dock_set_reveal_top (PanelDock *self,
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_TOP]);
 }
 
+void
+panel_dock_set_reveal_edge (PanelDock         *self,
+                            PanelDockPosition  edge,
+                            gboolean           reveal)
+{
+  g_return_if_fail (PANEL_IS_DOCK (self));
+
+  switch (edge)
+    {
+    case PANEL_DOCK_POSITION_END:
+      panel_dock_set_reveal_end (self, reveal);
+      break;
+
+    case PANEL_DOCK_POSITION_TOP:
+      panel_dock_set_reveal_top (self, reveal);
+      break;
+
+    case PANEL_DOCK_POSITION_BOTTOM:
+      panel_dock_set_reveal_bottom (self, reveal);
+      break;
+
+    case PANEL_DOCK_POSITION_START:
+      panel_dock_set_reveal_start (self, reveal);
+      break;
+
+    case PANEL_DOCK_POSITION_CENTER:
+    default:
+      g_return_if_reached ();
+    }
+}
+
 static GtkWidget *
 panel_dock_get_child_at_position (PanelDock         *self,
                                   PanelDockPosition  position)
@@ -831,9 +884,9 @@ _panel_dock_get_end_child (PanelDock *self)
   return panel_dock_get_child_at_position (self, PANEL_DOCK_POSITION_END);
 }
 
-static gboolean
-panel_dock_get_can_reveal (PanelDock         *self,
-                           PanelDockPosition  position)
+gboolean
+panel_dock_get_can_reveal_edge (PanelDock         *self,
+                                PanelDockPosition  position)
 {
   GtkWidget *child;
 
@@ -848,25 +901,25 @@ panel_dock_get_can_reveal (PanelDock         *self,
 gboolean
 panel_dock_get_can_reveal_bottom (PanelDock *self)
 {
-  return panel_dock_get_can_reveal (self, PANEL_DOCK_POSITION_BOTTOM);
+  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_BOTTOM);
 }
 
 gboolean
 panel_dock_get_can_reveal_top (PanelDock *self)
 {
-  return panel_dock_get_can_reveal (self, PANEL_DOCK_POSITION_TOP);
+  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_TOP);
 }
 
 gboolean
 panel_dock_get_can_reveal_start (PanelDock *self)
 {
-  return panel_dock_get_can_reveal (self, PANEL_DOCK_POSITION_START);
+  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_START);
 }
 
 gboolean
 panel_dock_get_can_reveal_end (PanelDock *self)
 {
-  return panel_dock_get_can_reveal (self, PANEL_DOCK_POSITION_END);
+  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_END);
 }
 
 static void

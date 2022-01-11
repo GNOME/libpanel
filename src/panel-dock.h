@@ -58,6 +58,13 @@ struct _PanelDockClass
 PANEL_AVAILABLE_IN_ALL
 GtkWidget *panel_dock_new                   (void);
 PANEL_AVAILABLE_IN_ALL
+gboolean   panel_dock_get_reveal_edge       (PanelDock          *self,
+                                             PanelDockPosition   edge);
+PANEL_AVAILABLE_IN_ALL
+void       panel_dock_set_reveal_edge       (PanelDock          *self,
+                                             PanelDockPosition   position,
+                                             gboolean            reveal);
+PANEL_AVAILABLE_IN_ALL
 gboolean   panel_dock_get_reveal_start      (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
 gboolean   panel_dock_get_reveal_end        (PanelDock          *self);
@@ -77,6 +84,9 @@ void       panel_dock_set_reveal_top        (PanelDock          *self,
 PANEL_AVAILABLE_IN_ALL
 void       panel_dock_set_reveal_bottom     (PanelDock          *self,
                                              gboolean            reveal_bottom);
+PANEL_AVAILABLE_IN_ALL
+gboolean   panel_dock_get_can_reveal_edge   (PanelDock          *self,
+                                             PanelDockPosition   edge);
 PANEL_AVAILABLE_IN_ALL
 gboolean   panel_dock_get_can_reveal_bottom (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL

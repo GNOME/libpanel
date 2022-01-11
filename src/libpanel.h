@@ -23,6 +23,7 @@
 #define LIBPANEL_INSIDE
 # include "panel-dock.h"
 # include "panel-dock-switcher.h"
+# include "panel-enums.h"
 # include "panel-frame.h"
 # include "panel-frame-header.h"
 # include "panel-frame-header-bar.h"

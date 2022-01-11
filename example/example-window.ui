@@ -21,8 +21,9 @@
               </object>
             </child>
             <child type="start">
-              <object class="PanelDockSwitcher" id="dockswitcher">
+              <object class="PanelDockSwitcher">
                 <property name="dock">dock</property>
+                <property name="position">start</property>
               </object>
             </child>
             <child type="title">
@@ -65,6 +66,12 @@
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="primary">true</property>
                 <property name="menu-model">window_menu</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="PanelDockSwitcher">
+                <property name="dock">dock</property>
+                <property name="position">end</property>
               </object>
             </child>
             <child type="end">
@@ -537,6 +544,12 @@
                 <attributes>
                   <attribute name="family" value="Monospace"/>
                 </attributes>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="PanelDockSwitcher">
+                <property name="dock">dock</property>
+                <property name="position">bottom</property>
               </object>
             </child>
             <child type="suffix">

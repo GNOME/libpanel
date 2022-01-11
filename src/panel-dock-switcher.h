@@ -33,11 +33,7 @@ PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelDockSwitcher, panel_dock_switcher, PANEL, DOCK_SWITCHER, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_dock_switcher_new      (void);
-PANEL_AVAILABLE_IN_ALL
-PanelDock *panel_dock_switcher_get_dock (PanelDockSwitcher *self);
-PANEL_AVAILABLE_IN_ALL
-void       panel_dock_switcher_set_dock (PanelDockSwitcher *self,
-                                         PanelDock         *dock);
+GtkWidget *panel_dock_switcher_new (PanelDock         *dock,
+                                    PanelDockPosition  position);
 
 G_END_DECLS

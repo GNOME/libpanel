@@ -165,10 +165,12 @@ panelstatusbar > * {
 panelstatusbar > *:last-child {
   border-right: none;
 }
+panelstatusbar paneldockswitcher,
 panelstatusbar > menubutton,
 panelstatusbar > dropdown {
   padding: 0;
 }
+panelstatusbar paneldockswitcher button,
 panelstatusbar > dropdown > button,
 panelstatusbar > menubutton > button,
 panelstatusbar > button {
@@ -176,6 +178,7 @@ panelstatusbar > button {
   border-radius: 0;
   padding: 0 9px;
 }
+panelstatusbar paneldockswitcher button:not(:hover):not(:checked),
 panelstatusbar > dropdown > button:not(:hover):not(:checked),
 panelstatusbar > menubutton > button:not(:hover):not(:checked),
 panelstatusbar > button:not(:hover):not(:checked) {
