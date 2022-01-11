@@ -26,6 +26,18 @@
                 <property name="position">start</property>
               </object>
             </child>
+            <child type="start">
+              <object class="AdwSplitButton">
+                <property name="icon-name">builder-build-symbolic</property>
+                <property name="tooltip-text">Build Project (Ctrl+Shift+B)</property>
+              </object>
+            </child>
+            <child type="start">
+              <object class="AdwSplitButton">
+                <property name="icon-name">media-playback-start-symbolic</property>
+                <property name="tooltip-text">Run Project (Ctrl+Shift+R)</property>
+              </object>
+            </child>
             <child type="title">
               <object class="GtkCenterBox">
                 <child type="center">
@@ -41,22 +53,6 @@
                         </child>
                       </object>
                     </property>
-                  </object>
-                </child>
-                <child type="start">
-                  <object class="GtkBox">
-                    <child>
-                      <object class="AdwSplitButton">
-                        <property name="icon-name">builder-build-symbolic</property>
-                        <property name="tooltip-text">Build Project (Ctrl+Shift+B)</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="AdwSplitButton">
-                        <property name="icon-name">media-playback-start-symbolic</property>
-                        <property name="tooltip-text">Run Project (Ctrl+Shift+R)</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -719,11 +715,34 @@
   </menu>
   <menu id="add_menu">
     <section>
-      <attribute name="label">Documents</attribute>
+      <attribute name="label">Files</attribute>
       <item>
-        <attribute name="label">New Document</attribute>
+        <attribute name="label">New File</attribute>
         <attribute name="action">document.new</attribute>
         <attribute name="accel">&lt;ctrl&gt;n</attribute>
+      </item>
+      <item>
+        <attribute name="label">New Class</attribute>
+        <attribute name="action">class.new</attribute>
+      </item>
+      <item>
+        <attribute name="label">New Widget</attribute>
+        <attribute name="action">class.new</attribute>
+      </item>
+    </section>
+    <section>
+      <attribute name="label">Terminals</attribute>
+      <item>
+        <attribute name="label">New Terminal</attribute>
+        <attribute name="action">terminal.new</attribute>
+      </item>
+      <item>
+        <attribute name="label">New Terminal in SDK</attribute>
+        <attribute name="action">terminal.new-build</attribute>
+      </item>
+      <item>
+        <attribute name="label">New Terminal in Runtime</attribute>
+        <attribute name="action">terminal.new-build</attribute>
       </item>
     </section>
   </menu>
