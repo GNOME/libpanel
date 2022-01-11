@@ -27,27 +27,35 @@
             </child>
             <child type="title">
               <object class="GtkCenterBox">
-                <child type="start">
-                  <object class="GtkMenuButton">
-                    <property name="always-show-arrow">true</property>
-                    <property name="icon-name">computer-symbolic</property>
-                  </object>
-                </child>
                 <child type="center">
                   <object class="PanelOmniBar">
                     <property name="width-request">300</property>
                     <property name="valign">center</property>
-                    <child type="suffix">
-                      <object class="GtkImage">
-                        <property name="icon-name">builder-build-symbolic</property>
+                    <property name="popover">
+                      <object class="GtkPopover">
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Build Popover</property>
+                          </object>
+                        </child>
                       </object>
-                    </child>
+                    </property>
                   </object>
                 </child>
-                <child type="end">
-                  <object class="AdwSplitButton">
-                    <property name="margin-start">6</property>
-                    <property name="icon-name">media-playback-start-symbolic</property>
+                <child type="start">
+                  <object class="GtkBox">
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="icon-name">builder-build-symbolic</property>
+                        <property name="tooltip-text">Build Project (Ctrl+Shift+B)</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="icon-name">media-playback-start-symbolic</property>
+                        <property name="tooltip-text">Run Project (Ctrl+Shift+R)</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
