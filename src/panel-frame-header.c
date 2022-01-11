@@ -117,23 +117,23 @@ panel_frame_header_page_changed (PanelFrameHeader *self,
 }
 
 void
-panel_frame_header_pack_start (PanelFrameHeader *self,
+panel_frame_header_add_prefix (PanelFrameHeader *self,
                                int               priority,
                                GtkWidget        *child)
 {
   g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
   g_return_if_fail (GTK_IS_WIDGET (child));
 
-  PANEL_FRAME_HEADER_GET_IFACE (self)->pack_start (self, priority, child);
+  PANEL_FRAME_HEADER_GET_IFACE (self)->add_prefix (self, priority, child);
 }
 
 void
-panel_frame_header_pack_end (PanelFrameHeader *self,
-                             int               priority,
-                             GtkWidget        *child)
+panel_frame_header_add_suffix (PanelFrameHeader *self,
+                               int               priority,
+                               GtkWidget        *child)
 {
   g_return_if_fail (PANEL_IS_FRAME_HEADER (self));
   g_return_if_fail (GTK_IS_WIDGET (child));
 
-  PANEL_FRAME_HEADER_GET_IFACE (self)->pack_end (self, priority, child);
+  PANEL_FRAME_HEADER_GET_IFACE (self)->add_suffix (self, priority, child);
 }

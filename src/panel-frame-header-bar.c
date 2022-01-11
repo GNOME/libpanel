@@ -623,7 +623,7 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
 #define SET_PRIORITY(w,i) g_object_set_data(G_OBJECT(w),"PRIORITY",GINT_TO_POINTER(i))
 
 static void
-panel_frame_header_bar_pack_start (PanelFrameHeader *header,
+panel_frame_header_bar_add_prefix (PanelFrameHeader *header,
                                    int               priority,
                                    GtkWidget        *widget)
 {
@@ -647,9 +647,9 @@ panel_frame_header_bar_pack_start (PanelFrameHeader *header,
 }
 
 static void
-panel_frame_header_bar_pack_end (PanelFrameHeader *header,
-                                 int               priority,
-                                 GtkWidget        *widget)
+panel_frame_header_bar_add_suffix (PanelFrameHeader *header,
+                                   int               priority,
+                                   GtkWidget        *widget)
 {
   PanelFrameHeaderBar *self = (PanelFrameHeaderBar *)header;
   GtkWidget *sibling = NULL;
@@ -675,8 +675,8 @@ frame_header_iface_init (PanelFrameHeaderInterface *iface)
 {
   iface->can_drop = panel_frame_header_bar_can_drop;
   iface->page_changed = panel_frame_header_bar_page_changed;
-  iface->pack_start = panel_frame_header_bar_pack_start;
-  iface->pack_end = panel_frame_header_bar_pack_end;
+  iface->add_prefix = panel_frame_header_bar_add_prefix;
+  iface->add_suffix = panel_frame_header_bar_add_suffix;
 }
 
 /**

@@ -42,10 +42,10 @@ struct _PanelFrameHeaderInterface
                             PanelWidget      *widget);
   gboolean (*can_drop)     (PanelFrameHeader *self,
                             PanelWidget      *widget);
-  void     (*pack_start)   (PanelFrameHeader *self,
+  void     (*add_prefix)   (PanelFrameHeader *self,
                             int               priority,
                             GtkWidget        *child);
-  void     (*pack_end)     (PanelFrameHeader *self,
+  void     (*add_suffix)   (PanelFrameHeader *self,
                             int               priority,
                             GtkWidget        *child);
 };
@@ -62,11 +62,11 @@ PANEL_AVAILABLE_IN_ALL
 void        panel_frame_header_page_changed (PanelFrameHeader *self,
                                              PanelWidget      *widget);
 PANEL_AVAILABLE_IN_ALL
-void        panel_frame_header_pack_start   (PanelFrameHeader *self,
+void        panel_frame_header_add_prefix   (PanelFrameHeader *self,
                                              int               priority,
                                              GtkWidget        *child);
 PANEL_AVAILABLE_IN_ALL
-void        panel_frame_header_pack_end     (PanelFrameHeader *self,
+void        panel_frame_header_add_suffix   (PanelFrameHeader *self,
                                              int               priority,
                                              GtkWidget        *child);
 

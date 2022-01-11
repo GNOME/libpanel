@@ -232,7 +232,7 @@ create_frame_cb (PanelGrid     *grid,
     panel_frame_header_bar_set_show_icon (PANEL_FRAME_HEADER_BAR (header), TRUE);
 
   panel_frame_set_header (frame, header);
-  panel_frame_header_pack_start (header,
+  panel_frame_header_add_prefix (header,
                                  -100,
                                  (child = g_object_new (GTK_TYPE_BUTTON,
                                                         "width-request", 40,
@@ -241,7 +241,7 @@ create_frame_cb (PanelGrid     *grid,
                                                         NULL)));
   gtk_widget_add_css_class (child, "flat");
 
-  panel_frame_header_pack_start (header,
+  panel_frame_header_add_prefix (header,
                                  -50,
                                  (child = g_object_new (GTK_TYPE_BUTTON,
                                                         "width-request", 40,
