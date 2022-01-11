@@ -47,8 +47,9 @@
               </object>
             </child>
             <child type="end">
-              <object class="GtkMenuButton">
+              <object class="GtkMenuButton" id="primary_button">
                 <property name="icon-name">open-menu-symbolic</property>
+                <property name="primary">true</property>
                 <property name="menu-model">window_menu</property>
               </object>
             </child>
@@ -649,6 +650,9 @@
       </object>
     </child>
   </template>
+  <object class="PanelThemeSelector" id="theme_selector">
+    <property name="action-name">win.theme</property>
+  </object>
   <menu id="page_menu">
     <section>
       <item>
@@ -673,6 +677,11 @@
     </section>
   </menu>
   <menu id="window_menu">
+    <section>
+      <item>
+        <attribute name="custom">theme</attribute>
+      </item>
+    </section>
     <section>
       <item>
         <attribute name="label">Create new document</attribute>

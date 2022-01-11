@@ -34,5 +34,6 @@
 # include "panel-paned.h"
 # include "panel-save-delegate.h"
 # include "panel-statusbar.h"
+# include "panel-theme-selector.h"
 # include "panel-widget.h"
 #undef LIBPANEL_INSIDE

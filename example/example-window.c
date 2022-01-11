@@ -31,6 +31,8 @@ struct _ExampleWindow
   GMenuModel *page_menu;
   GtkDropDown *language;
   GtkToggleButton *frame_header_bar;
+  GtkMenuButton *primary_button;
+  PanelThemeSelector *theme_selector;
   GtkLabel *command;
   GtkLabel *command_bar;
 };
@@ -134,6 +136,60 @@ add_document_action (GtkWidget  *widget,
   example_window_add_document (EXAMPLE_WINDOW (widget));
 }
 
+static void
+set_theme_action (GSimpleAction *action,
+                  GVariant      *param,
+                  gpointer       user_data)
+{
+  const char *str = g_variant_get_string (param, NULL);
+  AdwStyleManager *manager = adw_style_manager_get_default ();
+
+  if (g_strcmp0 (str, "default") == 0)
+    adw_style_manager_set_color_scheme (manager, ADW_COLOR_SCHEME_DEFAULT);
+  else if (g_strcmp0 (str, "light") == 0)
+    adw_style_manager_set_color_scheme (manager, ADW_COLOR_SCHEME_FORCE_LIGHT);
+  else if (g_strcmp0 (str, "dark") == 0)
+    adw_style_manager_set_color_scheme (manager, ADW_COLOR_SCHEME_FORCE_DARK);
+}
+
+static void
+notify_theme_cb (ExampleWindow   *self,
+                 GParamSpec      *pspec,
+                 AdwStyleManager *style_manager)
+{
+  const char *name;
+  GAction *action;
+
+  g_assert (EXAMPLE_IS_WINDOW (self));
+  g_assert (ADW_IS_STYLE_MANAGER (style_manager));
+
+  switch (adw_style_manager_get_color_scheme (style_manager))
+    {
+    case ADW_COLOR_SCHEME_PREFER_DARK:
+    case ADW_COLOR_SCHEME_FORCE_DARK:
+      name = "dark";
+      break;
+
+    case ADW_COLOR_SCHEME_FORCE_LIGHT:
+    case ADW_COLOR_SCHEME_PREFER_LIGHT:
+      name = "light";
+      break;
+
+    case ADW_COLOR_SCHEME_DEFAULT:
+    default:
+      if (!adw_style_manager_get_system_supports_color_schemes (style_manager))
+        name = "light";
+      else
+        name = "default";
+      break;
+    }
+
+
+  action = g_action_map_lookup_action (G_ACTION_MAP (self), "theme");
+  g_simple_action_set_state (G_SIMPLE_ACTION (action),
+                             g_variant_new_string (name));
+}
+
 static PanelFrame *
 create_frame_cb (PanelGrid     *grid,
                  ExampleWindow *self)
@@ -224,6 +280,8 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, language);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command_bar);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, primary_button);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, theme_selector);
   gtk_widget_class_bind_template_callback (widget_class, create_frame_cb);
 
   gtk_widget_class_install_action (widget_class, "document.new", NULL, add_document_action);
@@ -241,11 +299,24 @@ example_window_class_init (ExampleWindowClass *klass)
 static void
 example_window_init (ExampleWindow *self)
 {
+  static const GActionEntry entries[] = {
+    { "theme", NULL, "s", "'default'", set_theme_action },
+  };
   g_autoptr(GPropertyAction) reveal_start = NULL;
   g_autoptr(GPropertyAction) reveal_end = NULL;
   g_autoptr(GPropertyAction) reveal_bottom = NULL;
+  AdwStyleManager *style_manager = adw_style_manager_get_default ();
+  GtkPopover *popover;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  g_action_map_add_action_entries (G_ACTION_MAP (self), entries, G_N_ELEMENTS (entries), self);
+  g_signal_connect_object (style_manager,
+                           "notify",
+                           G_CALLBACK (notify_theme_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  notify_theme_cb (self, NULL, style_manager);
 
   reveal_start = g_property_action_new ("reveal-start", self->dock, "reveal-start");
   reveal_bottom = g_property_action_new ("reveal-bottom", self->dock, "reveal-bottom");
@@ -263,4 +334,9 @@ example_window_init (ExampleWindow *self)
       if (GTK_IS_POPOVER (child))
         gtk_popover_set_position (GTK_POPOVER (child), GTK_POS_TOP);
     }
+
+  popover = gtk_menu_button_get_popover (self->primary_button);
+  gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover),
+                              GTK_WIDGET (self->theme_selector),
+                              "theme");
 }

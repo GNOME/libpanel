@@ -7,5 +7,6 @@
     <file compressed="true" preprocess="xml-stripblanks">panel-frame-header-bar-row.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-frame.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-save-dialog.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">panel-theme-selector.ui</file>
   </gresource>
 </gresources>

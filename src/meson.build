@@ -43,6 +43,7 @@ libpanel_sources = [
   'panel-scaler.c',
   'panel-signal-group.c',
   'panel-statusbar.c',
+  'panel-theme-selector.c',
   'panel-widget.c',
 ]
 
