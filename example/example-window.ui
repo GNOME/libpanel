@@ -894,6 +894,12 @@
         <attribute name="action">window.close</attribute>
       </item>
     </section>
+    <section>
+      <attribute name="label">Appearance</attribute>
+      <item>
+        <attribute name="custom">appearance</attribute>
+      </item>
+    </section>
     <!--
     <section>
       <item>
