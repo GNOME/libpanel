@@ -26,18 +26,6 @@
                 <property name="position">start</property>
               </object>
             </child>
-            <child type="start">
-              <object class="AdwSplitButton">
-                <property name="icon-name">builder-build-symbolic</property>
-                <property name="tooltip-text">Build Project (Ctrl+Shift+B)</property>
-              </object>
-            </child>
-            <child type="start">
-              <object class="AdwSplitButton">
-                <property name="icon-name">media-playback-start-symbolic</property>
-                <property name="tooltip-text">Run Project (Ctrl+Shift+R)</property>
-              </object>
-            </child>
             <child type="title">
               <object class="GtkCenterBox">
                 <child type="center">
@@ -53,6 +41,22 @@
                         </child>
                       </object>
                     </property>
+                    <child type="suffix">
+                      <object class="GtkImage">
+                        <property name="icon-name">builder-build-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child type="end">
+                  <object class="GtkBox">
+                    <property name="margin-start">6</property>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="icon-name">media-playback-start-symbolic</property>
+                        <property name="tooltip-text">Run Project (Ctrl+Shift+R)</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -68,25 +72,6 @@
               <object class="PanelDockSwitcher">
                 <property name="dock">dock</property>
                 <property name="position">end</property>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GtkBox">
-                <style>
-                  <class name="linked"/>
-                </style>
-                <child>
-                  <object class="GtkToggleButton" id="frame_header_bar">
-                    <property name="active">true</property>
-                    <property name="label">H</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="frame_tab_bar">
-                    <property name="group">frame_header_bar</property>
-                    <property name="label">T</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
@@ -546,6 +531,18 @@
               <object class="PanelDockSwitcher">
                 <property name="dock">dock</property>
                 <property name="position">bottom</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkToggleButton" id="frame_header_bar">
+                <property name="active">true</property>
+                <property name="label">H</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkToggleButton" id="frame_tab_bar">
+                <property name="group">frame_header_bar</property>
+                <property name="label">T</property>
               </object>
             </child>
             <child type="suffix">
