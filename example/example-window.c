@@ -32,7 +32,9 @@ struct _ExampleWindow
   GtkDropDown *language;
   GtkToggleButton *frame_header_bar;
   GtkMenuButton *primary_button;
+  AdwSplitButton *run_button;
   PanelThemeSelector *theme_selector;
+  GtkWidget *appearance;
   GtkLabel *command;
   GtkLabel *command_bar;
 };
@@ -281,6 +283,8 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command_bar);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, primary_button);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, appearance);
+  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, run_button);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, theme_selector);
   gtk_widget_class_bind_template_callback (widget_class, create_frame_cb);
 
@@ -339,4 +343,8 @@ example_window_init (ExampleWindow *self)
   gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover),
                               GTK_WIDGET (self->theme_selector),
                               "theme");
+
+  popover = adw_split_button_get_popover (self->run_button);
+  gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover),
+                              self->appearance, "appearance");
 }

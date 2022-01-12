@@ -52,7 +52,7 @@
                   <object class="GtkBox">
                     <property name="margin-start">6</property>
                     <child>
-                      <object class="AdwSplitButton">
+                      <object class="AdwSplitButton" id="run_button">
                         <property name="icon-name">media-playback-start-symbolic</property>
                         <property name="tooltip-text">Run Project (Ctrl+Shift+R)</property>
                         <property name="menu-model">run_menu</property>
@@ -674,6 +674,75 @@
   <object class="PanelThemeSelector" id="theme_selector">
     <property name="action-name">win.theme</property>
   </object>
+  <object class="GtkBox" id="appearance">
+    <property name="hexpand">true</property>
+    <property name="orientation">vertical</property>
+    <property name="margin-start">12</property>
+    <property name="margin-end">12</property>
+    <property name="margin-bottom">12</property>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">12</property>
+        <property name="halign">center</property>
+        <style>
+          <class name="linked"/>
+        </style>
+        <child>
+          <object class="GtkToggleButton" id="light">
+            <property name="active">true</property>
+            <property name="label">Light</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleButton">
+            <property name="group">light</property>
+            <property name="label">Dark</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkGrid">
+        <property name="hexpand">true</property>
+        <property name="row-spacing">6</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="xalign">0</property>
+            <property name="label">High Contrast</property>
+            <property name="hexpand">true</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="xalign">0</property>
+            <property name="label">Right-to-Left</property>
+            <property name="hexpand">true</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSwitch">
+            <layout>
+              <property name="row">0</property>
+              <property name="column">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSwitch">
+            <layout>
+              <property name="row">1</property>
+              <property name="column">1</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
   <menu id="page_menu">
     <section>
       <item>
@@ -879,19 +948,23 @@
         <attribute name="label">Run</attribute>
         <attribute name="accel">&lt;ctrl&gt;r</attribute>
         <attribute name="action">window.close</attribute>
+        <attribute name="role">radio</attribute>
       </item>
       <item>
         <attribute name="label">Run with Profiler</attribute>
         <attribute name="action">window.close</attribute>
+        <attribute name="role">radio</attribute>
       </item>
       <item>
         <attribute name="label">Run with Debugger</attribute>
         <attribute name="accel">&lt;ctrl&gt;d</attribute>
         <attribute name="action">window.close</attribute>
+        <attribute name="role">radio</attribute>
       </item>
       <item>
         <attribute name="label">Run with Valgrind</attribute>
         <attribute name="action">window.close</attribute>
+        <attribute name="role">radio</attribute>
       </item>
     </section>
     <section>
