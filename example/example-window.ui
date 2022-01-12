@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk" version="4.0"/>
   <template class="ExampleWindow" parent="AdwApplicationWindow">
     <property name="title">Panel Example</property>
     <property name="default-width">900</property>
@@ -703,41 +704,42 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
-        <property name="hexpand">true</property>
-        <property name="row-spacing">6</property>
+      <object class="GtkListBox">
+        <style>
+          <class name="boxed-list"/>
+        </style>
         <child>
-          <object class="GtkLabel">
-            <property name="xalign">0</property>
-            <property name="label">High Contrast</property>
-            <property name="hexpand">true</property>
+          <object class="AdwActionRow">
+            <property name="activatable-widget">high_contrast</property>
+            <child type="prefix">
+              <object class="GtkLabel">
+                <property name="label">High Contrast</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkSwitch" id="high_contrast">
+                <property name="hexpand">true</property>
+                <property name="halign">end</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
-            <property name="xalign">0</property>
-            <property name="label">Right-to-Left</property>
-            <property name="hexpand">true</property>
-            <layout>
-              <property name="column">0</property>
-              <property name="row">1</property>
-            </layout>
-          </object>
-        </child>
-        <child>
-          <object class="GtkSwitch">
-            <layout>
-              <property name="row">0</property>
-              <property name="column">1</property>
-            </layout>
-          </object>
-        </child>
-        <child>
-          <object class="GtkSwitch">
-            <layout>
-              <property name="row">1</property>
-              <property name="column">1</property>
-            </layout>
+          <object class="AdwActionRow">
+            <property name="activatable-widget">rtl</property>
+            <child type="prefix">
+              <object class="GtkLabel">
+                <property name="label">Right-to-Left</property>
+              </object>
+            </child>
+            <child type="suffix">
+              <object class="GtkSwitch" id="rtl">
+                <property name="hexpand">true</property>
+                <property name="halign">end</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -968,17 +970,25 @@
       </item>
     </section>
     <section>
+      <submenu>
+        <attribute name="label">Run Target</attribute>
+        <section>
+          <item>
+            <attribute name="label">Flatpak Command (gnome-builder)</attribute>
+            <attribute name="role">radio</attribute>
+          </item>
+          <item>
+            <attribute name="label">test-vim</attribute>
+            <attribute name="role">radio</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+    <section>
       <attribute name="label">Appearance</attribute>
       <item>
         <attribute name="custom">appearance</attribute>
       </item>
     </section>
-    <!--
-    <section>
-      <item>
-        <attribute name="custom">target</attribute>
-      </item>
-    </section>
-    -->
   </menu>
 </interface>
