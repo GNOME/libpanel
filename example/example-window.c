@@ -34,7 +34,6 @@ struct _ExampleWindow
   GtkMenuButton *primary_button;
   AdwSplitButton *run_button;
   PanelThemeSelector *theme_selector;
-  GtkWidget *appearance;
   GtkLabel *command;
   GtkLabel *command_bar;
 };
@@ -152,6 +151,36 @@ set_theme_action (GSimpleAction *action,
     adw_style_manager_set_color_scheme (manager, ADW_COLOR_SCHEME_FORCE_LIGHT);
   else if (g_strcmp0 (str, "dark") == 0)
     adw_style_manager_set_color_scheme (manager, ADW_COLOR_SCHEME_FORCE_DARK);
+}
+
+static void
+set_high_contrast_action (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  g_autoptr(GVariant) v = g_action_get_state (G_ACTION (action));
+
+  if (!v ||
+      !g_variant_is_of_type (v, G_VARIANT_TYPE_BOOLEAN) ||
+      g_variant_get_boolean (v) == FALSE)
+    g_simple_action_set_state (action, g_variant_new_boolean (TRUE));
+  else
+    g_simple_action_set_state (action, g_variant_new_boolean (FALSE));
+}
+
+static void
+set_rtl_action (GSimpleAction *action,
+                GVariant      *param,
+                gpointer       user_data)
+{
+  g_autoptr(GVariant) v = g_action_get_state (G_ACTION (action));
+
+  if (!v ||
+      !g_variant_is_of_type (v, G_VARIANT_TYPE_BOOLEAN) ||
+      g_variant_get_boolean (v) == FALSE)
+    g_simple_action_set_state (action, g_variant_new_boolean (TRUE));
+  else
+    g_simple_action_set_state (action, g_variant_new_boolean (FALSE));
 }
 
 static void
@@ -283,7 +312,6 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, command_bar);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, primary_button);
-  gtk_widget_class_bind_template_child (widget_class, ExampleWindow, appearance);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, run_button);
   gtk_widget_class_bind_template_child (widget_class, ExampleWindow, theme_selector);
   gtk_widget_class_bind_template_callback (widget_class, create_frame_cb);
@@ -305,6 +333,8 @@ example_window_init (ExampleWindow *self)
 {
   static const GActionEntry entries[] = {
     { "theme", NULL, "s", "'default'", set_theme_action },
+    { "high-contrast", set_high_contrast_action, NULL, "false" },
+    { "right-to-left", set_rtl_action, NULL, "false" },
   };
   g_autoptr(GPropertyAction) reveal_start = NULL;
   g_autoptr(GPropertyAction) reveal_end = NULL;
@@ -343,8 +373,4 @@ example_window_init (ExampleWindow *self)
   gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover),
                               GTK_WIDGET (self->theme_selector),
                               "theme");
-
-  popover = adw_split_button_get_popover (self->run_button);
-  gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover),
-                              self->appearance, "appearance");
 }

@@ -675,76 +675,6 @@
   <object class="PanelThemeSelector" id="theme_selector">
     <property name="action-name">win.theme</property>
   </object>
-  <object class="GtkBox" id="appearance">
-    <property name="hexpand">true</property>
-    <property name="orientation">vertical</property>
-    <property name="margin-start">12</property>
-    <property name="margin-end">12</property>
-    <property name="margin-bottom">12</property>
-    <child>
-      <object class="GtkBox">
-        <property name="margin-top">6</property>
-        <property name="margin-bottom">12</property>
-        <property name="halign">center</property>
-        <style>
-          <class name="linked"/>
-        </style>
-        <child>
-          <object class="GtkToggleButton" id="light">
-            <property name="active">true</property>
-            <property name="label">Light</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkToggleButton">
-            <property name="group">light</property>
-            <property name="label">Dark</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkListBox">
-        <style>
-          <class name="boxed-list"/>
-        </style>
-        <child>
-          <object class="AdwActionRow">
-            <property name="activatable-widget">high_contrast</property>
-            <child type="prefix">
-              <object class="GtkLabel">
-                <property name="label">High Contrast</property>
-              </object>
-            </child>
-            <child type="suffix">
-              <object class="GtkSwitch" id="high_contrast">
-                <property name="hexpand">true</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwActionRow">
-            <property name="activatable-widget">rtl</property>
-            <child type="prefix">
-              <object class="GtkLabel">
-                <property name="label">Right-to-Left</property>
-              </object>
-            </child>
-            <child type="suffix">
-              <object class="GtkSwitch" id="rtl">
-                <property name="hexpand">true</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
   <menu id="page_menu">
     <section>
       <item>
@@ -982,17 +912,45 @@
             <attribute name="role">radio</attribute>
           </item>
         </section>
-        <section>
-          <item>
-            <attribute name="label">Custom Command…</attribute>
-          </item>
-        </section>
       </submenu>
+      <section>
+        <item>
+          <attribute name="label">Custom Command…</attribute>
+        </item>
+      </section>
     </section>
     <section>
       <attribute name="label">Appearance</attribute>
       <item>
-        <attribute name="custom">appearance</attribute>
+        <attribute name="label">Follow System</attribute>
+        <attribute name="role">radio</attribute>
+        <attribute name="action">win.theme</attribute>
+        <attribute name="target" type="s">'default'</attribute>
+      </item>
+      <item>
+        <attribute name="label">Force Light</attribute>
+        <attribute name="role">radio</attribute>
+        <attribute name="action">win.theme</attribute>
+        <attribute name="target" type="s">'dark'</attribute>
+      </item>
+      <item>
+        <attribute name="label">Force Dark</attribute>
+        <attribute name="role">radio</attribute>
+        <attribute name="action">win.theme</attribute>
+        <attribute name="target" type="s">'light'</attribute>
+      </item>
+    </section>
+    <section>
+      <attribute name="label">Accessibility</attribute>
+      <item>
+        <attribute name="label">High Contrast</attribute>
+        <attribute name="role">check</attribute>
+        <attribute name="action">win.high-contrast</attribute>
+      </item>
+      <item>
+        <attribute name="label">Right-to-Left</attribute>
+        <attribute name="role">check</attribute>
+        <attribute name="action">win.right-to-left</attribute>
       </item>
     </section>
   </menu>
