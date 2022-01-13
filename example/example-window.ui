@@ -982,6 +982,11 @@
             <attribute name="role">radio</attribute>
           </item>
         </section>
+        <section>
+          <item>
+            <attribute name="label">Custom Command…</attribute>
+          </item>
+        </section>
       </submenu>
     </section>
     <section>
