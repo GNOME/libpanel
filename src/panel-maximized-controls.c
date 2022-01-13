@@ -72,6 +72,8 @@ panel_maximized_controls_init (PanelMaximizedControls *self)
   gtk_button_set_icon_name (self->close, "view-restore-symbolic");
   gtk_widget_set_tooltip_text (GTK_WIDGET (self->close), _("Restore panel to previous location"));
   gtk_widget_set_can_focus (GTK_WIDGET (self->close), TRUE);
+  gtk_widget_set_margin_end (GTK_WIDGET (self->close), 12);
+  gtk_widget_set_margin_top (GTK_WIDGET (self->close), 12);
   gtk_widget_add_css_class (GTK_WIDGET (self->close), "circular");
   gtk_widget_add_css_class (GTK_WIDGET (self->close), "close");
   gtk_box_append (self->box, GTK_WIDGET (self->close));
