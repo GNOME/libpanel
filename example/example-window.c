@@ -154,6 +154,14 @@ set_theme_action (GSimpleAction *action,
 }
 
 static void
+set_runner_action (GSimpleAction *action,
+                   GVariant      *param,
+                   gpointer       user_data)
+{
+  g_simple_action_set_state (action, param);
+}
+
+static void
 set_high_contrast_action (GSimpleAction *action,
                           GVariant      *param,
                           gpointer       user_data)
@@ -333,6 +341,7 @@ example_window_init (ExampleWindow *self)
 {
   static const GActionEntry entries[] = {
     { "theme", NULL, "s", "'default'", set_theme_action },
+    { "runner", NULL, "s", "''", set_runner_action },
     { "high-contrast", set_high_contrast_action, NULL, "false" },
     { "right-to-left", set_rtl_action, NULL, "false" },
   };

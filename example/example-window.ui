@@ -875,31 +875,6 @@
   </menu>
   <menu id="run_menu">
     <section>
-      <attribute name="label">Run Options</attribute>
-      <item>
-        <attribute name="label">Run</attribute>
-        <attribute name="accel">&lt;ctrl&gt;r</attribute>
-        <attribute name="action">window.close</attribute>
-        <attribute name="role">radio</attribute>
-      </item>
-      <item>
-        <attribute name="label">Run with Profiler</attribute>
-        <attribute name="action">window.close</attribute>
-        <attribute name="role">radio</attribute>
-      </item>
-      <item>
-        <attribute name="label">Run with Debugger</attribute>
-        <attribute name="accel">&lt;ctrl&gt;d</attribute>
-        <attribute name="action">window.close</attribute>
-        <attribute name="role">radio</attribute>
-      </item>
-      <item>
-        <attribute name="label">Run with Valgrind</attribute>
-        <attribute name="action">window.close</attribute>
-        <attribute name="role">radio</attribute>
-      </item>
-    </section>
-    <section>
       <submenu>
         <attribute name="label">Run Target</attribute>
         <section>
@@ -918,6 +893,33 @@
           <attribute name="label">Custom Command…</attribute>
         </item>
       </section>
+    </section>
+    <section>
+      <attribute name="label">Tools</attribute>
+      <item>
+        <attribute name="label">Disabled</attribute>
+        <attribute name="action">win.runner</attribute>
+        <attribute name="target" type="s">''</attribute>
+        <attribute name="role">radio</attribute>
+      </item>
+      <item>
+        <attribute name="label">Profiler</attribute>
+        <attribute name="action">win.runner</attribute>
+        <attribute name="target" type="s">'profiler'</attribute>
+        <attribute name="role">radio</attribute>
+      </item>
+      <item>
+        <attribute name="label">Debugger</attribute>
+        <attribute name="action">win.runner</attribute>
+        <attribute name="target" type="s">'debugger'</attribute>
+        <attribute name="role">radio</attribute>
+      </item>
+      <item>
+        <attribute name="label">Valgrind</attribute>
+        <attribute name="action">win.runner</attribute>
+        <attribute name="target" type="s">'valgrind'</attribute>
+        <attribute name="role">radio</attribute>
+      </item>
     </section>
     <section>
       <attribute name="label">Appearance</attribute>
