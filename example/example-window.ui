@@ -876,7 +876,7 @@
   <menu id="run_menu">
     <section>
       <submenu>
-        <attribute name="label">Run Target</attribute>
+        <attribute name="label">Build Target</attribute>
         <section>
           <item>
             <attribute name="label">Flatpak Command (gnome-builder)</attribute>
@@ -893,6 +893,106 @@
           <attribute name="label">Custom Command…</attribute>
         </item>
       </section>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label">Device (My Computer)</attribute>
+        <section>
+          <item>
+            <attribute name="label">My Computer</attribute>
+          </item>
+          <item>
+            <attribute name="label">My Computer (_i386)</attribute>
+          </item>
+        </section>
+        <section>
+          <submenu>
+            <attribute name="label">Simulator</attribute>
+            <section>
+              <submenu>
+                <attribute name="label">GNOME OS</attribute>
+                <section>
+                  <item>
+                    <attribute name="label">41</attribute>
+                  </item>
+                  <item>
+                    <attribute name="label">42</attribute>
+                  </item>
+                  <item>
+                    <attribute name="label">43</attribute>
+                  </item>
+                </section>
+                <section>
+                  <item>
+                    <attribute name="label">Nightly</attribute>
+                  </item>
+                </section>
+              </submenu>
+              <submenu>
+                <attribute name="label">Fedora</attribute>
+                <section>
+                  <item>
+                    <attribute name="label">35</attribute>
+                  </item>
+                  <item>
+                    <attribute name="label">36</attribute>
+                  </item>
+                </section>
+                <section>
+                  <item>
+                    <attribute name="label">Rawhide</attribute>
+                  </item>
+                </section>
+              </submenu>
+              <submenu>
+                <attribute name="label">Red Hat Enterprise Linux</attribute>
+                <section>
+                  <item>
+                    <attribute name="label">RHEL 7 Workstation</attribute>
+                  </item>
+                  <item>
+                    <attribute name="label">RHEL 8 Workstation</attribute>
+                  </item>
+                </section>
+                <section>
+                  <item>
+                    <attribute name="label">RHEL 9 Workstation (Beta)</attribute>
+                  </item>
+                </section>
+              </submenu>
+            </section>
+          </submenu>
+          <submenu>
+            <attribute name="label">Simulator (aarch64)</attribute>
+            <section>
+              <submenu>
+                <attribute name="label">GNOME OS (aarch64)</attribute>
+                <section>
+                  <item>
+                    <attribute name="label">41</attribute>
+                  </item>
+                  <item>
+                    <attribute name="label">42</attribute>
+                  </item>
+                  <item>
+                    <attribute name="label">43</attribute>
+                  </item>
+                </section>
+                <section>
+                  <item>
+                    <attribute name="label">Nightly</attribute>
+                  </item>
+                </section>
+              </submenu>
+            </section>
+          </submenu>
+        </section>
+        <section>
+          <item>
+            <attribute name="label">Christian's Phone</attribute>
+          </item>
+        </section>
+      </submenu>
     </section>
     <section>
       <attribute name="label">Tools</attribute>
