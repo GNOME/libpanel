@@ -1306,7 +1306,7 @@
       </submenu>
     </section>
     <section>
-      <attribute name="label">Tools</attribute>
+      <attribute name="label">Observation</attribute>
       <item>
         <attribute name="label">Disabled</attribute>
         <attribute name="action">win.runner</attribute>
