@@ -24,6 +24,9 @@
 
 typedef struct
 {
+  GtkBox *box;
+  GtkMenuButton *menu_button;
+
   GtkBox *prefix;
   GtkBox *center;
   GtkBox *suffix;
@@ -39,6 +42,8 @@ G_DEFINE_TYPE_WITH_CODE (PanelOmniBar, panel_omni_bar, GTK_TYPE_WIDGET,
 enum {
   PROP_0,
   PROP_POPOVER,
+  PROP_ICON_NAME,
+  PROP_MENU_MODEL,
   N_PROPS
 };
 
@@ -133,12 +138,10 @@ static void
 panel_omni_bar_dispose (GObject *object)
 {
   PanelOmniBar *self = (PanelOmniBar *)object;
-  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+  GtkWidget *child;
 
-  g_clear_pointer ((GtkWidget **)&priv->prefix, gtk_widget_unparent);
-  g_clear_pointer ((GtkWidget **)&priv->center, gtk_widget_unparent);
-  g_clear_pointer ((GtkWidget **)&priv->suffix, gtk_widget_unparent);
-  g_clear_pointer ((GtkWidget **)&priv->popover, gtk_widget_unparent);
+  while ((child = gtk_widget_get_first_child (GTK_WIDGET (self))))
+    gtk_widget_unparent (child);
 
   G_OBJECT_CLASS (panel_omni_bar_parent_class)->dispose (object);
 }
@@ -150,11 +153,20 @@ panel_omni_bar_get_property (GObject    *object,
                              GParamSpec *pspec)
 {
   PanelOmniBar *self = PANEL_OMNI_BAR (object);
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
 
   switch (prop_id)
     {
     case PROP_POPOVER:
       g_value_set_object (value, panel_omni_bar_get_popover (self));
+      break;
+
+    case PROP_ICON_NAME:
+      g_value_set_string (value, gtk_menu_button_get_icon_name (priv->menu_button));
+      break;
+
+    case PROP_MENU_MODEL:
+      g_value_set_object (value, gtk_menu_button_get_menu_model (priv->menu_button));
       break;
 
     default:
@@ -169,11 +181,20 @@ panel_omni_bar_set_property (GObject      *object,
                              GParamSpec   *pspec)
 {
   PanelOmniBar *self = PANEL_OMNI_BAR (object);
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
 
   switch (prop_id)
     {
     case PROP_POPOVER:
       panel_omni_bar_set_popover (self, g_value_get_object (value));
+      break;
+
+    case PROP_ICON_NAME:
+      gtk_menu_button_set_icon_name (priv->menu_button, g_value_get_string (value));
+      break;
+
+    case PROP_MENU_MODEL:
+      gtk_menu_button_set_menu_model (priv->menu_button, g_value_get_object (value));
       break;
 
     default:
@@ -193,6 +214,20 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
 
   widget_class->size_allocate = panel_omni_bar_size_allocate;
 
+  properties [PROP_ICON_NAME] =
+    g_param_spec_string ("icon-name",
+                         "Icon Name",
+                         "Icon Name",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_MENU_MODEL] =
+    g_param_spec_object ("menu-model",
+                         "Menu Model",
+                         "Menu Model",
+                         G_TYPE_MENU_MODEL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   properties [PROP_POPOVER] =
     g_param_spec_object ("popover",
                          "Popover",
@@ -203,7 +238,7 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BOX_LAYOUT);
-  gtk_widget_class_set_css_name (widget_class, "panelomnibar");
+  gtk_widget_class_set_css_name (widget_class, "splitbutton");
 }
 
 static void
@@ -211,6 +246,29 @@ panel_omni_bar_init (PanelOmniBar *self)
 {
   PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
   GtkGesture *gesture;
+  GtkWidget *separator;
+  GtkWidget *button;
+
+  priv->box = g_object_new (GTK_TYPE_BOX,
+                            "css-name", "button",
+                            "orientation", GTK_ORIENTATION_HORIZONTAL,
+                            NULL);
+  gtk_widget_set_parent (GTK_WIDGET (priv->box), GTK_WIDGET (self));
+
+
+  button = g_object_new (GTK_TYPE_BUTTON,
+                         "icon-name", "builder-build-symbolic",
+                         NULL);
+  gtk_widget_set_parent (button, GTK_WIDGET (self));
+
+  separator = g_object_new (GTK_TYPE_SEPARATOR,
+                            "orientation", GTK_ORIENTATION_VERTICAL,
+                            NULL);
+  gtk_widget_set_parent (separator, GTK_WIDGET (self));
+
+  priv->menu_button = g_object_new (GTK_TYPE_MENU_BUTTON,
+                                    NULL);
+  gtk_widget_set_parent (GTK_WIDGET (priv->menu_button), GTK_WIDGET (self));
 
   priv->prefix = g_object_new (GTK_TYPE_BOX, NULL);
   priv->center = g_object_new (GTK_TYPE_BOX,
@@ -218,9 +276,9 @@ panel_omni_bar_init (PanelOmniBar *self)
                                NULL);
   priv->suffix = g_object_new (GTK_TYPE_BOX, NULL);
 
-  gtk_widget_set_parent (GTK_WIDGET (priv->prefix), GTK_WIDGET (self));
-  gtk_widget_set_parent (GTK_WIDGET (priv->center), GTK_WIDGET (self));
-  gtk_widget_set_parent (GTK_WIDGET (priv->suffix), GTK_WIDGET (self));
+  gtk_box_append (priv->box, GTK_WIDGET (priv->prefix));
+  gtk_box_append (priv->box, GTK_WIDGET (priv->center));
+  gtk_box_append (priv->box, GTK_WIDGET (priv->suffix));
 
   gesture = gtk_gesture_click_new ();
   g_signal_connect_object (gesture,
@@ -228,7 +286,7 @@ panel_omni_bar_init (PanelOmniBar *self)
                            G_CALLBACK (panel_omni_bar_click_pressed_cb),
                            self,
                            G_CONNECT_SWAPPED);
-  gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (gesture));
+  gtk_widget_add_controller (GTK_WIDGET (priv->box), GTK_EVENT_CONTROLLER (gesture));
 }
 
 #define GET_PRIORITY(w)   GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w),"PRIORITY"))
