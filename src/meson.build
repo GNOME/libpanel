@@ -64,6 +64,7 @@ libpanel_headers = [
   'panel-paned.h',
   'panel-save-delegate.h',
   'panel-statusbar.h',
+  'panel-theme-selector.h',
   'panel-version-macros.h',
   'panel-widget.h',
 ]
