@@ -24,12 +24,12 @@
 
 typedef struct
 {
-  GtkBox *box;
+  GtkBox        *box;
+  GtkButton     *button;
   GtkMenuButton *menu_button;
-
-  GtkBox *prefix;
-  GtkBox *center;
-  GtkBox *suffix;
+  GtkBox        *prefix;
+  GtkBox        *center;
+  GtkBox        *suffix;
   GtkPopover *popover;
 } PanelOmniBarPrivate;
 
@@ -162,7 +162,7 @@ panel_omni_bar_get_property (GObject    *object,
       break;
 
     case PROP_ICON_NAME:
-      g_value_set_string (value, gtk_menu_button_get_icon_name (priv->menu_button));
+      g_value_set_string (value, gtk_button_get_icon_name (priv->button));
       break;
 
     case PROP_MENU_MODEL:
@@ -190,7 +190,7 @@ panel_omni_bar_set_property (GObject      *object,
       break;
 
     case PROP_ICON_NAME:
-      gtk_menu_button_set_icon_name (priv->menu_button, g_value_get_string (value));
+      gtk_button_set_icon_name (priv->button, g_value_get_string (value));
       break;
 
     case PROP_MENU_MODEL:
@@ -247,7 +247,8 @@ panel_omni_bar_init (PanelOmniBar *self)
   PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
   GtkGesture *gesture;
   GtkWidget *separator;
-  GtkWidget *button;
+
+  gtk_widget_add_css_class (GTK_WIDGET (self), "omnibar");
 
   priv->box = g_object_new (GTK_TYPE_BOX,
                             "css-name", "button",
@@ -255,11 +256,8 @@ panel_omni_bar_init (PanelOmniBar *self)
                             NULL);
   gtk_widget_set_parent (GTK_WIDGET (priv->box), GTK_WIDGET (self));
 
-
-  button = g_object_new (GTK_TYPE_BUTTON,
-                         "icon-name", "builder-build-symbolic",
-                         NULL);
-  gtk_widget_set_parent (button, GTK_WIDGET (self));
+  priv->button = g_object_new (GTK_TYPE_BUTTON, NULL);
+  gtk_widget_set_parent (GTK_WIDGET (priv->button), GTK_WIDGET (self));
 
   separator = g_object_new (GTK_TYPE_SEPARATOR,
                             "orientation", GTK_ORIENTATION_VERTICAL,

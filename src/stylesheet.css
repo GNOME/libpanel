@@ -290,3 +290,8 @@ panelthemeselector checkbutton radio:checked {
   background-color: @theme_selected_bg_color;
   color: @theme_selected_fg_color;
 }
+
+
+splitbutton.omnibar {
+  background: alpha(currentColor, 0.075);
+}
