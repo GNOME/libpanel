@@ -37,6 +37,7 @@
                   <object class="PanelOmniBar">
                     <property name="valign">center</property>
                     <property name="icon-name">builder-build-symbolic</property>
+                    <property name="action-name">project.build</property>
                     <property name="menu-model">build_menu</property>
                     <child>
                       <object class="GtkLabel">

@@ -138,6 +138,13 @@ add_document_action (GtkWidget  *widget,
 }
 
 static void
+project_build_action (GtkWidget  *widget,
+                      const char *action_name,
+                      GVariant   *param)
+{
+}
+
+static void
 set_theme_action (GSimpleAction *action,
                   GVariant      *param,
                   gpointer       user_data)
@@ -325,6 +332,7 @@ example_window_class_init (ExampleWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, create_frame_cb);
 
   gtk_widget_class_install_action (widget_class, "document.new", NULL, add_document_action);
+  gtk_widget_class_install_action (widget_class, "project.build", NULL, project_build_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_n, GDK_CONTROL_MASK, "document.new", NULL);
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F9, 0, "win.reveal-start", NULL);

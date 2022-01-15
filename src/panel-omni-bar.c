@@ -33,18 +33,25 @@ typedef struct
   GtkPopover *popover;
 } PanelOmniBarPrivate;
 
-static void buildable_iface_init (GtkBuildableIface *iface);
+static void buildable_iface_init  (GtkBuildableIface      *iface);
+static void actionable_iface_init (GtkActionableInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (PanelOmniBar, panel_omni_bar, GTK_TYPE_WIDGET,
                          G_ADD_PRIVATE (PanelOmniBar)
-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init))
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ACTIONABLE, actionable_iface_init))
+
+
 
 enum {
   PROP_0,
   PROP_POPOVER,
   PROP_ICON_NAME,
   PROP_MENU_MODEL,
-  N_PROPS
+  N_PROPS,
+
+  PROP_ACTION_NAME,
+  PROP_ACTION_TARGET,
 };
 
 static GParamSpec *properties [N_PROPS];
@@ -157,6 +164,16 @@ panel_omni_bar_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_ACTION_NAME:
+      g_value_set_string (value,
+                          gtk_actionable_get_action_name (GTK_ACTIONABLE (priv->button)));
+      break;
+
+    case PROP_ACTION_TARGET:
+      g_value_set_variant (value,
+                           gtk_actionable_get_action_target_value (GTK_ACTIONABLE (priv->button)));
+      break;
+
     case PROP_POPOVER:
       g_value_set_object (value, panel_omni_bar_get_popover (self));
       break;
@@ -185,6 +202,16 @@ panel_omni_bar_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_ACTION_NAME:
+      gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->button),
+                                      g_value_get_string (value));
+      break;
+
+    case PROP_ACTION_TARGET:
+      gtk_actionable_set_action_target_value (GTK_ACTIONABLE (priv->button),
+                                              g_value_get_variant (value));
+      break;
+
     case PROP_POPOVER:
       panel_omni_bar_set_popover (self, g_value_get_object (value));
       break;
@@ -213,6 +240,9 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
   object_class->set_property = panel_omni_bar_set_property;
 
   widget_class->size_allocate = panel_omni_bar_size_allocate;
+
+  g_object_class_override_property (object_class, PROP_ACTION_NAME, "action-name");
+  g_object_class_override_property (object_class, PROP_ACTION_TARGET, "action-target");
 
   properties [PROP_ICON_NAME] =
     g_param_spec_string ("icon-name",
@@ -391,4 +421,51 @@ static void
 buildable_iface_init (GtkBuildableIface *iface)
 {
   iface->add_child = panel_omni_bar_add_child;
+}
+
+static const char *
+get_action_name (GtkActionable *actionable)
+{
+  PanelOmniBar *self = (PanelOmniBar *)actionable;
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  return gtk_actionable_get_action_name (GTK_ACTIONABLE (priv->button));
+}
+
+static void
+set_action_name (GtkActionable *actionable,
+                 const char    *action_name)
+{
+  PanelOmniBar *self = (PanelOmniBar *)actionable;
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->button), action_name);
+}
+
+static GVariant *
+get_action_target (GtkActionable *actionable)
+{
+  PanelOmniBar *self = (PanelOmniBar *)actionable;
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  return gtk_actionable_get_action_target_value (GTK_ACTIONABLE (priv->button));
+}
+
+static void
+set_action_target (GtkActionable *actionable,
+                   GVariant      *action_target)
+{
+  PanelOmniBar *self = (PanelOmniBar *)actionable;
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  gtk_actionable_set_action_target_value (GTK_ACTIONABLE (priv->button), action_target);
+}
+
+static void
+actionable_iface_init (GtkActionableInterface *iface)
+{
+  iface->get_action_name = get_action_name;
+  iface->set_action_name = set_action_name;
+  iface->get_action_target_value = get_action_target;
+  iface->set_action_target_value = set_action_target;
 }
