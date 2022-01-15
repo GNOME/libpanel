@@ -39,6 +39,25 @@
                     <property name="icon-name">builder-build-symbolic</property>
                     <property name="action-name">project.build</property>
                     <property name="menu-model">build_menu</property>
+                    <child type="prefix">
+                      <object class="GtkBox">
+                        <property name="valign">center</property>
+                        <property name="orientation">vertical</property>
+                        <property name="margin-end">12</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">pan-up-symbolic</property>>
+                            <property name="pixel-size">12</property>>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">pan-down-symbolic</property>>
+                            <property name="pixel-size">12</property>>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="hexpand">true</property>
@@ -959,9 +978,44 @@
     </section>
     <section>
       <item>
-        <attribute name="label">Create new document</attribute>
-        <attribute name="action">document.new</attribute>
-        <attribute name="accel">&lt;ctrl&gt;n</attribute>
+        <attribute name="label">Open a Project…</attribute>
+      </item>
+      <item>
+        <attribute name="label">Clone Repository…</attribute>
+      </item>
+      <item>
+        <attribute name="label">Start New Project…</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Add Workspace</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Close Workspace</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label">Keyboard Shortcuts</attribute>
+        <attribute name="action">win.help-overlay</attribute>
+        <attribute name="accel">&lt;ctrl&gt;question</attribute>
+      </item>
+      <item>
+        <attribute name="label">Help</attribute>
+      </item>
+      <item>
+        <attribute name="label">About Builder</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Help</attribute>
       </item>
     </section>
   </menu>
@@ -1129,14 +1183,31 @@
   <menu id="run_menu">
     <section>
       <submenu>
-        <attribute name="label">Build Target</attribute>
+        <attribute name="label">Run Command</attribute>
+        <section>
+          <submenu>
+            <attribute name="label">Unit Tests</attribute>
+            <section>
+              <item>
+                <attribute name="label">test-animation</attribute>
+              </item>
+              <item>
+                <attribute name="label">test-panel</attribute>
+              </item>
+            </section>
+          </submenu>
+        </section>
         <section>
           <item>
-            <attribute name="label">Flatpak Command (gnome-builder)</attribute>
+            <attribute name="label">gnome-builder (Flatpak)</attribute>
             <attribute name="role">radio</attribute>
           </item>
           <item>
-            <attribute name="label">test-vim</attribute>
+            <attribute name="label">test-vim (Meson)</attribute>
+            <attribute name="role">radio</attribute>
+          </item>
+          <item>
+            <attribute name="label">test-buffer (Meson)</attribute>
             <attribute name="role">radio</attribute>
           </item>
         </section>
@@ -1275,38 +1346,45 @@
       </item>
     </section>
     <section>
-      <attribute name="label">Appearance</attribute>
-      <item>
-        <attribute name="label">Follow System</attribute>
-        <attribute name="role">radio</attribute>
-        <attribute name="action">win.theme</attribute>
-        <attribute name="target" type="s">'default'</attribute>
-      </item>
-      <item>
-        <attribute name="label">Force Light</attribute>
-        <attribute name="role">radio</attribute>
-        <attribute name="action">win.theme</attribute>
-        <attribute name="target" type="s">'dark'</attribute>
-      </item>
-      <item>
-        <attribute name="label">Force Dark</attribute>
-        <attribute name="role">radio</attribute>
-        <attribute name="action">win.theme</attribute>
-        <attribute name="target" type="s">'light'</attribute>
-      </item>
-    </section>
-    <section>
-      <attribute name="label">Accessibility</attribute>
-      <item>
-        <attribute name="label">High Contrast</attribute>
-        <attribute name="role">check</attribute>
-        <attribute name="action">win.high-contrast</attribute>
-      </item>
-      <item>
-        <attribute name="label">Right-to-Left</attribute>
-        <attribute name="role">check</attribute>
-        <attribute name="action">win.right-to-left</attribute>
-      </item>
+      <attribute name="label">Settings</attribute>
+      <submenu>
+        <attribute name="label">Appearance</attribute>
+        <section>
+          <item>
+            <attribute name="label">Follow System</attribute>
+            <attribute name="role">radio</attribute>
+            <attribute name="action">win.theme</attribute>
+            <attribute name="target" type="s">'default'</attribute>
+          </item>
+          <item>
+            <attribute name="label">Force Light</attribute>
+            <attribute name="role">radio</attribute>
+            <attribute name="action">win.theme</attribute>
+            <attribute name="target" type="s">'dark'</attribute>
+          </item>
+          <item>
+            <attribute name="label">Force Dark</attribute>
+            <attribute name="role">radio</attribute>
+            <attribute name="action">win.theme</attribute>
+            <attribute name="target" type="s">'light'</attribute>
+          </item>
+        </section>
+      </submenu>
+      <submenu>
+        <attribute name="label">Accessibility</attribute>
+        <section>
+          <item>
+            <attribute name="label">High Contrast</attribute>
+            <attribute name="role">check</attribute>
+            <attribute name="action">win.high-contrast</attribute>
+          </item>
+          <item>
+            <attribute name="label">Right-to-Left</attribute>
+            <attribute name="role">check</attribute>
+            <attribute name="action">win.right-to-left</attribute>
+          </item>
+        </section>
+      </submenu>
     </section>
   </menu>
   <menu id="build_menu">
