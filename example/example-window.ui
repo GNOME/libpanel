@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <requires lib="Panel" version="1.0"/>
   <template class="ExampleWindow" parent="AdwApplicationWindow">
     <property name="title">Panel Example</property>
     <property name="default-width">900</property>
