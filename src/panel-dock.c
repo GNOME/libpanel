@@ -252,6 +252,7 @@ panel_dock_get_property (GObject    *object,
                          GParamSpec *pspec)
 {
   PanelDock *self = PANEL_DOCK (object);
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
   switch (prop_id)
     {
@@ -285,6 +286,22 @@ panel_dock_get_property (GObject    *object,
 
     case PROP_CAN_REVEAL_TOP:
       g_value_set_boolean (value, panel_dock_get_can_reveal_top (self));
+      break;
+
+    case PROP_START_WIDTH:
+      g_value_set_int (value, priv->start_width);
+      break;
+
+    case PROP_END_WIDTH:
+      g_value_set_int (value, priv->end_width);
+      break;
+
+    case PROP_TOP_HEIGHT:
+      g_value_set_int (value, priv->top_height);
+      break;
+
+    case PROP_BOTTOM_HEIGHT:
+      g_value_set_int (value, priv->bottom_height);
       break;
 
     default:
