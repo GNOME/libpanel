@@ -1445,6 +1445,14 @@
     </section>
     <section>
       <item>
+        <attribute name="label">Stop Build</attribute>
+      </item>
+      <item>
+        <attribute name="label">Pause Builds</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label">Show Build Output</attribute>
       </item>
     </section>
