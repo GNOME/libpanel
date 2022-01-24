@@ -1015,11 +1015,6 @@
         <attribute name="label">About Builder</attribute>
       </item>
     </section>
-    <section>
-      <item>
-        <attribute name="label">Help</attribute>
-      </item>
-    </section>
   </menu>
   <menu id="add_menu">
     <section>
