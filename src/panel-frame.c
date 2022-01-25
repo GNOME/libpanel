@@ -22,6 +22,7 @@
 
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
+#include "panel-drop-controls-private.h"
 #include "panel-frame-private.h"
 #include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
@@ -36,14 +37,15 @@
 
 typedef struct
 {
-  PanelFrameHeader *header;
-  GtkWidget        *box;
-  AdwTabView       *tab_view;
-  GtkWidget        *placeholder;
-  GtkStack         *stack;
-  GMenuModel       *frame_menu;
-  GtkOverlay       *overlay;
-  GtkWidget        *focus_highlight;
+  PanelFrameHeader  *header;
+  GtkWidget         *box;
+  AdwTabView        *tab_view;
+  GtkWidget         *placeholder;
+  GtkStack          *stack;
+  GMenuModel        *frame_menu;
+  GtkOverlay        *overlay;
+  GtkWidget         *focus_highlight;
+  PanelDropControls *drop_controls;
 
   guint             closeable : 1;
 } PanelFramePrivate;
@@ -539,6 +541,76 @@ page_move_up_action (GtkWidget  *widget,
 }
 
 static void
+set_margin (GtkWidget *widget,
+            int        top,
+            int        right,
+            int        bottom,
+            int        left)
+{
+  gtk_widget_set_margin_top (widget, top);
+  gtk_widget_set_margin_end (widget, right);
+  gtk_widget_set_margin_bottom (widget, bottom);
+  gtk_widget_set_margin_start (widget, left);
+}
+
+static void
+panel_frame_update_drop (PanelFrame *self)
+{
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  PanelDockPosition position;
+  GtkWidget *grid;
+  GtkWidget *child;
+
+  g_assert (PANEL_IS_FRAME (self));
+
+  if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
+    position = PANEL_DOCK_POSITION_CENTER;
+  else if ((child = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK_CHILD)))
+    position = panel_dock_child_get_position (PANEL_DOCK_CHILD (child));
+  else
+    position = PANEL_DOCK_POSITION_CENTER;
+
+  panel_drop_controls_set_position (priv->drop_controls, position);
+
+  switch (position)
+    {
+    case PANEL_DOCK_POSITION_START:
+      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_START);
+      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
+      set_margin (GTK_WIDGET (priv->drop_controls), 0, 0, 0, 12);
+      break;
+
+    case PANEL_DOCK_POSITION_END:
+      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_END);
+      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
+      set_margin (GTK_WIDGET (priv->drop_controls), 0, 12, 0, 0);
+      break;
+
+    case PANEL_DOCK_POSITION_TOP:
+      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_START);
+      set_margin (GTK_WIDGET (priv->drop_controls), 12, 0, 0, 0);
+      break;
+
+    case PANEL_DOCK_POSITION_BOTTOM:
+      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_END);
+      set_margin (GTK_WIDGET (priv->drop_controls), 0, 0, 12, 0);
+      break;
+
+    case PANEL_DOCK_POSITION_CENTER:
+      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
+      set_margin (GTK_WIDGET (priv->drop_controls), 0, 0, 0, 0);
+      break;
+
+    default:
+      g_assert_not_reached ();
+      break;
+    }
+}
+
+static void
 panel_frame_root (GtkWidget *widget)
 {
   g_assert (PANEL_IS_FRAME (widget));
@@ -546,6 +618,7 @@ panel_frame_root (GtkWidget *widget)
   GTK_WIDGET_CLASS (panel_frame_parent_class)->root (widget);
 
   panel_frame_update_actions (PANEL_FRAME (widget));
+  panel_frame_update_drop (PANEL_FRAME (widget));
 }
 
 static void
@@ -561,6 +634,7 @@ panel_frame_unroot (GtkWidget *widget)
   GTK_WIDGET_CLASS (panel_frame_parent_class)->unroot (widget);
 
   panel_frame_update_actions (PANEL_FRAME (widget));
+  panel_frame_update_drop (PANEL_FRAME (widget));
 }
 
 static void
@@ -727,6 +801,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, stack);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, tab_view);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, frame_menu);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, drop_controls);
   gtk_widget_class_bind_template_callback (widget_class, setup_menu_cb);
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
@@ -743,6 +818,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F11, GDK_SHIFT_MASK, "page.maximize", NULL);
 
   g_type_ensure (ADW_TYPE_TAB_VIEW);
+  g_type_ensure (PANEL_TYPE_DROP_CONTROLS);
 }
 
 static void

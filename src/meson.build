@@ -23,6 +23,7 @@ libpanel_sources = [
   'panel-dock.c',
   'panel-dock-child.c',
   'panel-dock-switcher.c',
+  'panel-drop-controls.c',
   'panel-frame.c',
   'panel-frame-header.c',
   'panel-frame-header-bar.c',

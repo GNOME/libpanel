@@ -295,3 +295,15 @@ panelthemeselector checkbutton radio:checked {
 splitbutton.omnibar {
   background: alpha(currentColor, 0.075);
 }
+
+
+paneldropcontrols image {
+  border-radius: 11px;
+  color: @theme_selected_fg_color;
+  background: @theme_selected_bg_color;
+  box-shadow: 0 3px 5px rgba(0,0,0,.2);
+  border: 2px solid alpha(@theme_selected_fg_color, .3);
+}
+paneldropcontrols image.circular {
+  border-radius: 9999px;
+}

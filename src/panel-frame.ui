@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
   <template class="PanelFrame" parent="GtkWidget">
     <child>
       <object class="GtkBox" id="box">
@@ -18,15 +20,27 @@
           </object>
         </child>
         <child>
-          <object class="GtkStack" id="stack">
+          <object class="GtkOverlay" id="controls_overlay">
+            <property name="hexpand">true</property>
+            <property name="vexpand">true</property>
+            <child type="overlay">
+              <object class="PanelDropControls" id="drop_controls">
+                <property name="position">center</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="visible">false</property>
+              </object>
+            </child>
             <child>
-              <object class="AdwTabView" id="tab_view">
-                <property name="hexpand">true</property>
-                <property name="vexpand">true</property>
-                <signal name="setup-menu" handler="setup_menu_cb"/>
-                <layout>
-                  <property name="name">pages</property>
-                </layout>
+              <object class="GtkStack" id="stack">
+                <child>
+                  <object class="AdwTabView" id="tab_view">
+                    <signal name="setup-menu" handler="setup_menu_cb"/>
+                    <layout>
+                      <property name="name">pages</property>
+                    </layout>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

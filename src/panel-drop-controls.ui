@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="PanelDropControls" parent="GtkWidget">
+    <child>
+      <object class="GtkGrid" id="child">
+        <property name="row-spacing">6</property>
+        <property name="column-spacing">6</property>
+        <child>
+          <object class="GtkImage" id="top">
+            <property name="icon-name">panel-top-symbolic</property>
+            <property name="height-request">32</property>
+            <property name="width-request">32</property>
+            <property name="halign">center</property>
+            <layout>
+              <property name="row">0</property>
+              <property name="column">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="right">
+            <property name="icon-name">panel-right-symbolic</property>
+            <property name="height-request">32</property>
+            <property name="width-request">32</property>
+            <property name="valign">center</property>
+            <layout>
+              <property name="row">1</property>
+              <property name="column">2</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="bottom">
+            <property name="icon-name">panel-bottom-symbolic</property>
+            <property name="height-request">32</property>
+            <property name="width-request">32</property>
+            <property name="halign">center</property>
+            <layout>
+              <property name="row">2</property>
+              <property name="column">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="left">
+            <property name="icon-name">panel-left-symbolic</property>
+            <property name="height-request">32</property>
+            <property name="width-request">32</property>
+            <property name="valign">center</property>
+            <layout>
+              <property name="row">1</property>
+              <property name="column">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="center">
+            <property name="icon-name">panel-center-symbolic</property>
+            <property name="height-request">48</property>
+            <property name="width-request">48</property>
+            <style>
+              <class name="circular"/>
+            </style>
+            <layout>
+              <property name="row">1</property>
+              <property name="column">1</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
