@@ -729,6 +729,25 @@ setup_menu_cb (AdwTabView *tab_view,
 }
 
 static void
+panel_frame_compute_expand (GtkWidget *widget,
+                            gboolean  *hexpand,
+                            gboolean  *vexpand)
+{
+  g_assert (PANEL_IS_FRAME (widget));
+
+  if (gtk_orientable_get_orientation (GTK_ORIENTABLE (widget)) == GTK_ORIENTATION_HORIZONTAL)
+    {
+      *hexpand = TRUE;
+      *vexpand = FALSE;
+    }
+  else
+    {
+      *hexpand = FALSE;
+      *vexpand = TRUE;
+    }
+}
+
+static void
 panel_frame_dispose (GObject *object)
 {
   PanelFrame *self = (PanelFrame *)object;
@@ -829,6 +848,7 @@ panel_frame_class_init (PanelFrameClass *klass)
 
   widget_class->root = panel_frame_root;
   widget_class->unroot = panel_frame_unroot;
+  widget_class->compute_expand = panel_frame_compute_expand;
 
   properties [PROP_EMPTY] =
     g_param_spec_boolean ("empty",
