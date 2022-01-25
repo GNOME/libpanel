@@ -611,11 +611,51 @@ panel_frame_update_drop (PanelFrame *self)
 }
 
 static void
+on_panel_drag_begin_cb (PanelFrame  *self,
+                        PanelWidget *widget,
+                        PanelDock   *dock)
+{
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (PANEL_IS_WIDGET (widget));
+  g_assert (PANEL_IS_DOCK (dock));
+
+  gtk_widget_add_css_class (GTK_WIDGET (self), "in-drag");
+}
+
+static void
+on_panel_drag_end_cb (PanelFrame  *self,
+                      PanelWidget *widget,
+                      PanelDock   *dock)
+{
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (PANEL_IS_WIDGET (widget));
+  g_assert (PANEL_IS_DOCK (dock));
+
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "in-drag");
+}
+
+static void
 panel_frame_root (GtkWidget *widget)
 {
+  GtkWidget *dock;
+
   g_assert (PANEL_IS_FRAME (widget));
 
   GTK_WIDGET_CLASS (panel_frame_parent_class)->root (widget);
+
+  if ((dock = gtk_widget_get_ancestor (widget, PANEL_TYPE_DOCK)))
+    {
+      g_signal_connect_object (dock,
+                               "panel-drag-begin",
+                               G_CALLBACK (on_panel_drag_begin_cb),
+                               widget,
+                               G_CONNECT_SWAPPED);
+      g_signal_connect_object (dock,
+                               "panel-drag-end",
+                               G_CALLBACK (on_panel_drag_end_cb),
+                               widget,
+                               G_CONNECT_SWAPPED);
+    }
 
   panel_frame_update_actions (PANEL_FRAME (widget));
   panel_frame_update_drop (PANEL_FRAME (widget));
@@ -625,8 +665,19 @@ static void
 panel_frame_unroot (GtkWidget *widget)
 {
   GtkWidget *grid;
+  GtkWidget *dock;
 
   g_assert (PANEL_IS_FRAME (widget));
+
+  if ((dock = gtk_widget_get_ancestor (widget, PANEL_TYPE_DOCK)))
+    {
+      g_signal_handlers_disconnect_by_func (dock,
+                                            G_CALLBACK (on_panel_drag_begin_cb),
+                                            widget);
+      g_signal_handlers_disconnect_by_func (dock,
+                                            G_CALLBACK (on_panel_drag_end_cb),
+                                            widget);
+    }
 
   if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)))
     _panel_grid_drop_frame_mru (PANEL_GRID (grid), PANEL_FRAME (widget));

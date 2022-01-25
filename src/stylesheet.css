@@ -307,3 +307,12 @@ paneldropcontrols image {
 paneldropcontrols image.circular {
   border-radius: 9999px;
 }
+panelframe .frameheader,
+panelframe > box > overlay > stack {
+  transition-property: opacity;
+  transition-duration: 600ms;
+}
+panelframe.in-drag .frameheader,
+panelframe.in-drag > box > overlay > stack {
+  opacity: .25;
+}
