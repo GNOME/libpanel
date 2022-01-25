@@ -500,6 +500,17 @@ _panel_grid_prepend_column (PanelGrid *self)
   _panel_grid_update_closeable (self);
 }
 
+void
+_panel_grid_insert_column (PanelGrid *self,
+                           guint      position)
+{
+  g_return_if_fail (PANEL_IS_GRID (self));
+
+  panel_paned_insert (self->columns, position, panel_grid_column_new ());
+  panel_grid_reexpand (self);
+  _panel_grid_update_closeable (self);
+}
+
 guint
 panel_grid_get_n_columns (PanelGrid *self)
 {

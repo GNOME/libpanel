@@ -39,6 +39,8 @@ void        _panel_grid_reposition       (PanelGrid          *self,
 void        _panel_grid_prepend_column   (PanelGrid          *self);
 void        _panel_grid_remove_column    (PanelGrid          *self,
                                           PanelGridColumn    *column);
+void        _panel_grid_insert_column    (PanelGrid          *self,
+                                          guint               position);
 void        _panel_grid_foreach_frame    (PanelGrid          *self,
                                           PanelFrameCallback  callback,
                                           gpointer            user_data);
