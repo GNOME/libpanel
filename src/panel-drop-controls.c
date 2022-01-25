@@ -23,6 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-drop-controls-private.h"
 #include "panel-enums.h"
+#include "panel-grid-private.h"
 #include "panel-paned.h"
 
 struct _PanelDropControls
@@ -181,12 +182,17 @@ on_drop_target_drop_cb (PanelDropControls *self,
                         double             y,
                         GtkDropTarget     *drop_target)
 {
+  PanelDockPosition position;
   PanelFrameHeader *header;
   PanelFrame *target;
+  PanelGrid *grid;
   GtkWidget *paned;
   GtkWidget *src_paned;
   PanelWidget *panel;
   GtkWidget *frame;
+  GtkWidget *button;
+  guint column;
+  guint row;
 
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
@@ -197,13 +203,66 @@ on_drop_target_drop_cb (PanelDropControls *self,
       !(panel = g_value_get_object (value)) ||
       !(frame = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_FRAME)) ||
       !panel_widget_get_reorderable (panel) ||
-      !(header = panel_frame_get_header (PANEL_FRAME (frame))) ||
-      (header && !panel_frame_header_can_drop (header, panel)) ||
+      !(header = panel_frame_get_header (PANEL_FRAME (target))) ||
+      !panel_frame_header_can_drop (header, panel) ||
       !(src_paned = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_PANED)) ||
       !(paned = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_PANED)))
     return FALSE;
 
-  /* TODO: Actually handle dock position here */
+  g_assert (PANEL_IS_WIDGET (panel));
+  g_assert (PANEL_IS_FRAME_HEADER (header));
+  g_assert (PANEL_IS_PANED (src_paned));
+  g_assert (PANEL_IS_PANED (paned));
+  g_assert (panel_frame_header_can_drop (header, panel));
+
+  button = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (drop_target));
+  position = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "POSITION"));
+  grid = PANEL_GRID (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID));
+
+  switch (position)
+    {
+    case PANEL_DOCK_POSITION_CENTER:
+      /* Do Nothing */
+      break;
+
+    case PANEL_DOCK_POSITION_START:
+      if (grid != NULL)
+        {
+          PanelGridColumn *grid_column;
+
+          _panel_grid_get_position (grid, GTK_WIDGET (frame), &column, &row);
+          _panel_grid_insert_column (grid, column);
+
+          grid_column = panel_grid_get_column (grid, column);
+          target = panel_grid_column_get_most_recent_frame (grid_column);
+        }
+      break;
+
+    case PANEL_DOCK_POSITION_END:
+      if (grid != NULL)
+        {
+          PanelGridColumn *grid_column;
+
+          _panel_grid_get_position (grid, GTK_WIDGET (frame), &column, &row);
+          _panel_grid_insert_column (grid, ++column);
+
+          grid_column = panel_grid_get_column (grid, column);
+          target = panel_grid_column_get_most_recent_frame (grid_column);
+        }
+      break;
+
+    case PANEL_DOCK_POSITION_TOP:
+      break;
+
+    case PANEL_DOCK_POSITION_BOTTOM:
+      break;
+
+    default:
+      g_assert_not_reached ();
+    }
+
+  if (frame == GTK_WIDGET (target))
+    return FALSE;
 
   g_object_ref (panel);
 
@@ -229,6 +288,10 @@ setup_drop_target (PanelDropControls  *self,
   GType types[] = { PANEL_TYPE_WIDGET };
 
   g_assert (PANEL_IS_DROP_CONTROLS (self));
+
+  g_object_set_data (G_OBJECT (widget),
+                     "POSITION",
+                     GINT_TO_POINTER (position));
 
   *targetptr = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY | GDK_ACTION_MOVE);
   gtk_drop_target_set_gtypes (*targetptr, types, G_N_ELEMENTS (types));
