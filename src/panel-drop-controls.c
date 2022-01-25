@@ -26,6 +26,7 @@
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
 #include "panel-paned.h"
+#include "panel-resizer-private.h"
 
 struct _PanelDropControls
 {
@@ -176,6 +177,22 @@ on_drop_target_leave_cb (PanelDropControls *self,
 
 }
 
+static GtkWidget *
+get_prev_frame (PanelFrame *frame)
+{
+  GtkWidget *resizer;
+
+  g_assert (PANEL_IS_FRAME (frame));
+
+  resizer = gtk_widget_get_ancestor (GTK_WIDGET (frame), PANEL_TYPE_RESIZER);
+  resizer = gtk_widget_get_prev_sibling (resizer);
+
+  if (resizer != NULL)
+    return panel_resizer_get_child (PANEL_RESIZER (resizer));
+
+  return NULL;
+}
+
 static gboolean
 on_drop_target_drop_cb (PanelDropControls *self,
                         const GValue      *value,
@@ -184,6 +201,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
                         GtkDropTarget     *drop_target)
 {
   PanelDockPosition position;
+  GtkOrientation orientation;
   PanelFrameHeader *header;
   PanelFrame *target;
   PanelGrid *grid;
@@ -219,6 +237,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
   button = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (drop_target));
   position = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "POSITION"));
   grid = PANEL_GRID (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID));
+  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (target));
 
   switch (position)
     {
@@ -237,6 +256,17 @@ on_drop_target_drop_cb (PanelDropControls *self,
           grid_column = panel_grid_get_column (grid, column);
           target = panel_grid_column_get_most_recent_frame (grid_column);
         }
+      else
+        {
+          GtkWidget *new_frame;
+
+          new_frame = panel_frame_new ();
+          gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
+          panel_paned_insert_after (PANEL_PANED (paned),
+                                    new_frame,
+                                    get_prev_frame (target));
+          target = PANEL_FRAME (new_frame);
+        }
       break;
 
     case PANEL_DOCK_POSITION_END:
@@ -249,6 +279,15 @@ on_drop_target_drop_cb (PanelDropControls *self,
 
           grid_column = panel_grid_get_column (grid, column);
           target = panel_grid_column_get_most_recent_frame (grid_column);
+        }
+      else
+        {
+          GtkWidget *new_frame;
+
+          new_frame = panel_frame_new ();
+          gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
+          panel_paned_insert_after (PANEL_PANED (paned), new_frame, GTK_WIDGET (target));
+          target = PANEL_FRAME (new_frame);
         }
       break;
 
@@ -268,6 +307,17 @@ on_drop_target_drop_cb (PanelDropControls *self,
 
           target = panel_grid_column_get_row (grid_column, row - 1);
         }
+      else
+        {
+          GtkWidget *new_frame;
+
+          new_frame = panel_frame_new ();
+          gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
+          panel_paned_insert_after (PANEL_PANED (paned),
+                                    new_frame,
+                                    get_prev_frame (target));
+          target = PANEL_FRAME (new_frame);
+        }
       break;
 
     case PANEL_DOCK_POSITION_BOTTOM:
@@ -278,6 +328,15 @@ on_drop_target_drop_cb (PanelDropControls *self,
           _panel_grid_get_position (grid, GTK_WIDGET (target), &column, &row);
           grid_column = panel_grid_get_column (grid, column);
           target = panel_grid_column_get_row (grid_column, row + 1);
+        }
+      else
+        {
+          GtkWidget *new_frame;
+
+          new_frame = panel_frame_new ();
+          gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
+          panel_paned_insert_after (PANEL_PANED (paned), new_frame, GTK_WIDGET (target));
+          target = PANEL_FRAME (new_frame);
         }
       break;
 
@@ -293,6 +352,14 @@ on_drop_target_drop_cb (PanelDropControls *self,
   panel_frame_remove (PANEL_FRAME (frame), panel);
   panel_frame_add (target, panel);
   panel_frame_set_visible_child (target, panel);
+
+  /* If we failed to locate a grid, we need to cleanup and remove any
+   * empty frame we left behind as we're in an edge panel.
+   */
+  if (grid == NULL &&
+      panel_frame_get_empty (PANEL_FRAME (frame)) &&
+      panel_paned_get_n_children (PANEL_PANED (src_paned)) > 1)
+    panel_paned_remove (PANEL_PANED (src_paned), frame);
 
   g_object_unref (panel);
 
