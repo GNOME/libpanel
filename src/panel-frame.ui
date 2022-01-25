@@ -29,6 +29,9 @@
                 <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="visible">false</property>
+                <layout>
+                  <property name="measure">true</property>
+                </layout>
               </object>
             </child>
             <child>
