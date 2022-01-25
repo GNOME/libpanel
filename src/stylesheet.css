@@ -297,19 +297,23 @@ splitbutton.omnibar {
 }
 
 
-paneldropcontrols image {
+paneldropcontrols button {
   border-radius: 11px;
-  color: @theme_selected_fg_color;
-  background: @theme_selected_bg_color;
+  color: alpha(@theme_selected_fg_color, .8);
+  background-color: @theme_selected_bg_color;
   box-shadow: 0 3px 5px rgba(0,0,0,.2);
-  border: 2px solid alpha(@theme_selected_fg_color, .3);
+  padding: 0;
 }
-paneldropcontrols image.circular {
+paneldropcontrols button.circular {
   border-radius: 9999px;
+}
+paneldropcontrols button:drop(active) {
+  background-color: mix(@theme_selected_bg_color, @theme_selected_fg_color, .3);
+  color: @theme_selected_fg_color;
 }
 panelframe .frameheader,
 panelframe > box > overlay > stack {
-  transition-property: opacity;
+  transition-property: all;
   transition-duration: 600ms;
 }
 panelframe.in-drag .frameheader,

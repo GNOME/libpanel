@@ -29,11 +29,12 @@ struct _PanelDropControls
   GtkWidget          parent_instance;
 
   GtkWidget         *child;
-  GtkImage          *top;
-  GtkImage          *bottom;
-  GtkImage          *left;
-  GtkImage          *right;
-  GtkImage          *center;
+
+  GtkButton          *bottom;
+  GtkButton          *center;
+  GtkButton          *left;
+  GtkButton          *right;
+  GtkButton          *top;
 
   PanelDock         *dock;
 
