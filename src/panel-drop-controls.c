@@ -24,6 +24,7 @@
 #include "panel-drop-controls-private.h"
 #include "panel-enums.h"
 #include "panel-grid-private.h"
+#include "panel-grid-column-private.h"
 #include "panel-paned.h"
 
 struct _PanelDropControls
@@ -230,7 +231,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         {
           PanelGridColumn *grid_column;
 
-          _panel_grid_get_position (grid, GTK_WIDGET (frame), &column, &row);
+          _panel_grid_get_position (grid, GTK_WIDGET (target), &column, &row);
           _panel_grid_insert_column (grid, column);
 
           grid_column = panel_grid_get_column (grid, column);
@@ -243,7 +244,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         {
           PanelGridColumn *grid_column;
 
-          _panel_grid_get_position (grid, GTK_WIDGET (frame), &column, &row);
+          _panel_grid_get_position (grid, GTK_WIDGET (target), &column, &row);
           _panel_grid_insert_column (grid, ++column);
 
           grid_column = panel_grid_get_column (grid, column);
@@ -252,9 +253,32 @@ on_drop_target_drop_cb (PanelDropControls *self,
       break;
 
     case PANEL_DOCK_POSITION_TOP:
+      if (grid != NULL)
+        {
+          PanelGridColumn *grid_column;
+
+          _panel_grid_get_position (grid, GTK_WIDGET (target), &column, &row);
+          grid_column = panel_grid_get_column (grid, column);
+
+          if (row == 0)
+            {
+              _panel_grid_column_prepend_frame (PANEL_GRID_COLUMN (grid_column));
+              row++;
+            }
+
+          target = panel_grid_column_get_row (grid_column, row - 1);
+        }
       break;
 
     case PANEL_DOCK_POSITION_BOTTOM:
+      if (grid != NULL)
+        {
+          PanelGridColumn *grid_column;
+
+          _panel_grid_get_position (grid, GTK_WIDGET (target), &column, &row);
+          grid_column = panel_grid_get_column (grid, column);
+          target = panel_grid_column_get_row (grid_column, row + 1);
+        }
       break;
 
     default:
@@ -269,10 +293,6 @@ on_drop_target_drop_cb (PanelDropControls *self,
   panel_frame_remove (PANEL_FRAME (frame), panel);
   panel_frame_add (target, panel);
   panel_frame_set_visible_child (target, panel);
-
-  if (panel_frame_get_empty (PANEL_FRAME (frame)) &&
-      panel_paned_get_n_children (PANEL_PANED (src_paned)) > 1)
-    panel_paned_remove (PANEL_PANED (src_paned), frame);
 
   g_object_unref (panel);
 
