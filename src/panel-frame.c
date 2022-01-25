@@ -44,6 +44,7 @@ typedef struct
   GtkStack          *stack;
   GMenuModel        *frame_menu;
   GtkOverlay        *overlay;
+  GtkOverlay        *controls_overlay;
   GtkWidget         *focus_highlight;
   PanelDropControls *drop_controls;
 
@@ -736,7 +737,7 @@ panel_frame_dispose (GObject *object)
   panel_frame_set_header (self, NULL);
   panel_frame_set_placeholder (self, NULL);
 
-  g_clear_pointer (&priv->box, gtk_widget_unparent);
+  g_clear_pointer ((GtkWidget **)&priv->controls_overlay, gtk_widget_unparent);
 
   G_OBJECT_CLASS (panel_frame_parent_class)->dispose (object);
 }
@@ -864,6 +865,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, tab_view);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, frame_menu);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, drop_controls);
+  gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, controls_overlay);
   gtk_widget_class_bind_template_callback (widget_class, setup_menu_cb);
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
