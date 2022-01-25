@@ -23,6 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-drop-controls-private.h"
 #include "panel-enums.h"
+#include "panel-paned.h"
 
 struct _PanelDropControls
 {
@@ -35,6 +36,12 @@ struct _PanelDropControls
   GtkButton          *left;
   GtkButton          *right;
   GtkButton          *top;
+
+  GtkDropTarget     *bottom_target;
+  GtkDropTarget     *center_target;
+  GtkDropTarget     *left_target;
+  GtkDropTarget     *right_target;
+  GtkDropTarget     *top_target;
 
   PanelDock         *dock;
 
@@ -105,6 +112,154 @@ panel_drop_controls_get_position (PanelDropControls *self)
   g_return_val_if_fail (PANEL_IS_DROP_CONTROLS (self), 0);
 
   return self->position;
+}
+
+static gboolean
+drop_target_accept_cb (PanelDropControls *self,
+                       GdkDrop           *drop,
+                       GtkDropTarget     *drop_target)
+{
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+  g_assert (GDK_IS_DROP (drop));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  return TRUE;
+}
+
+static void
+on_drop_target_notify_value_cb (PanelDropControls *self,
+                                GParamSpec        *pspec,
+                                GtkDropTarget     *drop_target)
+{
+  PanelFrameHeader *header;
+  const GValue *value;
+  PanelWidget *panel;
+  GtkWidget *frame;
+
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  if (!(value = gtk_drop_target_get_value (drop_target)) ||
+      !G_VALUE_HOLDS (value, PANEL_TYPE_WIDGET) ||
+      !(panel = g_value_get_object (value)) ||
+      !(frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME)) ||
+      !(header = panel_frame_get_header (PANEL_FRAME (frame))))
+    return;
+
+  /* TODO: Actually handle this based on position */
+
+  if (!panel_widget_get_reorderable (panel) ||
+      (!panel_frame_header_can_drop (header, panel)))
+    gtk_drop_target_reject (drop_target);
+}
+
+static GdkDragAction
+on_drop_target_motion_cb (PanelDropControls *self,
+                          double             x,
+                          double             y,
+                          GtkDropTarget     *drop_target)
+{
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  return GDK_ACTION_MOVE;
+}
+
+static void
+on_drop_target_leave_cb (PanelDropControls *self,
+                         GtkDropTarget     *drop_target)
+{
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+}
+
+static gboolean
+on_drop_target_drop_cb (PanelDropControls *self,
+                        const GValue      *value,
+                        double             x,
+                        double             y,
+                        GtkDropTarget     *drop_target)
+{
+  PanelFrameHeader *header;
+  PanelFrame *target;
+  GtkWidget *paned;
+  GtkWidget *src_paned;
+  PanelWidget *panel;
+  GtkWidget *frame;
+
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  target = PANEL_FRAME (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME));
+
+  if (!G_VALUE_HOLDS (value, PANEL_TYPE_WIDGET) ||
+      !(panel = g_value_get_object (value)) ||
+      !(frame = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_FRAME)) ||
+      !panel_widget_get_reorderable (panel) ||
+      !(header = panel_frame_get_header (PANEL_FRAME (frame))) ||
+      (header && !panel_frame_header_can_drop (header, panel)) ||
+      !(src_paned = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_PANED)) ||
+      !(paned = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_PANED)))
+    return FALSE;
+
+  /* TODO: Actually handle dock position here */
+
+  g_object_ref (panel);
+
+  panel_frame_remove (PANEL_FRAME (frame), panel);
+  panel_frame_add (target, panel);
+  panel_frame_set_visible_child (target, panel);
+
+  if (panel_frame_get_empty (PANEL_FRAME (frame)) &&
+      panel_paned_get_n_children (PANEL_PANED (src_paned)) > 1)
+    panel_paned_remove (PANEL_PANED (src_paned), frame);
+
+  g_object_unref (panel);
+
+  return TRUE;
+}
+
+static void
+setup_drop_target (PanelDropControls  *self,
+                   GtkButton           *widget,
+                   GtkDropTarget     **targetptr,
+                   PanelDockPosition   position)
+{
+  GType types[] = { PANEL_TYPE_WIDGET };
+
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+
+  *targetptr = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY | GDK_ACTION_MOVE);
+  gtk_drop_target_set_gtypes (*targetptr, types, G_N_ELEMENTS (types));
+  gtk_drop_target_set_preload (*targetptr, TRUE);
+  g_signal_connect_object (*targetptr,
+                           "accept",
+                           G_CALLBACK (drop_target_accept_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_signal_connect_object (*targetptr,
+                           "notify::value",
+                           G_CALLBACK (on_drop_target_notify_value_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_signal_connect_object (*targetptr,
+                           "motion",
+                           G_CALLBACK (on_drop_target_motion_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_signal_connect_object (*targetptr,
+                           "drop",
+                           G_CALLBACK (on_drop_target_drop_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_signal_connect_object (*targetptr,
+                           "leave",
+                           G_CALLBACK (on_drop_target_leave_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  gtk_widget_add_controller (GTK_WIDGET (widget),
+                             GTK_EVENT_CONTROLLER (*targetptr));
 }
 
 static void
@@ -222,4 +377,10 @@ static void
 panel_drop_controls_init (PanelDropControls *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  setup_drop_target (self, self->bottom, &self->bottom_target, PANEL_DOCK_POSITION_BOTTOM);
+  setup_drop_target (self, self->center, &self->center_target, PANEL_DOCK_POSITION_CENTER);
+  setup_drop_target (self, self->left, &self->left_target, PANEL_DOCK_POSITION_START);
+  setup_drop_target (self, self->right, &self->right_target, PANEL_DOCK_POSITION_END);
+  setup_drop_target (self, self->top, &self->top_target, PANEL_DOCK_POSITION_TOP);
 }
