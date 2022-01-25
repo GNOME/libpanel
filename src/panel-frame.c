@@ -615,14 +615,19 @@ on_panel_drag_begin_cb (PanelFrame  *self,
                         PanelWidget *widget,
                         PanelDock   *dock)
 {
-  //PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
 
   g_assert (PANEL_IS_FRAME (self));
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
   gtk_widget_add_css_class (GTK_WIDGET (self), "in-drag");
-  //gtk_widget_show (GTK_WIDGET (priv->drop_controls));
+
+  if (priv->header != NULL &&
+      panel_frame_header_can_drop (priv->header, widget))
+    {
+      //gtk_widget_show (GTK_WIDGET (priv->drop_controls));
+    }
 }
 
 static void
