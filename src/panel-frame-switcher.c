@@ -23,7 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-frame-private.h"
 #include "panel-frame-header.h"
-#include "panel-frame-switcher.h"
+#include "panel-frame-switcher-private.h"
 #include "panel-scaler-private.h"
 #include "panel-widget.h"
 
@@ -945,4 +945,25 @@ panel_frame_switcher_set_foreground_rgba (PanelFrameSwitcher *self,
     self->foreground_rgba = *foreground_rgba;
   panel_frame_switcher_queue_update_css (self);
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_FOREGROUND_RGBA]);
+}
+
+AdwTabPage *
+_panel_frame_switcher_get_page (PanelFrameSwitcher *self,
+                                GtkWidget          *button)
+{
+  GHashTableIter iter;
+  AdwTabPage *page;
+  GtkWidget *page_button;
+
+  g_return_val_if_fail (PANEL_IS_FRAME_SWITCHER (self), NULL);
+  g_return_val_if_fail (GTK_IS_WIDGET (button), NULL);
+
+  g_hash_table_iter_init (&iter, self->buttons);
+  while (g_hash_table_iter_next (&iter, (gpointer *)&page, (gpointer *)&page_button))
+    {
+      if (page_button == button)
+        return page;
+    }
+
+  return NULL;
 }

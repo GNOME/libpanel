@@ -726,27 +726,34 @@ panel_frame_init (PanelFrame *self)
   panel_frame_update_actions (self);
 }
 
-/**
- * panel_frame_add:
- * @self: a #PanelFrame
- * @panel: a widget to add
- *
- * Adds a widget to the frame.
- */
 void
-panel_frame_add (PanelFrame  *self,
-                 PanelWidget *panel)
+panel_frame_add_before (PanelFrame  *self,
+                        PanelWidget *panel,
+                        PanelWidget *sibling)
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   AdwTabPage *page;
   GtkWidget *grid;
   gboolean empty;
+  int position;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
+  g_return_if_fail (!sibling || PANEL_IS_WIDGET (sibling));
+  g_return_if_fail (!sibling || gtk_widget_get_ancestor (GTK_WIDGET (sibling), PANEL_TYPE_FRAME) == GTK_WIDGET (self));
+
+  if (sibling != NULL)
+    {
+      page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (sibling));
+      position = adw_tab_view_get_page_position (priv->tab_view, page);
+    }
+  else
+    {
+      position = adw_tab_view_get_n_pages (priv->tab_view);
+    }
 
   empty = panel_frame_get_empty (self);
-  page = adw_tab_view_add_page (priv->tab_view, GTK_WIDGET (panel), NULL);
+  page = adw_tab_view_insert (priv->tab_view, GTK_WIDGET (panel), position);
 
   g_object_bind_property (panel, "title", page, "title", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "icon", page, "icon", G_BINDING_SYNC_CREATE);
@@ -762,6 +769,20 @@ panel_frame_add (PanelFrame  *self,
 
   if (empty)
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_EMPTY]);
+}
+
+/**
+ * panel_frame_add:
+ * @self: a #PanelFrame
+ * @panel: a widget to add
+ *
+ * Adds a widget to the frame.
+ */
+void
+panel_frame_add (PanelFrame  *self,
+                 PanelWidget *panel)
+{
+  panel_frame_add_before (self, panel, NULL);
 }
 
 /**

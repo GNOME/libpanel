@@ -54,6 +54,10 @@ PANEL_AVAILABLE_IN_ALL
 void               panel_frame_add               (PanelFrame       *self,
                                                   PanelWidget      *panel);
 PANEL_AVAILABLE_IN_ALL
+void               panel_frame_add_before        (PanelFrame       *self,
+                                                  PanelWidget      *panel,
+                                                  PanelWidget      *sibling);
+PANEL_AVAILABLE_IN_ALL
 void               panel_frame_remove            (PanelFrame       *self,
                                                   PanelWidget      *panel);
 PANEL_AVAILABLE_IN_ALL

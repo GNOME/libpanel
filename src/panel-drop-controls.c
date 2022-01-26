@@ -23,6 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-drop-controls-private.h"
 #include "panel-enums.h"
+#include "panel-frame-switcher-private.h"
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
 #include "panel-paned.h"
@@ -48,6 +49,7 @@ struct _PanelDropControls
   GtkDropTarget     *drop_target;
 
   PanelDock         *dock;
+  AdwTabPage        *drop_before_page;
 
   PanelDockPosition  position;
 };
@@ -163,8 +165,39 @@ on_drop_target_motion_cb (PanelDropControls *self,
                           double             y,
                           GtkDropTarget     *drop_target)
 {
+  PanelFrameHeader *header;
+  GtkWidget *pick;
+  GtkWidget *frame;
+  double header_x;
+  double header_y;
+
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  self->drop_before_page = NULL;
+
+  frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME);
+  header = panel_frame_get_header (PANEL_FRAME (frame));
+
+  if (PANEL_IS_FRAME_SWITCHER (header))
+    {
+      gtk_widget_translate_coordinates (GTK_WIDGET (self),
+                                        GTK_WIDGET (header),
+                                        x, y, &header_x, &header_y);
+      if (gtk_widget_contains (GTK_WIDGET (header), header_x, header_y))
+        {
+          for (pick = gtk_widget_pick (GTK_WIDGET (header), header_x, header_y, GTK_PICK_DEFAULT);
+               pick != NULL && pick != GTK_WIDGET (header);
+               pick = gtk_widget_get_parent (pick))
+            {
+              if (GTK_IS_TOGGLE_BUTTON (pick))
+                {
+                  self->drop_before_page = _panel_frame_switcher_get_page (PANEL_FRAME_SWITCHER (header), pick);
+                  break;
+                }
+            }
+        }
+    }
 
   return GDK_ACTION_MOVE;
 }
@@ -186,6 +219,8 @@ on_drop_target_enter_cb (PanelDropControls *self,
 {
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  self->drop_before_page= NULL;
 
   gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
@@ -216,6 +251,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
   PanelDockPosition position;
   GtkOrientation orientation;
   PanelFrameHeader *header;
+  PanelWidget *before_panel = NULL;
   PanelFrame *target;
   PanelGrid *grid;
   GtkWidget *paned;
@@ -228,6 +264,12 @@ on_drop_target_drop_cb (PanelDropControls *self,
 
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  if (self->drop_before_page != NULL)
+    {
+      before_panel = PANEL_WIDGET (adw_tab_page_get_child (self->drop_before_page));
+      self->drop_before_page = NULL;
+    }
 
   target = PANEL_FRAME (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME));
 
@@ -357,13 +399,15 @@ on_drop_target_drop_cb (PanelDropControls *self,
       g_assert_not_reached ();
     }
 
-  if (frame == GTK_WIDGET (target))
+  /* Ignore the No-Op case */
+  if (frame == GTK_WIDGET (target) &&
+      (before_panel == NULL || before_panel == panel))
     return FALSE;
 
   g_object_ref (panel);
 
   panel_frame_remove (PANEL_FRAME (frame), panel);
-  panel_frame_add (target, panel);
+  panel_frame_add_before (target, panel, before_panel);
   panel_frame_set_visible_child (target, panel);
 
   /* If we failed to locate a grid, we need to cleanup and remove any
