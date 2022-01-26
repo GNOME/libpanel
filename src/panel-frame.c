@@ -414,9 +414,7 @@ on_panel_drag_begin_cb (PanelFrame  *self,
 
   if (priv->header != NULL &&
       panel_frame_header_can_drop (priv->header, widget))
-    {
-      //gtk_widget_show (GTK_WIDGET (priv->drop_controls));
-    }
+    gtk_widget_show (GTK_WIDGET (priv->drop_controls));
 }
 
 static void
