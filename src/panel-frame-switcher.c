@@ -320,9 +320,9 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
       !(child = gtk_widget_get_ancestor (child, GTK_TYPE_TOGGLE_BUTTON)))
     return NULL;
 
-  /* Only allow dragging the current panel */
+  /* Panel must be active so that we can get a snapshot */
   if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (child)))
-    return NULL;
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (child), TRUE);
 
   for (child = gtk_widget_get_prev_sibling (child);
        child;
