@@ -6,13 +6,15 @@
       <object class="GtkGrid" id="child">
         <property name="row-spacing">6</property>
         <property name="column-spacing">6</property>
+        <property name="vexpand">true</property>
+        <property name="hexpand">true</property>
         <child>
           <object class="GtkButton" id="top">
             <property name="icon-name">panel-top-symbolic</property>
             <property name="halign">center</property>
             <layout>
-              <property name="row">0</property>
-              <property name="column">1</property>
+              <property name="row">1</property>
+              <property name="column">2</property>
             </layout>
           </object>
         </child>
@@ -21,8 +23,8 @@
             <property name="icon-name">panel-right-symbolic</property>
             <property name="valign">center</property>
             <layout>
-              <property name="row">1</property>
-              <property name="column">2</property>
+              <property name="row">2</property>
+              <property name="column">3</property>
             </layout>
           </object>
         </child>
@@ -31,8 +33,8 @@
             <property name="icon-name">panel-bottom-symbolic</property>
             <property name="halign">center</property>
             <layout>
-              <property name="row">2</property>
-              <property name="column">1</property>
+              <property name="row">3</property>
+              <property name="column">2</property>
             </layout>
           </object>
         </child>
@@ -41,8 +43,8 @@
             <property name="icon-name">panel-left-symbolic</property>
             <property name="valign">center</property>
             <layout>
-              <property name="row">1</property>
-              <property name="column">0</property>
+              <property name="row">2</property>
+              <property name="column">1</property>
             </layout>
           </object>
         </child>
@@ -53,8 +55,44 @@
               <class name="circular"/>
             </style>
             <layout>
-              <property name="row">1</property>
+              <property name="row">2</property>
+              <property name="column">2</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="vexpand">true</property>
+            <layout>
+              <property name="row">0</property>
               <property name="column">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="vexpand">true</property>
+            <layout>
+              <property name="row">4</property>
+              <property name="column">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="hexpand">true</property>
+            <layout>
+              <property name="row">2</property>
+              <property name="column">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="hexpand">true</property>
+            <layout>
+              <property name="row">2</property>
+              <property name="column">4</property>
             </layout>
           </object>
         </child>

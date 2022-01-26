@@ -34,17 +34,18 @@ struct _PanelDropControls
 
   GtkWidget         *child;
 
-  GtkButton          *bottom;
-  GtkButton          *center;
-  GtkButton          *left;
-  GtkButton          *right;
-  GtkButton          *top;
+  GtkButton         *bottom;
+  GtkButton         *center;
+  GtkButton         *left;
+  GtkButton         *right;
+  GtkButton         *top;
 
   GtkDropTarget     *bottom_target;
   GtkDropTarget     *center_target;
   GtkDropTarget     *left_target;
   GtkDropTarget     *right_target;
   GtkDropTarget     *top_target;
+  GtkDropTarget     *drop_target;
 
   PanelDock         *dock;
 
@@ -175,6 +176,18 @@ on_drop_target_leave_cb (PanelDropControls *self,
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
 
+}
+
+static void
+on_drop_target_enter_cb (PanelDropControls *self,
+                         double             x,
+                         double             y,
+                         GtkDropTarget     *drop_target)
+{
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+  g_assert (GTK_IS_DROP_TARGET (drop_target));
+
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
 
 static GtkWidget *
@@ -368,13 +381,14 @@ on_drop_target_drop_cb (PanelDropControls *self,
 
 static void
 setup_drop_target (PanelDropControls  *self,
-                   GtkButton           *widget,
+                   GtkWidget           *widget,
                    GtkDropTarget     **targetptr,
                    PanelDockPosition   position)
 {
   GType types[] = { PANEL_TYPE_WIDGET };
 
   g_assert (PANEL_IS_DROP_CONTROLS (self));
+  g_assert (GTK_IS_WIDGET (widget));
 
   g_object_set_data (G_OBJECT (widget),
                      "POSITION",
@@ -406,6 +420,11 @@ setup_drop_target (PanelDropControls  *self,
   g_signal_connect_object (*targetptr,
                            "leave",
                            G_CALLBACK (on_drop_target_leave_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_signal_connect_object (*targetptr,
+                           "enter",
+                           G_CALLBACK (on_drop_target_enter_cb),
                            self,
                            G_CONNECT_SWAPPED);
   gtk_widget_add_controller (GTK_WIDGET (widget),
@@ -528,9 +547,10 @@ panel_drop_controls_init (PanelDropControls *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  setup_drop_target (self, self->bottom, &self->bottom_target, PANEL_DOCK_POSITION_BOTTOM);
-  setup_drop_target (self, self->center, &self->center_target, PANEL_DOCK_POSITION_CENTER);
-  setup_drop_target (self, self->left, &self->left_target, PANEL_DOCK_POSITION_START);
-  setup_drop_target (self, self->right, &self->right_target, PANEL_DOCK_POSITION_END);
-  setup_drop_target (self, self->top, &self->top_target, PANEL_DOCK_POSITION_TOP);
+  setup_drop_target (self, GTK_WIDGET (self->bottom), &self->bottom_target, PANEL_DOCK_POSITION_BOTTOM);
+  setup_drop_target (self, GTK_WIDGET (self->center), &self->center_target, PANEL_DOCK_POSITION_CENTER);
+  setup_drop_target (self, GTK_WIDGET (self->left), &self->left_target, PANEL_DOCK_POSITION_START);
+  setup_drop_target (self, GTK_WIDGET (self->right), &self->right_target, PANEL_DOCK_POSITION_END);
+  setup_drop_target (self, GTK_WIDGET (self->top), &self->top_target, PANEL_DOCK_POSITION_TOP);
+  setup_drop_target (self, GTK_WIDGET (self), &self->drop_target, PANEL_DOCK_POSITION_CENTER);
 }

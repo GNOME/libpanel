@@ -79,168 +79,6 @@ panel_frame_new (void)
   return g_object_new (PANEL_TYPE_FRAME, NULL);
 }
 
-static GtkWidget *
-create_frame (PanelFrame *self)
-{
-  GtkWidget *grid;
-
-  g_assert (PANEL_IS_FRAME (self));
-
-  if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
-    return GTK_WIDGET (_panel_grid_create_frame (PANEL_GRID (grid)));
-  else
-    return panel_frame_new ();
-}
-
-static void
-panel_frame_notify_value_cb (PanelFrame    *self,
-                             GParamSpec    *pspec,
-                             GtkDropTarget *drop_target)
-{
-  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
-  const GValue *value;
-  PanelWidget *panel;
-
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (GTK_IS_DROP_TARGET (drop_target));
-
-  if (!(value = gtk_drop_target_get_value (drop_target)) ||
-      !G_VALUE_HOLDS (value, PANEL_TYPE_WIDGET) ||
-      !(panel = g_value_get_object (value)))
-    return;
-
-  if (!panel_widget_get_reorderable (panel) ||
-      (priv->header && !panel_frame_header_can_drop (priv->header, panel)))
-    gtk_drop_target_reject (drop_target);
-}
-
-static gboolean
-panel_frame_drop_accept_cb (PanelFrame    *self,
-                            GdkDrop       *drop,
-                            GtkDropTarget *drop_target)
-{
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (GDK_IS_DROP (drop));
-  g_assert (GTK_IS_DROP_TARGET (drop_target));
-
-  return TRUE;
-}
-
-static GdkDragAction
-panel_frame_drop_motion_cb (PanelFrame    *self,
-                            double         x,
-                            double         y,
-                            GtkDropTarget *drop_target)
-{
-  GtkOrientation orientation;
-  GtkAllocation alloc;
-
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (GTK_IS_DROP_TARGET (drop_target));
-
-  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
-
-  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
-
-  if (orientation == GTK_ORIENTATION_HORIZONTAL)
-    {
-      if (x + SIZE_AT_END >= alloc.width)
-        gtk_widget_add_css_class (GTK_WIDGET (self), "drop-after");
-      else
-        gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
-    }
-  else
-    {
-      if (y + SIZE_AT_END >= alloc.height)
-        gtk_widget_add_css_class (GTK_WIDGET (self), "drop-after");
-      else
-        gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
-    }
-
-  return GDK_ACTION_MOVE;
-}
-
-static void
-panel_frame_drop_leave_cb (PanelFrame    *self,
-                           GtkDropTarget *drop_target)
-{
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (GTK_IS_DROP_TARGET (drop_target));
-
-  gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
-}
-
-static gboolean
-panel_frame_drop_cb (PanelFrame    *self,
-                     const GValue  *value,
-                     double         x,
-                     double         y,
-                     GtkDropTarget *drop_target)
-{
-  PanelFrame *target = self;
-  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
-  GtkWidget *paned;
-  GtkWidget *src_paned;
-  PanelWidget *panel;
-  GtkWidget *frame;
-  GtkAllocation alloc;
-  GtkOrientation orientation;
-  gboolean is_after = FALSE;
-
-  g_assert (PANEL_IS_FRAME (self));
-  g_assert (GTK_IS_DROP_TARGET (drop_target));
-
-  gtk_widget_remove_css_class (GTK_WIDGET (self), "drop-after");
-
-  if (!G_VALUE_HOLDS (value, PANEL_TYPE_WIDGET) ||
-      !(panel = g_value_get_object (value)) ||
-      !(frame = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_FRAME)) ||
-      !panel_widget_get_reorderable (panel) ||
-      (priv->header && !panel_frame_header_can_drop (priv->header, panel)))
-    return FALSE;
-
-  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
-  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
-
-  if (orientation == GTK_ORIENTATION_HORIZONTAL)
-    is_after = x + SIZE_AT_END >= alloc.width;
-  else
-    is_after = y + SIZE_AT_END >= alloc.height;
-
-  if (frame == GTK_WIDGET (self) && !is_after)
-    return FALSE;
-
-  if (!(src_paned = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_PANED)))
-    return FALSE;
-
-  if (!(paned = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_PANED)))
-    return FALSE;
-
-  if (is_after)
-    {
-      GtkWidget *new_frame;
-
-      new_frame = create_frame (self);
-      gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
-      panel_paned_insert_after (PANEL_PANED (paned), new_frame, GTK_WIDGET (self));
-      target = PANEL_FRAME (new_frame);
-    }
-
-  g_object_ref (panel);
-
-  panel_frame_remove (PANEL_FRAME (frame), panel);
-  panel_frame_add (target, panel);
-  panel_frame_set_visible_child (target, panel);
-
-  if (panel_frame_get_empty (PANEL_FRAME (frame)) &&
-      panel_paned_get_n_children (PANEL_PANED (src_paned)) > 1)
-    panel_paned_remove (PANEL_PANED (src_paned), frame);
-
-  g_object_unref (panel);
-
-  return TRUE;
-}
-
 static void
 page_save_action (GtkWidget  *widget,
                   const char *action_name,
@@ -542,19 +380,6 @@ page_move_up_action (GtkWidget  *widget,
 }
 
 static void
-set_margin (GtkWidget *widget,
-            int        top,
-            int        right,
-            int        bottom,
-            int        left)
-{
-  gtk_widget_set_margin_top (widget, top);
-  gtk_widget_set_margin_end (widget, right);
-  gtk_widget_set_margin_bottom (widget, bottom);
-  gtk_widget_set_margin_start (widget, left);
-}
-
-static void
 panel_frame_update_drop (PanelFrame *self)
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
@@ -572,43 +397,6 @@ panel_frame_update_drop (PanelFrame *self)
     position = PANEL_DOCK_POSITION_CENTER;
 
   panel_drop_controls_set_position (priv->drop_controls, position);
-
-  switch (position)
-    {
-    case PANEL_DOCK_POSITION_START:
-      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_START);
-      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
-      set_margin (GTK_WIDGET (priv->drop_controls), 0, 0, 0, 12);
-      break;
-
-    case PANEL_DOCK_POSITION_END:
-      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_END);
-      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
-      set_margin (GTK_WIDGET (priv->drop_controls), 0, 12, 0, 0);
-      break;
-
-    case PANEL_DOCK_POSITION_TOP:
-      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_START);
-      set_margin (GTK_WIDGET (priv->drop_controls), 12, 0, 0, 0);
-      break;
-
-    case PANEL_DOCK_POSITION_BOTTOM:
-      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_END);
-      set_margin (GTK_WIDGET (priv->drop_controls), 0, 0, 12, 0);
-      break;
-
-    case PANEL_DOCK_POSITION_CENTER:
-      gtk_widget_set_halign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (GTK_WIDGET (priv->drop_controls), GTK_ALIGN_CENTER);
-      set_margin (GTK_WIDGET (priv->drop_controls), 0, 0, 0, 0);
-      break;
-
-    default:
-      g_assert_not_reached ();
-      break;
-    }
 }
 
 static void
@@ -910,8 +698,6 @@ panel_frame_init (PanelFrame *self)
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   PanelJoinedMenu *menu;
-  GtkDropTarget *drop_target;
-  GType types[] = { PANEL_TYPE_WIDGET };
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -933,36 +719,6 @@ panel_frame_init (PanelFrame *self)
   adw_tab_view_set_menu_model (priv->tab_view, G_MENU_MODEL (menu));
   panel_joined_menu_append_menu (menu, priv->frame_menu);
   g_clear_object (&menu);
-
-  drop_target = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY | GDK_ACTION_MOVE);
-  gtk_drop_target_set_gtypes (drop_target, types, G_N_ELEMENTS (types));
-  gtk_drop_target_set_preload (drop_target, TRUE);
-  g_signal_connect_object (drop_target,
-                           "accept",
-                           G_CALLBACK (panel_frame_drop_accept_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  g_signal_connect_object (drop_target,
-                           "notify::value",
-                           G_CALLBACK (panel_frame_notify_value_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  g_signal_connect_object (drop_target,
-                           "drop",
-                           G_CALLBACK (panel_frame_drop_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  g_signal_connect_object (drop_target,
-                           "motion",
-                           G_CALLBACK (panel_frame_drop_motion_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  g_signal_connect_object (drop_target,
-                           "leave",
-                           G_CALLBACK (panel_frame_drop_leave_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 
   g_signal_connect_object (priv->tab_view,
                            "notify::selected-page",

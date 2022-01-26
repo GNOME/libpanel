@@ -10,8 +10,8 @@
         <child type="overlay">
           <object class="PanelDropControls" id="drop_controls">
             <property name="position">center</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
+            <property name="hexpand">true</property>
+            <property name="vexpand">true</property>
             <property name="visible">false</property>
             <layout>
               <property name="measure">true</property>
@@ -36,6 +36,8 @@
             </child>
             <child>
               <object class="GtkStack" id="stack">
+                <property name="vexpand">true</property>
+                <property name="hexpand">true</property>
                 <child>
                   <object class="AdwTabView" id="tab_view">
                     <signal name="setup-menu" handler="setup_menu_cb"/>
