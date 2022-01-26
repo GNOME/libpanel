@@ -141,6 +141,8 @@ panel_dock_switcher_panel_drag_begin_cb (PanelDockSwitcher *self,
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
+  gtk_widget_add_css_class (GTK_WIDGET (self), "drag-active");
+
   if (!gtk_widget_get_visible (GTK_WIDGET (self->revealer)))
     {
       gtk_toggle_button_set_active (self->button, FALSE);
@@ -157,6 +159,8 @@ panel_dock_switcher_panel_drag_end_cb (PanelDockSwitcher *self,
   g_assert (PANEL_IS_DOCK_SWITCHER (self));
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
+
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "drag-active");
 
   if (!panel_dock_get_can_reveal_edge (dock, self->position))
     {

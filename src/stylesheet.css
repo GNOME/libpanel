@@ -1,8 +1,8 @@
 paneldockswitcher button {
   margin-right: 1px;
 }
-paneldockswitcher revealer:last-child button {
-  margin-right: 0;
+paneldockswitcher.drag-active button:not(:checked) {
+  background: alpha(@theme_selected_bg_color, .1);
 }
 
 paneldockchild.bottom,
