@@ -410,8 +410,6 @@ on_panel_drag_begin_cb (PanelFrame  *self,
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
-  gtk_widget_add_css_class (GTK_WIDGET (self), "in-drag");
-
   if (priv->header != NULL &&
       panel_frame_header_can_drop (priv->header, widget))
     gtk_widget_show (GTK_WIDGET (priv->drop_controls));
@@ -429,7 +427,6 @@ on_panel_drag_end_cb (PanelFrame  *self,
   g_assert (PANEL_IS_DOCK (dock));
 
   gtk_widget_hide (GTK_WIDGET (priv->drop_controls));
-  gtk_widget_remove_css_class (GTK_WIDGET (self), "in-drag");
 }
 
 static void
