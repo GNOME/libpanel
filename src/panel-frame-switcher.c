@@ -35,6 +35,7 @@
  */
 
 #define TIMEOUT_EXPAND 500
+#define INDICATOR_SIZE 16
 
 struct _PanelFrameSwitcher
 {
@@ -47,6 +48,9 @@ struct _PanelFrameSwitcher
   GHashTable        *buttons;
   PanelWidget       *drag_panel;
   PanelDock         *drag_dock;
+
+  GtkWidget         *drop_before_button;
+  GskRenderNode     *drop_indicator;
 
   GdkRGBA            foreground_rgba;
   GdkRGBA            background_rgba;
@@ -84,10 +88,59 @@ enum {
 static GParamSpec *properties [N_PROPS];
 
 static void
+ensure_indicator (PanelFrameSwitcher *self)
+{
+  GtkStyleContext *style_context;
+  GtkSnapshot *snapshot;
+  GtkOrientation orientation;
+  GdkRGBA color;
+  cairo_t *cr;
+
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+
+  if (self->drop_indicator != NULL)
+    return;
+
+  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
+
+  style_context = gtk_widget_get_style_context (GTK_WIDGET (self));
+  gtk_style_context_save (style_context);
+  gtk_style_context_add_class (style_context, "drop-indicator");
+  gtk_style_context_get_color (style_context, &color);
+  gtk_style_context_restore (style_context);
+
+  snapshot = gtk_snapshot_new ();
+  cr = gtk_snapshot_append_cairo (snapshot,
+                                  &GRAPHENE_RECT_INIT (0, 0, INDICATOR_SIZE, INDICATOR_SIZE));
+  gdk_cairo_set_source_rgba (cr, &color);
+  cairo_set_line_width (cr, 1.0);
+  cairo_translate (cr, .5, .5);
+
+  if (orientation == GTK_ORIENTATION_HORIZONTAL)
+    {
+      cairo_move_to (cr, INDICATOR_SIZE/2, 0);
+      cairo_line_to (cr, INDICATOR_SIZE/2, INDICATOR_SIZE-3);
+      cairo_stroke (cr);
+      cairo_arc (cr, INDICATOR_SIZE/2-1, INDICATOR_SIZE-5, 4, 0, 2 * M_PI);
+      cairo_fill (cr);
+    }
+  else
+    {
+      cairo_move_to (cr, 0, INDICATOR_SIZE/2);
+      cairo_line_to (cr, INDICATOR_SIZE-3, INDICATOR_SIZE/2);
+      cairo_stroke (cr);
+      cairo_arc (cr, INDICATOR_SIZE-5, INDICATOR_SIZE/2, 4, 0, 2 * M_PI);
+      cairo_fill (cr);
+    }
+
+  cairo_destroy (cr);
+
+  self->drop_indicator = gtk_snapshot_free_to_node (snapshot);
+}
+
+static void
 panel_frame_switcher_init (PanelFrameSwitcher *switcher)
 {
-  GtkLayoutManager *layout_manager;
-
   switcher->buttons = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, NULL);
 
   switcher->bindings = panel_binding_group_new ();
@@ -101,8 +154,7 @@ panel_frame_switcher_init (PanelFrameSwitcher *switcher)
 
   gtk_widget_add_css_class (GTK_WIDGET (switcher), "linked");
 
-  layout_manager = gtk_widget_get_layout_manager (GTK_WIDGET (switcher));
-  gtk_box_layout_set_homogeneous (GTK_BOX_LAYOUT (layout_manager), TRUE);
+  _panel_dock_update_orientation (GTK_WIDGET (switcher), GTK_ORIENTATION_HORIZONTAL);
 }
 
 static void
@@ -286,7 +338,10 @@ panel_frame_switcher_click_pressed_cb (PanelFrameSwitcher *self,
       for (child = gtk_widget_get_prev_sibling (child);
            child;
            child = gtk_widget_get_prev_sibling (child))
-        i++;
+        {
+          if (GTK_IS_TOGGLE_BUTTON (child))
+            i++;
+        }
 
       pages = G_LIST_MODEL (panel_frame_get_pages (self->frame));
       page = g_list_model_get_item (pages, i);
@@ -327,7 +382,10 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
   for (child = gtk_widget_get_prev_sibling (child);
        child;
        child = gtk_widget_get_prev_sibling (child))
-    i++;
+    {
+      if (GTK_IS_TOGGLE_BUTTON (child))
+        i++;
+    }
 
   pages = G_LIST_MODEL (panel_frame_get_pages (self->frame));
   page = g_list_model_get_item (pages, i);
@@ -635,6 +693,83 @@ panel_frame_switcher_get_frame (PanelFrameSwitcher *switcher)
 }
 
 static void
+panel_frame_switcher_snapshot (GtkWidget   *widget,
+                               GtkSnapshot *snapshot)
+{
+  PanelFrameSwitcher *self = (PanelFrameSwitcher *)widget;
+  GtkOrientation orientation;
+  PanelFrame *frame;
+  GtkWidget *last;
+  gboolean draw_indicator = FALSE;
+  int x = -1, y = -1;
+
+  g_assert (PANEL_IS_FRAME_SWITCHER (self));
+  g_assert (GTK_IS_SNAPSHOT (snapshot));
+
+  GTK_WIDGET_CLASS (panel_frame_switcher_parent_class)->snapshot (widget, snapshot);
+
+  orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
+
+  if (self->drop_before_button != NULL)
+    {
+      GtkAllocation alloc;
+      gboolean is_first = gtk_widget_get_prev_sibling (self->drop_before_button) == NULL;
+
+      gtk_widget_get_allocation (self->drop_before_button, &alloc);
+
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          x = alloc.x - INDICATOR_SIZE/2;
+          y = alloc.y + alloc.height - INDICATOR_SIZE;
+
+          if (is_first)
+            x += 4;
+        }
+      else
+        {
+          x = alloc.x + alloc.width - INDICATOR_SIZE;
+          y = alloc.y - INDICATOR_SIZE/2;
+
+          if (is_first)
+            y += 4;
+        }
+
+      draw_indicator = TRUE;
+    }
+  else if ((last = gtk_widget_get_last_child (GTK_WIDGET (self))) &&
+           (frame = panel_frame_header_get_frame (PANEL_FRAME_HEADER (self))) &&
+           _panel_frame_in_drop (frame))
+    {
+      GtkAllocation alloc;
+
+      gtk_widget_get_allocation (last, &alloc);
+
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          x = alloc.x + alloc.width - INDICATOR_SIZE/2 - 4;
+          y = alloc.y + alloc.height - INDICATOR_SIZE;
+        }
+      else
+        {
+          x = alloc.x + alloc.width - INDICATOR_SIZE;
+          y = alloc.y + alloc.height - INDICATOR_SIZE/2 - 4;
+        }
+
+      draw_indicator = TRUE;
+    }
+
+  if (draw_indicator)
+    {
+      ensure_indicator (self);
+
+      gtk_snapshot_save (snapshot);
+      gtk_snapshot_translate (snapshot, &GRAPHENE_POINT_INIT (x, y));
+      gtk_snapshot_append_node (snapshot, self->drop_indicator);
+      gtk_snapshot_restore (snapshot);
+    }
+}
+
+static void
 panel_frame_switcher_get_property (GObject    *object,
                                    guint       prop_id,
                                    GValue     *value,
@@ -685,6 +820,7 @@ panel_frame_switcher_set_property (GObject      *object,
           {
             gtk_orientable_set_orientation (GTK_ORIENTABLE (box_layout), orientation);
             _panel_dock_update_orientation (GTK_WIDGET (switcher), orientation);
+            g_clear_pointer (&switcher->drop_indicator, gsk_render_node_unref);
             g_object_notify_by_pspec (object, pspec);
           }
       }
@@ -709,6 +845,19 @@ panel_frame_switcher_set_property (GObject      *object,
 }
 
 static void
+panel_frame_switcher_css_changed (GtkWidget         *widget,
+                                  GtkCssStyleChange *change)
+{
+  PanelFrameSwitcher *self = (PanelFrameSwitcher *)widget;
+
+  g_assert (GTK_IS_WIDGET (widget));
+
+  GTK_WIDGET_CLASS (panel_frame_switcher_parent_class)->css_changed (widget, change);
+
+  g_clear_pointer (&self->drop_indicator, gsk_render_node_unref);
+}
+
+static void
 panel_frame_switcher_dispose (GObject *object)
 {
   PanelFrameSwitcher *switcher = PANEL_FRAME_SWITCHER (object);
@@ -717,6 +866,8 @@ panel_frame_switcher_dispose (GObject *object)
   g_clear_object (&switcher->css_provider);
   g_clear_object (&switcher->bindings);
   unset_frame (switcher);
+
+  g_clear_pointer (&switcher->drop_indicator, gsk_render_node_unref);
 
   G_OBJECT_CLASS (panel_frame_switcher_parent_class)->dispose (object);
 }
@@ -741,6 +892,9 @@ panel_frame_switcher_class_init (PanelFrameSwitcherClass *class)
   object_class->set_property = panel_frame_switcher_set_property;
   object_class->dispose = panel_frame_switcher_dispose;
   object_class->finalize = panel_frame_switcher_finalize;
+
+  widget_class->snapshot = panel_frame_switcher_snapshot;
+  widget_class->css_changed = panel_frame_switcher_css_changed;
 
   properties [PROP_BACKGROUND_RGBA] =
     g_param_spec_boxed ("background-rgba",
@@ -966,4 +1120,39 @@ _panel_frame_switcher_get_page (PanelFrameSwitcher *self,
     }
 
   return NULL;
+}
+
+void
+_panel_frame_switcher_set_drop_before (PanelFrameSwitcher *self,
+                                       PanelWidget        *widget)
+{
+  GHashTableIter iter;
+  AdwTabPage *page;
+  GtkWidget *button;
+  GtkWidget *child;
+
+  g_return_if_fail (PANEL_IS_FRAME_SWITCHER (self));
+  g_return_if_fail (!widget || PANEL_IS_WIDGET (widget));
+
+  self->drop_before_button = NULL;
+
+  if (widget != NULL)
+    {
+      g_hash_table_iter_init (&iter, self->buttons);
+      while (g_hash_table_iter_next (&iter, (gpointer *)&page, (gpointer *)&button))
+        {
+          g_assert (ADW_IS_TAB_PAGE (page));
+          g_assert (GTK_IS_TOGGLE_BUTTON (button));
+
+          child = adw_tab_page_get_child (page);
+
+          if (child == GTK_WIDGET (widget))
+            {
+              self->drop_before_button = button;
+              break;
+            }
+        }
+    }
+
+  gtk_widget_queue_draw (GTK_WIDGET (self));
 }

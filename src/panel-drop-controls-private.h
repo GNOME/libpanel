@@ -32,5 +32,6 @@ GtkWidget         *panel_drop_controls_new          (void);
 PanelDockPosition  panel_drop_controls_get_position (PanelDropControls *self);
 void               panel_drop_controls_set_position (PanelDropControls *self,
                                                      PanelDockPosition  position);
+gboolean           panel_drop_controls_in_drop      (PanelDropControls *self);
 
 G_END_DECLS

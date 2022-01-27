@@ -2,7 +2,7 @@ paneldockswitcher button {
   margin-right: 1px;
 }
 paneldockswitcher.drag-active button:not(:checked) {
-  background: alpha(@theme_selected_bg_color, .1);
+  background: alpha(@accent_bg_color, .25);
 }
 
 paneldockchild.bottom,
@@ -103,12 +103,18 @@ panelpaned.horizontal panelframe panelframeswitcher button {
 }
 panelframe panelframeswitcher button {
   border-radius: 7px;
-  border-color: transparent;
-  margin: 1px;
+  /* use border instead of margin so that there are no gaps
+   * when dragging across buttons. This helps things feel a
+   * bit more solid when doing DnD.
+   */
+  border: 1px solid @view_bg_color;
 }
 panelframe panelframeswitcher button:not(:hover):not(:checked):not(:active) {
   background: transparent;
   color: alpha(currentColor, 0.75);
+}
+panelframeswitcher.drop-indicator {
+  color: shade(@theme_selected_bg_color,0.8);
 }
 
 panelframe .frameheader .action-bar popover.menu.pages-popover row {
@@ -211,7 +217,7 @@ panelomnibar {
   min-height: 28px;
   padding: 3px 9px;
   background: alpha(currentColor, .075);
-  transition-property: all;
+  transition-property: background;
   transition-duration: 200ms;
 }
 panelomnibar:hover {
@@ -301,22 +307,22 @@ panelframe:drop(active) {
   box-shadow: none;
 }
 panelframe paneldropcontrols {
-  transition-property: all;
+  transition-property: background, border;
   transition-duration: 300ms;
   border-radius: 7px;
   margin: 1px;
 }
 panelframe paneldropcontrols {
-  background: alpha(@theme_selected_bg_color, .1);
+  background: alpha(@accent_bg_color, .1);
 }
 panelframe paneldropcontrols:drop(active) {
-  background: alpha(@theme_selected_bg_color, .3);
+  background: alpha(@accent_bg_color, .3);
   box-shadow: inset 0 0 0 1px @accent_bg_color;
 }
 paneldropcontrols button {
   border-radius: 11px;
   color: alpha(@theme_selected_fg_color, .8);
-  background-color: @theme_selected_bg_color;
+  background-color: @accent_bg_color;
   box-shadow: 0 3px 5px rgba(0,0,0,.2);
   padding: 0;
 }
@@ -324,6 +330,6 @@ paneldropcontrols button.circular {
   border-radius: 9999px;
 }
 paneldropcontrols button:drop(active) {
-  background-color: mix(@theme_selected_bg_color, @theme_selected_fg_color, .3);
+  background-color: mix(@accent_bg_color, @accent_fg_color, .3);
   color: @theme_selected_fg_color;
 }

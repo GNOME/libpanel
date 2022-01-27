@@ -25,7 +25,7 @@
 #include "panel-drop-controls-private.h"
 #include "panel-frame-private.h"
 #include "panel-frame-header.h"
-#include "panel-frame-switcher.h"
+#include "panel-frame-switcher-private.h"
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
 #include "panel-joined-menu-private.h"
@@ -48,7 +48,7 @@ typedef struct
   GtkWidget         *focus_highlight;
   PanelDropControls *drop_controls;
 
-  guint             closeable : 1;
+  guint              closeable : 1;
 } PanelFramePrivate;
 
 #define SIZE_AT_END 50
@@ -608,6 +608,8 @@ panel_frame_set_property (GObject      *object,
           gtk_widget_set_halign (priv->focus_highlight, GTK_ALIGN_START);
           gtk_widget_set_valign (priv->focus_highlight, GTK_ALIGN_FILL);
         }
+
+      _panel_dock_update_orientation (GTK_WIDGET (self), g_value_get_enum (value));
       break;
 
     case PROP_PLACEHOLDER:
@@ -695,6 +697,9 @@ panel_frame_init (PanelFrame *self)
   PanelJoinedMenu *menu;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  _panel_dock_update_orientation (GTK_WIDGET (self),
+                                  gtk_orientable_get_orientation (GTK_ORIENTABLE (self)));
 
   /* Locate GtkStack within tab view and alter homogeneous
    * values so that we have more flexibility in sizing.
@@ -1144,4 +1149,27 @@ _panel_frame_set_closeable (PanelFrame  *self,
   priv->closeable = !!closeable;
 
   panel_frame_update_actions (self);
+}
+
+void
+_panel_frame_set_drop_before (PanelFrame  *self,
+                              PanelWidget *widget)
+{
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_FRAME (self));
+  g_return_if_fail (!widget || PANEL_IS_WIDGET (widget));
+
+  if (PANEL_IS_FRAME_SWITCHER (priv->header))
+    _panel_frame_switcher_set_drop_before (PANEL_FRAME_SWITCHER (priv->header), widget);
+}
+
+gboolean
+_panel_frame_in_drop (PanelFrame *self)
+{
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
+
+  return panel_drop_controls_in_drop (priv->drop_controls);
 }

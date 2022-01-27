@@ -23,6 +23,7 @@
 #include "panel-dock-private.h"
 #include "panel-drop-controls-private.h"
 #include "panel-enums.h"
+#include "panel-frame-private.h"
 #include "panel-frame-switcher-private.h"
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
@@ -52,6 +53,8 @@ struct _PanelDropControls
   AdwTabPage        *drop_before_page;
 
   PanelDockPosition  position;
+
+  guint              in_drop : 1;
 };
 
 G_DEFINE_TYPE (PanelDropControls, panel_drop_controls, GTK_TYPE_WIDGET)
@@ -68,6 +71,21 @@ GtkWidget *
 panel_drop_controls_new (void)
 {
   return g_object_new (PANEL_TYPE_DROP_CONTROLS, NULL);
+}
+
+static void
+panel_drop_controls_drop_finished (PanelDropControls *self,
+                                   gboolean           success)
+{
+  GtkWidget *frame;
+
+  g_assert (PANEL_IS_DROP_CONTROLS (self));
+
+  self->drop_before_page = NULL;
+  self->in_drop = FALSE;
+
+  if ((frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME)))
+    _panel_frame_set_drop_before (PANEL_FRAME (frame), NULL);
 }
 
 void
@@ -166,21 +184,22 @@ on_drop_target_motion_cb (PanelDropControls *self,
                           GtkDropTarget     *drop_target)
 {
   PanelFrameHeader *header;
+  GtkOrientation orientation;
+  AdwTabPage *drop_before = NULL;
   GtkWidget *pick;
   GtkWidget *frame;
-  double header_x;
-  double header_y;
+  double header_x, header_y;
 
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
-
-  self->drop_before_page = NULL;
 
   frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME);
   header = panel_frame_get_header (PANEL_FRAME (frame));
 
   if (PANEL_IS_FRAME_SWITCHER (header))
     {
+      orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (header));
+
       gtk_widget_translate_coordinates (GTK_WIDGET (self),
                                         GTK_WIDGET (header),
                                         x, y, &header_x, &header_y);
@@ -192,12 +211,29 @@ on_drop_target_motion_cb (PanelDropControls *self,
             {
               if (GTK_IS_TOGGLE_BUTTON (pick))
                 {
-                  self->drop_before_page = _panel_frame_switcher_get_page (PANEL_FRAME_SWITCHER (header), pick);
+                  GtkAllocation alloc;
+                  double pick_x, pick_y;
+
+                  /* If the drop spot is >= ⅔ through the widget, assume they want it after this widget */
+                  gtk_widget_translate_coordinates (GTK_WIDGET (self), pick, x, y, &pick_x, &pick_y);
+                  gtk_widget_get_allocation (pick, &alloc);
+                  if ((orientation == GTK_ORIENTATION_HORIZONTAL && pick_x > (alloc.width * 2 / 3)) ||
+                      (orientation == GTK_ORIENTATION_VERTICAL && pick_y > (alloc.height * 2 / 3)))
+                    pick = gtk_widget_get_next_sibling (pick);
+
+                  if (pick != NULL)
+                    drop_before = _panel_frame_switcher_get_page (PANEL_FRAME_SWITCHER (header), pick);
+
                   break;
                 }
             }
         }
     }
+
+  self->drop_before_page = drop_before;
+  _panel_frame_set_drop_before (PANEL_FRAME (frame),
+                                drop_before ? PANEL_WIDGET (adw_tab_page_get_child (drop_before))
+                                            : NULL);
 
   return GDK_ACTION_MOVE;
 }
@@ -209,6 +245,7 @@ on_drop_target_leave_cb (PanelDropControls *self,
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
 
+  panel_drop_controls_drop_finished (self, FALSE);
 }
 
 static void
@@ -220,6 +257,7 @@ on_drop_target_enter_cb (PanelDropControls *self,
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
 
+  self->in_drop = TRUE;
   self->drop_before_page= NULL;
 
   gtk_widget_queue_allocate (GTK_WIDGET (self));
@@ -259,6 +297,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
   PanelWidget *panel;
   GtkWidget *frame;
   GtkWidget *button;
+  gboolean success = FALSE;
   guint column;
   guint row;
 
@@ -266,10 +305,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
   g_assert (GTK_IS_DROP_TARGET (drop_target));
 
   if (self->drop_before_page != NULL)
-    {
-      before_panel = PANEL_WIDGET (adw_tab_page_get_child (self->drop_before_page));
-      self->drop_before_page = NULL;
-    }
+    before_panel = PANEL_WIDGET (adw_tab_page_get_child (self->drop_before_page));
 
   target = PANEL_FRAME (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME));
 
@@ -281,7 +317,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
       !panel_frame_header_can_drop (header, panel) ||
       !(src_paned = gtk_widget_get_ancestor (GTK_WIDGET (panel), PANEL_TYPE_PANED)) ||
       !(paned = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_PANED)))
-    return FALSE;
+    goto cleanup;
 
   g_assert (PANEL_IS_WIDGET (panel));
   g_assert (PANEL_IS_FRAME_HEADER (header));
@@ -400,9 +436,8 @@ on_drop_target_drop_cb (PanelDropControls *self,
     }
 
   /* Ignore the No-Op case */
-  if (frame == GTK_WIDGET (target) &&
-      (before_panel == NULL || before_panel == panel))
-    return FALSE;
+  if (frame == GTK_WIDGET (target) && before_panel == panel)
+    goto cleanup;
 
   g_object_ref (panel);
 
@@ -420,7 +455,12 @@ on_drop_target_drop_cb (PanelDropControls *self,
 
   g_object_unref (panel);
 
-  return TRUE;
+  success = TRUE;
+
+cleanup:
+  panel_drop_controls_drop_finished (self, success);
+
+  return success;
 }
 
 static void
@@ -597,4 +637,12 @@ panel_drop_controls_init (PanelDropControls *self)
   setup_drop_target (self, GTK_WIDGET (self->right), &self->right_target, PANEL_DOCK_POSITION_END);
   setup_drop_target (self, GTK_WIDGET (self->top), &self->top_target, PANEL_DOCK_POSITION_TOP);
   setup_drop_target (self, GTK_WIDGET (self), &self->drop_target, PANEL_DOCK_POSITION_CENTER);
+}
+
+gboolean
+panel_drop_controls_in_drop (PanelDropControls *self)
+{
+  g_return_val_if_fail (PANEL_IS_DROP_CONTROLS (self), FALSE);
+
+  return self->in_drop;
 }

@@ -26,7 +26,9 @@
 
 G_BEGIN_DECLS
 
-AdwTabPage *_panel_frame_switcher_get_page (PanelFrameSwitcher *self,
-                                            GtkWidget          *button);
+AdwTabPage *_panel_frame_switcher_get_page        (PanelFrameSwitcher *self,
+                                                   GtkWidget          *button);
+void        _panel_frame_switcher_set_drop_before (PanelFrameSwitcher *self,
+                                                   PanelWidget        *widget);
 
 G_END_DECLS

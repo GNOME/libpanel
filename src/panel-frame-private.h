@@ -26,13 +26,16 @@
 
 G_BEGIN_DECLS
 
-void        _panel_frame_set_closeable (PanelFrame  *self,
-                                        gboolean     closeable);
-GMenuModel *_panel_frame_get_tab_menu  (PanelFrame  *self);
-AdwTabView *_panel_frame_get_tab_view  (PanelFrame  *self);
-void        _panel_frame_transfer      (PanelFrame  *self,
-                                        PanelWidget *widget,
-                                        PanelFrame  *new_frame,
-                                        int          position);
+void        _panel_frame_set_closeable   (PanelFrame  *self,
+                                          gboolean     closeable);
+GMenuModel *_panel_frame_get_tab_menu    (PanelFrame  *self);
+AdwTabView *_panel_frame_get_tab_view    (PanelFrame  *self);
+void        _panel_frame_transfer        (PanelFrame  *self,
+                                          PanelWidget *widget,
+                                          PanelFrame  *new_frame,
+                                          int          position);
+gboolean    _panel_frame_in_drop         (PanelFrame  *self);
+void        _panel_frame_set_drop_before (PanelFrame  *self,
+                                          PanelWidget *widget);
 
 G_END_DECLS
