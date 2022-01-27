@@ -109,11 +109,11 @@ panel_omni_bar_new (void)
 }
 
 static void
-panel_omni_bar_click_pressed_cb (PanelOmniBar    *self,
-                                 int              n_pressed,
-                                 double           x,
-                                 double           y,
-                                 GtkGestureClick *click)
+panel_omni_bar_click_released_cb (PanelOmniBar    *self,
+                                  int              n_relases,
+                                  double           x,
+                                  double           y,
+                                  GtkGestureClick *click)
 {
   PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
 
@@ -310,8 +310,8 @@ panel_omni_bar_init (PanelOmniBar *self)
 
   gesture = gtk_gesture_click_new ();
   g_signal_connect_object (gesture,
-                           "pressed",
-                           G_CALLBACK (panel_omni_bar_click_pressed_cb),
+                           "released",
+                           G_CALLBACK (panel_omni_bar_click_released_cb),
                            self,
                            G_CONNECT_SWAPPED);
   gtk_widget_add_controller (GTK_WIDGET (priv->box), GTK_EVENT_CONTROLLER (gesture));
