@@ -699,6 +699,8 @@ panel_frame_switcher_snapshot (GtkWidget   *widget,
   PanelFrameSwitcher *self = (PanelFrameSwitcher *)widget;
   GtkOrientation orientation;
   PanelFrame *frame;
+  GtkWidget *child;
+  GtkWidget *focused = NULL;
   GtkWidget *last;
   gboolean draw_indicator = FALSE;
   int x = -1, y = -1;
@@ -706,7 +708,19 @@ panel_frame_switcher_snapshot (GtkWidget   *widget,
   g_assert (PANEL_IS_FRAME_SWITCHER (self));
   g_assert (GTK_IS_SNAPSHOT (snapshot));
 
-  GTK_WIDGET_CLASS (panel_frame_switcher_parent_class)->snapshot (widget, snapshot);
+  for (child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (gtk_widget_has_focus (child))
+        focused = child;
+      else
+        gtk_widget_snapshot_child (widget, child, snapshot);
+    }
+
+  /* Draw widget w/ focus last */
+  if (focused)
+    gtk_widget_snapshot_child (widget, focused, snapshot);
 
   orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (self));
 
