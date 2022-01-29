@@ -16,25 +16,6 @@ paneldockchild.top {
   color: @panel_fg_color;
 }
 
-paneldockchild.bottom panelpaned textview text,
-paneldockchild.bottom panelpaned panelframe textview,
-paneldockchild.bottom panelpaned panelframe list,
-paneldockchild.bottom panelpaned panelframe listview,
-paneldockchild.end panelpaned textview text,
-paneldockchild.end panelpaned panelframe list,
-paneldockchild.end panelpaned panelframe listview,
-paneldockchild.end panelpaned panelframe textview,
-paneldockchild.start panelpaned textview text,
-paneldockchild.start panelpaned panelframe list,
-paneldockchild.start panelpaned panelframe listview,
-paneldockchild.start panelpaned panelframe textview,
-paneldockchild.top panelpaned textview text,
-paneldockchild.top panelpaned panelframe list,
-paneldockchild.top panelpaned panelframe listview,
-paneldockchild.top panelpaned panelframe textview {
-  background: transparent;
-}
-
 panelframe panelframeheaderbar,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframeheaderbar {
   border-top: 2px solid transparent;
