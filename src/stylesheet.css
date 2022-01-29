@@ -1,3 +1,6 @@
+@define-color panel_bg_color @window_bg_color;
+@define-color panel_fg_color @window_fg_color;
+
 paneldockswitcher button {
   margin-right: 1px;
 }
@@ -9,8 +12,8 @@ paneldockchild.bottom,
 paneldockchild.end,
 paneldockchild.start,
 paneldockchild.top {
-  background: @view_bg_color;
-  color: @view_fg_color;
+  background: @panel_bg_color;
+  color: @panel_fg_color;
 }
 
 paneldockchild.bottom panelpaned textview text,
@@ -86,8 +89,8 @@ paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe pan
   border-bottom: 1px solid alpha(@borders,.6);
 }
 panelpaned panelframe panelframeswitcher {
-  background: @view_bg_color;
-  color: @view_fg_color;
+  background: @panel_bg_color;
+  color: @panel_fg_color;
 }
 panelpaned.horizontal panelframe panelframeswitcher {
   padding: 2px 2px 2px 0;
@@ -107,7 +110,7 @@ panelframe panelframeswitcher button {
    * when dragging across buttons. This helps things feel a
    * bit more solid when doing DnD.
    */
-  border: 1px solid @view_bg_color;
+  border: 1px solid @panel_bg_color;
 }
 panelframe panelframeswitcher button:not(:hover):not(:checked):not(:active) {
   background: transparent;
