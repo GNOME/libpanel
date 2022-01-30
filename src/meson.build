@@ -178,7 +178,7 @@ if generate_gir
   )
   
   if generate_vapi
-    gtksource_vapi = gnome.generate_vapi('libpanel',
+    gtksource_vapi = gnome.generate_vapi('libpanel-@0@'.format(ABI_MAJOR),
           sources: libpanel_gir.get(0),
           install: true,
       install_dir: vapidir,
