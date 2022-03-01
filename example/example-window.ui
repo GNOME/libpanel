@@ -1186,6 +1186,11 @@
             <attribute name="label">Unit Tests</attribute>
             <section>
               <item>
+                <attribute name="label">Run All Tests</attribute>
+              </item>
+            </section>
+            <section>
+              <item>
                 <attribute name="label">test-animation</attribute>
               </item>
               <item>
