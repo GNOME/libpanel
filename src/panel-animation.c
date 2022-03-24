@@ -126,7 +126,7 @@ TWEEN (double);
  * @offset: (in): The position within the animation; 0.0 to 1.0.
  *
  * An alpha function to transform the offset within the animation.
- * @PANEL_ANIMATION_CUBIC means the valu ewill be transformed into
+ * @PANEL_ANIMATION_CUBIC means the value will be transformed into
  * cubic acceleration (x * x * x).
  */
 static gdouble
@@ -161,7 +161,7 @@ panel_animation_alpha_ease_in_out_cubic (gdouble offset)
  * @offset: (in): The position within the animation; 0.0 to 1.0.
  *
  * An alpha function to transform the offset within the animation.
- * @PANEL_ANIMATION_LINEAR means no tranformation will be made.
+ * @PANEL_ANIMATION_LINEAR means no transformation will be made.
  *
  * Returns: @offset.
  * Side effects: None.
@@ -181,7 +181,7 @@ panel_animation_alpha_linear (gdouble offset)
  * @PANEL_ANIMATION_EASE_IN_QUAD means that the value will be transformed
  * into a quadratic acceleration.
  *
- * Returns: A tranformation of @offset.
+ * Returns: A transformation of @offset.
  * Side effects: None.
  */
 static gdouble
@@ -199,7 +199,7 @@ panel_animation_alpha_ease_in_quad (gdouble offset)
  * @PANEL_ANIMATION_EASE_OUT_QUAD means that the value will be transformed
  * into a quadratic deceleration.
  *
- * Returns: A tranformation of @offset.
+ * Returns: A transformation of @offset.
  * Side effects: None.
  */
 static gdouble
@@ -218,7 +218,7 @@ panel_animation_alpha_ease_out_quad (gdouble offset)
  * into a quadratic acceleration for the first half, and quadratic
  * deceleration the second half.
  *
- * Returns: A tranformation of @offset.
+ * Returns: A transformation of @offset.
  * Side effects: None.
  */
 static gdouble
