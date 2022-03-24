@@ -1,9 +1,6 @@
 @define-color panel_bg_color @window_bg_color;
 @define-color panel_fg_color @window_fg_color;
 
-paneldockswitcher button {
-  margin-right: 1px;
-}
 paneldockswitcher.drag-active button:not(:checked) {
   background: alpha(@accent_bg_color, .25);
 }
@@ -167,6 +164,9 @@ panelstatusbar > button {
   min-width: 8px;
   border-radius: 0;
   padding: 0 9px;
+}
+panelstatusbar paneldockswitcher:last-child button {
+  border-bottom-right-radius: 11px;
 }
 panelstatusbar paneldockswitcher button:not(:hover):not(:checked),
 panelstatusbar > dropdown > button:not(:hover):not(:checked),
