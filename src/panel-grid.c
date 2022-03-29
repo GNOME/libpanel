@@ -26,6 +26,7 @@
 #include "panel-grid-private.h"
 #include "panel-paned.h"
 #include "panel-resizer-private.h"
+#include "panel-save-dialog.h"
 
 typedef struct
 {
@@ -640,4 +641,81 @@ _panel_grid_update_closeable (PanelGrid *self)
     _panel_grid_foreach_frame (self,
                                adjust_can_close_frame,
                                GUINT_TO_POINTER (TRUE));
+}
+
+static void
+panel_grid_agree_to_close_frame_cb (PanelFrame *frame,
+                                    gpointer    user_data)
+{
+  PanelSaveDialog *dialog = user_data;
+  guint n_pages;
+
+  g_assert (PANEL_IS_FRAME (frame));
+  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+
+  n_pages = panel_frame_get_n_pages (frame);
+
+  for (guint i = 0; i < n_pages; i++)
+    {
+      PanelWidget *page = panel_frame_get_page (frame, i);
+      PanelSaveDelegate *delegate = panel_widget_get_save_delegate (page);
+
+      if (delegate != NULL)
+        panel_save_dialog_add_delegate (dialog, delegate);
+    }
+}
+
+static void
+panel_grid_agree_to_close_cb (GObject      *object,
+                              GAsyncResult *result,
+                              gpointer      user_data)
+{
+  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  g_autoptr(GError) error = NULL;
+  g_autoptr(GTask) task = user_data;
+
+  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (G_IS_ASYNC_RESULT (result));
+  g_assert (G_IS_TASK (task));
+
+  if (panel_save_dialog_run_finish (dialog, result, &error))
+    g_task_return_boolean (task, TRUE);
+  else
+    g_task_return_error (task, g_steal_pointer (&error));
+}
+
+void
+panel_grid_agree_to_close_async (PanelGrid           *self,
+                                 GCancellable        *cancellable,
+                                 GAsyncReadyCallback  callback,
+                                 gpointer             user_data)
+{
+  g_autoptr(GTask) task = NULL;
+  PanelSaveDialog *dialog;
+
+  g_return_if_fail (PANEL_IS_GRID (self));
+  g_return_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable));
+
+  task = g_task_new (self, cancellable, callback, user_data);
+  g_task_set_source_tag (task, panel_grid_agree_to_close_async);
+
+  dialog = PANEL_SAVE_DIALOG (panel_save_dialog_new ());
+  _panel_grid_foreach_frame (self,
+                             panel_grid_agree_to_close_frame_cb,
+                             dialog);
+  panel_save_dialog_run_async (dialog,
+                               cancellable,
+                               panel_grid_agree_to_close_cb,
+                               g_steal_pointer (&task));
+}
+
+gboolean
+panel_grid_agree_to_close_finish (PanelGrid     *self,
+                                  GAsyncResult  *result,
+                                  GError       **error)
+{
+  g_return_val_if_fail (PANEL_IS_GRID (self), FALSE);
+  g_return_val_if_fail (G_IS_TASK (result), FALSE);
+
+  return g_task_propagate_boolean (G_TASK (result), error);
 }

@@ -46,16 +46,25 @@ struct _PanelGridClass
 PANEL_AVAILABLE_IN_ALL
 GtkWidget       *panel_grid_new                    (void);
 PANEL_AVAILABLE_IN_ALL
-PanelGridColumn *panel_grid_get_most_recent_column (PanelGrid   *self);
+PanelGridColumn *panel_grid_get_most_recent_column (PanelGrid            *self);
 PANEL_AVAILABLE_IN_ALL
-PanelFrame      *panel_grid_get_most_recent_frame  (PanelGrid   *self);
+PanelFrame      *panel_grid_get_most_recent_frame  (PanelGrid            *self);
 PANEL_AVAILABLE_IN_ALL
-void             panel_grid_add                    (PanelGrid   *self,
-                                                    PanelWidget *widget);
+void             panel_grid_add                    (PanelGrid            *self,
+                                                    PanelWidget          *widget);
 PANEL_AVAILABLE_IN_ALL
-guint            panel_grid_get_n_columns          (PanelGrid   *self);
+guint            panel_grid_get_n_columns          (PanelGrid            *self);
 PANEL_AVAILABLE_IN_ALL
-PanelGridColumn *panel_grid_get_column             (PanelGrid   *self,
-                                                    guint        column);
+PanelGridColumn *panel_grid_get_column             (PanelGrid            *self,
+                                                    guint                 column);
+PANEL_AVAILABLE_IN_ALL
+void             panel_grid_agree_to_close_async   (PanelGrid            *self,
+                                                    GCancellable         *cancellable,
+                                                    GAsyncReadyCallback   callback,
+                                                    gpointer              user_data);
+PANEL_AVAILABLE_IN_ALL
+gboolean         panel_grid_agree_to_close_finish  (PanelGrid            *self,
+                                                    GAsyncResult         *result,
+                                                    GError              **error);
 
 G_END_DECLS
