@@ -27,18 +27,16 @@
 #include "panel-paned.h"
 #include "panel-resizer-private.h"
 
-struct _PanelGrid
+typedef struct
 {
-  GtkWidget   parent_instance;
-
   PanelPaned *columns;
-
   GQueue      frame_mru;
-};
+} PanelGridPrivate;
 
 static void buildable_iface_init (GtkBuildableIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (PanelGrid, panel_grid, GTK_TYPE_WIDGET,
+                         G_ADD_PRIVATE (PanelGrid)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init))
 
 enum {
@@ -108,6 +106,7 @@ _panel_grid_create_frame (PanelGrid *self)
 void
 _panel_grid_update_focus (PanelGrid *self)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
   GtkWidget *first;
   GtkWidget *second;
 
@@ -116,8 +115,8 @@ _panel_grid_update_focus (PanelGrid *self)
   /* We only need to update head and second nodes because
    * the focus was always the head, and may now be the second.
    */
-  first = g_queue_peek_nth (&self->frame_mru, 0);
-  second = g_queue_peek_nth (&self->frame_mru, 1);
+  first = g_queue_peek_nth (&priv->frame_mru, 0);
+  second = g_queue_peek_nth (&priv->frame_mru, 1);
 
   if (second)
     gtk_widget_remove_css_class (second, "has-focus");
@@ -130,10 +129,12 @@ void
 _panel_grid_drop_frame_mru (PanelGrid  *self,
                             PanelFrame *frame)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
+
   g_assert (PANEL_IS_GRID (self));
   g_assert (PANEL_IS_FRAME (frame));
 
-  g_queue_remove (&self->frame_mru, frame);
+  g_queue_remove (&priv->frame_mru, frame);
   _panel_grid_update_focus (self);
 }
 
@@ -142,6 +143,7 @@ on_set_focus_cb (PanelGrid  *self,
                  GParamSpec *pspec,
                  GtkWindow  *window)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
   GtkWidget *focus;
   GtkWidget *frame;
 
@@ -151,8 +153,8 @@ on_set_focus_cb (PanelGrid  *self,
   if ((focus = gtk_window_get_focus (window)) &&
       (frame = gtk_widget_get_ancestor (focus, PANEL_TYPE_FRAME)))
     {
-      g_queue_remove (&self->frame_mru, frame);
-      g_queue_push_head (&self->frame_mru, frame);
+      g_queue_remove (&priv->frame_mru, frame);
+      g_queue_push_head (&priv->frame_mru, frame);
       _panel_grid_update_focus (self);
     }
 }
@@ -179,8 +181,9 @@ static void
 panel_grid_dispose (GObject *object)
 {
   PanelGrid *self = (PanelGrid *)object;
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
 
-  g_clear_pointer ((GtkWidget **)&self->columns, gtk_widget_unparent);
+  g_clear_pointer ((GtkWidget **)&priv->columns, gtk_widget_unparent);
 
   G_OBJECT_CLASS (panel_grid_parent_class)->dispose (object);
 }
@@ -195,6 +198,8 @@ panel_grid_class_init (PanelGridClass *klass)
 
   widget_class->root = panel_grid_root;
 
+  klass->create_frame = panel_grid_real_create_frame;
+
   /**
    * PanelGrid::create-frame:
    * @self: a #PanelGrid
@@ -208,13 +213,13 @@ panel_grid_class_init (PanelGridClass *klass)
    * Returns: (transfer full) (not nullable): an unrooted #PanelFrame
    */
   signals [CREATE_FRAME] =
-    g_signal_new_class_handler ("create-frame",
-                                G_TYPE_FROM_CLASS (klass),
-                                G_SIGNAL_RUN_LAST,
-                                G_CALLBACK (panel_grid_real_create_frame),
-                                g_signal_accumulator_first_wins, NULL,
-                                NULL,
-                                PANEL_TYPE_FRAME, 0);
+    g_signal_new ("create-frame",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (PanelGridClass, create_frame),
+                  g_signal_accumulator_first_wins, NULL,
+                  NULL,
+                  PANEL_TYPE_FRAME, 0);
 
   gtk_widget_class_set_css_name (widget_class, "panelgrid");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
@@ -223,9 +228,11 @@ panel_grid_class_init (PanelGridClass *klass)
 static void
 panel_grid_init (PanelGrid *self)
 {
-  self->columns = PANEL_PANED (panel_paned_new ());
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (self->columns), GTK_ORIENTATION_HORIZONTAL);
-  gtk_widget_set_parent (GTK_WIDGET (self->columns), GTK_WIDGET (self));
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
+
+  priv->columns = PANEL_PANED (panel_paned_new ());
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->columns), GTK_ORIENTATION_HORIZONTAL);
+  gtk_widget_set_parent (GTK_WIDGET (priv->columns), GTK_WIDGET (self));
 
   _panel_grid_prepend_column (self);
 }
@@ -241,24 +248,25 @@ panel_grid_init (PanelGrid *self)
 PanelGridColumn *
 panel_grid_get_most_recent_column (PanelGrid *self)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
   GtkWidget *column;
 
   g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
 
-  if (self->frame_mru.head != NULL)
+  if (priv->frame_mru.head != NULL)
     {
-      GtkWidget *frame = g_queue_peek_head (&self->frame_mru);
+      GtkWidget *frame = g_queue_peek_head (&priv->frame_mru);
       column = gtk_widget_get_ancestor (frame, PANEL_TYPE_GRID_COLUMN);
     }
   else
     {
-      column = panel_paned_get_nth_child (self->columns, 0);
+      column = panel_paned_get_nth_child (priv->columns, 0);
     }
 
   if (column == NULL)
     {
       _panel_grid_prepend_column (self);
-      column = panel_paned_get_nth_child (self->columns, 0);
+      column = panel_paned_get_nth_child (priv->columns, 0);
     }
 
   return PANEL_GRID_COLUMN (column);
@@ -275,12 +283,13 @@ panel_grid_get_most_recent_column (PanelGrid *self)
 PanelFrame *
 panel_grid_get_most_recent_frame (PanelGrid *self)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
   PanelGridColumn *column;
 
   g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
 
-  if (self->frame_mru.head != NULL)
-    return g_queue_peek_head (&self->frame_mru);
+  if (priv->frame_mru.head != NULL)
+    return g_queue_peek_head (&priv->frame_mru);
 
   column = panel_grid_get_most_recent_column (self);
   return panel_grid_column_get_most_recent_frame (column);
@@ -334,6 +343,7 @@ panel_grid_add_child (GtkBuildable *buildable,
                       const char   *type)
 {
   PanelGrid *self = (PanelGrid *)buildable;
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
 
   g_assert (PANEL_IS_GRID (self));
   g_assert (GTK_IS_BUILDER (builder));
@@ -343,12 +353,12 @@ panel_grid_add_child (GtkBuildable *buildable,
     {
       GtkWidget *column;
 
-      if (panel_paned_get_n_children (self->columns) == 1 &&
-          (column = panel_paned_get_nth_child (self->columns, 0)) &&
+      if (panel_paned_get_n_children (priv->columns) == 1 &&
+          (column = panel_paned_get_nth_child (priv->columns, 0)) &&
           panel_grid_column_get_empty (PANEL_GRID_COLUMN (column)))
-        panel_paned_remove (self->columns, column);
+        panel_paned_remove (priv->columns, column);
 
-      panel_paned_append (self->columns, GTK_WIDGET (child));
+      panel_paned_append (priv->columns, GTK_WIDGET (child));
       panel_grid_reexpand (self);
       _panel_grid_update_closeable (self);
     }
@@ -374,6 +384,7 @@ _panel_grid_get_position (PanelGrid *self,
                           guint     *column,
                           guint     *row)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
   guint n_columns;
 
   g_return_val_if_fail (PANEL_IS_GRID (self), FALSE);
@@ -386,11 +397,11 @@ _panel_grid_get_position (PanelGrid *self,
   *column = 0;
   *row = 0;
 
-  n_columns = panel_paned_get_n_children (self->columns);
+  n_columns = panel_paned_get_n_children (priv->columns);
 
   for (guint i = 0; i < n_columns; i++)
     {
-      GtkWidget *column_widget = panel_paned_get_nth_child (self->columns, i);
+      GtkWidget *column_widget = panel_paned_get_nth_child (priv->columns, i);
       guint n_rows;
 
       g_assert (PANEL_IS_GRID_COLUMN (column_widget));
@@ -433,14 +444,15 @@ PanelGridColumn *
 panel_grid_get_column (PanelGrid *self,
                        guint      column)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
   GtkWidget *child;
 
   g_return_val_if_fail (PANEL_IS_GRID (self), NULL);
 
-  while (panel_paned_get_n_children (self->columns) <= column)
+  while (panel_paned_get_n_children (priv->columns) <= column)
     {
       GtkWidget *column_widget = panel_grid_column_new ();
-      panel_paned_append (self->columns, column_widget);
+      panel_paned_append (priv->columns, column_widget);
       panel_grid_reexpand (self);
       _panel_grid_update_closeable (self);
     }
@@ -448,7 +460,7 @@ panel_grid_get_column (PanelGrid *self,
   if (column > 0)
     gtk_widget_add_css_class (GTK_WIDGET (self), "multi-column");
 
-  child = panel_paned_get_nth_child (self->columns, column);
+  child = panel_paned_get_nth_child (priv->columns, column);
   g_return_val_if_fail (PANEL_IS_GRID_COLUMN (child), NULL);
   return PANEL_GRID_COLUMN (child);
 }
@@ -493,9 +505,11 @@ _panel_grid_reposition (PanelGrid *self,
 void
 _panel_grid_prepend_column (PanelGrid *self)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_GRID (self));
 
-  panel_paned_insert (self->columns, 0, panel_grid_column_new ());
+  panel_paned_insert (priv->columns, 0, panel_grid_column_new ());
   panel_grid_reexpand (self);
   _panel_grid_update_closeable (self);
 }
@@ -504,9 +518,11 @@ void
 _panel_grid_insert_column (PanelGrid *self,
                            guint      position)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_GRID (self));
 
-  panel_paned_insert (self->columns, position, panel_grid_column_new ());
+  panel_paned_insert (priv->columns, position, panel_grid_column_new ());
   panel_grid_reexpand (self);
   _panel_grid_update_closeable (self);
 }
@@ -514,19 +530,23 @@ _panel_grid_insert_column (PanelGrid *self,
 guint
 panel_grid_get_n_columns (PanelGrid *self)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
+
   g_return_val_if_fail (PANEL_IS_GRID (self), 0);
 
-  return panel_paned_get_n_children (self->columns);
+  return panel_paned_get_n_children (priv->columns);
 }
 
 void
 _panel_grid_remove_column (PanelGrid       *self,
                            PanelGridColumn *column)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_GRID (self));
   g_return_if_fail (PANEL_IS_GRID_COLUMN (column));
 
-  panel_paned_remove (self->columns, GTK_WIDGET (column));
+  panel_paned_remove (priv->columns, GTK_WIDGET (column));
   panel_grid_reexpand (self);
   _panel_grid_update_closeable (self);
 }
@@ -536,10 +556,12 @@ _panel_grid_foreach_frame (PanelGrid          *self,
                            PanelFrameCallback  callback,
                            gpointer            user_data)
 {
+  PanelGridPrivate *priv = panel_grid_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_GRID (self));
   g_return_if_fail (callback != NULL);
 
-  for (GtkWidget *resizer = gtk_widget_get_first_child (GTK_WIDGET (self->columns));
+  for (GtkWidget *resizer = gtk_widget_get_first_child (GTK_WIDGET (priv->columns));
        resizer != NULL;
        resizer = gtk_widget_get_next_sibling (resizer))
     {

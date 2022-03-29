@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 
+#include "panel-frame.h"
 #include "panel-grid-column.h"
 #include "panel-version-macros.h"
 
@@ -30,7 +31,17 @@ G_BEGIN_DECLS
 #define PANEL_TYPE_GRID (panel_grid_get_type())
 
 PANEL_AVAILABLE_IN_ALL
-G_DECLARE_FINAL_TYPE (PanelGrid, panel_grid, PANEL, GRID, GtkWidget)
+G_DECLARE_DERIVABLE_TYPE (PanelGrid, panel_grid, PANEL, GRID, GtkWidget)
+
+struct _PanelGridClass
+{
+  GtkWidgetClass parent_class;
+
+  PanelFrame *(*create_frame) (PanelGrid *self);
+
+  /*< private >*/
+  gpointer _reserved[12];
+};
 
 PANEL_AVAILABLE_IN_ALL
 GtkWidget       *panel_grid_new                    (void);
