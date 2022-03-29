@@ -150,6 +150,8 @@ panel_omni_bar_dispose (GObject *object)
   PanelOmniBar *self = (PanelOmniBar *)object;
   GtkWidget *child;
 
+  panel_omni_bar_stop_pulsing (self);
+
   while ((child = gtk_widget_get_first_child (GTK_WIDGET (self))))
     gtk_widget_unparent (child);
 
@@ -594,6 +596,7 @@ panel_omni_bar_start_pulsing (PanelOmniBar *self)
   g_return_if_fail (PANEL_IS_OMNI_BAR (self));
 
   progress_bar_start_pulsing (priv->progress_bar);
+  gtk_widget_show (GTK_WIDGET (priv->progress_bar));
 }
 
 void
@@ -604,4 +607,5 @@ panel_omni_bar_stop_pulsing (PanelOmniBar *self)
   g_return_if_fail (PANEL_IS_OMNI_BAR (self));
 
   progress_bar_stop_pulsing (priv->progress_bar);
+  gtk_widget_hide (GTK_WIDGET (priv->progress_bar));
 }
