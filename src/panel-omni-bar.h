@@ -34,6 +34,9 @@ G_DECLARE_DERIVABLE_TYPE (PanelOmniBar, panel_omni_bar, PANEL, OMNI_BAR, GtkWidg
 struct _PanelOmniBarClass
 {
   GtkWidgetClass parent_class;
+
+  /*< private >*/
+  gpointer _reserved[8];
 };
 
 PANEL_AVAILABLE_IN_ALL
@@ -54,5 +57,10 @@ void        panel_omni_bar_add_suffix  (PanelOmniBar *self,
 PANEL_AVAILABLE_IN_ALL
 void        panel_omni_bar_remove      (PanelOmniBar *self,
                                         GtkWidget    *widget);
+PANEL_AVAILABLE_IN_ALL
+double      panel_omni_bar_get_progress (PanelOmniBar *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_omni_bar_set_progress (PanelOmniBar *self,
+                                         double        progress);
 
 G_END_DECLS

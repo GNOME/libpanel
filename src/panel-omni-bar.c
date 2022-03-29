@@ -24,13 +24,15 @@
 
 typedef struct
 {
-  GtkBox        *box;
-  GtkButton     *button;
-  GtkMenuButton *menu_button;
-  GtkBox        *prefix;
-  GtkBox        *center;
-  GtkBox        *suffix;
-  GtkPopover *popover;
+  GtkBox         *box;
+  GtkButton      *button;
+  GtkMenuButton  *menu_button;
+  GtkOverlay     *overlay;
+  GtkBox         *prefix;
+  GtkBox         *center;
+  GtkBox         *suffix;
+  GtkPopover     *popover;
+  GtkProgressBar *progress_bar;
 } PanelOmniBarPrivate;
 
 static void buildable_iface_init  (GtkBuildableIface      *iface);
@@ -46,6 +48,7 @@ G_DEFINE_TYPE_WITH_CODE (PanelOmniBar, panel_omni_bar, GTK_TYPE_WIDGET,
 enum {
   PROP_0,
   PROP_POPOVER,
+  PROP_PROGRESS,
   PROP_ICON_NAME,
   PROP_MENU_MODEL,
   N_PROPS,
@@ -178,6 +181,10 @@ panel_omni_bar_get_property (GObject    *object,
       g_value_set_object (value, panel_omni_bar_get_popover (self));
       break;
 
+    case PROP_PROGRESS:
+      g_value_set_double (value, panel_omni_bar_get_progress (self));
+      break;
+
     case PROP_ICON_NAME:
       g_value_set_string (value, gtk_button_get_icon_name (priv->button));
       break;
@@ -214,6 +221,10 @@ panel_omni_bar_set_property (GObject      *object,
 
     case PROP_POPOVER:
       panel_omni_bar_set_popover (self, g_value_get_object (value));
+      break;
+
+    case PROP_PROGRESS:
+      panel_omni_bar_set_progress (self, g_value_get_double (value));
       break;
 
     case PROP_ICON_NAME:
@@ -265,6 +276,13 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          GTK_TYPE_POPOVER,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  properties [PROP_PROGRESS] =
+    g_param_spec_double ("progress",
+                         "Progress",
+                         "Progress bar fraction",
+                         0.0, 1.0, 0.0,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BOX_LAYOUT);
@@ -277,6 +295,7 @@ panel_omni_bar_init (PanelOmniBar *self)
   PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
   GtkGesture *gesture;
   GtkWidget *separator;
+  GtkBox *box;
 
   gtk_widget_add_css_class (GTK_WIDGET (self), "omnibar");
 
@@ -304,9 +323,23 @@ panel_omni_bar_init (PanelOmniBar *self)
                                NULL);
   priv->suffix = g_object_new (GTK_TYPE_BOX, NULL);
 
-  gtk_box_append (priv->box, GTK_WIDGET (priv->prefix));
-  gtk_box_append (priv->box, GTK_WIDGET (priv->center));
-  gtk_box_append (priv->box, GTK_WIDGET (priv->suffix));
+  box = g_object_new (GTK_TYPE_BOX,
+                      "orientation", GTK_ORIENTATION_HORIZONTAL,
+                      NULL);
+  gtk_box_append (box, GTK_WIDGET (priv->prefix));
+  gtk_box_append (box, GTK_WIDGET (priv->center));
+  gtk_box_append (box, GTK_WIDGET (priv->suffix));
+
+  priv->overlay = g_object_new (GTK_TYPE_OVERLAY, NULL);
+  gtk_overlay_set_child (priv->overlay, GTK_WIDGET (box));
+  gtk_box_append (priv->box, GTK_WIDGET (priv->overlay));
+
+  priv->progress_bar = g_object_new (GTK_TYPE_PROGRESS_BAR,
+                                     "valign", GTK_ALIGN_END,
+                                     "visible", FALSE,
+                                     NULL);
+  gtk_widget_add_css_class (GTK_WIDGET (priv->progress_bar), "osd");
+  gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->progress_bar));
 
   gesture = gtk_gesture_click_new ();
   g_signal_connect_object (gesture,
@@ -468,4 +501,32 @@ actionable_iface_init (GtkActionableInterface *iface)
   iface->set_action_name = set_action_name;
   iface->get_action_target_value = get_action_target;
   iface->set_action_target_value = set_action_target;
+}
+
+double
+panel_omni_bar_get_progress (PanelOmniBar *self)
+{
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_OMNI_BAR (self), 0.0);
+
+  return gtk_progress_bar_get_fraction (priv->progress_bar);
+}
+
+void
+panel_omni_bar_set_progress (PanelOmniBar *self,
+                             double        progress)
+{
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_OMNI_BAR (self));
+
+  progress = CLAMP (progress, 0.0, 1.0);
+
+  if (progress != panel_omni_bar_get_progress (self))
+    {
+      gtk_progress_bar_set_fraction (priv->progress_bar, progress);
+      gtk_widget_set_visible (GTK_WIDGET (priv->progress_bar), progress > 0.0);
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_PROGRESS]);
+    }
 }
