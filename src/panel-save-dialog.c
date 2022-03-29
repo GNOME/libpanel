@@ -147,11 +147,14 @@ panel_save_dialog_run_async (PanelSaveDialog     *self,
   g_return_if_fail (PANEL_IS_SAVE_DIALOG (self));
   g_return_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable));
 
+  g_object_ref_sink (self);
+
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_save_dialog_run_async);
 
   if (self->count == 0)
     {
+      gtk_window_destroy (GTK_WINDOW (self));
       g_task_return_boolean (task, TRUE);
       return;
     }
