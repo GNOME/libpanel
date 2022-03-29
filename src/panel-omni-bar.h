@@ -40,27 +40,31 @@ struct _PanelOmniBarClass
 };
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget  *panel_omni_bar_new         (void);
+GtkWidget  *panel_omni_bar_new           (void);
 PANEL_AVAILABLE_IN_ALL
-GtkPopover *panel_omni_bar_get_popover (PanelOmniBar *self);
+GtkPopover *panel_omni_bar_get_popover   (PanelOmniBar *self);
 PANEL_AVAILABLE_IN_ALL
-void        panel_omni_bar_set_popover (PanelOmniBar *self,
-                                        GtkPopover   *popover);
+void        panel_omni_bar_set_popover   (PanelOmniBar *self,
+                                          GtkPopover   *popover);
 PANEL_AVAILABLE_IN_ALL
-void        panel_omni_bar_add_prefix  (PanelOmniBar *self,
-                                        int           priority,
-                                        GtkWidget    *widget);
+void        panel_omni_bar_add_prefix    (PanelOmniBar *self,
+                                          int           priority,
+                                          GtkWidget    *widget);
 PANEL_AVAILABLE_IN_ALL
-void        panel_omni_bar_add_suffix  (PanelOmniBar *self,
-                                        int           priority,
-                                        GtkWidget    *widget);
+void        panel_omni_bar_add_suffix    (PanelOmniBar *self,
+                                          int           priority,
+                                          GtkWidget    *widget);
 PANEL_AVAILABLE_IN_ALL
-void        panel_omni_bar_remove      (PanelOmniBar *self,
-                                        GtkWidget    *widget);
+void        panel_omni_bar_remove        (PanelOmniBar *self,
+                                          GtkWidget    *widget);
 PANEL_AVAILABLE_IN_ALL
-double      panel_omni_bar_get_progress (PanelOmniBar *self);
+void        panel_omni_bar_start_pulsing (PanelOmniBar *self);
 PANEL_AVAILABLE_IN_ALL
-void        panel_omni_bar_set_progress (PanelOmniBar *self,
-                                         double        progress);
+void        panel_omni_bar_stop_pulsing  (PanelOmniBar *self);
+PANEL_AVAILABLE_IN_ALL
+double      panel_omni_bar_get_progress  (PanelOmniBar *self);
+PANEL_AVAILABLE_IN_ALL
+void        panel_omni_bar_set_progress  (PanelOmniBar *self,
+                                          double        progress);
 
 G_END_DECLS
