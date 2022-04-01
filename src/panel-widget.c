@@ -1212,3 +1212,14 @@ _panel_widget_can_save (PanelWidget *self)
 
   return priv->modified && priv->save_delegate != NULL;
 }
+
+void
+panel_widget_close (PanelWidget *self)
+{
+  GtkWidget *frame;
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if ((frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME)))
+    _panel_frame_request_close (PANEL_FRAME (frame), self);
+}

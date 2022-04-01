@@ -130,5 +130,7 @@ PanelSaveDelegate *panel_widget_get_save_delegate   (PanelWidget       *self);
 PANEL_AVAILABLE_IN_ALL
 void               panel_widget_set_save_delegate   (PanelWidget       *self,
                                                      PanelSaveDelegate *save_delegate);
+PANEL_AVAILABLE_IN_ALL
+void               panel_widget_close               (PanelWidget       *self);
 
 G_END_DECLS

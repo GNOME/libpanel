@@ -37,5 +37,7 @@ void        _panel_frame_transfer        (PanelFrame  *self,
 gboolean    _panel_frame_in_drop         (PanelFrame  *self);
 void        _panel_frame_set_drop_before (PanelFrame  *self,
                                           PanelWidget *widget);
+void        _panel_frame_request_close   (PanelFrame  *self,
+                                          PanelWidget *widget);
 
 G_END_DECLS

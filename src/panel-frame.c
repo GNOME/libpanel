@@ -115,10 +115,7 @@ close_page_or_frame_action (GtkWidget  *widget,
 
   if ((visible_child = panel_frame_get_visible_child (self)))
     {
-      AdwTabPage *page;
-
-      page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (visible_child));
-      adw_tab_view_close_page (priv->tab_view, page);
+      _panel_frame_request_close (self, visible_child);
     }
   else if (priv->closeable)
     {
@@ -1172,4 +1169,18 @@ _panel_frame_in_drop (PanelFrame *self)
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
   return panel_drop_controls_in_drop (priv->drop_controls);
+}
+
+void
+_panel_frame_request_close (PanelFrame  *self,
+                            PanelWidget *widget)
+{
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  AdwTabPage *page;
+
+  g_return_if_fail (PANEL_IS_FRAME (self));
+  g_return_if_fail (PANEL_IS_WIDGET (widget));
+
+  if ((page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (widget))))
+    adw_tab_view_close_page (priv->tab_view, page);
 }
