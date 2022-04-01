@@ -244,6 +244,8 @@ panel_frame_notify_selected_page_cb (PanelFrame *self,
   else
     gtk_stack_set_visible_child (priv->stack, GTK_WIDGET (priv->tab_view));
 
+  _panel_widget_emit_presented (visible_child);
+
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
 }
 

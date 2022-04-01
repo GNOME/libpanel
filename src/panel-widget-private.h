@@ -24,6 +24,7 @@
 
 G_BEGIN_DECLS
 
-gboolean _panel_widget_can_save (PanelWidget *self);
+gboolean _panel_widget_can_save       (PanelWidget *self);
+void     _panel_widget_emit_presented (PanelWidget *self);
 
 G_END_DECLS

@@ -79,6 +79,7 @@ enum {
 
 enum {
   GET_DEFAULT_FOCUS,
+  PRESENTED,
   N_SIGNALS
 };
 
@@ -453,6 +454,21 @@ panel_widget_class_init (PanelWidgetClass *klass)
                   g_signal_accumulator_first_wins, NULL,
                   NULL,
                   GTK_TYPE_WIDGET, 0);
+
+  /**
+   * PanelWidget::presented:
+   *
+   * The "presented" signal is emitted when the widget is brought
+   * to the front of a frame.
+   */
+  signals [PRESENTED] =
+    g_signal_new ("presented",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (PanelWidgetClass, presented),
+                  NULL, NULL,
+                  NULL,
+                  G_TYPE_NONE, 0);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
@@ -1222,4 +1238,12 @@ panel_widget_close (PanelWidget *self)
 
   if ((frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME)))
     _panel_frame_request_close (PANEL_FRAME (frame), self);
+}
+
+void
+_panel_widget_emit_presented (PanelWidget *self)
+{
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  g_signal_emit (self, signals [PRESENTED], 0);
 }

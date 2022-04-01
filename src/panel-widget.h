@@ -37,9 +37,10 @@ struct _PanelWidgetClass
   GtkWidgetClass parent_instance;
 
   GtkWidget *(*get_default_focus) (PanelWidget *self);
+  void       (*presented)         (PanelWidget *self);
 
   /*< private >*/
-  gpointer _reserved[16];
+  gpointer _reserved[8];
 };
 
 #define PANEL_WIDGET_KIND_ANY      "*"
