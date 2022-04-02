@@ -152,7 +152,8 @@ on_set_focus_cb (PanelGrid  *self,
   g_assert (GTK_IS_WINDOW (window));
 
   if ((focus = gtk_window_get_focus (window)) &&
-      (frame = gtk_widget_get_ancestor (focus, PANEL_TYPE_FRAME)))
+      (frame = gtk_widget_get_ancestor (focus, PANEL_TYPE_FRAME)) &&
+      GTK_WIDGET (self) == gtk_widget_get_ancestor (focus, PANEL_TYPE_GRID))
     {
       g_queue_remove (&priv->frame_mru, frame);
       g_queue_push_head (&priv->frame_mru, frame);
