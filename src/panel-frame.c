@@ -646,7 +646,7 @@ panel_frame_class_init (PanelFrameClass *klass)
     g_param_spec_object ("placeholder",
                          "Placeholder",
                          "Placeholder",
-                         PANEL_TYPE_WIDGET,
+                         GTK_TYPE_WIDGET,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_VISIBLE_CHILD] =
