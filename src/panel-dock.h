@@ -111,5 +111,8 @@ PANEL_AVAILABLE_IN_ALL
 void       panel_dock_foreach_frame         (PanelDock          *self,
                                              PanelFrameCallback  callback,
                                              gpointer            user_data);
+PANEL_AVAILABLE_IN_ALL
+void       panel_dock_remove                (PanelDock          *self,
+                                             GtkWidget          *child);
 
 G_END_DECLS

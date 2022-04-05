@@ -1263,3 +1263,16 @@ panel_dock_set_bottom_height (PanelDock *self,
   priv->bottom_height = height;
   panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_BOTTOM, height);
 }
+
+void
+panel_dock_remove (PanelDock *self,
+                   GtkWidget *widget)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_DOCK (self));
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+  g_return_if_fail (GTK_WIDGET (priv->grid) == gtk_widget_get_parent (widget));
+
+  gtk_grid_remove (priv->grid, widget);
+}
