@@ -48,7 +48,7 @@ panel_statusbar_dispose (GObject *object)
   self->expander = NULL;
 
   while ((child = gtk_widget_get_first_child (GTK_WIDGET (self))))
-    gtk_widget_unparent (child);
+    panel_statusbar_remove (self, child);
 
   G_OBJECT_CLASS (panel_statusbar_parent_class)->dispose (object);
 }
@@ -79,7 +79,7 @@ panel_statusbar_init (PanelStatusbar *self)
 static void
 update_expander (PanelStatusbar *self)
 {
-  gboolean hexpand = FALSE;
+  gboolean has_hexpand = FALSE;
 
   g_assert (PANEL_IS_STATUSBAR (self));
 
@@ -87,11 +87,13 @@ update_expander (PanelStatusbar *self)
        child != NULL;
        child = gtk_widget_get_next_sibling (child))
     {
-      if (child != self->expander)
-        hexpand |= gtk_widget_get_hexpand (child);
+      if (child == self->expander || !gtk_widget_get_visible (GTK_WIDGET (self)))
+        continue;
+
+      has_hexpand |= gtk_widget_compute_expand (child, GTK_ORIENTATION_HORIZONTAL);
     }
 
-  gtk_widget_set_visible (self->expander, !hexpand);
+  gtk_widget_set_visible (self->expander, has_hexpand == FALSE);
 }
 
 void
@@ -101,6 +103,10 @@ panel_statusbar_add_prefix (PanelStatusbar *self,
   g_return_if_fail (PANEL_IS_STATUSBAR (self));
   g_return_if_fail (GTK_IS_WIDGET (widget));
 
+  g_signal_connect_swapped (widget,
+                            "notify::visible",
+                            G_CALLBACK (update_expander),
+                            self);
   gtk_widget_insert_before (widget, GTK_WIDGET (self), self->expander);
   update_expander (self);
 }
@@ -112,6 +118,10 @@ panel_statusbar_add_suffix (PanelStatusbar *self,
   g_return_if_fail (PANEL_IS_STATUSBAR (self));
   g_return_if_fail (GTK_IS_WIDGET (widget));
 
+  g_signal_connect_swapped (widget,
+                            "notify::visible",
+                            G_CALLBACK (update_expander),
+                            self);
   gtk_widget_insert_after (widget, GTK_WIDGET (self), self->expander);
   update_expander (self);
 }
@@ -125,6 +135,9 @@ panel_statusbar_remove (PanelStatusbar *self,
   g_return_if_fail (GTK_WIDGET (self) == gtk_widget_get_parent (widget));
   g_return_if_fail (widget != self->expander);
 
+  g_signal_handlers_disconnect_by_func (widget,
+                                        G_CALLBACK (update_expander),
+                                        self);
   gtk_widget_unparent (widget);
   update_expander (self);
 }
