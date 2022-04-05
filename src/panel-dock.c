@@ -1272,7 +1272,16 @@ panel_dock_remove (PanelDock *self,
 
   g_return_if_fail (PANEL_IS_DOCK (self));
   g_return_if_fail (GTK_IS_WIDGET (widget));
-  g_return_if_fail (GTK_WIDGET (priv->grid) == gtk_widget_get_parent (widget));
+
+  if (!PANEL_IS_DOCK_CHILD (widget))
+    {
+      GtkWidget *parent = gtk_widget_get_ancestor (widget, PANEL_TYPE_DOCK_CHILD);
+
+      g_return_if_fail (PANEL_IS_DOCK_CHILD (parent));
+      g_return_if_fail (GTK_WIDGET (priv->grid) == gtk_widget_get_parent (parent));
+
+      widget = parent;
+    }
 
   gtk_grid_remove (priv->grid, widget);
 }
