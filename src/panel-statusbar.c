@@ -26,6 +26,7 @@ struct _PanelStatusbar
 {
   GtkWidget  parent_instance;
   GtkWidget *expander;
+  guint      disposed : 1;
 };
 
 static void buildable_iface_init (GtkBuildableIface *iface);
@@ -45,6 +46,7 @@ panel_statusbar_dispose (GObject *object)
   PanelStatusbar *self = (PanelStatusbar *)object;
   GtkWidget *child;
 
+  self->disposed = TRUE;
   self->expander = NULL;
 
   while ((child = gtk_widget_get_first_child (GTK_WIDGET (self))))
@@ -138,8 +140,11 @@ panel_statusbar_remove (PanelStatusbar *self,
   g_signal_handlers_disconnect_by_func (widget,
                                         G_CALLBACK (update_expander),
                                         self);
+
   gtk_widget_unparent (widget);
-  update_expander (self);
+
+  if (!self->disposed)
+    update_expander (self);
 }
 
 static void
