@@ -180,6 +180,9 @@ panelstatusbar > button label {
   font-weight: normal;
 }
 
+panelframe panelframetabbar {
+   border-bottom: 1px solid alpha(@borders,.6);
+}
 panelframe panelframetabbar > overlay > box.focus-handle,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframetabbar box.focus-handle {
   min-height: 2px;

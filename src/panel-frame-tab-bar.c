@@ -290,6 +290,7 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
   gtk_widget_add_css_class (box, "focus-handle");
 
   self->tab_bar = ADW_TAB_BAR (adw_tab_bar_new ());
+  gtk_widget_add_css_class (GTK_WIDGET (self->tab_bar), "inline");
   adw_tab_bar_set_autohide (self->tab_bar, FALSE);
   g_signal_connect_object (self->tab_bar,
                            "notify",
