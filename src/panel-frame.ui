@@ -55,6 +55,7 @@
   </template>
   <menu id="frame_menu">
     <section>
+      <attribute name="label" translatable="yes">Frame</attribute>
       <item>
         <attribute name="label" translatable="yes">Move Page _Left</attribute>
         <attribute name="action">page.move-left</attribute>
