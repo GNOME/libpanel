@@ -35,9 +35,11 @@ PANEL_AVAILABLE_IN_ALL
 GtkWidget *panel_statusbar_new        (void);
 PANEL_AVAILABLE_IN_ALL
 void       panel_statusbar_add_prefix (PanelStatusbar *self,
+                                       int             priority,
                                        GtkWidget      *widget);
 PANEL_AVAILABLE_IN_ALL
 void       panel_statusbar_add_suffix (PanelStatusbar *self,
+                                       int             priority,
                                        GtkWidget      *widget);
 PANEL_AVAILABLE_IN_ALL
 void       panel_statusbar_remove     (PanelStatusbar *self,

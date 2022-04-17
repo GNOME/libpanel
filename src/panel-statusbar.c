@@ -22,6 +22,9 @@
 
 #include "panel-statusbar.h"
 
+#define GET_PRIORITY(w)   GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w),"PRIORITY"))
+#define SET_PRIORITY(w,i) g_object_set_data(G_OBJECT(w),"PRIORITY",GINT_TO_POINTER(i))
+
 struct _PanelStatusbar
 {
   GtkWidget  parent_instance;
@@ -100,33 +103,67 @@ update_expander (PanelStatusbar *self)
 
 void
 panel_statusbar_add_prefix (PanelStatusbar *self,
+                            int             priority,
                             GtkWidget      *widget)
 {
+  GtkWidget *sibling = NULL;
+
   g_return_if_fail (PANEL_IS_STATUSBAR (self));
   g_return_if_fail (GTK_IS_WIDGET (widget));
   g_return_if_fail (self->expander != NULL);
+
+  SET_PRIORITY (widget, priority);
 
   g_signal_connect_swapped (widget,
                             "notify::visible",
                             G_CALLBACK (update_expander),
                             self);
-  gtk_widget_insert_before (widget, GTK_WIDGET (self), self->expander);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      sibling = child;
+      if (priority < GET_PRIORITY (child) || child == self->expander)
+        break;
+    }
+
+  g_assert (sibling != NULL);
+
+  gtk_widget_insert_before (widget, GTK_WIDGET (self), sibling);
   update_expander (self);
 }
 
 void
 panel_statusbar_add_suffix (PanelStatusbar *self,
+                            int             priority,
                             GtkWidget      *widget)
 {
+  GtkWidget *sibling = NULL;
+
   g_return_if_fail (PANEL_IS_STATUSBAR (self));
   g_return_if_fail (GTK_IS_WIDGET (widget));
   g_return_if_fail (self->expander != NULL);
+
+  SET_PRIORITY (widget, priority);
 
   g_signal_connect_swapped (widget,
                             "notify::visible",
                             G_CALLBACK (update_expander),
                             self);
-  gtk_widget_insert_after (widget, GTK_WIDGET (self), self->expander);
+
+  for (GtkWidget *child = gtk_widget_get_last_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_prev_sibling (child))
+    {
+      sibling = child;
+      if (priority < GET_PRIORITY (child) || child == self->expander)
+        break;
+    }
+
+  g_assert (sibling != NULL);
+
+  gtk_widget_insert_after (widget, GTK_WIDGET (self), sibling);
   update_expander (self);
 }
 
@@ -161,9 +198,9 @@ panel_statusbar_add_child (GtkBuildable *buildable,
   g_assert (GTK_IS_BUILDER (builder));
 
   if (g_strcmp0 (type, "suffix") == 0)
-    panel_statusbar_add_suffix (self, GTK_WIDGET (child));
+    panel_statusbar_add_suffix (self, 0, GTK_WIDGET (child));
   else if (GTK_IS_WIDGET (child))
-    panel_statusbar_add_prefix (self, GTK_WIDGET (child));
+    panel_statusbar_add_prefix (self, 0, GTK_WIDGET (child));
   else
     g_warning ("%s cannot add child of type %s",
                G_OBJECT_TYPE_NAME (self),
