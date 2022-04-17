@@ -104,6 +104,7 @@ panel_statusbar_add_prefix (PanelStatusbar *self,
 {
   g_return_if_fail (PANEL_IS_STATUSBAR (self));
   g_return_if_fail (GTK_IS_WIDGET (widget));
+  g_return_if_fail (self->expander != NULL);
 
   g_signal_connect_swapped (widget,
                             "notify::visible",
@@ -119,6 +120,7 @@ panel_statusbar_add_suffix (PanelStatusbar *self,
 {
   g_return_if_fail (PANEL_IS_STATUSBAR (self));
   g_return_if_fail (GTK_IS_WIDGET (widget));
+  g_return_if_fail (self->expander != NULL);
 
   g_signal_connect_swapped (widget,
                             "notify::visible",
