@@ -50,7 +50,6 @@ typedef struct
   guint             maximized : 1;
   guint             modified : 1;
   guint             needs_attention : 1;
-  guint             has_destroyed : 1;
 } PanelWidgetPrivate;
 
 static void buildable_iface_init (GtkBuildableIface *iface);
@@ -81,7 +80,7 @@ enum {
 enum {
   GET_DEFAULT_FOCUS,
   PRESENTED,
-  DESTROYED,
+  DESTROY,
   N_SIGNALS
 };
 
@@ -127,12 +126,6 @@ panel_widget_dispose (GObject *object)
 {
   PanelWidget *self = (PanelWidget *)object;
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
-
-  if (!priv->has_destroyed)
-    {
-      priv->has_destroyed = TRUE;
-      g_signal_emit (self, signals[DESTROYED], 0);
-    }
 
   g_clear_pointer (&priv->icon_name, g_free);
   g_clear_pointer (&priv->title, g_free);
@@ -474,28 +467,6 @@ panel_widget_class_init (PanelWidgetClass *klass)
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (PanelWidgetClass, presented),
-                  NULL, NULL,
-                  NULL,
-                  G_TYPE_NONE, 0);
-
-  /**
-   * PanelWidget::destroyed:
-   *
-   * The "destroyed" signal is emitted the first time a #PanelWidget
-   * is disposed. This is generally done when removing the widget from
-   * the hierarchy when it will not be re-attached somewhere else.
-   *
-   * This is useful for situations where you need to monitor if your
-   * widget has been released from the dock and you do not maintain
-   * a full reference or wish to treat it as transient.
-   *
-   * Combine with g_nullify_pointer() to clear unowned references.
-   */
-  signals [DESTROYED] =
-    g_signal_new ("destroyed",
-                  G_TYPE_FROM_CLASS (klass),
-                  G_SIGNAL_RUN_LAST,
-                  0,
                   NULL, NULL,
                   NULL,
                   G_TYPE_NONE, 0);
