@@ -13,6 +13,9 @@ paneldockchild.top {
   color: @panel_fg_color;
 }
 
+panelframeheaderbar {
+  min-height: 32px;
+}
 panelframe panelframeheaderbar,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframeheaderbar {
   border-top: 2px solid transparent;
@@ -75,6 +78,9 @@ panelpaned.horizontal panelframe panelframeswitcher {
 }
 panelpaned.vertical panelframe panelframeswitcher {
   padding: 0 2px 2px 2px;
+}
+panelpaned :first-child panelframe.vertical .frameheader {
+  min-height: 34px;
 }
 panelpaned.vertical panelframe panelframeswitcher button {
   padding: 2px 6px;
@@ -193,9 +199,6 @@ panelframe.has-focus panelframetabbar > overlay > box.focus-handle {
 }
 panelframe panelframetabbar tabbox tab button {
   min-height: 0;
-}
-panelframe panelframetabbar tabbar > revealer:first-child > box:first-child {
-  min-height: 34px;
 }
 
 splitbutton.omnibar > button {

@@ -4,6 +4,7 @@
     <child>
       <object class="GtkBox" id="box">
         <property name="orientation">vertical</property>
+        <property name="valign">center</property>
         <style>
           <class name="action-bar"/>
         </style>
