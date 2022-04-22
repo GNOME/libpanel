@@ -14,13 +14,13 @@ paneldockchild.top {
 }
 
 panelframeheaderbar {
-  min-height: 32px;
+  min-height: 38px;
+  padding: 2px;
 }
 panelframe panelframeheaderbar,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframeheaderbar {
   border-top: 2px solid transparent;
   border-bottom: 1px solid alpha(@borders,.6);
-  padding-bottom: 2px;
 }
 panelframe.has-focus panelframeheaderbar {
   border-top: 2px solid @accent_bg_color;
@@ -57,14 +57,6 @@ panelframeheaderbar .controls button.circular image {
   margin-right: 4px;
 }
 
-paneldockchild.end panelpaned.vertical panelresizer panelframe panelframeswitcher,
-paneldockchild.start panelpaned.vertical panelresizer panelframe panelframeswitcher {
-  border-top: 2px solid transparent;
-}
-paneldockchild.bottom panelpaned.horizontal panelresizer panelframe panelframeswitcher,
-paneldockchild.top panelpaned.horizontal panelresizer panelframe panelframeswitcher {
-  border-left: 2px solid transparent;
-}
 paneldockchild.end panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher,
 paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher {
   border-bottom: 1px solid alpha(@borders,.6);
@@ -74,13 +66,12 @@ panelpaned panelframe panelframeswitcher {
   color: @panel_fg_color;
 }
 panelpaned.horizontal panelframe panelframeswitcher {
-  padding: 2px 2px 2px 0;
+  padding: 4px;
+  min-width: 36px;
 }
 panelpaned.vertical panelframe panelframeswitcher {
-  padding: 0 2px 2px 2px;
-}
-panelpaned :first-child panelframe.vertical .frameheader {
-  min-height: 34px;
+  padding: 4px;
+  min-height: 36px;
 }
 panelpaned.vertical panelframe panelframeswitcher button {
   padding: 2px 6px;
@@ -187,7 +178,8 @@ panelstatusbar > button label {
 }
 
 panelframe panelframetabbar {
-   border-bottom: 1px solid alpha(@borders,.6);
+  border-bottom: 1px solid alpha(@borders,.6);
+  min-height: 44px;
 }
 panelframe panelframetabbar > overlay > box.focus-handle,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframetabbar box.focus-handle {
