@@ -21,6 +21,7 @@ endif
 libpanel_example = executable('libpanel-example',
   libpanel_example_sources + libpanel_example_gresources,
   dependencies: [libpanel_dep, gtksourceview_dep],
+  build_by_default: not meson.is_subproject(),
   install: get_option('install-examples'),
   c_args: libpanel_example_cargs + deprecation_args,
 )
