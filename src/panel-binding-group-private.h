@@ -19,9 +19,7 @@
 
 #pragma once
 
-#include <gio/gio.h>
-
-#include "panel-version-macros.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
