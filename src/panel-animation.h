@@ -39,34 +39,34 @@ typedef enum _PanelAnimationMode
   PANEL_ANIMATION_LAST
 } PanelAnimationMode;
 
-GType            panel_animation_mode_get_type      (void) G_GNUC_CONST;
-void             panel_animation_start              (PanelAnimation     *animation);
-void             panel_animation_stop               (PanelAnimation     *animation);
-void             panel_animation_add_property       (PanelAnimation     *animation,
-                                                      GParamSpec          *pspec,
-                                                      const GValue        *value);
-PanelAnimation *panel_object_animatev              (gpointer             object,
-                                                      PanelAnimationMode  mode,
-                                                      guint                duration_msec,
-                                                      GdkFrameClock       *frame_clock,
-                                                      const gchar         *first_property,
-                                                      va_list              args);
-PanelAnimation *panel_object_animate               (gpointer             object,
-                                                      PanelAnimationMode  mode,
-                                                      guint                duration_msec,
-                                                      GdkFrameClock       *frame_clock,
-                                                      const gchar         *first_property,
-                                                      ...) G_GNUC_NULL_TERMINATED;
-PanelAnimation *panel_object_animate_full          (gpointer             object,
-                                                      PanelAnimationMode  mode,
-                                                      guint                duration_msec,
-                                                      GdkFrameClock       *frame_clock,
-                                                      GDestroyNotify       notify,
-                                                      gpointer             notify_data,
-                                                      const gchar         *first_property,
-                                                      ...) G_GNUC_NULL_TERMINATED;
-guint            panel_animation_calculate_duration (GdkMonitor          *monitor,
-                                                      gdouble              from_value,
-                                                      gdouble              to_value);
+GType           panel_animation_mode_get_type      (void) G_GNUC_CONST;
+void            panel_animation_start              (PanelAnimation     *animation);
+void            panel_animation_stop               (PanelAnimation     *animation);
+void            panel_animation_add_property       (PanelAnimation     *animation,
+                                                    GParamSpec         *pspec,
+                                                    const GValue       *value);
+PanelAnimation *panel_object_animatev              (gpointer            object,
+                                                    PanelAnimationMode  mode,
+                                                    guint               duration_msec,
+                                                    GdkFrameClock      *frame_clock,
+                                                    const char         *first_property,
+                                                    va_list             args);
+PanelAnimation *panel_object_animate               (gpointer            object,
+                                                    PanelAnimationMode  mode,
+                                                    guint               duration_msec,
+                                                    GdkFrameClock      *frame_clock,
+                                                    const char         *first_property,
+                                                    ...) G_GNUC_NULL_TERMINATED;
+PanelAnimation *panel_object_animate_full          (gpointer            object,
+                                                    PanelAnimationMode  mode,
+                                                    guint               duration_msec,
+                                                    GdkFrameClock      *frame_clock,
+                                                    GDestroyNotify      notify,
+                                                    gpointer            notify_data,
+                                                    const char         *first_property,
+                                                    ...) G_GNUC_NULL_TERMINATED;
+guint           panel_animation_calculate_duration (GdkMonitor         *monitor,
+                                                    double              from_value,
+                                                    double              to_value);
 
 G_END_DECLS
