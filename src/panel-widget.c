@@ -122,6 +122,58 @@ panel_widget_new (void)
 }
 
 static void
+panel_widget_measure (GtkWidget      *widget,
+                      GtkOrientation  orientation,
+                      int             for_size,
+                      int            *minimum,
+                      int            *natural,
+                      int            *minimum_baseline,
+                      int            *natural_baseline)
+{
+  int min = 0, nat = 0, minb = 0, natb = 0;
+
+  g_assert (PANEL_IS_WIDGET (widget));
+
+  *minimum = 0;
+  *natural = 0;
+
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      gtk_widget_measure (child, orientation, for_size, &min, &nat, &minb, &natb);
+
+      if (min > *minimum)
+        {
+          *minimum = min;
+          *minimum_baseline = minb;
+        }
+
+      if (nat > *natural)
+        {
+          *natural = nat;
+          *natural_baseline = natb;
+        }
+    }
+}
+
+static void
+panel_widget_size_allocate (GtkWidget *widget,
+                            int        width,
+                            int        height,
+                            int        baseline)
+{
+  g_assert (PANEL_IS_WIDGET (widget));
+
+  GTK_WIDGET_CLASS (panel_widget_parent_class)->size_allocate (widget, width, height, baseline);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child;
+       child = gtk_widget_get_next_sibling (child))
+    gtk_widget_allocate (child, width, height, baseline, NULL);
+}
+
+static void
 panel_widget_dispose (GObject *object)
 {
   PanelWidget *self = (PanelWidget *)object;
@@ -284,6 +336,9 @@ panel_widget_class_init (PanelWidgetClass *klass)
   object_class->dispose = panel_widget_dispose;
   object_class->get_property = panel_widget_get_property;
   object_class->set_property = panel_widget_set_property;
+
+  widget_class->measure = panel_widget_measure;
+  widget_class->size_allocate = panel_widget_size_allocate;
 
   /**
    * PanelWidget:background-rgba:
@@ -471,7 +526,6 @@ panel_widget_class_init (PanelWidgetClass *klass)
                   NULL,
                   G_TYPE_NONE, 0);
 
-  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
 
   gtk_widget_class_install_action (widget_class, "page.maximize", NULL, panel_widget_maximize_action);
