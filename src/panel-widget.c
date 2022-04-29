@@ -130,31 +130,13 @@ panel_widget_measure (GtkWidget      *widget,
                       int            *minimum_baseline,
                       int            *natural_baseline)
 {
-  int min = 0, nat = 0, minb = 0, natb = 0;
+  PanelWidget *self = (PanelWidget *)widget;
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
-  g_assert (PANEL_IS_WIDGET (widget));
+  g_assert (PANEL_IS_WIDGET (self));
 
-  *minimum = 0;
-  *natural = 0;
-
-  for (GtkWidget *child = gtk_widget_get_first_child (widget);
-       child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    {
-      gtk_widget_measure (child, orientation, for_size, &min, &nat, &minb, &natb);
-
-      if (min > *minimum)
-        {
-          *minimum = min;
-          *minimum_baseline = minb;
-        }
-
-      if (nat > *natural)
-        {
-          *natural = nat;
-          *natural_baseline = natb;
-        }
-    }
+  if (priv->child != NULL)
+    gtk_widget_measure (priv->child, orientation, for_size, minimum, natural, minimum_baseline, natural_baseline);
 }
 
 static void
@@ -163,14 +145,15 @@ panel_widget_size_allocate (GtkWidget *widget,
                             int        height,
                             int        baseline)
 {
-  g_assert (PANEL_IS_WIDGET (widget));
+  PanelWidget *self = (PanelWidget *)widget;
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_assert (PANEL_IS_WIDGET (self));
 
   GTK_WIDGET_CLASS (panel_widget_parent_class)->size_allocate (widget, width, height, baseline);
 
-  for (GtkWidget *child = gtk_widget_get_first_child (widget);
-       child;
-       child = gtk_widget_get_next_sibling (child))
-    gtk_widget_allocate (child, width, height, baseline, NULL);
+  if (priv->child != NULL)
+    gtk_widget_allocate (priv->child, width, height, baseline, NULL);
 }
 
 static void
