@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "panel-dock-child-private.h"
+#include "panel-enums.h"
 #include "panel-frame-private.h"
 #include "panel-grid-private.h"
 #include "panel-paned.h"
@@ -44,6 +45,7 @@ enum {
   PROP_0,
   PROP_CHILD,
   PROP_EMPTY,
+  PROP_POSITION,
   PROP_REVEAL_CHILD,
   N_PROPS
 };
@@ -80,6 +82,10 @@ panel_dock_child_get_property (GObject    *object,
 
     case PROP_REVEAL_CHILD:
       g_value_set_boolean (value, panel_dock_child_get_reveal_child (self));
+      break;
+
+    case PROP_POSITION:
+      g_value_set_enum (value, panel_dock_child_get_position (self));
       break;
 
     default:
@@ -140,6 +146,14 @@ panel_dock_child_class_init (PanelDockChildClass *klass)
                           "If the dock child is empty",
                           FALSE,
                           (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_POSITION] =
+    g_param_spec_enum ("position",
+                       "Position",
+                       "The dock edge or center",
+                       PANEL_TYPE_DOCK_POSITION,
+                       PANEL_DOCK_POSITION_START,
+                       (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
