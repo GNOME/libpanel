@@ -1088,7 +1088,7 @@ failure:
  * Return value: (transfer none): A #PanelAnimation.
  * Side effects: None.
  */
-PanelAnimation*
+PanelAnimation *
 panel_object_animate (gpointer             object,
                       PanelAnimationMode  mode,
                       guint                duration_msec,
@@ -1111,14 +1111,14 @@ panel_object_animate (gpointer             object,
  *
  * Return value: (transfer none): A #PanelAnimation.
  */
-PanelAnimation*
-panel_object_animate_full (gpointer             object,
+PanelAnimation *
+panel_object_animate_full (gpointer            object,
                            PanelAnimationMode  mode,
-                           guint                duration_msec,
-                           GdkFrameClock       *frame_clock,
-                           GDestroyNotify       notify,
-                           gpointer             notify_data,
-                           const gchar         *first_property,
+                           guint               duration_msec,
+                           GdkFrameClock      *frame_clock,
+                           GDestroyNotify      notify,
+                           gpointer            notify_data,
+                           const gchar        *first_property,
                            ...)
 {
   PanelAnimation *animation;
