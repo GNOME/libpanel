@@ -315,11 +315,15 @@ page_move_right_action (GtkWidget  *widget,
 
   if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)) &&
       _panel_grid_get_position (PANEL_GRID (grid), widget, &column, &row))
-    _panel_grid_reposition (PANEL_GRID (grid),
-                            GTK_WIDGET (visible_child),
-                            column + 1,
-                            row,
-                            FALSE);
+    {
+      _panel_grid_reposition (PANEL_GRID (grid),
+                              GTK_WIDGET (visible_child),
+                              column + 1,
+                              row,
+                              FALSE);
+      panel_widget_raise (visible_child);
+      gtk_widget_grab_focus (GTK_WIDGET (visible_child));
+    }
 }
 
 static void
@@ -351,6 +355,8 @@ page_move_left_action (GtkWidget  *widget,
                               column - 1,
                               row,
                               FALSE);
+      panel_widget_raise (visible_child);
+      gtk_widget_grab_focus (GTK_WIDGET (visible_child));
     }
 }
 
@@ -371,11 +377,15 @@ page_move_down_action (GtkWidget  *widget,
 
   if ((grid = gtk_widget_get_ancestor (widget, PANEL_TYPE_GRID)) &&
       _panel_grid_get_position (PANEL_GRID (grid), widget, &column, &row))
-    _panel_grid_reposition (PANEL_GRID (grid),
-                            GTK_WIDGET (visible_child),
-                            column,
-                            row + 1,
-                            TRUE);
+    {
+      _panel_grid_reposition (PANEL_GRID (grid),
+                              GTK_WIDGET (visible_child),
+                              column,
+                              row + 1,
+                              TRUE);
+      panel_widget_raise (visible_child);
+      gtk_widget_grab_focus (GTK_WIDGET (visible_child));
+    }
 }
 
 static void
@@ -409,6 +419,8 @@ page_move_up_action (GtkWidget  *widget,
                               column,
                               row - 1,
                               TRUE);
+      panel_widget_raise (visible_child);
+      gtk_widget_grab_focus (GTK_WIDGET (visible_child));
     }
 }
 
