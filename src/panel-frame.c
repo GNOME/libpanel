@@ -194,6 +194,39 @@ close_frame_action (GtkWidget  *widget,
 }
 
 static void
+frame_page_action (GtkWidget  *widget,
+                   const char *action_name,
+                   GVariant   *param)
+{
+  PanelFrame *self = (PanelFrame *)widget;
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  int n_pages;
+  int n;
+
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (g_variant_is_of_type (param, G_VARIANT_TYPE_INT32));
+
+  n = g_variant_get_int32 (param);
+  n_pages = panel_frame_get_n_pages (self);
+
+  if (n == -1)
+    {
+      adw_tab_view_select_previous_page (priv->tab_view);
+    }
+  else if (n == 0)
+    {
+      adw_tab_view_select_next_page (priv->tab_view);
+    }
+  else if (n > 0 && n <= n_pages)
+    {
+      AdwTabPage *page = adw_tab_view_get_nth_page (priv->tab_view, n-1);
+
+      if (page != NULL)
+        adw_tab_view_set_selected_page (priv->tab_view, page);
+    }
+}
+
+static void
 panel_frame_update_actions (PanelFrame *self)
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
@@ -681,6 +714,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_install_action (widget_class, "page.save", NULL, page_save_action);
   gtk_widget_class_install_action (widget_class, "frame.close-page-or-frame", NULL, close_page_or_frame_action);
   gtk_widget_class_install_action (widget_class, "frame.close", NULL, close_frame_action);
+  gtk_widget_class_install_action (widget_class, "frame.page", "i", frame_page_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceright, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-right", NULL);
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceleft, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-left", NULL);
