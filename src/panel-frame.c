@@ -777,6 +777,25 @@ panel_frame_init (PanelFrame *self)
   panel_frame_update_actions (self);
 }
 
+static gboolean
+modified_to_indicator_icon (GBinding     *binding,
+                            const GValue *from_value,
+                            GValue       *to_value,
+                            gpointer      user_data)
+{
+  static GIcon *icon;
+
+  if (icon == NULL)
+    icon = g_themed_icon_new ("panel-modified-symbolic");
+
+  if (g_value_get_boolean (from_value))
+    g_value_set_object (to_value, icon);
+  else
+    g_value_set_object (to_value, NULL);
+
+  return TRUE;
+}
+
 void
 panel_frame_add_before (PanelFrame  *self,
                         PanelWidget *panel,
@@ -810,6 +829,8 @@ panel_frame_add_before (PanelFrame  *self,
   g_object_bind_property (panel, "icon", page, "icon", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "needs-attention", page, "needs-attention", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "busy", page, "loading", G_BINDING_SYNC_CREATE);
+  g_object_bind_property_full (panel, "modified", page, "indicator-icon", G_BINDING_SYNC_CREATE,
+                               modified_to_indicator_icon, NULL, NULL, NULL);
 
   g_assert (!panel_frame_get_empty (self));
 
