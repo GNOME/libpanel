@@ -8,6 +8,7 @@
         <signal name="notify::child-revealed" handler="notify_child_revealed_cb"/>
         <child>
           <object class="GtkToggleButton" id="button">
+            <property name="focus-on-click">false</property>
             <property name="icon-name">panel-top-symbolic</property>
             <property name="width-request">48</property>
             <child>
