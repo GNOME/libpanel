@@ -58,6 +58,9 @@ PANEL_AVAILABLE_IN_ALL
 PanelGridColumn *panel_grid_get_column             (PanelGrid            *self,
                                                     guint                 column);
 PANEL_AVAILABLE_IN_ALL
+void             panel_grid_insert_column          (PanelGrid            *self,
+                                                    guint                 position);
+PANEL_AVAILABLE_IN_ALL
 void             panel_grid_agree_to_close_async   (PanelGrid            *self,
                                                     GCancellable         *cancellable,
                                                     GAsyncReadyCallback   callback,

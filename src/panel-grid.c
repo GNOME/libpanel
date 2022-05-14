@@ -529,6 +529,13 @@ _panel_grid_insert_column (PanelGrid *self,
   _panel_grid_update_closeable (self);
 }
 
+void
+panel_grid_insert_column (PanelGrid *self,
+                          guint      position)
+{
+  _panel_grid_insert_column (self, position);
+}
+
 guint
 panel_grid_get_n_columns (PanelGrid *self)
 {
