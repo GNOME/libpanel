@@ -62,6 +62,7 @@ G_DEFINE_TYPE_WITH_CODE (PanelFrame, panel_frame, GTK_TYPE_WIDGET,
 
 enum {
   PROP_0,
+  PROP_CLOSEABLE,
   PROP_EMPTY,
   PROP_PLACEHOLDER,
   PROP_VISIBLE_CHILD,
@@ -604,6 +605,10 @@ panel_frame_get_property (GObject    *object,
       g_value_set_object (value, panel_frame_get_visible_child (self));
       break;
 
+    case PROP_CLOSEABLE:
+      g_value_set_boolean (value, priv->closeable);
+      break;
+
     case PROP_EMPTY:
       g_value_set_boolean (value, panel_frame_get_empty (self));
       break;
@@ -679,6 +684,13 @@ panel_frame_class_init (PanelFrameClass *klass)
   widget_class->root = panel_frame_root;
   widget_class->unroot = panel_frame_unroot;
   widget_class->compute_expand = panel_frame_compute_expand;
+
+  properties [PROP_CLOSEABLE] =
+    g_param_spec_boolean ("closeable",
+                          "Closeable",
+                          "If the frame may be closed",
+                          FALSE,
+                          (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_EMPTY] =
     g_param_spec_boolean ("empty",
@@ -1213,9 +1225,14 @@ _panel_frame_set_closeable (PanelFrame  *self,
 
   g_return_if_fail (PANEL_IS_FRAME (self));
 
-  priv->closeable = !!closeable;
+  closeable = !!closeable;
 
+  if (priv->closeable == closeable)
+    return;
+
+  priv->closeable = closeable;
   panel_frame_update_actions (self);
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CLOSEABLE]);
 }
 
 void
@@ -1253,4 +1270,14 @@ _panel_frame_request_close (PanelFrame  *self,
 
   if ((page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (widget))))
     adw_tab_view_close_page (priv->tab_view, page);
+}
+
+gboolean
+panel_frame_get_closeable (PanelFrame *self)
+{
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
+
+  return priv->closeable;
 }
