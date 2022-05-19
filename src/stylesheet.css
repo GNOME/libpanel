@@ -192,6 +192,10 @@ panelframe.has-focus panelframetabbar > overlay > box.focus-handle {
 panelframe panelframetabbar tabbox tab button {
   min-height: 0;
 }
+panelframe panelframetabbar button.frame-close-button {
+  min-width: 28px;
+  min-height: 28px;
+}
 
 splitbutton.omnibar > button {
   margin-bottom: 0;

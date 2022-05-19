@@ -38,6 +38,7 @@ struct _PanelFrameTabBar
   GtkBox            *start_area;
   GtkBox            *end_area;
   GtkMenuButton     *menu_button;
+  GtkButton         *close_button;
 };
 
 static void frame_header_iface_init (PanelFrameHeaderInterface *iface);
@@ -69,19 +70,15 @@ panel_frame_tab_bar_new (void)
 }
 
 static void
-on_pages_items_changed_cb (PanelFrameTabBar  *self,
-                           guint              position,
-                           guint              removed,
-                           guint              added,
-                           GtkSelectionModel *model)
+on_notify_closeable_cb (PanelFrameTabBar *self,
+                        GParamSpec       *pspec,
+                        PanelFrame       *frame)
 {
   g_assert (PANEL_IS_FRAME_TAB_BAR (self));
-  g_assert (GTK_IS_SELECTION_MODEL (model));
+  g_assert (PANEL_IS_FRAME (frame));
 
-  if (g_list_model_get_n_items (G_LIST_MODEL (model)) == 0)
-    gtk_widget_show (GTK_WIDGET (self->menu_button));
-  else
-    gtk_widget_hide (GTK_WIDGET (self->menu_button));
+  gtk_widget_set_visible (GTK_WIDGET (self->close_button),
+                          panel_frame_get_closeable (frame));
 }
 
 static void
@@ -96,10 +93,9 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
 
   if (self->frame)
     {
-      g_signal_handlers_disconnect_by_func (self->pages,
-                                            G_CALLBACK (on_pages_items_changed_cb),
+      g_signal_handlers_disconnect_by_func (self->frame,
+                                            G_CALLBACK (on_notify_closeable_cb),
                                             self);
-
       adw_tab_bar_set_view (self->tab_bar, NULL);
       gtk_menu_button_set_menu_model (self->menu_button, NULL);
       g_clear_object (&self->frame);
@@ -113,15 +109,17 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
       AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
       GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
 
-      self->pages = adw_tab_view_get_pages (tab_view);
-      g_signal_connect_object (self->pages,
-                               "items-changed",
-                               G_CALLBACK (on_pages_items_changed_cb),
+      g_signal_connect_object (self->frame,
+                               "notify::closeable",
+                               G_CALLBACK (on_notify_closeable_cb),
                                self,
-                               G_CONNECT_SWAPPED | G_CONNECT_AFTER);
+                               G_CONNECT_SWAPPED);
 
+      self->pages = adw_tab_view_get_pages (tab_view);
       gtk_menu_button_set_menu_model (self->menu_button, menu_model);
       adw_tab_bar_set_view (self->tab_bar, tab_view);
+
+      on_notify_closeable_cb (self, NULL, self->frame);
     }
 
   g_object_notify (G_OBJECT (self), "frame");
@@ -306,10 +304,18 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
   adw_tab_bar_set_end_action_widget (self->tab_bar, GTK_WIDGET (self->end_area));
 
   self->menu_button = g_object_new (GTK_TYPE_MENU_BUTTON,
-                                    "icon-name", "open-menu-symbolic",
-                                    "visible", FALSE,
+                                    "css-classes", (const char * const[]) { "flat", NULL },
+                                    "icon-name", "pan-down-symbolic",
                                     NULL);
   gtk_box_append (self->end_area, GTK_WIDGET (self->menu_button));
+
+  self->close_button = g_object_new (GTK_TYPE_BUTTON,
+                                     "action-name", "frame.close",
+                                     "css-classes", (const char * const[]) { "flat", "circular", "frame-close-button", NULL },
+                                     "icon-name", "window-close-symbolic",
+                                     "valign", GTK_ALIGN_CENTER,
+                                     NULL);
+  gtk_box_append (self->end_area, GTK_WIDGET (self->close_button));
 
   controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
   g_signal_connect_object (controller, "pressed",
