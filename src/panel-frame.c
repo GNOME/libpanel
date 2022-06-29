@@ -815,6 +815,8 @@ panel_frame_add_before (PanelFrame  *self,
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   AdwTabPage *page;
+  GtkWidget *dock = NULL;
+  GtkWidget *dock_child;
   GtkWidget *grid;
   gboolean empty;
   int position;
@@ -823,6 +825,9 @@ panel_frame_add_before (PanelFrame  *self,
   g_return_if_fail (PANEL_IS_WIDGET (panel));
   g_return_if_fail (!sibling || PANEL_IS_WIDGET (sibling));
   g_return_if_fail (!sibling || gtk_widget_get_ancestor (GTK_WIDGET (sibling), PANEL_TYPE_FRAME) == GTK_WIDGET (self));
+
+  if ((dock_child = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK_CHILD)))
+    dock = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK);
 
   if (sibling != NULL)
     {
@@ -853,6 +858,34 @@ panel_frame_add_before (PanelFrame  *self,
 
   if (empty)
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_EMPTY]);
+
+  if (dock_child != NULL && dock != NULL)
+    {
+      PanelDockPosition dockpos = panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child));
+
+      switch (dockpos)
+        {
+        case PANEL_DOCK_POSITION_START:
+          g_object_notify (G_OBJECT (dock), "can-reveal-start");
+          break;
+
+        case PANEL_DOCK_POSITION_END:
+          g_object_notify (G_OBJECT (dock), "can-reveal-end");
+          break;
+
+        case PANEL_DOCK_POSITION_TOP:
+          g_object_notify (G_OBJECT (dock), "can-reveal-top");
+          break;
+
+        case PANEL_DOCK_POSITION_BOTTOM:
+          g_object_notify (G_OBJECT (dock), "can-reveal-bottom");
+          break;
+
+        case PANEL_DOCK_POSITION_CENTER:
+        default:
+          break;
+        }
+    }
 }
 
 /**
