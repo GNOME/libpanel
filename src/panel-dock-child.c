@@ -319,9 +319,12 @@ panel_dock_child_get_empty (PanelDockChild *self)
 
   if (PANEL_IS_PANED (child))
     {
-      if (gtk_widget_get_first_child (GTK_WIDGET (child)) ==
-          gtk_widget_get_last_child (GTK_WIDGET (child)))
-        child = panel_paned_get_nth_child (PANEL_PANED (child), 0);
+      guint n_children = panel_paned_get_n_children (PANEL_PANED (child));
+
+      if (n_children > 1)
+        return FALSE;
+
+      child = panel_paned_get_nth_child (PANEL_PANED (child), 0);
     }
 
   if (PANEL_IS_FRAME (child))
