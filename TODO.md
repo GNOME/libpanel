@@ -11,5 +11,5 @@
  * Can theme selector be simplified?
  * Use GSignalGroup and GBindingGroup
  * Fix various DnD issues
-
+ * Use a "GtkStackPage" style object child for panels/etc
 
