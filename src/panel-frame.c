@@ -915,7 +915,7 @@ panel_frame_get_empty (PanelFrame *self)
 
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
-  return adw_tab_view_get_selected_page (priv->tab_view) == NULL;
+  return adw_tab_view_get_n_pages (priv->tab_view) == 0;
 }
 
 /**
