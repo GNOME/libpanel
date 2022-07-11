@@ -1,0 +1,10 @@
+libpanel 1.0.alpha
+==================
+
+This is my first release of libpanel.
+
+We still expect considerable ABI change before 1.0.0. This snapshot
+is an early release so that application such as Builder may be released
+as part of the GNOME 43 alpha release.
+
+-- Christian Hergert
