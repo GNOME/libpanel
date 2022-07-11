@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name>libpanel</name>
+  <shortname>libpanel</shortname>
+  <shortdesc>IDE paneling library for GTK</shortdesc>
+  <description>
+    libpanel is a collection of GTK widgets for IDE-like applications targeting
+    GNOME using GTK and libadwaita.
+  </description>
+  <homepage rdf:resource="https://gitlab.gnome.org/chergert/libpanel" />
+  <license rdf:resource="https://spdx.org/licenses/LGPL-3.0-or-later.html" />
+
+  <programming-language>C</programming-language>
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Christian Hergert</foaf:name>
+      <foaf:mbox rdf:resource="mailto:chergert@gnome.org" />
+      <gnome:userid>chergert</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+
+</Project>
+
