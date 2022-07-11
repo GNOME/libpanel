@@ -1,6 +1,6 @@
 project('libpanel', 'c',
-          version: '1.0.0-alpha0',
-    meson_version: '>= 0.59.1',
+          version: '1.0.alpha',
+    meson_version: '>= 0.60',
   default_options: [ 'warning_level=2', 'c_std=gnu18' ],
 )
 
@@ -14,6 +14,9 @@ VERSION = meson.project_version()
 ABI_MAJOR = VERSION.split('.')[0]
 ABI_MINOR = VERSION.split('.')[1]
 ABI_MICRO = VERSION.split('.')[2]
+if ABI_MICRO.startswith('alpha') or ABI_MICRO.startswith('beta')
+  ABI_MICRO  = '0'
+endif
 
 # Setup commonly used options
 prefix = get_option('prefix')
