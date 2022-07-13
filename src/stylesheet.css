@@ -173,8 +173,49 @@ panelstatusbar > button {
   border-radius: 0;
   padding: 0 9px;
 }
-window:not(.maximized) panelstatusbar paneldockswitcher:last-child button {
-  border-bottom-right-radius: 11px;
+panelstatusbar > :first-child,
+panelstatusbar > :first-child button {
+  border-bottom-left-radius: 12px;
+}
+panelstatusbar > :last-child,
+panelstatusbar > :last-child button {
+  border-bottom-right-radius: 12px;
+}
+window.maximized panelstatusbar > :first-child,
+window.maximized panelstatusbar > :first-child button,
+window.tiled panelstatusbar > :first-child,
+window.tiled panelstatusbar > :first-child button,
+window.tiled-left panelstatusbar > :first-child,
+window.tiled-left panelstatusbar > :first-child button,
+window.tiled-right panelstatusbar > :first-child,
+window.tiled-right panelstatusbar > :first-child button,
+window.tiled-top panelstatusbar > :first-child,
+window.tiled-top panelstatusbar > :first-child button,
+window.tiled-bottom panelstatusbar > :first-child,
+window.tiled-bottom panelstatusbar > :first-child button,
+window.fullscreen panelstatusbar > :first-child,
+window.fullscreen panelstatusbar > :first-child button,
+window.solid-csd panelstatusbar > :first-child,
+window.solid-csd panelstatusbar > :first-child button {
+  border-bottom-left-radius: 0;
+}
+window.maximized panelstatusbar > :last-child,
+window.maximized panelstatusbar > :last-child button,
+window.tiled panelstatusbar > :last-child,
+window.tiled panelstatusbar > :last-child button,
+window.tiled-left panelstatusbar > :last-child,
+window.tiled-left panelstatusbar > :last-child button,
+window.tiled-right panelstatusbar > :last-child,
+window.tiled-right panelstatusbar > :last-child button,
+window.tiled-top panelstatusbar > :last-child,
+window.tiled-top panelstatusbar > :last-child button,
+window.tiled-bottom panelstatusbar > :last-child,
+window.tiled-bottom panelstatusbar > :last-child button,
+window.fullscreen panelstatusbar > :last-child,
+window.fullscreen panelstatusbar > :last-child button,
+window.solid-csd panelstatusbar > :last-child,
+window.solid-csd panelstatusbar > :last-child button {
+  border-bottom-right-radius: 0;
 }
 panelstatusbar paneldockswitcher button,
 panelstatusbar > dropdown > button,
