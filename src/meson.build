@@ -118,6 +118,7 @@ libpanel_static = static_library('panel',
 )
 
 libpanel_static_dep = declare_dependency(
+              sources: libpanel_generated_headers,
          dependencies: libpanel_deps,
            link_whole: libpanel_static,
   include_directories: libpanel_include_directories,

@@ -1,7 +1,5 @@
 #include <libpanel.h>
 
-#include "panel-paned.h"
-
 int
 main (int argc,
       char *argv[])
