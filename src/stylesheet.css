@@ -138,13 +138,24 @@ panelframe .frameheader tab > button.tab-close-button {
 
 panelstatusbar {
   min-height: 24px;
-  border-top: 1px solid @borders;
   font-size: 0.9em;
+  padding-top: 1px;
+  box-shadow: inset 0 1px @headerbar_shade_color;
+  background: @headerbar_bg_color;
+  color: @headerbar_fg_color;
+}
+panelstatusbar:backdrop {
+  background: @headerbar_backdrop_color;
+  transition: 200ms ease-in-out;
 }
 panelstatusbar > * {
   border-right: 1px solid @borders;
   padding-left: 9px;
   padding-right: 9px;
+}
+panelstatusbar:backdrop > * {
+  filter: opacity(.5);
+  transition: 200ms ease-in-out;
 }
 panelstatusbar > *:last-child {
   border-right: none;
@@ -165,11 +176,49 @@ panelstatusbar > button {
 window:not(.maximized) panelstatusbar paneldockswitcher:last-child button {
   border-bottom-right-radius: 11px;
 }
-panelstatusbar paneldockswitcher button:not(:hover):not(:checked),
-panelstatusbar > dropdown > button:not(:hover):not(:checked),
-panelstatusbar > menubutton > button:not(:hover):not(:checked),
-panelstatusbar > button:not(:hover):not(:checked) {
+panelstatusbar paneldockswitcher button,
+panelstatusbar > dropdown > button,
+panelstatusbar > menubutton > button,
+panelstatusbar > button {
   background: transparent;
+}
+panelstatusbar paneldockswitcher button:hover,
+panelstatusbar > dropdown > button:hover,
+panelstatusbar > menubutton > button:hover,
+panelstatusbar > button:hover {
+  background: alpha(currentColor, .07);
+}
+panelstatusbar paneldockswitcher button:active,
+panelstatusbar paneldockswitcher button.keyboard-activating,
+panelstatusbar > dropdown > button:hover,
+panelstatusbar > dropdown > button.keyboard-activating,
+panelstatusbar > menubutton > button:hover,
+panelstatusbar > menubutton > button.keyboard-activating,
+panelstatusbar > button:hover,
+panelstatusbar > button.keyboard-activating {
+  background: alpha(currentColor, .16);
+}
+panelstatusbar paneldockswitcher button:checked,
+panelstatusbar > dropdown > button:checked,
+panelstatusbar > menubutton > button:checked,
+panelstatusbar > button:checked {
+  background: alpha(currentColor, .1);
+}
+panelstatusbar paneldockswitcher button:checked:hover,
+panelstatusbar > dropdown > button:checked:hover,
+panelstatusbar > menubutton > button:checked:hover,
+panelstatusbar > button:hover {
+  background: alpha(currentColor, .13);
+}
+panelstatusbar paneldockswitcher button:checked:active,
+panelstatusbar paneldockswitcher button:checked.keyboard-activating,
+panelstatusbar > dropdown > button:checked:hover,
+panelstatusbar > dropdown > button:checked.keyboard-activating,
+panelstatusbar > menubutton > button:checked:hover,
+panelstatusbar > menubutton > button:checked.keyboard-activating,
+panelstatusbar > button:hover,
+panelstatusbar > button.keyboard-activating {
+  background: alpha(currentColor, .19);
 }
 panelstatusbar > dropdown > button label,
 panelstatusbar > menubutton > button label,
