@@ -121,7 +121,7 @@ ensure_indicator (PanelFrameSwitcher *self)
       cairo_move_to (cr, INDICATOR_SIZE/2, 0);
       cairo_line_to (cr, INDICATOR_SIZE/2, INDICATOR_SIZE-3);
       cairo_stroke (cr);
-      cairo_arc (cr, INDICATOR_SIZE/2-1, INDICATOR_SIZE-5, 4, 0, 2 * M_PI);
+      cairo_arc (cr, INDICATOR_SIZE/2-1, INDICATOR_SIZE-5, 4, 0, 2 * G_PI);
       cairo_fill (cr);
     }
   else
@@ -129,7 +129,7 @@ ensure_indicator (PanelFrameSwitcher *self)
       cairo_move_to (cr, 0, INDICATOR_SIZE/2);
       cairo_line_to (cr, INDICATOR_SIZE-3, INDICATOR_SIZE/2);
       cairo_stroke (cr);
-      cairo_arc (cr, INDICATOR_SIZE-5, INDICATOR_SIZE/2, 4, 0, 2 * M_PI);
+      cairo_arc (cr, INDICATOR_SIZE-5, INDICATOR_SIZE/2, 4, 0, 2 * G_PI);
       cairo_fill (cr);
     }
 
