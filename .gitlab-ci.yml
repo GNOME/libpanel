@@ -1,0 +1,27 @@
+stages:
+- build
+- pages
+
+fedora:
+  stage: build
+  image: fedora:latest
+  script:
+    - sudo dnf install -y meson gi-docgen gettext gcc git gtk4-devel libadwaita-devel
+    - meson build -Ddocs=enabled
+    - ninja -C build test
+    - mv build/docs/panel-1.0 docs
+  artifacts:
+    paths:
+    - docs
+
+pages:
+  stage: pages
+  dependencies:
+  - fedora
+  script:
+  - mv docs/panel-1.0 public
+  artifacts:
+    paths:
+    - public
+  only:
+  - main
