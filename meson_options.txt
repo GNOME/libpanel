@@ -8,6 +8,11 @@ option('introspection',
        value: 'enabled', 
        description: 'Enable GObject Introspection')
 
+option('docs',
+       type: 'feature', 
+       value: 'auto', yield: true,
+       description: 'Build the API reference (requires gi-docgen)')
+
 option('vapi',
        type: 'boolean', 
        value: true,
