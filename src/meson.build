@@ -18,7 +18,6 @@ panel_version_h = configure_file(
   configuration: version_data)
 
 libpanel_sources = [
-  'panel-animation.c',
   'panel-binding-group.c',
   'panel-dock.c',
   'panel-dock-child.c',
@@ -28,7 +27,6 @@ libpanel_sources = [
   'panel-frame-header.c',
   'panel-frame-header-bar.c',
   'panel-frame-header-bar-row.c',
-  'panel-frame-source.c',
   'panel-frame-switcher.c',
   'panel-frame-tab-bar.c',
   'panel-grid.c',
