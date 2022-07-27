@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-action-muxer-private.h"
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
@@ -34,6 +35,7 @@ typedef struct
   GIcon             *icon;
   GMenuModel        *menu_model;
   PanelSaveDelegate *save_delegate;
+  PanelActionMuxer  *action_muxer;
 
   GtkWidget         *maximize_frame;
   GtkWidget         *maximize_dock_child;
@@ -161,6 +163,12 @@ panel_widget_dispose (GObject *object)
 {
   PanelWidget *self = (PanelWidget *)object;
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  if (priv->action_muxer != NULL)
+    {
+      panel_action_muxer_clear (priv->action_muxer);
+      g_clear_object (&priv->action_muxer);
+    }
 
   g_clear_pointer (&priv->icon_name, g_free);
   g_clear_pointer (&priv->title, g_free);
@@ -1284,4 +1292,30 @@ _panel_widget_emit_presented (PanelWidget *self)
   g_return_if_fail (PANEL_IS_WIDGET (self));
 
   g_signal_emit (self, signals [PRESENTED], 0);
+}
+
+GActionGroup *
+_panel_widget_get_action_group (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  if (priv->action_muxer == NULL)
+    priv->action_muxer = panel_action_muxer_new ();
+
+  return G_ACTION_GROUP (priv->action_muxer);
+}
+
+void
+panel_widget_insert_action_group (PanelWidget  *self,
+                                  const char   *prefix,
+                                  GActionGroup *group)
+{
+  GActionGroup *muxer;
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+  g_return_if_fail (prefix != NULL);
+
+  muxer = _panel_widget_get_action_group (self);
+
+  panel_action_muxer_insert_action_group (PANEL_ACTION_MUXER (muxer), prefix, group);
 }
