@@ -106,16 +106,6 @@ void               panel_widget_mark_busy           (PanelWidget       *self);
 PANEL_AVAILABLE_IN_ALL
 void               panel_widget_unmark_busy         (PanelWidget       *self);
 PANEL_AVAILABLE_IN_ALL
-const GdkRGBA     *panel_widget_get_foreground_rgba (PanelWidget       *self);
-PANEL_AVAILABLE_IN_ALL
-void               panel_widget_set_foreground_rgba (PanelWidget       *self,
-                                                     const GdkRGBA     *foreground_rgba);
-PANEL_AVAILABLE_IN_ALL
-const GdkRGBA     *panel_widget_get_background_rgba (PanelWidget       *self);
-PANEL_AVAILABLE_IN_ALL
-void               panel_widget_set_background_rgba (PanelWidget       *self,
-                                                     const GdkRGBA     *background_rgba);
-PANEL_AVAILABLE_IN_ALL
 GMenuModel        *panel_widget_get_menu_model      (PanelWidget       *self);
 PANEL_AVAILABLE_IN_ALL
 void               panel_widget_set_menu_model      (PanelWidget       *self,

@@ -371,9 +371,6 @@
                   <object class="PanelFrame">
                     <child>
                       <object class="PanelWidget">
-                        <!-- you might want to set background-rgba by retrieving
-                             your document colors, such as from GtkSourceStyleScheme -->
-                        <property name="background-rgba">#fff</property>
                         <property name="title">Color</property>
                         <property name="can-maximize">true</property>
                         <property name="icon-name">color-select-symbolic</property>
@@ -385,7 +382,6 @@
                     </child>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="title">Swatches</property>
                         <property name="icon-name">preferences-color-symbolic</property>
                         <property name="can-maximize">true</property>
@@ -404,7 +400,6 @@
                   <object class="PanelFrame">
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="title">Adjustments</property>
                         <child>
                           <object class="GtkScrolledWindow">
@@ -418,7 +413,6 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="title">Styles</property>
-                        <property name="background-rgba">#fff</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <child>
@@ -435,7 +429,6 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="title">Layers</property>
-                        <property name="background-rgba">#fff</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <child>
@@ -448,7 +441,6 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="title">Channels</property>
-                        <property name="background-rgba">#fff</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <child>
@@ -460,7 +452,6 @@
                     </child>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="title">Paths</property>
                         <child>
                           <object class="GtkScrolledWindow">
@@ -483,7 +474,6 @@
                     <property name="orientation">horizontal</property>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="icon-name">edit-find-symbolic</property>
                         <property name="title">Find in Files</property>
                         <property name="can-maximize">true</property>
@@ -495,7 +485,6 @@
                     </child>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="title">Terminal</property>
                         <property name="icon-name">utilities-terminal-symbolic</property>
                         <property name="can-maximize">true</property>
@@ -518,7 +507,6 @@
                     </child>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#000</property>
                         <property name="title">Build Output</property>
                         <property name="icon-name">builder-build-symbolic</property>
                         <property name="can-maximize">true</property>
@@ -533,7 +521,6 @@
                     </child>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#000</property>
                         <property name="title">Application Output</property>
                         <property name="icon-name">media-playback-start-symbolic</property>
                         <property name="can-maximize">true</property>
@@ -558,7 +545,6 @@
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="icon-name">view-list-symbolic</property>
                         <property name="title">Project Tree</property>
                         <property name="can-maximize">true</property>
@@ -709,7 +695,6 @@
                     </child>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="title">Build Issues</property>
                         <property name="icon-name">builder-build-symbolic</property>
                         <property name="can-maximize">true</property>
@@ -724,7 +709,6 @@
                     </child>
                     <child>
                       <object class="PanelWidget">
-                        <property name="background-rgba">#fff</property>
                         <property name="title">TODOs/FIXMEs</property>
                         <property name="icon-name">object-select-symbolic</property>
                         <property name="can-maximize">true</property>
