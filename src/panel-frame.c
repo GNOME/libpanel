@@ -81,25 +81,6 @@ panel_frame_new (void)
 }
 
 static void
-page_save_action (GtkWidget  *widget,
-                  const char *action_name,
-                  GVariant   *param)
-{
-  PanelFrame *self = (PanelFrame *)widget;
-  PanelWidget *visible_child;
-  PanelSaveDelegate *save_delegate;
-
-  g_assert (PANEL_IS_FRAME (self));
-
-  if (!(visible_child = panel_frame_get_visible_child (self)) ||
-      !_panel_widget_can_save (visible_child) ||
-      !(save_delegate = panel_widget_get_save_delegate (visible_child)))
-    g_return_if_reached ();
-
-  panel_save_delegate_save_async (save_delegate, NULL, NULL, NULL);
-}
-
-static void
 close_page_or_frame_action (GtkWidget  *widget,
                             const char *action_name,
                             GVariant   *param)
@@ -250,10 +231,6 @@ panel_frame_update_actions (PanelFrame *self)
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-left", grid && visible_child);
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-down", grid && visible_child);
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-up", grid && visible_child);
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.maximize",
-                                 grid && visible_child && panel_widget_get_can_maximize (visible_child));
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.save",
-                                 visible_child && _panel_widget_can_save (visible_child));
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
                                  "frame.close-page-or-frame",
                                  grid && (visible_child || priv->closeable));
@@ -289,21 +266,6 @@ panel_frame_notify_selected_page_cb (PanelFrame *self,
     _panel_widget_emit_presented (visible_child);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_VISIBLE_CHILD]);
-}
-
-static void
-page_maximize_action (GtkWidget  *widget,
-                      const char *action_name,
-                      GVariant   *param)
-{
-  PanelWidget *visible_child;
-
-  g_assert (PANEL_IS_FRAME (widget));
-
-  if (!(visible_child = panel_frame_get_visible_child (PANEL_FRAME (widget))))
-    g_return_if_reached ();
-
-  panel_widget_maximize (visible_child);
 }
 
 static void
@@ -741,15 +703,12 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_install_action (widget_class, "page.move-left", NULL, page_move_left_action);
   gtk_widget_class_install_action (widget_class, "page.move-down", NULL, page_move_down_action);
   gtk_widget_class_install_action (widget_class, "page.move-up", NULL, page_move_up_action);
-  gtk_widget_class_install_action (widget_class, "page.maximize", NULL, page_maximize_action);
-  gtk_widget_class_install_action (widget_class, "page.save", NULL, page_save_action);
   gtk_widget_class_install_action (widget_class, "frame.close-page-or-frame", NULL, close_page_or_frame_action);
   gtk_widget_class_install_action (widget_class, "frame.close", NULL, close_frame_action);
   gtk_widget_class_install_action (widget_class, "frame.page", "i", frame_page_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceright, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-right", NULL);
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceleft, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-left", NULL);
-  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F11, GDK_SHIFT_MASK, "page.maximize", NULL);
 
   g_type_ensure (ADW_TYPE_TAB_VIEW);
   g_type_ensure (PANEL_TYPE_DROP_CONTROLS);

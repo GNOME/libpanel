@@ -71,6 +71,7 @@ typedef struct
   guint             maximized : 1;
   guint             modified : 1;
   guint             needs_attention : 1;
+  guint             saving : 1;
 } PanelWidgetPrivate;
 
 typedef struct
@@ -172,12 +173,17 @@ static void
 panel_widget_update_actions (PanelWidget *self)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+  gboolean can_maximize;
+  gboolean can_save;
 
   g_assert (PANEL_IS_WIDGET (self));
 
-  panel_widget_action_set_enabled (self,
-                                   "page.maximize",
-                                   !priv->maximized && panel_widget_get_can_maximize (self));
+  can_maximize = !priv->maximized &&
+                 panel_widget_get_can_maximize (self);
+  can_save = _panel_widget_can_save (self);
+
+  panel_widget_action_set_enabled (self, "maximize", can_maximize);
+  panel_widget_action_set_enabled (self, "save", can_save);
 }
 
 static void
@@ -186,6 +192,55 @@ panel_widget_maximize_action (GtkWidget  *widget,
                               GVariant   *param)
 {
   panel_widget_maximize (PANEL_WIDGET (widget));
+}
+
+static void
+panel_widget_save_cb (GObject      *object,
+                      GAsyncResult *result,
+                      gpointer      user_data)
+{
+  PanelSaveDelegate *save_delegate = (PanelSaveDelegate *)object;
+  g_autoptr(PanelWidget) self = user_data;
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+  g_autoptr(GError) error = NULL;
+
+  g_assert (PANEL_IS_SAVE_DELEGATE (save_delegate));
+  g_assert (G_IS_ASYNC_RESULT (result));
+  g_assert (PANEL_IS_WIDGET (self));
+
+  priv->saving = FALSE;
+
+  if (!panel_save_delegate_save_finish (save_delegate, result, &error))
+    {
+      /* TODO: Request save delegate to format an error message to
+       *       display to the user via adwaita infobar replacement.
+       */
+      g_warning ("Failed to save: %s", error->message);
+    }
+
+  panel_widget_update_actions (self);
+}
+
+static void
+panel_widget_save_action (GtkWidget  *widget,
+                          const char *action_name,
+                          GVariant   *param)
+{
+  PanelWidget *self = (PanelWidget *)widget;
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+  g_return_if_fail (priv->save_delegate != NULL);
+  g_return_if_fail (priv->saving == FALSE);
+
+  priv->saving = TRUE;
+
+  panel_save_delegate_save_async (priv->save_delegate,
+                                  NULL,
+                                  panel_widget_save_cb,
+                                  g_object_ref (self));
+
+  panel_widget_update_actions (self);
 }
 
 /**
@@ -567,6 +622,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
 
   panel_widget_class_install_action (klass, "maximize", NULL, panel_widget_maximize_action);
+  panel_widget_class_install_action (klass, "save", NULL, panel_widget_save_action);
 
   /* Ensure we have quarks for known types */
   g_quark_from_static_string (PANEL_WIDGET_KIND_ANY);
@@ -582,7 +638,8 @@ panel_widget_init (GTypeInstance *instance,
   PanelWidget *self = PANEL_WIDGET (instance);
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
-  panel_widget_update_actions (self);
+  panel_widget_action_set_enabled (self, "maximize", FALSE);
+  panel_widget_action_set_enabled (self, "save", FALSE);
 
   priv->kind = g_quark_from_static_string (PANEL_WIDGET_KIND_UNKNOWN);
   priv->reorderable = TRUE;
@@ -712,6 +769,7 @@ panel_widget_set_modified (PanelWidget *self,
     {
       priv->modified = modified;
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_MODIFIED]);
+      panel_widget_update_actions (self);
     }
 }
 
@@ -1231,7 +1289,7 @@ _panel_widget_can_save (PanelWidget *self)
 
   g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
 
-  return priv->modified && priv->save_delegate != NULL;
+  return !priv->saving && priv->modified && priv->save_delegate != NULL;
 }
 
 void
