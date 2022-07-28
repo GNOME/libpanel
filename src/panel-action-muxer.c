@@ -711,6 +711,12 @@ panel_action_muxer_get_action_parameter_type (GActionGroup *group,
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
 
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        return iter->parameter_type;
+    }
+
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
