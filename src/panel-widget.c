@@ -566,7 +566,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
 
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
 
-  panel_widget_class_install_action (klass, "page.maximize", NULL, panel_widget_maximize_action);
+  panel_widget_class_install_action (klass, "maximize", NULL, panel_widget_maximize_action);
 
   /* Ensure we have quarks for known types */
   g_quark_from_static_string (PANEL_WIDGET_KIND_ANY);
