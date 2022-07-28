@@ -18,6 +18,7 @@ panel_version_h = configure_file(
   configuration: version_data)
 
 libpanel_private_sources = [
+  'gsettings-mapping.c',
   'panel-action-muxer.c',
   'panel-binding-group.c',
   'panel-dock-child.c',

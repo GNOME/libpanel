@@ -231,8 +231,8 @@ static void
 panel_frame_update_actions (PanelFrame *self)
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  PanelActionMuxer *action_group = NULL;
   PanelWidget *visible_child;
-  GActionGroup *action_group = NULL;
   GtkWidget *grid;
 
   g_assert (PANEL_IS_FRAME (self));
@@ -241,8 +241,10 @@ panel_frame_update_actions (PanelFrame *self)
   visible_child = panel_frame_get_visible_child (self);
 
   if (visible_child != NULL)
-    action_group = _panel_widget_get_action_group (visible_child);
-  gtk_widget_insert_action_group (GTK_WIDGET (self), "page", action_group);
+    action_group = _panel_widget_get_action_muxer (visible_child);
+  gtk_widget_insert_action_group (GTK_WIDGET (self),
+                                  "page",
+                                  G_ACTION_GROUP (action_group));
 
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-right", grid  && visible_child);
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-left", grid && visible_child);

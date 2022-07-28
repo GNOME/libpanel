@@ -20,13 +20,21 @@
 
 #include "config.h"
 
+#include <gtk/gtk.h>
+
+#include "gsettings-mapping.h"
 #include "panel-action-muxer-private.h"
 
 struct _PanelActionMuxer
 {
-  GObject    parent_instance;
-  GPtrArray *action_groups;
-  guint      n_recurse;
+  GObject            parent_instance;
+  GPtrArray         *action_groups;
+  const PanelAction *actions;
+  GtkBitset         *actions_disabled;
+  GHashTable        *pspec_name_to_action;
+  gpointer           instance;
+  gulong             instance_notify_handler;
+  guint              n_recurse;
 };
 
 typedef struct
@@ -74,13 +82,42 @@ prefixed_action_group_ref (PrefixedActionGroup *pag)
   return g_rc_box_acquire (pag);
 }
 
+static GVariant *
+get_property_state (gpointer            instance,
+                    GParamSpec         *pspec,
+                    const GVariantType *state_type)
+{
+  GValue value = G_VALUE_INIT;
+  GVariant *ret;
+
+  g_assert (G_IS_OBJECT (instance));
+  g_assert (pspec != NULL);
+  g_assert (state_type != NULL);
+
+  g_value_init (&value, pspec->value_type);
+  g_object_get_property (instance, pspec->name, &value);
+  ret = g_settings_set_mapping (&value, state_type, NULL);
+  g_value_unset (&value);
+
+  return g_variant_ref_sink (ret);
+}
+
 static void
 panel_action_muxer_dispose (GObject *object)
 {
   PanelActionMuxer *self = (PanelActionMuxer *)object;
 
+  if (self->instance != NULL)
+    {
+      g_clear_signal_handler (&self->instance_notify_handler, self->instance);
+      g_clear_weak_pointer (&self->instance);
+    }
+
   if (self->action_groups->len > 0)
     g_ptr_array_remove_range (self->action_groups, 0, self->action_groups->len);
+
+  self->actions = NULL;
+  g_clear_pointer (&self->actions_disabled, gtk_bitset_unref);
 
   G_OBJECT_CLASS (panel_action_muxer_parent_class)->finalize (object);
 }
@@ -108,6 +145,7 @@ static void
 panel_action_muxer_init (PanelActionMuxer *self)
 {
   self->action_groups = g_ptr_array_new_with_free_func ((GDestroyNotify)prefixed_action_group_drop);
+  self->actions_disabled = gtk_bitset_new_empty ();
 }
 
 PanelActionMuxer *
@@ -378,6 +416,12 @@ panel_action_muxer_has_action (GActionGroup *group,
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
 
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        return TRUE;
+    }
+
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
@@ -400,6 +444,12 @@ panel_action_muxer_list_actions (GActionGroup *group)
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
   GArray *ar = g_array_new (TRUE, FALSE, sizeof (char *));
 
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      char *name = g_strdup (iter->name);
+      g_array_append_val (ar, name);
+    }
+
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
@@ -420,6 +470,12 @@ panel_action_muxer_get_action_enabled (GActionGroup *group,
                                        const char   *action_name)
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
+
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (action_name, iter->name) == 0)
+        return !gtk_bitset_contains (self->actions_disabled, iter->position);
+    }
 
   for (guint i = 0; i < self->action_groups->len; i++)
     {
@@ -443,6 +499,16 @@ panel_action_muxer_get_action_state (GActionGroup *group,
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
 
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        {
+          if (iter->pspec != NULL && self->instance != NULL)
+            return get_property_state (self->instance, iter->pspec, iter->state_type);
+          return NULL;
+        }
+    }
+
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
@@ -464,6 +530,38 @@ panel_action_muxer_get_action_state_hint (GActionGroup *group,
                                           const char   *action_name)
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
+
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        {
+          if (iter->pspec != NULL)
+            {
+              if (iter->pspec->value_type == G_TYPE_INT)
+                {
+                  GParamSpecInt *pspec = (GParamSpecInt *)iter->pspec;
+                  return g_variant_new ("(ii)", pspec->minimum, pspec->maximum);
+                }
+              else if (iter->pspec->value_type == G_TYPE_UINT)
+                {
+                  GParamSpecUInt *pspec = (GParamSpecUInt *)iter->pspec;
+                  return g_variant_new ("(uu)", pspec->minimum, pspec->maximum);
+                }
+              else if (iter->pspec->value_type == G_TYPE_FLOAT)
+                {
+                  GParamSpecFloat *pspec = (GParamSpecFloat *)iter->pspec;
+                  return g_variant_new ("(dd)", (double)pspec->minimum, (double)pspec->maximum);
+                }
+              else if (iter->pspec->value_type == G_TYPE_DOUBLE)
+                {
+                  GParamSpecDouble *pspec = (GParamSpecDouble *)iter->pspec;
+                  return g_variant_new ("(dd)", pspec->minimum, pspec->maximum);
+                }
+            }
+
+          return NULL;
+        }
+    }
 
   for (guint i = 0; i < self->action_groups->len; i++)
     {
@@ -488,6 +586,23 @@ panel_action_muxer_change_action_state (GActionGroup *group,
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
 
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        {
+          if (iter->pspec != NULL && self->instance != NULL)
+            {
+              GValue gvalue = G_VALUE_INIT;
+              g_value_init (&gvalue, iter->pspec->value_type);
+              g_settings_get_mapping (&gvalue, value, NULL);
+              g_object_set_property (self->instance, iter->pspec->name, &gvalue);
+              g_value_unset (&gvalue);
+            }
+
+          return;
+        }
+    }
+
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
@@ -511,6 +626,12 @@ panel_action_muxer_get_action_state_type (GActionGroup *group,
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
 
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        return iter->state_type;
+    }
+
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
@@ -533,6 +654,39 @@ panel_action_muxer_activate_action (GActionGroup *group,
                                     GVariant     *parameter)
 {
   PanelActionMuxer *self = PANEL_ACTION_MUXER (group);
+
+  for (const PanelAction *iter = self->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        {
+          if (iter->pspec != NULL)
+            {
+              if (iter->pspec->value_type == G_TYPE_BOOLEAN)
+                {
+                  gboolean value;
+
+                  g_return_if_fail (parameter == NULL);
+
+                  g_object_get (self->instance, iter->pspec->name, &value, NULL);
+                  value = !value;
+                  g_object_set (self->instance, iter->pspec->name, value, NULL);
+                }
+              else
+                {
+                  g_return_if_fail (parameter != NULL && g_variant_is_of_type (parameter, iter->state_type));
+
+                  panel_action_muxer_change_action_state (group, action_name, parameter);
+                }
+
+            }
+          else
+            {
+              iter->activate (self->instance, iter->name, parameter);
+            }
+
+          return;
+        }
+    }
 
   for (guint i = 0; i < self->action_groups->len; i++)
     {
@@ -588,7 +742,7 @@ action_group_iface_init (GActionGroupInterface *iface)
 }
 
 void
-panel_action_muxer_clear (PanelActionMuxer *self)
+panel_action_muxer_remove_all (PanelActionMuxer *self)
 {
   g_auto(GStrv) action_groups = NULL;
 
@@ -598,5 +752,117 @@ panel_action_muxer_clear (PanelActionMuxer *self)
     {
       for (guint i = 0; action_groups[i]; i++)
         panel_action_muxer_remove_action_group (self, action_groups[i]);
+    }
+}
+
+void
+panel_action_muxer_set_enabled (PanelActionMuxer  *self,
+                                const PanelAction *action,
+                                gboolean           enabled)
+{
+  gboolean disabled = !enabled;
+
+  g_return_if_fail (PANEL_IS_ACTION_MUXER (self));
+  g_return_if_fail (action != NULL);
+
+  if (disabled != gtk_bitset_contains (self->actions_disabled, action->position))
+    {
+      if (disabled)
+        gtk_bitset_add (self->actions_disabled, action->position);
+      else
+        gtk_bitset_remove (self->actions_disabled, action->position);
+
+      g_action_group_action_enabled_changed (G_ACTION_GROUP (self), action->name, !disabled);
+    }
+}
+
+static void
+panel_action_muxer_property_action_notify_cb (PanelActionMuxer *self,
+                                              GParamSpec       *pspec,
+                                              gpointer          instance)
+{
+  g_autoptr(GVariant) state = NULL;
+  const PanelAction *action;
+
+  g_assert (PANEL_IS_ACTION_MUXER (self));
+  g_assert (pspec != NULL);
+  g_assert (G_IS_OBJECT (instance));
+
+  if (!(action = g_hash_table_lookup (self->pspec_name_to_action, pspec->name)))
+    return;
+
+  state = get_property_state (instance, action->pspec, action->state_type);
+
+  g_action_group_action_state_changed (G_ACTION_GROUP (self), action->name, state);
+}
+
+static void
+panel_action_muxer_add_property_action (PanelActionMuxer  *self,
+                                        gpointer           instance,
+                                        const PanelAction *action)
+{
+  g_assert (PANEL_IS_ACTION_MUXER (self));
+  g_assert (G_IS_OBJECT (instance));
+  g_assert (action != NULL);
+  g_assert (action->pspec != NULL);
+  g_assert (g_type_is_a (G_OBJECT_TYPE (instance), action->owner));
+
+  if (self->pspec_name_to_action == NULL)
+    self->pspec_name_to_action = g_hash_table_new (NULL, NULL);
+
+  g_hash_table_insert (self->pspec_name_to_action,
+                       (gpointer)action->pspec->name,
+                       (gpointer)action);
+
+  if (self->instance_notify_handler == 0)
+    self->instance_notify_handler =
+      g_signal_connect_object (instance,
+                               "notify",
+                               G_CALLBACK (panel_action_muxer_property_action_notify_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
+
+  g_action_group_action_added (G_ACTION_GROUP (self), action->name);
+}
+
+static void
+panel_action_muxer_add_action (PanelActionMuxer  *self,
+                               gpointer           instance,
+                               const PanelAction *action)
+{
+  g_assert (PANEL_IS_ACTION_MUXER (self));
+  g_assert (G_IS_OBJECT (instance));
+  g_assert (action != NULL);
+  g_assert (g_type_is_a (G_OBJECT_TYPE (instance), action->owner));
+
+  g_action_group_action_added (G_ACTION_GROUP (self), action->name);
+}
+
+void
+panel_action_muxer_connect_actions (PanelActionMuxer  *self,
+                                    gpointer           instance,
+                                    const PanelAction *actions)
+{
+  g_return_if_fail (PANEL_IS_ACTION_MUXER (self));
+  g_return_if_fail (G_IS_OBJECT (instance));
+  g_return_if_fail (self->instance == NULL);
+
+  if (actions == NULL)
+    return;
+
+  g_set_weak_pointer (&self->instance, instance);
+
+  self->actions = actions;
+
+  for (const PanelAction *iter = actions; iter; iter = iter->next)
+    {
+      g_assert (iter->next == NULL ||
+                iter->position == iter->next->position + 1);
+      g_assert (iter->pspec != NULL || iter->activate != NULL);
+
+      if (iter->pspec != NULL)
+        panel_action_muxer_add_property_action (self, instance, iter);
+      else
+        panel_action_muxer_add_action (self, instance, iter);
     }
 }

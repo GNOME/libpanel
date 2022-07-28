@@ -24,19 +24,41 @@
 
 G_BEGIN_DECLS
 
+typedef void (*PanelActionActivateFunc) (gpointer    instance,
+                                         const char *action_name,
+                                         GVariant   *param);
+
+typedef struct _PanelAction
+{
+  const struct _PanelAction *next;
+  const char                *name;
+  GType                      owner;
+  const GVariantType        *parameter_type;
+  const GVariantType        *state_type;
+  GParamSpec                *pspec;
+  PanelActionActivateFunc    activate;
+  guint                      position;
+} PanelAction;
+
 #define PANEL_TYPE_ACTION_MUXER (panel_action_muxer_get_type())
 
 G_DECLARE_FINAL_TYPE (PanelActionMuxer, panel_action_muxer, PANEL, ACTION_MUXER, GObject)
 
 PanelActionMuxer  *panel_action_muxer_new                 (void);
-void               panel_action_muxer_insert_action_group (PanelActionMuxer *self,
-                                                           const char       *prefix,
-                                                           GActionGroup     *action_group);
-void               panel_action_muxer_remove_action_group (PanelActionMuxer *self,
-                                                           const char       *prefix);
-char             **panel_action_muxer_list_groups         (PanelActionMuxer *self);
-GActionGroup      *panel_action_muxer_get_action_group    (PanelActionMuxer *self,
-                                                           const char       *prefix);
-void               panel_action_muxer_clear               (PanelActionMuxer *self);
+void               panel_action_muxer_remove_all          (PanelActionMuxer  *self);
+void               panel_action_muxer_insert_action_group (PanelActionMuxer  *self,
+                                                           const char        *prefix,
+                                                           GActionGroup      *action_group);
+void               panel_action_muxer_remove_action_group (PanelActionMuxer  *self,
+                                                           const char        *prefix);
+char             **panel_action_muxer_list_groups         (PanelActionMuxer  *self);
+GActionGroup      *panel_action_muxer_get_action_group    (PanelActionMuxer  *self,
+                                                           const char        *prefix);
+void               panel_action_muxer_set_enabled         (PanelActionMuxer  *self,
+                                                           const PanelAction *action,
+                                                           gboolean           enabled);
+void               panel_action_muxer_connect_actions     (PanelActionMuxer  *self,
+                                                           gpointer           instance,
+                                                           const PanelAction *actions);
 
 G_END_DECLS

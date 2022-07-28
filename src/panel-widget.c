@@ -18,6 +18,30 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+/* GTK - The GIMP Toolkit
+ * Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh MacDonald
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
+ * file for a list of people on the GTK+ Team.  See the ChangeLog
+ * files for a list of changes.  These files are distributed with
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
+ */
+
 #include "config.h"
 
 #include "panel-action-muxer-private.h"
@@ -49,11 +73,15 @@ typedef struct
   guint             needs_attention : 1;
 } PanelWidgetPrivate;
 
-static void buildable_iface_init (GtkBuildableIface *iface);
+typedef struct
+{
+  const PanelAction *actions;
+} PanelWidgetClassPrivate;
 
-G_DEFINE_TYPE_WITH_CODE (PanelWidget, panel_widget, GTK_TYPE_WIDGET,
-                         G_ADD_PRIVATE  (PanelWidget)
-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init))
+static void panel_widget_class_init_buildable (GtkBuildableIface *iface);
+static void panel_widget_class_init           (PanelWidgetClass  *klass);
+static void panel_widget_init                 (GTypeInstance     *instance,
+                                               gpointer           g_class);
 
 enum {
   PROP_0,
@@ -80,7 +108,65 @@ enum {
 };
 
 static GParamSpec *properties [N_PROPS];
-static guint signals [N_SIGNALS];
+static guint       signals [N_SIGNALS];
+static int         PanelWidget_private_offset;
+static gpointer    panel_widget_parent_class;
+
+static inline gpointer
+panel_widget_get_instance_private (PanelWidget *self)
+{
+  return (G_STRUCT_MEMBER_P (self, PanelWidget_private_offset));
+}
+
+static inline gpointer
+panel_widget_class_get_private (PanelWidgetClass *widget_class)
+{
+  return G_TYPE_CLASS_GET_PRIVATE (widget_class, PANEL_TYPE_WIDGET, PanelWidgetClassPrivate);
+}
+
+GType
+panel_widget_get_type (void)
+{
+  static GType widget_type = 0;
+
+  if G_UNLIKELY (widget_type == 0)
+    {
+      const GTypeInfo widget_info =
+      {
+        sizeof (PanelWidgetClass),
+        NULL,
+        NULL,
+        (GClassInitFunc)panel_widget_class_init,
+        NULL,
+        NULL,
+        sizeof (PanelWidget),
+        0,
+        panel_widget_init,
+        NULL,
+      };
+
+      const GInterfaceInfo buildable_info =
+      {
+        (GInterfaceInitFunc)panel_widget_class_init_buildable,
+        (GInterfaceFinalizeFunc)NULL,
+        NULL /* interface data */
+      };
+
+      widget_type = g_type_register_static (GTK_TYPE_WIDGET,
+                                            g_intern_static_string ("PanelWidget"),
+                                            &widget_info,
+                                            0);
+      g_type_add_class_private (widget_type,
+                                sizeof (PanelWidgetClassPrivate));
+      PanelWidget_private_offset = g_type_add_instance_private (widget_type,
+                                                                sizeof (PanelWidgetPrivate));
+      g_type_add_interface_static (widget_type,
+                                   GTK_TYPE_BUILDABLE,
+                                   &buildable_info);
+    }
+
+  return widget_type;
+}
 
 static void
 panel_widget_update_actions (PanelWidget *self)
@@ -89,9 +175,9 @@ panel_widget_update_actions (PanelWidget *self)
 
   g_assert (PANEL_IS_WIDGET (self));
 
-  gtk_widget_action_set_enabled (GTK_WIDGET (self),
-                                 "page.maximize",
-                                 !priv->maximized && panel_widget_get_can_maximize (self));
+  panel_widget_action_set_enabled (self,
+                                   "page.maximize",
+                                   !priv->maximized && panel_widget_get_can_maximize (self));
 }
 
 static void
@@ -151,6 +237,21 @@ panel_widget_size_allocate (GtkWidget *widget,
 }
 
 static void
+panel_widget_constructed (GObject *object)
+{
+  PanelWidget *self = PANEL_WIDGET (object);
+  PanelWidgetClass *widget_class = PANEL_WIDGET_GET_CLASS (self);
+  PanelWidgetClassPrivate *class_priv = panel_widget_class_get_private (widget_class);
+  PanelActionMuxer *muxer;
+
+  G_OBJECT_CLASS (panel_widget_parent_class)->constructed (object);
+
+  muxer = PANEL_ACTION_MUXER (_panel_widget_get_action_muxer (self));
+
+  panel_action_muxer_connect_actions (muxer, self, class_priv->actions);
+}
+
+static void
 panel_widget_dispose (GObject *object)
 {
   PanelWidget *self = (PanelWidget *)object;
@@ -158,7 +259,7 @@ panel_widget_dispose (GObject *object)
 
   if (priv->action_muxer != NULL)
     {
-      panel_action_muxer_clear (priv->action_muxer);
+      panel_action_muxer_remove_all (priv->action_muxer);
       g_clear_object (&priv->action_muxer);
     }
 
@@ -300,6 +401,10 @@ panel_widget_class_init (PanelWidgetClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  g_type_class_adjust_private_offset (klass, &PanelWidget_private_offset);
+  panel_widget_parent_class = g_type_class_peek_parent (klass);
+
+  object_class->constructed = panel_widget_constructed;
   object_class->dispose = panel_widget_dispose;
   object_class->get_property = panel_widget_get_property;
   object_class->set_property = panel_widget_set_property;
@@ -461,7 +566,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
 
   gtk_widget_class_set_css_name (widget_class, "panelwidget");
 
-  gtk_widget_class_install_action (widget_class, "page.maximize", NULL, panel_widget_maximize_action);
+  panel_widget_class_install_action (klass, "page.maximize", NULL, panel_widget_maximize_action);
 
   /* Ensure we have quarks for known types */
   g_quark_from_static_string (PANEL_WIDGET_KIND_ANY);
@@ -471,8 +576,10 @@ panel_widget_class_init (PanelWidgetClass *klass)
 }
 
 static void
-panel_widget_init (PanelWidget *self)
+panel_widget_init (GTypeInstance *instance,
+                   gpointer       g_class)
 {
+  PanelWidget *self = PANEL_WIDGET (instance);
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
   panel_widget_update_actions (self);
@@ -1064,7 +1171,7 @@ panel_widget_add_child (GtkBuildable *buildable,
 }
 
 static void
-buildable_iface_init (GtkBuildableIface *iface)
+panel_widget_class_init_buildable (GtkBuildableIface *iface)
 {
   iface->add_child = panel_widget_add_child;
 }
@@ -1146,15 +1253,15 @@ _panel_widget_emit_presented (PanelWidget *self)
   g_signal_emit (self, signals [PRESENTED], 0);
 }
 
-GActionGroup *
-_panel_widget_get_action_group (PanelWidget *self)
+PanelActionMuxer *
+_panel_widget_get_action_muxer (PanelWidget *self)
 {
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
 
   if (priv->action_muxer == NULL)
     priv->action_muxer = panel_action_muxer_new ();
 
-  return G_ACTION_GROUP (priv->action_muxer);
+  return priv->action_muxer;
 }
 
 void
@@ -1162,12 +1269,188 @@ panel_widget_insert_action_group (PanelWidget  *self,
                                   const char   *prefix,
                                   GActionGroup *group)
 {
-  GActionGroup *muxer;
+  PanelActionMuxer *muxer;
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
   g_return_if_fail (prefix != NULL);
 
-  muxer = _panel_widget_get_action_group (self);
+  if ((muxer = _panel_widget_get_action_muxer (self)))
+    panel_action_muxer_insert_action_group (muxer, prefix, group);
+}
 
-  panel_action_muxer_insert_action_group (PANEL_ACTION_MUXER (muxer), prefix, group);
+static void
+panel_widget_class_add_action (PanelWidgetClass *widget_class,
+                               PanelAction      *action)
+{
+  PanelWidgetClassPrivate *class_priv = panel_widget_class_get_private (widget_class);
+
+  g_assert (PANEL_IS_WIDGET_CLASS (widget_class));
+  g_assert (action != NULL);
+  g_assert (action->next == NULL);
+  g_assert (action->position == 0);
+
+  /* Precalculate action "position". To be stable this is the
+   * number of items from the end.
+   */
+  for (const PanelAction *iter = class_priv->actions;
+       iter != NULL;
+       iter = iter->next)
+    action->position++;
+
+  action->next = class_priv->actions;
+  class_priv->actions = action;
+}
+
+/**
+ * panel_widget_class_install_action:
+ * @widget_class: a `PanelWidgetClass`
+ * @action_name: a prefixed action name, such as "clipboard.paste"
+ * @parameter_type: (nullable): the parameter type
+ * @activate: (scope notified): callback to use when the action is activated
+ *
+ * This should be called at class initialization time to specify
+ * actions to be added for all instances of this class.
+ *
+ * Actions installed by this function are stateless. The only state
+ * they have is whether they are enabled or not.
+ */
+void
+panel_widget_class_install_action (PanelWidgetClass            *widget_class,
+                                   const char                  *action_name,
+                                   const char                  *parameter_type,
+                                   GtkWidgetActionActivateFunc  activate)
+{
+  PanelAction *action;
+
+  g_return_if_fail (PANEL_IS_WIDGET_CLASS (widget_class));
+  g_return_if_fail (action_name != NULL);
+  g_return_if_fail (activate != NULL);
+
+  action = g_new0 (PanelAction, 1);
+  action->owner = G_TYPE_FROM_CLASS (widget_class);
+  action->name = g_intern_string (action_name);
+  if (parameter_type != NULL)
+    action->parameter_type = g_variant_type_new (parameter_type);
+  action->activate = (PanelActionActivateFunc)activate;
+
+  panel_widget_class_add_action (widget_class, action);
+}
+
+static const GVariantType *
+determine_type (GParamSpec *pspec)
+{
+  if (G_TYPE_IS_ENUM (pspec->value_type))
+    return G_VARIANT_TYPE_STRING;
+
+  switch (pspec->value_type)
+    {
+    case G_TYPE_BOOLEAN:
+      return G_VARIANT_TYPE_BOOLEAN;
+
+    case G_TYPE_INT:
+      return G_VARIANT_TYPE_INT32;
+
+    case G_TYPE_UINT:
+      return G_VARIANT_TYPE_UINT32;
+
+    case G_TYPE_DOUBLE:
+    case G_TYPE_FLOAT:
+      return G_VARIANT_TYPE_DOUBLE;
+
+    case G_TYPE_STRING:
+      return G_VARIANT_TYPE_STRING;
+
+    default:
+      g_critical ("Unable to use panel_widget_class_install_property_action with property '%s:%s' of type '%s'",
+                  g_type_name (pspec->owner_type), pspec->name, g_type_name (pspec->value_type));
+      return NULL;
+    }
+}
+
+/**
+ * panel_widget_class_install_property_action:
+ * @widget_class: a `GtkWidgetClass`
+ * @action_name: name of the action
+ * @property_name: name of the property in instances of @widget_class
+ *   or any parent class.
+ *
+ * Installs an action called @action_name on @widget_class and
+ * binds its state to the value of the @property_name property.
+ *
+ * This function will perform a few santity checks on the property selected
+ * via @property_name. Namely, the property must exist, must be readable,
+ * writable and must not be construct-only. There are also restrictions
+ * on the type of the given property, it must be boolean, int, unsigned int,
+ * double or string. If any of these conditions are not met, a critical
+ * warning will be printed and no action will be added.
+ *
+ * The state type of the action matches the property type.
+ *
+ * If the property is boolean, the action will have no parameter and
+ * toggle the property value. Otherwise, the action will have a parameter
+ * of the same type as the property.
+ */
+void
+panel_widget_class_install_property_action (PanelWidgetClass *widget_class,
+                                            const char       *action_name,
+                                            const char       *property_name)
+{
+  const GVariantType *state_type;
+  PanelAction *action;
+  GParamSpec *pspec;
+
+  g_return_if_fail (GTK_IS_WIDGET_CLASS (widget_class));
+
+  if (!(pspec = g_object_class_find_property (G_OBJECT_CLASS (widget_class), property_name)))
+    {
+      g_critical ("Attempted to use non-existent property '%s:%s' for panel_widget_class_install_property_action",
+                  G_OBJECT_CLASS_NAME (widget_class), property_name);
+      return;
+    }
+
+  if (~pspec->flags & G_PARAM_READABLE || ~pspec->flags & G_PARAM_WRITABLE || pspec->flags & G_PARAM_CONSTRUCT_ONLY)
+    {
+      g_critical ("Property '%s:%s' used with panel_widget_class_install_property_action must be readable, writable, and not construct-only",
+                  G_OBJECT_CLASS_NAME (widget_class), property_name);
+      return;
+    }
+
+  state_type = determine_type (pspec);
+
+  if (!state_type)
+    return;
+
+  action = g_new0 (PanelAction, 1);
+  action->owner = G_TYPE_FROM_CLASS (widget_class);
+  action->name = g_intern_string (action_name);
+  action->pspec = pspec;
+  action->state_type = state_type;
+  if (action->pspec->value_type != G_TYPE_BOOLEAN)
+    action->parameter_type = action->state_type;
+
+  panel_widget_class_add_action (widget_class, action);
+}
+
+void
+panel_widget_action_set_enabled (PanelWidget *self,
+                                 const char  *action_name,
+                                 gboolean     enabled)
+{
+  PanelWidgetClassPrivate *class_priv;
+  PanelActionMuxer *muxer;
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+  g_return_if_fail (action_name != NULL);
+
+  class_priv = panel_widget_class_get_private (PANEL_WIDGET_GET_CLASS (self));
+  muxer = _panel_widget_get_action_muxer (self);
+
+  for (const PanelAction *iter = class_priv->actions; iter; iter = iter->next)
+    {
+      if (g_strcmp0 (iter->name, action_name) == 0)
+        {
+          panel_action_muxer_set_enabled (muxer, iter, enabled);
+          break;
+        }
+    }
 }
