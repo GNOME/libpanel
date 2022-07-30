@@ -47,6 +47,7 @@ G_DEFINE_TYPE_WITH_CODE (PanelOmniBar, panel_omni_bar, GTK_TYPE_WIDGET,
 
 enum {
   PROP_0,
+  PROP_ACTION_TOOLTIP,
   PROP_POPOVER,
   PROP_PROGRESS,
   PROP_ICON_NAME,
@@ -179,6 +180,10 @@ panel_omni_bar_get_property (GObject    *object,
                            gtk_actionable_get_action_target_value (GTK_ACTIONABLE (priv->button)));
       break;
 
+    case PROP_ACTION_TOOLTIP:
+      g_value_set_string (value, gtk_widget_get_tooltip_text (GTK_WIDGET (priv->button)));
+      break;
+
     case PROP_POPOVER:
       g_value_set_object (value, panel_omni_bar_get_popover (self));
       break;
@@ -221,6 +226,10 @@ panel_omni_bar_set_property (GObject      *object,
                                               g_value_get_variant (value));
       break;
 
+    case PROP_ACTION_TOOLTIP:
+      gtk_widget_set_tooltip_text (GTK_WIDGET (priv->button), g_value_get_string (value));
+      break;
+
     case PROP_POPOVER:
       panel_omni_bar_set_popover (self, g_value_get_object (value));
       break;
@@ -256,6 +265,10 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
 
   g_object_class_override_property (object_class, PROP_ACTION_NAME, "action-name");
   g_object_class_override_property (object_class, PROP_ACTION_TARGET, "action-target");
+
+  properties[PROP_ACTION_TOOLTIP] =
+    g_param_spec_string ("action-tooltip", NULL, NULL, NULL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_ICON_NAME] =
     g_param_spec_string ("icon-name",
