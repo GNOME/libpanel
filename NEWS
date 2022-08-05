@@ -1,3 +1,11 @@
+libpanel 1.0.alpha1
+===================
+
+Another update to libpanel as we progress to GNOME 43.
+
+This includes a lot of action muxer and action group additions to
+simplify how we dispatch actions from frames to pages.
+
 libpanel 1.0.alpha
 ==================
 
