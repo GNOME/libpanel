@@ -1,0 +1,7 @@
+src/panel-frame-header-bar.c
+src/panel-frame-header-bar.ui
+src/panel-frame.ui
+src/panel-maximized-controls.c
+src/panel-save-dialog.c
+src/panel-save-dialog.ui
+src/panel-signal-group.c
