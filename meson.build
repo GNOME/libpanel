@@ -198,5 +198,6 @@ subdir('src')
 subdir('example')
 subdir('testsuite')
 subdir('po')
+subdir('docs')
 
 gnome.post_install(gtk_update_icon_cache: true)
