@@ -679,8 +679,8 @@ panel_grid_agree_to_close_cb (GObject      *object,
                               gpointer      user_data)
 {
   PanelSaveDialog *dialog = (PanelSaveDialog *)object;
-  g_autoptr(GError) error = NULL;
-  g_autoptr(GTask) task = user_data;
+  GError *error = NULL;
+  GTask *task = user_data;
 
   g_assert (PANEL_IS_SAVE_DIALOG (dialog));
   g_assert (G_IS_ASYNC_RESULT (result));
@@ -689,7 +689,9 @@ panel_grid_agree_to_close_cb (GObject      *object,
   if (panel_save_dialog_run_finish (dialog, result, &error))
     g_task_return_boolean (task, TRUE);
   else
-    g_task_return_error (task, g_steal_pointer (&error));
+    g_task_return_error (task, error);
+
+  g_clear_object (&task);
 }
 
 void
@@ -698,8 +700,8 @@ panel_grid_agree_to_close_async (PanelGrid           *self,
                                  GAsyncReadyCallback  callback,
                                  gpointer             user_data)
 {
-  g_autoptr(GTask) task = NULL;
   PanelSaveDialog *dialog;
+  GTask *task = NULL;
 
   g_return_if_fail (PANEL_IS_GRID (self));
   g_return_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable));
