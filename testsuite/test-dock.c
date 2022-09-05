@@ -90,7 +90,7 @@ main (int argc,
   GMainLoop *main_loop;
   GtkBuilder *builder;
   GtkWindow *window;
-  g_autofree char *filename = NULL;
+  char *filename = NULL;
   GtkBuilderScope *scope;
   GError *error = NULL;
 
@@ -106,6 +106,7 @@ main (int argc,
   gtk_builder_cscope_add_callback_symbol (GTK_BUILDER_CSCOPE (scope), "create_frame_cb", G_CALLBACK (create_frame_cb));
   gtk_builder_cscope_add_callback_symbol (GTK_BUILDER_CSCOPE (scope), "add_clicked_cb", G_CALLBACK (add_clicked_cb));
   gtk_builder_add_from_file (builder, filename, &error);
+  g_clear_pointer (&filename, g_free);
   g_assert_no_error (error);
 
   menu_model = G_MENU_MODEL (gtk_builder_get_object (builder, "page_menu"));
