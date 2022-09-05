@@ -34,7 +34,7 @@ struct _PanelThemeSelector
   GtkToggleButton *light;
   GtkToggleButton *follow;
 
-  char            *action_name;;
+  char            *action_name;
 };
 
 G_DEFINE_TYPE (PanelThemeSelector, panel_theme_selector, GTK_TYPE_WIDGET)
