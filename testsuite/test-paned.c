@@ -18,7 +18,7 @@ main (int argc,
 
   for (guint i = 0; i < 5; i++)
     {
-      g_autofree char *label = g_strdup_printf ("Button %u", i);
+      char *label = g_strdup_printf ("Button %u", i);
       GtkWidget *button = gtk_button_new ();
       gtk_button_set_label (GTK_BUTTON (button), label);
       panel_paned_append (PANEL_PANED (paned), button);
@@ -27,6 +27,8 @@ main (int argc,
         gtk_widget_set_hexpand (button, TRUE);
 
       g_signal_connect_swapped (button, "clicked", G_CALLBACK (panel_paned_remove), paned);
+
+      g_clear_pointer (&label, g_free);
     }
 
   g_signal_connect_swapped (window, "close-request", G_CALLBACK (g_main_loop_quit), main_loop);

@@ -142,7 +142,7 @@ panel_save_dialog_run_async (PanelSaveDialog     *self,
                              GAsyncReadyCallback  callback,
                              gpointer             user_data)
 {
-  g_autoptr(GTask) task = NULL;
+  GTask *task = NULL;
 
   g_return_if_fail (PANEL_IS_SAVE_DIALOG (self));
   g_return_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable));
@@ -156,6 +156,7 @@ panel_save_dialog_run_async (PanelSaveDialog     *self,
     {
       gtk_window_destroy (GTK_WINDOW (self));
       g_task_return_boolean (task, TRUE);
+      g_clear_object (&task);
       return;
     }
 
@@ -165,10 +166,12 @@ panel_save_dialog_run_async (PanelSaveDialog     *self,
                                G_IO_ERROR,
                                G_IO_ERROR_INVAL,
                                "Run has already been called");
+      g_clear_object (&task);
       return;
     }
 
-  g_set_object (&self->task, task);
+  g_clear_object (&self->task);
+  self->task = g_steal_pointer (&task);
 
   gtk_window_present (GTK_WINDOW (self));
 }

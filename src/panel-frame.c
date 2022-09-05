@@ -113,8 +113,8 @@ panel_frame_save_cb (GObject      *object,
                      gpointer      user_data)
 {
   PanelSaveDialog *dialog = (PanelSaveDialog *)object;
-  g_autoptr(PanelFrame) self = user_data;
-  g_autoptr(GError) error = NULL;
+  PanelFrame *self = user_data;
+  GError *error = NULL;
   GtkWidget *dock;
   GtkWidget *grid;
 
@@ -126,6 +126,7 @@ panel_frame_save_cb (GObject      *object,
     {
       if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
         g_warning ("%s", error->message);
+      g_clear_error (&error);
       return;
     }
 
@@ -134,6 +135,8 @@ panel_frame_save_cb (GObject      *object,
     g_return_if_reached ();
 
   _panel_dock_remove_frame (PANEL_DOCK (dock), self);
+
+  g_clear_object (&self);
 }
 
 static void

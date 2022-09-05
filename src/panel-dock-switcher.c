@@ -174,7 +174,7 @@ panel_dock_switcher_notify_can_reveal_cb (PanelDock   *dock,
                                           GParamSpec  *pspec,
                                           GtkRevealer *revealer)
 {
-  g_auto(GValue) value = G_VALUE_INIT;
+  GValue value = G_VALUE_INIT;
 
   g_assert (PANEL_IS_DOCK (dock));
   g_assert (G_IS_PARAM_SPEC_BOOLEAN (pspec));
@@ -192,6 +192,8 @@ panel_dock_switcher_notify_can_reveal_cb (PanelDock   *dock,
     {
       gtk_revealer_set_reveal_child (revealer, FALSE);
     }
+
+  g_value_unset (&value);
 }
 
 static void
@@ -223,7 +225,7 @@ panel_dock_switcher_set_dock (PanelDockSwitcher *self,
   if (self->dock)
     {
       const char *nick = NULL;
-      g_autofree char *notify = NULL;
+      char *notify = NULL;
 
       switch (self->position)
         {
@@ -261,6 +263,8 @@ panel_dock_switcher_set_dock (PanelDockSwitcher *self,
                                G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
                                self->revealer,
                                0);
+
+      g_clear_pointer (&notify, g_free);
     }
 }
 

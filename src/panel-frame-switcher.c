@@ -304,7 +304,7 @@ panel_frame_switcher_click_pressed_cb (PanelFrameSwitcher *self,
   if (n_presses == 2)
     {
       GtkWidget *child = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
-      g_autoptr(GListModel) pages = NULL;
+      GListModel *pages = NULL;
       AdwTabPage *page;
       guint i = 0;
 
@@ -323,6 +323,7 @@ panel_frame_switcher_click_pressed_cb (PanelFrameSwitcher *self,
       pages = G_LIST_MODEL (panel_frame_get_pages (self->frame));
       page = g_list_model_get_item (pages, i);
       child = adw_tab_page_get_child (page);
+      g_clear_object (&pages);
       g_clear_object (&page);
 
       if (PANEL_IS_WIDGET (child))
@@ -386,7 +387,7 @@ panel_frame_switcher_drag_begin_cb (PanelFrameSwitcher *self,
                                     GdkDrag            *drag,
                                     GtkDragSource      *source)
 {
-  g_autoptr(GdkPaintable) paintable = NULL;
+  GdkPaintable *paintable = NULL;
   GtkWidget *dock;
 
   g_assert (PANEL_IS_FRAME_SWITCHER (self));
@@ -436,6 +437,8 @@ panel_frame_switcher_drag_begin_cb (PanelFrameSwitcher *self,
       g_set_weak_pointer (&self->drag_dock, PANEL_DOCK (dock));
       _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
     }
+
+  g_clear_object (&paintable);
 }
 
 static void

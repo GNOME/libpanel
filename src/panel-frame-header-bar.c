@@ -176,8 +176,9 @@ panel_frame_header_bar_set_frame (PanelFrameHeaderBar *self,
 
   if (self->frame)
     {
-      g_autoptr(GtkSelectionModel) pages = panel_frame_get_pages (self->frame);
+      GtkSelectionModel *pages = panel_frame_get_pages (self->frame);
       gtk_list_view_set_model (self->list_view, pages);
+      g_clear_object (&pages);
     }
 
   g_object_notify (G_OBJECT (self), "frame");
@@ -230,7 +231,7 @@ drag_begin_cb (PanelFrameHeaderBar *self,
                GdkDrag             *drag,
                GtkDragSource       *drag_source)
 {
-  g_autoptr(GdkPaintable) paintable = NULL;
+  GdkPaintable *paintable = NULL;
   GtkWidget *dock;
 
   g_assert (PANEL_IS_FRAME_HEADER_BAR (self));
@@ -279,6 +280,8 @@ drag_begin_cb (PanelFrameHeaderBar *self,
       _panel_dock_begin_drag (PANEL_DOCK (dock), PANEL_WIDGET (self->drag_panel));
       g_set_weak_pointer (&self->drag_dock, dock);
     }
+
+  g_clear_object (&paintable);
 }
 
 static void

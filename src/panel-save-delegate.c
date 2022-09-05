@@ -70,7 +70,7 @@ panel_save_delegate_real_save_async (PanelSaveDelegate   *self,
                                      GAsyncReadyCallback  callback,
                                      gpointer             user_data)
 {
-  g_autoptr(GTask) task = NULL;
+  GTask *task = NULL;
 
   g_assert (PANEL_IS_SAVE_DELEGATE (self));
   g_assert (!cancellable || G_IS_CANCELLABLE (cancellable));
@@ -78,6 +78,7 @@ panel_save_delegate_real_save_async (PanelSaveDelegate   *self,
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_save_delegate_real_save_async);
   g_signal_emit (self, signals [SAVE], 0, task);
+  g_clear_object (&task);
 }
 
 static gboolean

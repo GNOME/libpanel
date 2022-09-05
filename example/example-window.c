@@ -173,7 +173,7 @@ set_high_contrast_action (GSimpleAction *action,
                           GVariant      *param,
                           gpointer       user_data)
 {
-  g_autoptr(GVariant) v = g_action_get_state (G_ACTION (action));
+  GVariant *v = g_action_get_state (G_ACTION (action));
 
   if (!v ||
       !g_variant_is_of_type (v, G_VARIANT_TYPE_BOOLEAN) ||
@@ -181,6 +181,8 @@ set_high_contrast_action (GSimpleAction *action,
     g_simple_action_set_state (action, g_variant_new_boolean (TRUE));
   else
     g_simple_action_set_state (action, g_variant_new_boolean (FALSE));
+
+  g_clear_pointer (&v, g_variant_unref);
 }
 
 static void
@@ -188,7 +190,7 @@ set_rtl_action (GSimpleAction *action,
                 GVariant      *param,
                 gpointer       user_data)
 {
-  g_autoptr(GVariant) v = g_action_get_state (G_ACTION (action));
+  GVariant *v = g_action_get_state (G_ACTION (action));
 
   if (!v ||
       !g_variant_is_of_type (v, G_VARIANT_TYPE_BOOLEAN) ||
@@ -196,6 +198,8 @@ set_rtl_action (GSimpleAction *action,
     g_simple_action_set_state (action, g_variant_new_boolean (TRUE));
   else
     g_simple_action_set_state (action, g_variant_new_boolean (FALSE));
+
+  g_clear_pointer (&v, g_variant_unref);
 }
 
 static void
@@ -353,9 +357,9 @@ example_window_init (ExampleWindow *self)
     { "high-contrast", set_high_contrast_action, NULL, "false" },
     { "right-to-left", set_rtl_action, NULL, "false" },
   };
-  g_autoptr(GPropertyAction) reveal_start = NULL;
-  g_autoptr(GPropertyAction) reveal_end = NULL;
-  g_autoptr(GPropertyAction) reveal_bottom = NULL;
+  GPropertyAction *reveal_start = NULL;
+  GPropertyAction *reveal_end = NULL;
+  GPropertyAction *reveal_bottom = NULL;
   AdwStyleManager *style_manager = adw_style_manager_get_default ();
   GtkPopover *popover;
 
@@ -390,4 +394,8 @@ example_window_init (ExampleWindow *self)
   gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover),
                               GTK_WIDGET (self->theme_selector),
                               "theme");
+
+  g_clear_object (&reveal_start);
+  g_clear_object (&reveal_end);
+  g_clear_object (&reveal_bottom);
 }

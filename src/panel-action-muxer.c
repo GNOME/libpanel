@@ -193,7 +193,7 @@ panel_action_muxer_action_group_action_added_cb (GActionGroup        *action_gro
                                                  const char          *action_name,
                                                  PrefixedActionGroup *pag)
 {
-  g_autofree char *full_name = NULL;
+  char *full_name = NULL;
 
   g_assert (G_IS_ACTION_GROUP (action_group));
   g_assert (action_name != NULL);
@@ -203,6 +203,7 @@ panel_action_muxer_action_group_action_added_cb (GActionGroup        *action_gro
 
   full_name = g_strconcat (pag->prefix, action_name, NULL);
   g_action_group_action_added (G_ACTION_GROUP (pag->backptr), full_name);
+  g_clear_pointer (&full_name, g_free);
 }
 
 static void
@@ -210,7 +211,7 @@ panel_action_muxer_action_group_action_removed_cb (GActionGroup        *action_g
                                                    const char          *action_name,
                                                    PrefixedActionGroup *pag)
 {
-  g_autofree char *full_name = NULL;
+  char *full_name = NULL;
 
   g_assert (G_IS_ACTION_GROUP (action_group));
   g_assert (action_name != NULL);
@@ -220,6 +221,7 @@ panel_action_muxer_action_group_action_removed_cb (GActionGroup        *action_g
 
   full_name = g_strconcat (pag->prefix, action_name, NULL);
   g_action_group_action_removed (G_ACTION_GROUP (pag->backptr), full_name);
+  g_clear_pointer (&full_name, g_free);
 }
 
 static void
@@ -228,7 +230,7 @@ panel_action_muxer_action_group_action_enabled_changed_cb (GActionGroup        *
                                                            gboolean             enabled,
                                                            PrefixedActionGroup *pag)
 {
-  g_autofree char *full_name = NULL;
+  char *full_name = NULL;
 
   g_assert (G_IS_ACTION_GROUP (action_group));
   g_assert (action_name != NULL);
@@ -238,6 +240,7 @@ panel_action_muxer_action_group_action_enabled_changed_cb (GActionGroup        *
 
   full_name = g_strconcat (pag->prefix, action_name, NULL);
   g_action_group_action_enabled_changed (G_ACTION_GROUP (pag->backptr), full_name, enabled);
+  g_clear_pointer (&full_name, g_free);
 }
 
 static void
@@ -246,7 +249,7 @@ panel_action_muxer_action_group_action_state_changed_cb (GActionGroup        *ac
                                                          GVariant            *value,
                                                          PrefixedActionGroup *pag)
 {
-  g_autofree char *full_name = NULL;
+  char *full_name = NULL;
 
   g_assert (G_IS_ACTION_GROUP (action_group));
   g_assert (action_name != NULL);
@@ -256,6 +259,7 @@ panel_action_muxer_action_group_action_state_changed_cb (GActionGroup        *ac
 
   full_name = g_strconcat (pag->prefix, action_name, NULL);
   g_action_group_action_state_changed (G_ACTION_GROUP (pag->backptr), full_name, value);
+  g_clear_pointer (&full_name, g_free);
 }
 
 void
@@ -263,7 +267,7 @@ panel_action_muxer_insert_action_group (PanelActionMuxer *self,
                                         const char       *prefix,
                                         GActionGroup     *action_group)
 {
-  g_autofree char *prefix_dot = NULL;
+  char *prefix_dot = NULL;
 
   g_return_if_fail (PANEL_IS_ACTION_MUXER (self));
   g_return_if_fail (self->n_recurse == 0);
@@ -285,7 +289,7 @@ panel_action_muxer_insert_action_group (PanelActionMuxer *self,
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
-      g_auto(GStrv) action_names = NULL;
+      GStrv action_names = NULL;
 
       g_assert (pag->prefix != NULL);
       g_assert (G_IS_ACTION_GROUP (pag->action_group));
@@ -308,10 +312,12 @@ panel_action_muxer_insert_action_group (PanelActionMuxer *self,
       /* Notify any actiongroup listeners of removed actions */
       for (guint j = 0; action_names[j]; j++)
         {
-          g_autofree char *action_name = g_strconcat (prefix_dot, action_names[j], NULL);
+          char *action_name = g_strconcat (prefix_dot, action_names[j], NULL);
           g_action_group_action_removed (G_ACTION_GROUP (self), action_name);
+          g_clear_pointer (&action_name, g_free);
         }
 
+      g_clear_pointer (&action_names, g_strfreev);
       break;
     }
 
@@ -320,7 +326,7 @@ panel_action_muxer_insert_action_group (PanelActionMuxer *self,
    */
   if (action_group != NULL)
     {
-      g_auto(GStrv) action_names = g_action_group_list_actions (action_group);
+      GStrv action_names = g_action_group_list_actions (action_group);
       PrefixedActionGroup *new_pag = g_rc_box_new0 (PrefixedActionGroup);
 
       new_pag->backptr = self;
@@ -358,12 +364,17 @@ panel_action_muxer_insert_action_group (PanelActionMuxer *self,
 
       for (guint j = 0; action_names[j]; j++)
         {
-          g_autofree char *action_name = g_strconcat (prefix_dot, action_names[j], NULL);
+          char *action_name = g_strconcat (prefix_dot, action_names[j], NULL);
           g_action_group_action_added (G_ACTION_GROUP (self), action_name);
+          g_clear_pointer (&action_name, g_free);
         }
+
+      g_clear_pointer (&action_names, g_strfreev);
     }
 
   self->n_recurse--;
+
+  g_clear_pointer (&prefix_dot, g_free);
 }
 
 void
@@ -392,7 +403,8 @@ GActionGroup *
 panel_action_muxer_get_action_group (PanelActionMuxer *self,
                                      const char       *prefix)
 {
-  g_autofree char *prefix_dot = NULL;
+  GActionGroup *action_group = NULL;
+  char *prefix_dot = NULL;
 
   g_return_val_if_fail (PANEL_IS_ACTION_MUXER (self), NULL);
   g_return_val_if_fail (prefix!= NULL, NULL);
@@ -404,10 +416,15 @@ panel_action_muxer_get_action_group (PanelActionMuxer *self,
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
 
       if (g_strcmp0 (pag->prefix, prefix_dot) == 0)
-        return pag->action_group;
+        {
+          action_group = pag->action_group;
+          break;
+        }
     }
 
-  return NULL;
+  g_clear_pointer (&prefix_dot, g_free);
+
+  return action_group;
 }
 
 static gboolean
@@ -453,13 +470,15 @@ panel_action_muxer_list_actions (GActionGroup *group)
   for (guint i = 0; i < self->action_groups->len; i++)
     {
       const PrefixedActionGroup *pag = g_ptr_array_index (self->action_groups, i);
-      g_auto(GStrv) action_names = g_action_group_list_actions (pag->action_group);
+      GStrv action_names = g_action_group_list_actions (pag->action_group);
 
       for (guint j = 0; action_names[j]; j++)
         {
           char *full_action_name = g_strconcat (pag->prefix, action_names[j], NULL);
           g_array_append_val (ar, full_action_name);
         }
+
+      g_clear_pointer (&action_names, g_strfreev);
     }
 
   return (char **)g_array_free (ar, FALSE);
@@ -750,7 +769,7 @@ action_group_iface_init (GActionGroupInterface *iface)
 void
 panel_action_muxer_remove_all (PanelActionMuxer *self)
 {
-  g_auto(GStrv) action_groups = NULL;
+  GStrv action_groups = NULL;
 
   g_return_if_fail (PANEL_IS_ACTION_MUXER (self));
 
@@ -759,6 +778,8 @@ panel_action_muxer_remove_all (PanelActionMuxer *self)
       for (guint i = 0; action_groups[i]; i++)
         panel_action_muxer_remove_action_group (self, action_groups[i]);
     }
+
+  g_clear_pointer (&action_groups, g_strfreev);
 }
 
 void
@@ -787,8 +808,8 @@ panel_action_muxer_property_action_notify_cb (PanelActionMuxer *self,
                                               GParamSpec       *pspec,
                                               gpointer          instance)
 {
-  g_autoptr(GVariant) state = NULL;
   const PanelAction *action;
+  GVariant *state = NULL;
 
   g_assert (PANEL_IS_ACTION_MUXER (self));
   g_assert (pspec != NULL);
@@ -800,6 +821,7 @@ panel_action_muxer_property_action_notify_cb (PanelActionMuxer *self,
   state = get_property_state (instance, action->pspec, action->state_type);
 
   g_action_group_action_state_changed (G_ACTION_GROUP (self), action->name, state);
+  g_clear_pointer (&state, g_variant_unref);
 }
 
 static void
