@@ -1,8 +1,8 @@
 [library]
 namespace = "libpanel"
 version = "@PANEL_VERSION@"
-browse_url = "https://gitlab.gnome.org/chergert/libpanel"
-repository_url = "https://gitlab.gnome.org/chergert/libpanel.git"
+browse_url = "https://gitlab.gnome.org/GNOME/libpanel"
+repository_url = "https://gitlab.gnome.org/GNOME/libpanel.git"
 authors = "Christian Hergert"
 license = "LGPL"
 description = "A dock/panel library for GTK 4"
@@ -31,7 +31,7 @@ show_index_summary = true
 show_class_hierarchy = true
 
 [source-location]
-base_url = "https://gitlab.gnome.org/chergert/libpanel/-/blob/main/"
+base_url = "https://gitlab.gnome.org/GNOME/libpanel/-/blob/main/"
 
 [extra]
 urlmap_file = "urlmap.js"
