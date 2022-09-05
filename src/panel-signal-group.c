@@ -194,7 +194,7 @@ static void
 panel_signal_group_bind (PanelSignalGroup *self,
                          GObject          *target)
 {
-  g_autoptr(GObject) hold = NULL;
+  GObject *hold = NULL;
 
   g_assert (PANEL_IS_SIGNAL_GROUP (self));
   g_assert (!target || G_IS_OBJECT (target));
@@ -219,12 +219,14 @@ panel_signal_group_bind (PanelSignalGroup *self,
     }
 
   g_signal_emit (self, signals [BIND], 0, hold);
+
+  g_clear_object (&hold);
 }
 
 static void
 panel_signal_group_unbind (PanelSignalGroup *self)
 {
-  g_autoptr(GObject) target = NULL;
+  GObject *target = NULL;
 
   g_return_if_fail (PANEL_IS_SIGNAL_GROUP (self));
 
@@ -276,6 +278,8 @@ panel_signal_group_unbind (PanelSignalGroup *self)
     }
 
   g_signal_emit (self, signals [UNBIND], 0);
+
+  g_clear_object (&target);
 }
 
 static gboolean
@@ -310,7 +314,7 @@ panel_signal_group_check_target_type (PanelSignalGroup *self,
 void
 panel_signal_group_block (PanelSignalGroup *self)
 {
-  g_autoptr(GObject) target = NULL;
+  GObject *target = NULL;
 
   g_return_if_fail (PANEL_IS_SIGNAL_GROUP (self));
   g_return_if_fail (self->block_count != G_MAXSIZE);
@@ -333,6 +337,8 @@ panel_signal_group_block (PanelSignalGroup *self)
 
       g_signal_handler_block (target, handler->handler_id);
     }
+
+  g_clear_object (&target);
 }
 
 /**
@@ -349,7 +355,7 @@ panel_signal_group_block (PanelSignalGroup *self)
 void
 panel_signal_group_unblock (PanelSignalGroup *self)
 {
-  g_autoptr(GObject) target = NULL;
+  GObject *target = NULL;
 
   g_return_if_fail (PANEL_IS_SIGNAL_GROUP (self));
   g_return_if_fail (self->block_count != 0);
@@ -372,6 +378,8 @@ panel_signal_group_unblock (PanelSignalGroup *self)
 
       g_signal_handler_unblock (target, handler->handler_id);
     }
+
+  g_clear_object (&target);
 }
 
 /**
@@ -385,7 +393,7 @@ panel_signal_group_unblock (PanelSignalGroup *self)
 gpointer
 panel_signal_group_get_target (PanelSignalGroup *self)
 {
-  g_autoptr(GObject) target = NULL;
+  GObject *target = NULL;
 
   g_return_val_if_fail (PANEL_IS_SIGNAL_GROUP (self), NULL);
 
@@ -399,12 +407,16 @@ panel_signal_group_get_target (PanelSignalGroup *self)
    */
 
   if (target == NULL || target->ref_count < 2)
-    return NULL;
+    {
+      g_clear_object (&target);
+      return NULL;
+    }
 
   /* Unref and pass back a borrowed reference. This looks unsafe, but is safe
    * because of our reference check above, so much as the assertion holds that
    * the caller obeyed the ownership rules of this class.
    */
+  g_object_unref (target);
   return target;
 }
 
@@ -425,7 +437,7 @@ void
 panel_signal_group_set_target (PanelSignalGroup *self,
                                gpointer          target)
 {
-  g_autoptr(GObject) object = NULL;
+  GObject *object = NULL;
 
   g_return_if_fail (PANEL_IS_SIGNAL_GROUP (self));
 
@@ -435,7 +447,10 @@ panel_signal_group_set_target (PanelSignalGroup *self,
     return;
 
   if (!panel_signal_group_check_target_type (self, target))
-    return;
+    {
+      g_clear_object (&object);
+      return;
+    }
 
   /* Only emit unbind if we've ever called bind */
   if (self->has_bound_at_least_once)
@@ -444,6 +459,8 @@ panel_signal_group_set_target (PanelSignalGroup *self,
   panel_signal_group_bind (self, target);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TARGET]);
+
+  g_clear_object (&object);
 }
 
 static void
@@ -465,12 +482,14 @@ static void
 panel_signal_group_constructed (GObject *object)
 {
   PanelSignalGroup *self = (PanelSignalGroup *)object;
-  g_autoptr(GObject) target = g_weak_ref_get (&self->target_ref);
+  GObject *target = g_weak_ref_get (&self->target_ref);
 
   if (!panel_signal_group_check_target_type (self, target))
     panel_signal_group_set_target (self, NULL);
 
   G_OBJECT_CLASS (panel_signal_group_parent_class)->constructed (object);
+
+  g_clear_object (&target);
 }
 
 static void
@@ -655,9 +674,9 @@ panel_signal_group_connect_full (PanelSignalGroup *self,
                                  GConnectFlags     flags,
                                  gboolean          is_object)
 {
-  g_autoptr(GObject) target = NULL;
   SignalHandler *handler;
   GClosure *closure;
+  GObject *target = NULL;
   guint signal_id;
   GQuark signal_detail;
 
@@ -699,6 +718,8 @@ panel_signal_group_connect_full (PanelSignalGroup *self,
 
   /* Lazily remove any old handlers on connect */
   panel_signal_group_gc_handlers (self);
+
+  g_clear_object (&target);
 }
 
 /**
