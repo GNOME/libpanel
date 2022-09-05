@@ -200,9 +200,9 @@ panel_widget_save_cb (GObject      *object,
                       gpointer      user_data)
 {
   PanelSaveDelegate *save_delegate = (PanelSaveDelegate *)object;
-  g_autoptr(PanelWidget) self = user_data;
+  PanelWidget *self = user_data;
   PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
-  g_autoptr(GError) error = NULL;
+  GError *error = NULL;
 
   g_assert (PANEL_IS_SAVE_DELEGATE (save_delegate));
   g_assert (G_IS_ASYNC_RESULT (result));
@@ -216,9 +216,11 @@ panel_widget_save_cb (GObject      *object,
        *       display to the user via adwaita infobar replacement.
        */
       g_warning ("Failed to save: %s", error->message);
+      g_clear_error (&error);
     }
 
   panel_widget_update_actions (self);
+  g_clear_object (&self);
 }
 
 static void
