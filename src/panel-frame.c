@@ -548,6 +548,18 @@ panel_frame_compute_expand (GtkWidget *widget,
     }
 }
 
+static gboolean
+panel_frame_grab_focus (GtkWidget *widget)
+{
+  PanelFrame *self = PANEL_FRAME (widget);
+  PanelWidget *child = panel_frame_get_visible_child (self);
+
+  if (child != NULL)
+    return gtk_widget_grab_focus (GTK_WIDGET (child));
+
+  return FALSE;
+}
+
 static void
 panel_frame_dispose (GObject *object)
 {
@@ -653,6 +665,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   object_class->get_property = panel_frame_get_property;
   object_class->set_property = panel_frame_set_property;
 
+  widget_class->grab_focus = panel_frame_grab_focus;
   widget_class->root = panel_frame_root;
   widget_class->unroot = panel_frame_unroot;
   widget_class->compute_expand = panel_frame_compute_expand;

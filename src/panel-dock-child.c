@@ -52,6 +52,12 @@ enum {
 
 static GParamSpec *properties [N_PROPS];
 
+static gboolean
+panel_dock_child_grab_focus (GtkWidget *widget)
+{
+  return gtk_widget_grab_focus (GTK_WIDGET (PANEL_DOCK_CHILD (widget)->resizer));
+}
+
 static void
 panel_dock_child_dispose (GObject *object)
 {
@@ -125,6 +131,8 @@ panel_dock_child_class_init (PanelDockChildClass *klass)
   object_class->dispose = panel_dock_child_dispose;
   object_class->get_property = panel_dock_child_get_property;
   object_class->set_property = panel_dock_child_set_property;
+
+  widget_class->grab_focus = panel_dock_child_grab_focus;
 
   properties [PROP_REVEAL_CHILD] =
     g_param_spec_boolean ("reveal-child",

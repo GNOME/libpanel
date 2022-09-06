@@ -345,6 +345,17 @@ panel_resizer_compute_expand (GtkWidget *widget,
     }
 }
 
+static gboolean
+panel_resizer_grab_focus (GtkWidget *widget)
+{
+  PanelResizer *self = PANEL_RESIZER (widget);
+
+  if (self->child != NULL)
+    return gtk_widget_grab_focus (self->child);
+
+  return FALSE;
+}
+
 static void
 panel_resizer_dispose (GObject *object)
 {
@@ -405,6 +416,7 @@ panel_resizer_class_init (PanelResizerClass *klass)
   object_class->set_property = panel_resizer_set_property;
 
   widget_class->compute_expand = panel_resizer_compute_expand;
+  widget_class->grab_focus = panel_resizer_grab_focus;
   widget_class->measure = panel_resizer_measure;
   widget_class->size_allocate = panel_resizer_size_allocate;
 

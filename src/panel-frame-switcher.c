@@ -73,6 +73,20 @@ enum {
   PROP_ORIENTATION,
 };
 
+static gboolean
+panel_frame_switcher_grab_focus (GtkWidget *widget)
+{
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (gtk_widget_grab_focus (child))
+        return TRUE;
+    }
+
+  return FALSE;
+}
+
 static void
 ensure_indicator (PanelFrameSwitcher *self)
 {
@@ -868,6 +882,7 @@ panel_frame_switcher_class_init (PanelFrameSwitcherClass *class)
   object_class->dispose = panel_frame_switcher_dispose;
   object_class->finalize = panel_frame_switcher_finalize;
 
+  widget_class->grab_focus = panel_frame_switcher_grab_focus;
   widget_class->snapshot = panel_frame_switcher_snapshot;
   widget_class->css_changed = panel_frame_switcher_css_changed;
 

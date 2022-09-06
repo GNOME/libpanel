@@ -293,6 +293,20 @@ panel_widget_size_allocate (GtkWidget *widget,
     gtk_widget_allocate (priv->child, width, height, baseline, NULL);
 }
 
+static gboolean
+panel_widget_grab_focus (GtkWidget *widget)
+{
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (gtk_widget_grab_focus (child))
+        return TRUE;
+    }
+
+  return FALSE;
+}
+
 static void
 panel_widget_constructed (GObject *object)
 {
@@ -466,6 +480,7 @@ panel_widget_class_init (PanelWidgetClass *klass)
   object_class->get_property = panel_widget_get_property;
   object_class->set_property = panel_widget_set_property;
 
+  widget_class->grab_focus = panel_widget_grab_focus;
   widget_class->measure = panel_widget_measure;
   widget_class->size_allocate = panel_widget_size_allocate;
 
