@@ -36,6 +36,7 @@
             "buildsystem" : "meson",
             "builddir" : true,
             "config-opts" : [
+                "-Ddocs=disabled",
                 "-Dinstall-examples=true"
             ],
             "sources" : [
