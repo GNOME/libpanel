@@ -176,6 +176,10 @@ set_reveal (PanelDock         *self,
           if (value != panel_dock_child_get_reveal_child (PANEL_DOCK_CHILD (child)))
             {
               panel_dock_child_set_reveal_child (PANEL_DOCK_CHILD (child), value);
+
+              if (value)
+                gtk_widget_grab_focus (child);
+
               return TRUE;
             }
         }
