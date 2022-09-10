@@ -32,7 +32,6 @@ libpanel_private_sources = [
 
 libpanel_sources = [
   'panel-dock.c',
-  'panel-dock-switcher.c',
   'panel-frame.c',
   'panel-frame-header.c',
   'panel-frame-header-bar.c',
@@ -47,12 +46,12 @@ libpanel_sources = [
   'panel-save-delegate.c',
   'panel-statusbar.c',
   'panel-theme-selector.c',
+  'panel-toggle-button.c',
   'panel-widget.c',
 ]
 
 libpanel_headers = [
   'libpanel.h',
-  'panel-dock-switcher.h',
   'panel-dock.h',
   'panel-frame.h',
   'panel-frame-header-bar.h',
@@ -67,6 +66,7 @@ libpanel_headers = [
   'panel-save-delegate.h',
   'panel-statusbar.h',
   'panel-theme-selector.h',
+  'panel-toggle-button.h',
   'panel-version-macros.h',
   'panel-widget.h',
 ]

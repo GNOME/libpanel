@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="PanelDockSwitcher" parent="GtkWidget">
+  <template class="PanelToggleButton" parent="GtkWidget">
     <child>
       <object class="GtkRevealer" id="revealer">
         <property name="transition-type">slide-right</property>

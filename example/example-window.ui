@@ -24,7 +24,7 @@
               </object>
             </child>
             <child type="start">
-              <object class="PanelDockSwitcher">
+              <object class="PanelToggleButton">
                 <property name="dock">dock</property>
                 <property name="area">start</property>
               </object>
@@ -345,7 +345,7 @@
               </object>
             </child>
             <child type="end">
-              <object class="PanelDockSwitcher">
+              <object class="PanelToggleButton">
                 <property name="dock">dock</property>
                 <property name="area">end</property>
               </object>
@@ -788,7 +788,7 @@
               </object>
             </child>
             <child type="suffix">
-              <object class="PanelDockSwitcher">
+              <object class="PanelToggleButton">
                 <property name="dock">dock</property>
                 <property name="area">bottom</property>
               </object>

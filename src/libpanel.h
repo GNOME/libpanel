@@ -22,7 +22,6 @@
 
 #define LIBPANEL_INSIDE
 # include "panel-dock.h"
-# include "panel-dock-switcher.h"
 # include "panel-enums.h"
 # include "panel-frame.h"
 # include "panel-frame-header.h"
@@ -37,5 +36,6 @@
 # include "panel-save-delegate.h"
 # include "panel-statusbar.h"
 # include "panel-theme-selector.h"
+# include "panel-toggle-button.h"
 # include "panel-widget.h"
 #undef LIBPANEL_INSIDE
