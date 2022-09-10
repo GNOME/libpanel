@@ -32,12 +32,12 @@ G_BEGIN_DECLS
 
 typedef enum
 {
-  PANEL_DOCK_POSITION_START,
-  PANEL_DOCK_POSITION_END,
-  PANEL_DOCK_POSITION_TOP,
-  PANEL_DOCK_POSITION_BOTTOM,
-  PANEL_DOCK_POSITION_CENTER,
-} PanelDockPosition;
+  PANEL_AREA_START,
+  PANEL_AREA_END,
+  PANEL_AREA_TOP,
+  PANEL_AREA_BOTTOM,
+  PANEL_AREA_CENTER,
+} PanelArea;
 
 typedef void (*PanelFrameCallback) (PanelFrame *frame,
                                     gpointer    user_data);
@@ -58,11 +58,11 @@ struct _PanelDockClass
 PANEL_AVAILABLE_IN_ALL
 GtkWidget *panel_dock_new                   (void);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_reveal_edge       (PanelDock          *self,
-                                             PanelDockPosition   edge);
+gboolean   panel_dock_get_reveal_area       (PanelDock          *self,
+                                             PanelArea           area);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_reveal_edge       (PanelDock          *self,
-                                             PanelDockPosition   position,
+void       panel_dock_set_reveal_area       (PanelDock          *self,
+                                             PanelArea           area,
                                              gboolean            reveal);
 PANEL_AVAILABLE_IN_ALL
 gboolean   panel_dock_get_reveal_start      (PanelDock          *self);
@@ -85,8 +85,8 @@ PANEL_AVAILABLE_IN_ALL
 void       panel_dock_set_reveal_bottom     (PanelDock          *self,
                                              gboolean            reveal_bottom);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_can_reveal_edge   (PanelDock          *self,
-                                             PanelDockPosition   edge);
+gboolean   panel_dock_get_can_reveal_area   (PanelDock          *self,
+                                             PanelArea           area);
 PANEL_AVAILABLE_IN_ALL
 gboolean   panel_dock_get_can_reveal_bottom (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL

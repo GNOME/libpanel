@@ -26,7 +26,7 @@
             <child type="start">
               <object class="PanelDockSwitcher">
                 <property name="dock">dock</property>
-                <property name="position">start</property>
+                <property name="area">start</property>
               </object>
             </child>
             <child type="title">
@@ -347,7 +347,7 @@
             <child type="end">
               <object class="PanelDockSwitcher">
                 <property name="dock">dock</property>
-                <property name="position">end</property>
+                <property name="area">end</property>
               </object>
             </child>
           </object>
@@ -790,7 +790,7 @@
             <child type="suffix">
               <object class="PanelDockSwitcher">
                 <property name="dock">dock</property>
-                <property name="position">bottom</property>
+                <property name="area">bottom</property>
               </object>
             </child>
             <child type="suffix">

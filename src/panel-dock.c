@@ -89,66 +89,66 @@ panel_dock_new (void)
 }
 
 static void
-notify_can_reveal (PanelDock         *self,
-                   PanelDockPosition  position)
+notify_can_reveal (PanelDock *self,
+                   PanelArea  area)
 {
-  switch (position)
+  switch (area)
     {
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_START]);
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_END]);
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_TOP]);
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_BOTTOM]);
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       break;
     }
 }
 
 static void
-get_grid_positions (PanelDockPosition  position,
-                    int               *left,
-                    int               *top,
-                    int               *width,
-                    int               *height,
-                    GtkOrientation    *orientation)
+get_grid_positions (PanelArea       area,
+                    int            *left,
+                    int            *top,
+                    int            *width,
+                    int            *height,
+                    GtkOrientation *orientation)
 {
 
-  switch (position)
+  switch (area)
     {
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       *left = 0, *top = 0, *width = 1, *height = 3;
       *orientation = GTK_ORIENTATION_VERTICAL;
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       *left = 2, *top = 0, *width = 1, *height = 3;
       *orientation = GTK_ORIENTATION_VERTICAL;
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       *left = 1, *top = 0, *width = 1, *height = 1;
       *orientation = GTK_ORIENTATION_HORIZONTAL;
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       *left = 1, *top = 2, *width = 1, *height = 1;
       *orientation = GTK_ORIENTATION_HORIZONTAL;
       break;
 
     default:
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
       *left = 1, *top = 1, *width = 1, *height = 1;
       *orientation = GTK_ORIENTATION_HORIZONTAL;
       break;
@@ -156,9 +156,9 @@ get_grid_positions (PanelDockPosition  position,
 }
 
 static gboolean
-set_reveal (PanelDock         *self,
-            PanelDockPosition  position,
-            gboolean           value)
+set_reveal (PanelDock *self,
+            PanelArea  area,
+            gboolean   value)
 {
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
@@ -171,7 +171,7 @@ set_reveal (PanelDock         *self,
       if (!PANEL_IS_DOCK_CHILD (child))
         continue;
 
-      if (panel_dock_child_get_position (PANEL_DOCK_CHILD (child)) == position)
+      if (panel_dock_child_get_area (PANEL_DOCK_CHILD (child)) == area)
         {
           if (value != panel_dock_child_get_reveal_child (PANEL_DOCK_CHILD (child)))
             {
@@ -523,49 +523,49 @@ panel_dock_notify_empty_cb (PanelDock      *self,
                             GParamSpec     *pspec,
                             PanelDockChild *child)
 {
-  PanelDockPosition position;
+  PanelArea area;
 
   g_assert (PANEL_IS_DOCK (self));
   g_assert (PANEL_IS_DOCK_CHILD (child));
 
-  position = panel_dock_child_get_position (child);
-  if (position == PANEL_DOCK_POSITION_CENTER)
+  area = panel_dock_child_get_area (child);
+  if (area == PANEL_AREA_CENTER)
     return;
 
   if (panel_dock_child_get_empty (child))
     panel_dock_child_set_reveal_child (child, FALSE);
 
-  switch (panel_dock_child_get_position (child))
+  switch (panel_dock_child_get_area (child))
     {
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_START]);
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_END]);
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_TOP]);
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CAN_REVEAL_BOTTOM]);
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       break;
     }
 }
 
 static GtkWidget *
-get_or_create_dock_child (PanelDock         *self,
-                          PanelDockPosition  position,
-                          int                left,
-                          int                top,
-                          int                width,
-                          int                height)
+get_or_create_dock_child (PanelDock *self,
+                          PanelArea  area,
+                          int        left,
+                          int        top,
+                          int        width,
+                          int        height)
 {
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
   GtkWidget *child;
@@ -578,12 +578,12 @@ get_or_create_dock_child (PanelDock         *self,
     {
       if (PANEL_IS_DOCK_CHILD (child))
         {
-          if (position == panel_dock_child_get_position (PANEL_DOCK_CHILD (child)))
+          if (area == panel_dock_child_get_area (PANEL_DOCK_CHILD (child)))
             return child;
         }
     }
 
-  child = panel_dock_child_new (position);
+  child = panel_dock_child_new (area);
   panel_dock_child_set_reveal_child (PANEL_DOCK_CHILD (child), FALSE);
   g_signal_connect_object (child,
                            "notify::empty",
@@ -625,7 +625,7 @@ panel_dock_add_child (GtkBuildable *buildable,
 {
   PanelDock *self = (PanelDock *)buildable;
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
-  PanelDockPosition position = 0;
+  PanelArea area = 0;
   GtkOrientation orientation = 0;
   gboolean reveal;
   int left;
@@ -643,43 +643,43 @@ panel_dock_add_child (GtkBuildable *buildable,
 
   if (g_strcmp0 (type, "start") == 0)
     {
-      position = PANEL_DOCK_POSITION_START;
+      area = PANEL_AREA_START;
       reveal = priv->reveal_start;
       drag_position = priv->start_width;
     }
   else if (g_strcmp0 (type, "end") == 0)
     {
-      position = PANEL_DOCK_POSITION_END;
+      area = PANEL_AREA_END;
       reveal = priv->reveal_end;
       drag_position = priv->end_width;
     }
   else if (g_strcmp0 (type, "top") == 0)
     {
-      position = PANEL_DOCK_POSITION_TOP;
+      area = PANEL_AREA_TOP;
       reveal = priv->reveal_top;
       drag_position = priv->top_height;
     }
   else if (g_strcmp0 (type, "bottom") == 0)
     {
-      position = PANEL_DOCK_POSITION_BOTTOM;
+      area = PANEL_AREA_BOTTOM;
       reveal = priv->reveal_bottom;
       drag_position = priv->bottom_height;
     }
   else
     {
-      position = PANEL_DOCK_POSITION_CENTER;
+      area = PANEL_AREA_CENTER;
       reveal = TRUE;
     }
 
-  get_grid_positions (position, &left, &top, &width, &height, &orientation);
+  get_grid_positions (area, &left, &top, &width, &height, &orientation);
 
   if (!PANEL_IS_DOCK_CHILD (object))
     {
-      GtkWidget *dock_child = get_or_create_dock_child (self, position, left, top, width, height);
+      GtkWidget *dock_child = get_or_create_dock_child (self, area, left, top, width, height);
 
       panel_dock_child_set_drag_position (PANEL_DOCK_CHILD (dock_child), drag_position);
 
-      if (position != PANEL_DOCK_POSITION_CENTER && PANEL_IS_WIDGET (object))
+      if (area != PANEL_AREA_CENTER && PANEL_IS_WIDGET (object))
         {
           GtkWidget *paned = panel_dock_child_get_child (PANEL_DOCK_CHILD (dock_child));
           GtkWidget *frame;
@@ -712,8 +712,8 @@ panel_dock_add_child (GtkBuildable *buildable,
       gtk_grid_attach (priv->grid, GTK_WIDGET (object), left, top, width, height);
     }
 
-  notify_can_reveal (self, position);
-  set_reveal (self, position, reveal);
+  notify_can_reveal (self, area);
+  set_reveal (self, area, reveal);
 }
 
 static void
@@ -755,22 +755,22 @@ panel_dock_get_reveal_top (PanelDock *self)
 }
 
 gboolean
-panel_dock_get_reveal_edge (PanelDock         *self,
-                            PanelDockPosition  edge)
+panel_dock_get_reveal_area (PanelDock *self,
+                            PanelArea  area)
 {
   g_return_val_if_fail (PANEL_IS_DOCK (self), FALSE);
 
-  switch (edge)
+  switch (area)
     {
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       return panel_dock_get_reveal_end (self);
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       return panel_dock_get_reveal_top (self);
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       return panel_dock_get_reveal_bottom (self);
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       return panel_dock_get_reveal_start (self);
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       g_return_val_if_reached (FALSE);
     }
@@ -785,7 +785,7 @@ panel_dock_set_reveal_bottom (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->reveal_bottom = !!reveal_bottom;
-  if (set_reveal (self, PANEL_DOCK_POSITION_BOTTOM, reveal_bottom))
+  if (set_reveal (self, PANEL_AREA_BOTTOM, reveal_bottom))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_BOTTOM]);
 }
 
@@ -798,7 +798,7 @@ panel_dock_set_reveal_end (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->reveal_end = !!reveal_end;
-  if (set_reveal (self, PANEL_DOCK_POSITION_END, reveal_end))
+  if (set_reveal (self, PANEL_AREA_END, reveal_end))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_END]);
 }
 
@@ -811,7 +811,7 @@ panel_dock_set_reveal_start (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->reveal_start = !!reveal_start;
-  if (set_reveal (self, PANEL_DOCK_POSITION_START, reveal_start))
+  if (set_reveal (self, PANEL_AREA_START, reveal_start))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_START]);
 }
 
@@ -824,44 +824,44 @@ panel_dock_set_reveal_top (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->reveal_top = !!reveal_top;
-  if (set_reveal (self, PANEL_DOCK_POSITION_TOP, reveal_top))
+  if (set_reveal (self, PANEL_AREA_TOP, reveal_top))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_TOP]);
 }
 
 void
-panel_dock_set_reveal_edge (PanelDock         *self,
-                            PanelDockPosition  edge,
-                            gboolean           reveal)
+panel_dock_set_reveal_area (PanelDock *self,
+                            PanelArea  area,
+                            gboolean   reveal)
 {
   g_return_if_fail (PANEL_IS_DOCK (self));
 
-  switch (edge)
+  switch (area)
     {
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       panel_dock_set_reveal_end (self, reveal);
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       panel_dock_set_reveal_top (self, reveal);
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       panel_dock_set_reveal_bottom (self, reveal);
       break;
 
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       panel_dock_set_reveal_start (self, reveal);
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       g_return_if_reached ();
     }
 }
 
 static GtkWidget *
-panel_dock_get_child_at_position (PanelDock         *self,
-                                  PanelDockPosition  position)
+panel_dock_get_child_for_area (PanelDock *self,
+                               PanelArea  area)
 {
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
@@ -874,7 +874,7 @@ panel_dock_get_child_at_position (PanelDock         *self,
       if (!PANEL_IS_DOCK_CHILD (child))
         continue;
 
-      if (panel_dock_child_get_position (PANEL_DOCK_CHILD (child)) == position)
+      if (panel_dock_child_get_area (PANEL_DOCK_CHILD (child)) == area)
         return child;
     }
 
@@ -884,36 +884,36 @@ panel_dock_get_child_at_position (PanelDock         *self,
 GtkWidget *
 _panel_dock_get_top_child (PanelDock *self)
 {
-  return panel_dock_get_child_at_position (self, PANEL_DOCK_POSITION_TOP);
+  return panel_dock_get_child_for_area (self, PANEL_AREA_TOP);
 }
 
 GtkWidget *
 _panel_dock_get_bottom_child (PanelDock *self)
 {
-  return panel_dock_get_child_at_position (self, PANEL_DOCK_POSITION_BOTTOM);
+  return panel_dock_get_child_for_area (self, PANEL_AREA_BOTTOM);
 }
 
 GtkWidget *
 _panel_dock_get_start_child (PanelDock *self)
 {
-  return panel_dock_get_child_at_position (self, PANEL_DOCK_POSITION_START);
+  return panel_dock_get_child_for_area (self, PANEL_AREA_START);
 }
 
 GtkWidget *
 _panel_dock_get_end_child (PanelDock *self)
 {
-  return panel_dock_get_child_at_position (self, PANEL_DOCK_POSITION_END);
+  return panel_dock_get_child_for_area (self, PANEL_AREA_END);
 }
 
 gboolean
-panel_dock_get_can_reveal_edge (PanelDock         *self,
-                                PanelDockPosition  position)
+panel_dock_get_can_reveal_area (PanelDock *self,
+                                PanelArea  area)
 {
   GtkWidget *child;
 
   g_return_val_if_fail (PANEL_IS_DOCK (self), FALSE);
 
-  if (!(child = panel_dock_get_child_at_position (self, position)))
+  if (!(child = panel_dock_get_child_for_area (self, area)))
     return FALSE;
 
   return !panel_dock_child_get_empty (PANEL_DOCK_CHILD (child));
@@ -922,45 +922,45 @@ panel_dock_get_can_reveal_edge (PanelDock         *self,
 gboolean
 panel_dock_get_can_reveal_bottom (PanelDock *self)
 {
-  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_BOTTOM);
+  return panel_dock_get_can_reveal_area (self, PANEL_AREA_BOTTOM);
 }
 
 gboolean
 panel_dock_get_can_reveal_top (PanelDock *self)
 {
-  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_TOP);
+  return panel_dock_get_can_reveal_area (self, PANEL_AREA_TOP);
 }
 
 gboolean
 panel_dock_get_can_reveal_start (PanelDock *self)
 {
-  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_START);
+  return panel_dock_get_can_reveal_area (self, PANEL_AREA_START);
 }
 
 gboolean
 panel_dock_get_can_reveal_end (PanelDock *self)
 {
-  return panel_dock_get_can_reveal_edge (self, PANEL_DOCK_POSITION_END);
+  return panel_dock_get_can_reveal_area (self, PANEL_AREA_END);
 }
 
 static void
-prepare_for_drag (PanelDock         *self,
-                  PanelDockPosition  position)
+prepare_for_drag (PanelDock *self,
+                  PanelArea  area)
 {
   GtkWidget *child;
   GtkWidget *paned;
 
   g_assert (PANEL_IS_DOCK (self));
 
-  if (!(child = panel_dock_get_child_at_position (self, position)))
+  if (!(child = panel_dock_get_child_for_area (self, area)))
     {
       GtkOrientation orientation;
       int left, top, width, height;
 
       /* TODO: Add policy to disable creating some panels (like top). */
 
-      get_grid_positions (position, &left, &top, &width, &height, &orientation);
-      child = get_or_create_dock_child (self, position, left, top, width, height);
+      get_grid_positions (area, &left, &top, &width, &height, &orientation);
+      child = get_or_create_dock_child (self, area, left, top, width, height);
       paned = panel_dock_child_get_child (PANEL_DOCK_CHILD (child));
 
       if (paned == NULL)
@@ -981,14 +981,14 @@ prepare_for_drag (PanelDock         *self,
 }
 
 static void
-unprepare_from_drag (PanelDock         *self,
-                     PanelDockPosition  position)
+unprepare_from_drag (PanelDock *self,
+                     PanelArea  area)
 {
   GtkWidget *child;
 
   g_assert (PANEL_IS_DOCK (self));
 
-  if ((child = panel_dock_get_child_at_position (self, position)))
+  if ((child = panel_dock_get_child_for_area (self, area)))
     panel_dock_child_set_dragging (PANEL_DOCK_CHILD (child), FALSE);
 }
 
@@ -1003,10 +1003,10 @@ _panel_dock_begin_drag (PanelDock   *self,
    * make sure that there is a child there that we can expand
    * if necessary.
    */
-  prepare_for_drag (self, PANEL_DOCK_POSITION_START);
-  prepare_for_drag (self, PANEL_DOCK_POSITION_END);
-  prepare_for_drag (self, PANEL_DOCK_POSITION_TOP);
-  prepare_for_drag (self, PANEL_DOCK_POSITION_BOTTOM);
+  prepare_for_drag (self, PANEL_AREA_START);
+  prepare_for_drag (self, PANEL_AREA_END);
+  prepare_for_drag (self, PANEL_AREA_TOP);
+  prepare_for_drag (self, PANEL_AREA_BOTTOM);
 
   g_signal_emit (self, signals [PANEL_DRAG_BEGIN], 0, panel);
 }
@@ -1020,10 +1020,10 @@ _panel_dock_end_drag (PanelDock   *self,
 
   g_signal_emit (self, signals [PANEL_DRAG_END], 0, panel);
 
-  unprepare_from_drag (self, PANEL_DOCK_POSITION_START);
-  unprepare_from_drag (self, PANEL_DOCK_POSITION_END);
-  unprepare_from_drag (self, PANEL_DOCK_POSITION_TOP);
-  unprepare_from_drag (self, PANEL_DOCK_POSITION_BOTTOM);
+  unprepare_from_drag (self, PANEL_AREA_START);
+  unprepare_from_drag (self, PANEL_AREA_END);
+  unprepare_from_drag (self, PANEL_AREA_TOP);
+  unprepare_from_drag (self, PANEL_AREA_BOTTOM);
 }
 
 void
@@ -1108,9 +1108,9 @@ _panel_dock_add_widget (PanelDock      *self,
           int left, top, width, height;
           GtkOrientation orientation;
 
-          get_grid_positions (PANEL_DOCK_POSITION_START, &left, &top, &width, &height, &orientation);
+          get_grid_positions (PANEL_AREA_START, &left, &top, &width, &height, &orientation);
 
-          dock_child = PANEL_DOCK_CHILD (panel_dock_child_new (PANEL_DOCK_POSITION_START));
+          dock_child = PANEL_DOCK_CHILD (panel_dock_child_new (PANEL_AREA_START));
           gtk_orientable_set_orientation (GTK_ORIENTABLE (dock_child), orientation);
           gtk_grid_attach (priv->grid, GTK_WIDGET (dock_child), left, top, width, height);
         }
@@ -1120,11 +1120,10 @@ _panel_dock_add_widget (PanelDock      *self,
 
   if (frame == NULL)
     {
-      PanelDockPosition position = panel_dock_child_get_position (dock_child);
+      PanelArea area = panel_dock_child_get_area (dock_child);
       GtkOrientation orientation;
 
-      if (position == PANEL_DOCK_POSITION_START ||
-          position == PANEL_DOCK_POSITION_END)
+      if (area == PANEL_AREA_START || area == PANEL_AREA_END)
         orientation = GTK_ORIENTATION_VERTICAL;
       else
         orientation = GTK_ORIENTATION_HORIZONTAL;
@@ -1140,8 +1139,8 @@ _panel_dock_add_widget (PanelDock      *self,
   panel_frame_add (frame, widget);
   panel_frame_set_visible_child (frame, widget);
 
-  notify_can_reveal (self, panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)));
-  set_reveal (self, panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child)), TRUE);
+  notify_can_reveal (self, panel_dock_child_get_area (PANEL_DOCK_CHILD (dock_child)));
+  set_reveal (self, panel_dock_child_get_area (PANEL_DOCK_CHILD (dock_child)), TRUE);
 }
 
 void
@@ -1200,9 +1199,9 @@ panel_dock_foreach_frame (PanelDock          *self,
 }
 
 static void
-panel_dock_set_panel_size (PanelDock         *self,
-                           PanelDockPosition  position,
-                           int                size)
+panel_dock_set_panel_size (PanelDock *self,
+                           PanelArea  area,
+                           int        size)
 {
   g_return_if_fail (PANEL_IS_DOCK (self));
 
@@ -1213,7 +1212,7 @@ panel_dock_set_panel_size (PanelDock         *self,
       if (!PANEL_IS_DOCK_CHILD (child))
         continue;
 
-      if (panel_dock_child_get_position (PANEL_DOCK_CHILD (child)) != position)
+      if (panel_dock_child_get_area (PANEL_DOCK_CHILD (child)) != area)
         continue;
 
       panel_dock_child_set_drag_position (PANEL_DOCK_CHILD (child), size);
@@ -1229,7 +1228,7 @@ panel_dock_set_start_width (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->start_width = width;
-  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_START, width);
+  panel_dock_set_panel_size (self, PANEL_AREA_START, width);
 }
 
 void
@@ -1241,7 +1240,7 @@ panel_dock_set_end_width (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->end_width = width;
-  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_END, width);
+  panel_dock_set_panel_size (self, PANEL_AREA_END, width);
 }
 
 void
@@ -1253,7 +1252,7 @@ panel_dock_set_top_height (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->top_height = height;
-  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_TOP, height);
+  panel_dock_set_panel_size (self, PANEL_AREA_TOP, height);
 }
 
 void
@@ -1265,7 +1264,7 @@ panel_dock_set_bottom_height (PanelDock *self,
   g_return_if_fail (PANEL_IS_DOCK (self));
 
   priv->bottom_height = height;
-  panel_dock_set_panel_size (self, PANEL_DOCK_POSITION_BOTTOM, height);
+  panel_dock_set_panel_size (self, PANEL_AREA_BOTTOM, height);
 }
 
 void

@@ -63,7 +63,7 @@ static void
 panel_paned_set_orientation (PanelPaned     *self,
                              GtkOrientation  orientation)
 {
-  PanelDockPosition dockpos;
+  PanelArea area;
 
   g_assert (PANEL_IS_PANED (self));
   g_assert (orientation == GTK_ORIENTATION_HORIZONTAL ||
@@ -75,9 +75,9 @@ panel_paned_set_orientation (PanelPaned     *self,
   self->orientation = orientation;
 
   if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-    dockpos = PANEL_DOCK_POSITION_START;
+    area = PANEL_AREA_START;
   else
-    dockpos = PANEL_DOCK_POSITION_TOP;
+    area = PANEL_AREA_TOP;
 
   for (GtkWidget *child = gtk_widget_get_last_child (GTK_WIDGET (self));
        child != NULL;
@@ -85,7 +85,7 @@ panel_paned_set_orientation (PanelPaned     *self,
     {
       g_assert (PANEL_IS_RESIZER (child));
 
-      panel_resizer_set_position (PANEL_RESIZER (child), dockpos);
+      panel_resizer_set_area (PANEL_RESIZER (child), area);
     }
 
   _panel_dock_update_orientation (GTK_WIDGET (self), self->orientation);
@@ -467,7 +467,7 @@ panel_paned_insert (PanelPaned *self,
                     int         position,
                     GtkWidget  *child)
 {
-  PanelDockPosition dockpos;
+  PanelArea area;
   GtkWidget *resizer;
 
   g_return_if_fail (PANEL_IS_PANED (self));
@@ -475,11 +475,11 @@ panel_paned_insert (PanelPaned *self,
   g_return_if_fail (gtk_widget_get_parent (child) == NULL);
 
   if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-    dockpos = PANEL_DOCK_POSITION_START;
+    area = PANEL_AREA_START;
   else
-    dockpos = PANEL_DOCK_POSITION_TOP;
+    area = PANEL_AREA_TOP;
 
-  resizer = panel_resizer_new (dockpos);
+  resizer = panel_resizer_new (area);
   panel_resizer_set_child (PANEL_RESIZER (resizer), child);
 
   if (position < 0)

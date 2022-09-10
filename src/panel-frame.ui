@@ -9,7 +9,7 @@
         <property name="vexpand">true</property>
         <child type="overlay">
           <object class="PanelDropControls" id="drop_controls">
-            <property name="position">center</property>
+            <property name="area">center</property>
             <property name="hexpand">true</property>
             <property name="vexpand">true</property>
             <property name="visible">false</property>

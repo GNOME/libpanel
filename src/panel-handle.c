@@ -27,9 +27,9 @@
 
 struct _PanelHandle
 {
-  GtkWidget          parent_instance;
-  GtkWidget         *separator;
-  PanelDockPosition  position : 3;
+  GtkWidget parent_instance;
+  GtkWidget *separator;
+  PanelArea  area : 3;
 };
 
 G_DEFINE_TYPE (PanelHandle, panel_handle, GTK_TYPE_WIDGET)
@@ -55,27 +55,27 @@ panel_handle_contains (GtkWidget *widget,
                                   &area))
       return FALSE;
 
-  switch (self->position)
+  switch (self->area)
     {
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       area.origin.x -= EXTRA_SIZE;
       area.size.width = EXTRA_SIZE;
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       area.size.width = EXTRA_SIZE;
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       area.origin.y -= EXTRA_SIZE;
       area.size.height = EXTRA_SIZE;
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       area.size.height = EXTRA_SIZE;
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       g_assert_not_reached ();
       break;
@@ -115,28 +115,28 @@ panel_handle_init (PanelHandle *self)
 }
 
 void
-panel_handle_set_position (PanelHandle       *self,
-                           PanelDockPosition  position)
+panel_handle_set_area (PanelHandle *self,
+                       PanelArea    area)
 {
   g_return_if_fail (PANEL_IS_HANDLE (self));
 
-  self->position = position;
+  self->area = area;
 
-  switch (position)
+  switch (area)
     {
-    case PANEL_DOCK_POSITION_START:
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_START:
+    case PANEL_AREA_END:
       gtk_widget_set_cursor_from_name (GTK_WIDGET (self), "col-resize");
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->separator), GTK_ORIENTATION_VERTICAL);
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_TOP:
+    case PANEL_AREA_BOTTOM:
       gtk_widget_set_cursor_from_name (GTK_WIDGET (self), "row-resize");
       gtk_orientable_set_orientation (GTK_ORIENTABLE (self->separator), GTK_ORIENTATION_HORIZONTAL);
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       gtk_widget_set_cursor_from_name (GTK_WIDGET (self), "arrow");
       break;
@@ -144,12 +144,12 @@ panel_handle_set_position (PanelHandle       *self,
 }
 
 GtkWidget *
-panel_handle_new (PanelDockPosition position)
+panel_handle_new (PanelArea area)
 {
   PanelHandle *self;
 
   self = g_object_new (PANEL_TYPE_HANDLE, NULL);
-  panel_handle_set_position (self, position);
+  panel_handle_set_area (self, area);
 
   return GTK_WIDGET (self);
 }

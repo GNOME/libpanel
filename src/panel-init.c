@@ -23,7 +23,9 @@
 #include <adwaita.h>
 
 #include "panel-dock.h"
+#include "panel-dock-child-private.h"
 #include "panel-dock-switcher.h"
+#include "panel-enums.h"
 #include "panel-frame.h"
 #include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
@@ -49,7 +51,9 @@ panel_init (void)
 
   g_resources_register (panel_get_resource ());
 
+  g_type_ensure (PANEL_TYPE_AREA);
   g_type_ensure (PANEL_TYPE_DOCK);
+  g_type_ensure (PANEL_TYPE_DOCK_CHILD);
   g_type_ensure (PANEL_TYPE_DOCK_SWITCHER);
   g_type_ensure (PANEL_TYPE_FRAME);
   g_type_ensure (PANEL_TYPE_FRAME_HEADER);

@@ -29,16 +29,16 @@
 
 struct _PanelResizer
 {
-  GtkWidget          parent_instance;
+  GtkWidget    parent_instance;
 
-  PanelHandle       *handle;
-  GtkWidget         *child;
+  PanelHandle *handle;
+  GtkWidget   *child;
 
-  double             drag_orig_size;
-  double             drag_position;
+  double       drag_orig_size;
+  double       drag_position;
+  guint        drag_position_set : 1;
 
-  guint              drag_position_set : 1;
-  PanelDockPosition  position : 3;
+  PanelArea    area : 3;
 };
 
 G_DEFINE_TYPE (PanelResizer, panel_resizer, GTK_TYPE_WIDGET)
@@ -73,29 +73,29 @@ panel_resizer_drag_begin_cb (PanelResizer   *self,
 
   if (self->child != NULL)
     {
-      switch (self->position)
+      switch (self->area)
         {
-        case PANEL_DOCK_POSITION_START:
+        case PANEL_AREA_START:
           if (start_x > gtk_widget_get_width (GTK_WIDGET (self)) - HANDLE_SIZE)
             goto start_drag;
           break;
 
-        case PANEL_DOCK_POSITION_END:
+        case PANEL_AREA_END:
           if (start_x <= HANDLE_SIZE)
             goto start_drag;
           break;
 
-        case PANEL_DOCK_POSITION_TOP:
+        case PANEL_AREA_TOP:
           if (start_y > gtk_widget_get_height (GTK_WIDGET (self)) - HANDLE_SIZE)
             goto start_drag;
           break;
 
-        case PANEL_DOCK_POSITION_BOTTOM:
+        case PANEL_AREA_BOTTOM:
           if (start_y <= HANDLE_SIZE)
             goto start_drag;
           break;
 
-        case PANEL_DOCK_POSITION_CENTER:
+        case PANEL_AREA_CENTER:
         default:
           break;
         }
@@ -112,8 +112,8 @@ start_drag:
   gtk_widget_get_allocation (self->child, &child_alloc);
   gtk_widget_get_allocation (GTK_WIDGET (self->handle), &handle_alloc);
 
-  if (self->position == PANEL_DOCK_POSITION_START ||
-      self->position == PANEL_DOCK_POSITION_END)
+  if (self->area == PANEL_AREA_START ||
+      self->area == PANEL_AREA_END)
     {
       self->drag_orig_size = child_alloc.width + handle_alloc.width;
       gtk_widget_set_hexpand (self->child, FALSE);
@@ -139,13 +139,13 @@ panel_resizer_drag_update_cb (PanelResizer   *self,
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
 
-  if (self->position == PANEL_DOCK_POSITION_START)
+  if (self->area == PANEL_AREA_START)
     self->drag_position = self->drag_orig_size + offset_x;
-  else if (self->position == PANEL_DOCK_POSITION_END)
+  else if (self->area == PANEL_AREA_END)
     self->drag_position = gtk_widget_get_width (GTK_WIDGET (self)) - offset_x;
-  else if (self->position == PANEL_DOCK_POSITION_TOP)
+  else if (self->area == PANEL_AREA_TOP)
     self->drag_position = self->drag_orig_size + offset_y;
-  else if (self->position == PANEL_DOCK_POSITION_BOTTOM)
+  else if (self->area == PANEL_AREA_BOTTOM)
     self->drag_position = gtk_widget_get_height (GTK_WIDGET (self)) - offset_y;
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
@@ -162,16 +162,16 @@ panel_resizer_drag_end_cb (PanelResizer   *self,
 }
 
 GtkWidget *
-panel_resizer_new (PanelDockPosition position)
+panel_resizer_new (PanelArea area)
 {
   PanelResizer *self;
 
   self = g_object_new (PANEL_TYPE_RESIZER, NULL);
-  self->position = position;
-  self->handle = PANEL_HANDLE (panel_handle_new (position));
+  self->area = area;
+  self->handle = PANEL_HANDLE (panel_handle_new (area));
   gtk_widget_set_parent (GTK_WIDGET (self->handle), GTK_WIDGET (self));
 
-  if (position == PANEL_DOCK_POSITION_CENTER)
+  if (area == PANEL_AREA_CENTER)
     gtk_widget_hide (GTK_WIDGET (self->handle));
 
   return GTK_WIDGET (self);
@@ -203,11 +203,11 @@ panel_resizer_measure (GtkWidget      *widget,
                         NULL, NULL);
 
   if ((orientation == GTK_ORIENTATION_HORIZONTAL &&
-       (self->position == PANEL_DOCK_POSITION_START ||
-        self->position == PANEL_DOCK_POSITION_END)) ||
+       (self->area == PANEL_AREA_START ||
+        self->area == PANEL_AREA_END)) ||
       (orientation == GTK_ORIENTATION_VERTICAL &&
-       (self->position == PANEL_DOCK_POSITION_TOP ||
-        self->position == PANEL_DOCK_POSITION_BOTTOM)))
+       (self->area == PANEL_AREA_TOP ||
+        self->area == PANEL_AREA_BOTTOM)))
     {
       int handle_min, handle_nat;
 
@@ -246,8 +246,8 @@ panel_resizer_size_allocate (GtkWidget *widget,
 
   g_assert (PANEL_IS_RESIZER (self));
 
-  if (self->position == PANEL_DOCK_POSITION_START ||
-      self->position == PANEL_DOCK_POSITION_END)
+  if (self->area == PANEL_AREA_START ||
+      self->area == PANEL_AREA_END)
     orientation = GTK_ORIENTATION_HORIZONTAL;
   else
     orientation = GTK_ORIENTATION_VERTICAL;
@@ -259,9 +259,9 @@ panel_resizer_size_allocate (GtkWidget *widget,
                         &handle_min, &handle_nat,
                         NULL, NULL);
 
-  switch (self->position)
+  switch (self->area)
     {
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       handle_alloc.x = width - handle_min;
       handle_alloc.width = handle_min;
       handle_alloc.y = 0;
@@ -272,7 +272,7 @@ panel_resizer_size_allocate (GtkWidget *widget,
       child_alloc.height = height;
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       handle_alloc.x = 0;
       handle_alloc.width = handle_min;
       handle_alloc.y = 0;
@@ -283,7 +283,7 @@ panel_resizer_size_allocate (GtkWidget *widget,
       child_alloc.height = height;
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       handle_alloc.x = 0;
       handle_alloc.width = width;
       handle_alloc.y = height - handle_min;
@@ -294,7 +294,7 @@ panel_resizer_size_allocate (GtkWidget *widget,
       child_alloc.height = height - handle_min;
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       handle_alloc.x = 0;
       handle_alloc.width = width;
       handle_alloc.y = 0;
@@ -305,7 +305,7 @@ panel_resizer_size_allocate (GtkWidget *widget,
       child_alloc.height = height - handle_min;
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       handle_alloc.x = 0;
       handle_alloc.width = 0;
@@ -495,25 +495,25 @@ panel_resizer_set_child (PanelResizer *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CHILD]);
 }
 
-PanelDockPosition
-panel_resizer_get_position (PanelResizer *self)
+PanelArea
+panel_resizer_get_area (PanelResizer *self)
 {
   g_return_val_if_fail (PANEL_IS_RESIZER (self), 0);
 
-  return self->position;
+  return self->area;
 }
 
 void
-panel_resizer_set_position (PanelResizer      *self,
-                            PanelDockPosition  position)
+panel_resizer_set_area (PanelResizer *self,
+                        PanelArea     area)
 {
   g_return_if_fail (PANEL_IS_RESIZER (self));
 
-  if (position != self->position)
+  if (area != self->area)
     {
-      self->position = position;
+      self->area = area;
 
-      panel_handle_set_position (self->handle, position);
+      panel_handle_set_area (self->handle, area);
       gtk_widget_queue_resize (GTK_WIDGET (self));
     }
 }

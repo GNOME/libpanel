@@ -401,20 +401,20 @@ static void
 panel_frame_update_drop (PanelFrame *self)
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
-  PanelDockPosition position;
+  PanelArea area;
   GtkWidget *grid;
   GtkWidget *child;
 
   g_assert (PANEL_IS_FRAME (self));
 
   if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
-    position = PANEL_DOCK_POSITION_CENTER;
+    area = PANEL_AREA_CENTER;
   else if ((child = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK_CHILD)))
-    position = panel_dock_child_get_position (PANEL_DOCK_CHILD (child));
+    area = panel_dock_child_get_area (PANEL_DOCK_CHILD (child));
   else
-    position = PANEL_DOCK_POSITION_CENTER;
+    area = PANEL_AREA_CENTER;
 
-  panel_drop_controls_set_position (priv->drop_controls, position);
+  panel_drop_controls_set_area (priv->drop_controls, area);
 }
 
 static void
@@ -843,27 +843,27 @@ panel_frame_add_before (PanelFrame  *self,
 
   if (dock_child != NULL && dock != NULL)
     {
-      PanelDockPosition dockpos = panel_dock_child_get_position (PANEL_DOCK_CHILD (dock_child));
+      PanelArea dockpos = panel_dock_child_get_area (PANEL_DOCK_CHILD (dock_child));
 
       switch (dockpos)
         {
-        case PANEL_DOCK_POSITION_START:
+        case PANEL_AREA_START:
           g_object_notify (G_OBJECT (dock), "can-reveal-start");
           break;
 
-        case PANEL_DOCK_POSITION_END:
+        case PANEL_AREA_END:
           g_object_notify (G_OBJECT (dock), "can-reveal-end");
           break;
 
-        case PANEL_DOCK_POSITION_TOP:
+        case PANEL_AREA_TOP:
           g_object_notify (G_OBJECT (dock), "can-reveal-top");
           break;
 
-        case PANEL_DOCK_POSITION_BOTTOM:
+        case PANEL_AREA_BOTTOM:
           g_object_notify (G_OBJECT (dock), "can-reveal-bottom");
           break;
 
-        case PANEL_DOCK_POSITION_CENTER:
+        case PANEL_AREA_CENTER:
         default:
           break;
         }

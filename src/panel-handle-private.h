@@ -30,8 +30,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (PanelHandle, panel_handle, PANEL, HANDLE, GtkWidget)
 
-GtkWidget *panel_handle_new             (PanelDockPosition  position);
-void       panel_handle_set_position    (PanelHandle       *self,
-                                         PanelDockPosition  position);
+GtkWidget *panel_handle_new      (PanelArea    area);
+void       panel_handle_set_area (PanelHandle *self,
+                                  PanelArea    area);
 
 G_END_DECLS
