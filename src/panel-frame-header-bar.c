@@ -23,7 +23,6 @@
 #include <adwaita.h>
 #include <glib/gi18n.h>
 
-#include "panel-binding-group-private.h"
 #include "panel-frame-header-bar.h"
 #include "panel-frame-header-bar-row-private.h"
 #include "panel-frame-private.h"
@@ -35,7 +34,7 @@ struct _PanelFrameHeaderBar
 {
   GtkWidget          parent_instance;
 
-  PanelBindingGroup *bindings;
+  GBindingGroup     *bindings;
   PanelFrame        *frame;
   GMenuModel        *menu_model;
   PanelWidget       *visible_child;
@@ -443,12 +442,12 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   button = gtk_widget_get_first_child (GTK_WIDGET (self->title_button));
   gtk_button_set_child (GTK_BUTTON (button), box);
 
-  self->bindings = panel_binding_group_new ();
-  panel_binding_group_bind (self->bindings, "title", self->title, "label", 0);
-  panel_binding_group_bind_full (self->bindings, "modified",
-                                 self->modified, "label",
-                                 0, boolean_to_modified, NULL, NULL, NULL);
-  panel_binding_group_bind (self->bindings, "icon", self->image, "gicon", 0);
+  self->bindings = g_binding_group_new ();
+  g_binding_group_bind (self->bindings, "title", self->title, "label", 0);
+  g_binding_group_bind_full (self->bindings, "modified",
+                             self->modified, "label",
+                             0, boolean_to_modified, NULL, NULL, NULL);
+  g_binding_group_bind (self->bindings, "icon", self->image, "gicon", 0);
 }
 
 static gboolean
@@ -486,7 +485,7 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
   gtk_widget_set_sensitive (GTK_WIDGET (self->menu_button), page != NULL);
   gtk_widget_set_sensitive (GTK_WIDGET (self->drag_button), page != NULL);
 
-  panel_binding_group_set_source (self->bindings, page);
+  g_binding_group_set_source (self->bindings, page);
 
   gtk_widget_set_sensitive (GTK_WIDGET (self->title_button), page != NULL);
 

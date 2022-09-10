@@ -19,7 +19,6 @@
 
 #include "config.h"
 
-#include "panel-binding-group-private.h"
 #include "panel-dock-private.h"
 #include "panel-frame-private.h"
 #include "panel-frame-header.h"

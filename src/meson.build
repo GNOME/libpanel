@@ -20,7 +20,6 @@ panel_version_h = configure_file(
 libpanel_private_sources = [
   'gsettings-mapping.c',
   'panel-action-muxer.c',
-  'panel-binding-group.c',
   'panel-dock-child.c',
   'panel-drop-controls.c',
   'panel-frame-header-bar-row.c',
@@ -30,7 +29,6 @@ libpanel_private_sources = [
   'panel-resizer.c',
   'panel-save-dialog.c',
   'panel-scaler.c',
-  'panel-signal-group.c',
 ]
 
 libpanel_sources = [
