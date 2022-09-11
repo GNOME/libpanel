@@ -1,0 +1,87 @@
+# Swedish translation for libpanel.
+# Copyright © 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-11 13:11+0000\n"
+"PO-Revision-Date: 2022-09-11 15:24+0200\n"
+"Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Öppna sidor"
+
+#: src/panel-frame.ui:58
+msgid "Frame"
+msgstr "Ram"
+
+#: src/panel-frame.ui:60
+msgid "Move Page _Left"
+msgstr "Flytta sida åt _vänster"
+
+#: src/panel-frame.ui:65
+msgid "Move Page _Right"
+msgstr "Flytta sida åt _höger"
+
+#: src/panel-frame.ui:70
+msgid "Move Page _Up"
+msgstr "Flytta sida _uppåt"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Down"
+msgstr "Flytta sida _nedåt"
+
+#: src/panel-frame.ui:80
+msgid "Close Frame"
+msgstr "Stäng ram"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Återställ panel till föregående plats"
+
+#: src/panel-save-dialog.ui:27
+msgid "Save Changes?"
+msgstr "Spara ändringar?"
+
+#: src/panel-save-dialog.ui:35
+msgid ""
+"Open pages contain unsaved changes. Changes which are not saved will be "
+"permanently lost."
+msgstr ""
+"Öppna sidor innehåller osparade ändringar. Ändringar som inte har "
+"sparats kommer att förloras permanent."
+
+#: src/panel-save-dialog.ui:56
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: src/panel-save-dialog.ui:63
+msgid "_Discard All"
+msgstr "_Förkasta alla"
+
+#: src/panel-save-dialog.ui:70
+msgid "_Save"
+msgstr "_Spara"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Följ systemets stil"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Ljus stil"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Mörk stil"
