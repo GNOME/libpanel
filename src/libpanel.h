@@ -33,6 +33,7 @@
 # include "panel-init.h"
 # include "panel-omni-bar.h"
 # include "panel-paned.h"
+# include "panel-position.h"
 # include "panel-save-delegate.h"
 # include "panel-statusbar.h"
 # include "panel-theme-selector.h"
