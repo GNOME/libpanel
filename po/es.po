@@ -1,0 +1,88 @@
+# Spanish translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Daniel Mustieles García <daniel.mustieles@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-12 03:25+0000\n"
+"PO-Revision-Date: 2022-09-12 07:51+0200\n"
+"Last-Translator: Daniel Mustieles García <daniel.mustieles@gmail.com>\n"
+"Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 42.0\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Páginas abiertas"
+
+#: src/panel-frame.ui:58
+msgid "Frame"
+msgstr "Fotograma"
+
+#: src/panel-frame.ui:60
+msgid "Move Page _Left"
+msgstr "Mover página a la _izquierda"
+
+#: src/panel-frame.ui:65
+msgid "Move Page _Right"
+msgstr "Mover página a la _derecha"
+
+#: src/panel-frame.ui:70
+msgid "Move Page _Up"
+msgstr "_Subir página"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Down"
+msgstr "_Bajar página"
+
+#: src/panel-frame.ui:80
+msgid "Close Frame"
+msgstr "Cerrar marco"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Restaurar el panel a su ubicación anterior"
+
+#: src/panel-save-dialog.ui:27
+msgid "Save Changes?"
+msgstr "¿Quiere guardar los cambios?"
+
+#: src/panel-save-dialog.ui:35
+msgid ""
+"Open pages contain unsaved changes. Changes which are not saved will be "
+"permanently lost."
+msgstr ""
+"Las paginas abiertas contienen cambios sin guardar. Los cambios que no se "
+"guarden se perderán de forma permanente."
+
+#: src/panel-save-dialog.ui:56
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/panel-save-dialog.ui:63
+msgid "_Discard All"
+msgstr "_Descartar todo"
+
+#: src/panel-save-dialog.ui:70
+msgid "_Save"
+msgstr "_Guardar"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Seguir el estilo del sistema"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Estilo claro"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Estilo oscuro"
