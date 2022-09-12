@@ -1,0 +1,89 @@
+# Turkish translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+#
+# Sabri Ünal <libreajans@gmail.com>, 2022.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-11 11:22+0000\n"
+"PO-Revision-Date: 2022-09-12 09:45+0300\n"
+"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"Language-Team: Turkish <gnome-turk@gnome.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Sayfaları Aç"
+
+#: src/panel-frame.ui:58
+msgid "Frame"
+msgstr "Çerçeve"
+
+#: src/panel-frame.ui:60
+msgid "Move Page _Left"
+msgstr "Sayfayı _Sola Taşı"
+
+#: src/panel-frame.ui:65
+msgid "Move Page _Right"
+msgstr "Sayfayı Sağa _Taşı"
+
+#: src/panel-frame.ui:70
+msgid "Move Page _Up"
+msgstr "Sayfayı _Yukarı Taşı"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Down"
+msgstr "Sayfayı _Aşağı Taşı"
+
+#: src/panel-frame.ui:80
+msgid "Close Frame"
+msgstr "Çerçeveyi Kapat"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Paneli önceki konumuna geri yükle"
+
+#: src/panel-save-dialog.ui:27
+msgid "Save Changes?"
+msgstr "Değişiklikler Kaydedilsin Mi?"
+
+#: src/panel-save-dialog.ui:35
+msgid ""
+"Open pages contain unsaved changes. Changes which are not saved will be "
+"permanently lost."
+msgstr ""
+"Açık sayfalarda kaydedilmemiş değişiklikler var. Kaydedilmeyen "
+"değişiklikler kalıcı olarak yitirilecek."
+
+#: src/panel-save-dialog.ui:56
+msgid "Cancel"
+msgstr "İptal"
+
+#: src/panel-save-dialog.ui:63
+msgid "_Discard All"
+msgstr "Tümünden _Vazgeç"
+
+#: src/panel-save-dialog.ui:70
+msgid "_Save"
+msgstr "_Kaydet"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Sistem biçemini izle"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Açık biçem"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Koyu biçem"
