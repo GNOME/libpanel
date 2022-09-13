@@ -123,7 +123,7 @@ panel_save_delegate_real_save (PanelSaveDelegate *self,
 }
 
 static void
-panel_save_delegate_finalize (GObject *object)
+panel_save_delegate_dispose (GObject *object)
 {
   PanelSaveDelegate *self = (PanelSaveDelegate *)object;
   PanelSaveDelegatePrivate *priv = panel_save_delegate_get_instance_private (self);
@@ -133,7 +133,7 @@ panel_save_delegate_finalize (GObject *object)
   g_clear_pointer (&priv->icon_name, g_free);
   g_clear_object (&priv->icon);
 
-  G_OBJECT_CLASS (panel_save_delegate_parent_class)->finalize (object);
+  G_OBJECT_CLASS (panel_save_delegate_parent_class)->dispose (object);
 }
 
 static void
@@ -219,7 +219,7 @@ panel_save_delegate_class_init (PanelSaveDelegateClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->finalize = panel_save_delegate_finalize;
+  object_class->dispose = panel_save_delegate_dispose;
   object_class->get_property = panel_save_delegate_get_property;
   object_class->set_property = panel_save_delegate_set_property;
 
