@@ -81,6 +81,69 @@ panel_frame_new (void)
 }
 
 static void
+panel_frame_close_page_save_cb (GObject      *object,
+                                GAsyncResult *result,
+                                gpointer      user_data)
+{
+  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  PanelFrame *self = user_data;
+  GError *error = NULL;
+
+  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (G_IS_ASYNC_RESULT (result));
+  g_assert (PANEL_IS_FRAME (self));
+
+  if (!panel_save_dialog_run_finish (dialog, result, &error))
+    {
+      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        g_warning ("%s", error->message);
+      g_clear_error (&error);
+    }
+
+  g_clear_object (&self);
+}
+
+static gboolean
+panel_frame_close_page_cb (PanelFrame *self,
+                           AdwTabPage *tab_page,
+                           AdwTabView *tab_view)
+{
+  PanelSaveDelegate *delegate;
+  PanelSaveDialog *dialog;
+  PanelWidget *widget;
+  GtkRoot *root;
+
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (ADW_IS_TAB_PAGE (tab_page));
+  g_assert (ADW_IS_TAB_VIEW (tab_view));
+
+  widget = PANEL_WIDGET (adw_tab_page_get_child (tab_page));
+
+  if (widget != panel_frame_get_visible_child (self))
+    adw_tab_view_set_selected_page (tab_view, tab_page);
+
+  if (!_panel_widget_can_save (widget))
+    return FALSE;
+
+  root = gtk_widget_get_root (GTK_WIDGET (self));
+  delegate = panel_widget_get_save_delegate (widget);
+  dialog = PANEL_SAVE_DIALOG (panel_save_dialog_new ());
+
+  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (root));
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  panel_save_dialog_add_delegate (dialog, delegate);
+
+  panel_save_dialog_run_async (dialog,
+                               NULL,
+                               panel_frame_close_page_save_cb,
+                               g_object_ref (self));
+
+  adw_tab_view_close_page_finish (tab_view, tab_page, FALSE);
+
+  return TRUE;
+}
+
+static void
 close_page_or_frame_action (GtkWidget  *widget,
                             const char *action_name,
                             GVariant   *param)
@@ -713,8 +776,10 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, frame_menu);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, drop_controls);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, controls_overlay);
-  gtk_widget_class_bind_template_callback (widget_class, panel_frame_setup_menu_cb);
+
+  gtk_widget_class_bind_template_callback (widget_class, panel_frame_close_page_cb);
   gtk_widget_class_bind_template_callback (widget_class, panel_frame_notify_selected_page_cb);
+  gtk_widget_class_bind_template_callback (widget_class, panel_frame_setup_menu_cb);
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
   gtk_widget_class_install_action (widget_class, "page.move-left", NULL, page_move_left_action);
