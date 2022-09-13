@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "panel-save-delegate.h"
+#include "panel-macros.h"
 
 typedef struct
 {
@@ -350,11 +351,8 @@ panel_save_delegate_set_icon_name (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (g_strcmp0 (priv->icon_name, icon_name) != 0)
+  if (panel_set_string (&priv->icon_name, icon_name))
     {
-      g_free (priv->icon_name);
-      priv->icon_name = g_strdup (icon_name);
-
       if (g_set_object (&priv->icon, NULL))
         g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
 
@@ -395,12 +393,8 @@ panel_save_delegate_set_subtitle (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (g_strcmp0 (priv->subtitle, subtitle) != 0)
-    {
-      g_free (priv->subtitle);
-      priv->subtitle = g_strdup (subtitle);
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SUBTITLE]);
-    }
+  if (panel_set_string (&priv->subtitle, subtitle))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SUBTITLE]);
 }
 
 /**
@@ -436,12 +430,8 @@ panel_save_delegate_set_title (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (g_strcmp0 (priv->title, title) != 0)
-    {
-      g_free (priv->title);
-      priv->title = g_strdup (title);
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
-    }
+  if (panel_set_string (&priv->title, title))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
 }
 
 double
