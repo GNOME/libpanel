@@ -502,8 +502,8 @@ panel_frame_unroot (GtkWidget *widget)
 }
 
 static void
-setup_menu_cb (AdwTabView *tab_view,
-               AdwTabPage *page)
+panel_frame_setup_menu_cb (AdwTabView *tab_view,
+                           AdwTabPage *page)
 {
   GMenuModel *menu_model = NULL;
   PanelJoinedMenu *joined;
@@ -713,7 +713,8 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, frame_menu);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, drop_controls);
   gtk_widget_class_bind_template_child_private (widget_class, PanelFrame, controls_overlay);
-  gtk_widget_class_bind_template_callback (widget_class, setup_menu_cb);
+  gtk_widget_class_bind_template_callback (widget_class, panel_frame_setup_menu_cb);
+  gtk_widget_class_bind_template_callback (widget_class, panel_frame_notify_selected_page_cb);
 
   gtk_widget_class_install_action (widget_class, "page.move-right", NULL, page_move_right_action);
   gtk_widget_class_install_action (widget_class, "page.move-left", NULL, page_move_left_action);
@@ -759,12 +760,6 @@ panel_frame_init (PanelFrame *self)
   adw_tab_view_set_menu_model (priv->tab_view, G_MENU_MODEL (menu));
   panel_joined_menu_append_menu (menu, priv->frame_menu);
   g_clear_object (&menu);
-
-  g_signal_connect_object (priv->tab_view,
-                           "notify::selected-page",
-                           G_CALLBACK (panel_frame_notify_selected_page_cb),
-                           self,
-                           G_CONNECT_AFTER | G_CONNECT_SWAPPED);
 
   panel_frame_set_header (self, PANEL_FRAME_HEADER (panel_frame_switcher_new ()));
 

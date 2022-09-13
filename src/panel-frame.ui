@@ -40,7 +40,8 @@
                 <property name="hexpand">true</property>
                 <child>
                   <object class="AdwTabView" id="tab_view">
-                    <signal name="setup-menu" handler="setup_menu_cb"/>
+                    <signal name="notify::selected-page" handler="panel_frame_notify_selected_page_cb" swapped="true" after="true" object="PanelFrame"/>
+                    <signal name="setup-menu" handler="panel_frame_setup_menu_cb"/>
                     <layout>
                       <property name="name">pages</property>
                     </layout>
