@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-dock.h"
 #include "panel-dock-child-private.h"
 #include "panel-enums.h"
 #include "panel-frame-private.h"
@@ -32,11 +33,11 @@
 
 struct _PanelDockChild
 {
-  GtkWidget          parent_instance;
-  GtkRevealer       *revealer;
-  PanelResizer      *resizer;
-  PanelDockPosition  position : 3;
-  guint              dragging : 1;
+  GtkWidget     parent_instance;
+  GtkRevealer  *revealer;
+  PanelResizer *resizer;
+  PanelArea     area : 3;
+  guint         dragging : 1;
 };
 
 G_DEFINE_TYPE (PanelDockChild, panel_dock_child, GTK_TYPE_WIDGET)
@@ -45,7 +46,7 @@ enum {
   PROP_0,
   PROP_CHILD,
   PROP_EMPTY,
-  PROP_POSITION,
+  PROP_AREA,
   PROP_REVEAL_CHILD,
   N_PROPS
 };
@@ -90,8 +91,8 @@ panel_dock_child_get_property (GObject    *object,
       g_value_set_boolean (value, panel_dock_child_get_reveal_child (self));
       break;
 
-    case PROP_POSITION:
-      g_value_set_enum (value, panel_dock_child_get_position (self));
+    case PROP_AREA:
+      g_value_set_enum (value, panel_dock_child_get_area (self));
       break;
 
     default:
@@ -155,12 +156,10 @@ panel_dock_child_class_init (PanelDockChildClass *klass)
                           FALSE,
                           (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
-  properties [PROP_POSITION] =
-    g_param_spec_enum ("position",
-                       "Position",
-                       "The dock edge or center",
-                       PANEL_TYPE_DOCK_POSITION,
-                       PANEL_DOCK_POSITION_START,
+  properties [PROP_AREA] =
+    g_param_spec_enum ("area", NULL, NULL,
+                       PANEL_TYPE_AREA,
+                       PANEL_AREA_START,
                        (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -175,23 +174,23 @@ panel_dock_child_init (PanelDockChild *self)
 }
 
 GtkWidget *
-panel_dock_child_new (PanelDockPosition position)
+panel_dock_child_new (PanelArea area)
 {
   PanelDockChild *self;
 
   self = g_object_new (PANEL_TYPE_DOCK_CHILD, NULL);
-  self->position = position;
+  self->area = area;
 
   self->revealer = GTK_REVEALER (gtk_revealer_new ());
   gtk_revealer_set_reveal_child (GTK_REVEALER (self->revealer), TRUE);
   gtk_widget_set_parent (GTK_WIDGET (self->revealer), GTK_WIDGET (self));
 
-  self->resizer = PANEL_RESIZER (panel_resizer_new (position));
+  self->resizer = PANEL_RESIZER (panel_resizer_new (area));
   gtk_revealer_set_child (self->revealer, GTK_WIDGET (self->resizer));
 
-  switch (position)
+  switch (area)
     {
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       gtk_widget_set_hexpand (GTK_WIDGET (self), TRUE);
       gtk_widget_set_vexpand (GTK_WIDGET (self), FALSE);
       gtk_revealer_set_transition_type (GTK_REVEALER (self->revealer),
@@ -199,7 +198,7 @@ panel_dock_child_new (PanelDockPosition position)
       gtk_widget_add_css_class (GTK_WIDGET (self), "top");
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       gtk_widget_set_hexpand (GTK_WIDGET (self), TRUE);
       gtk_widget_set_vexpand (GTK_WIDGET (self), FALSE);
       gtk_revealer_set_transition_type (GTK_REVEALER (self->revealer),
@@ -207,7 +206,7 @@ panel_dock_child_new (PanelDockPosition position)
       gtk_widget_add_css_class (GTK_WIDGET (self), "bottom");
       break;
 
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       gtk_widget_set_hexpand (GTK_WIDGET (self), FALSE);
       gtk_widget_set_vexpand (GTK_WIDGET (self), TRUE);
       gtk_revealer_set_transition_type (GTK_REVEALER (self->revealer),
@@ -215,7 +214,7 @@ panel_dock_child_new (PanelDockPosition position)
       gtk_widget_add_css_class (GTK_WIDGET (self), "start");
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       gtk_widget_set_hexpand (GTK_WIDGET (self), FALSE);
       gtk_widget_set_vexpand (GTK_WIDGET (self), TRUE);
       gtk_revealer_set_transition_type (GTK_REVEALER (self->revealer),
@@ -224,7 +223,7 @@ panel_dock_child_new (PanelDockPosition position)
       break;
 
     default:
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
       gtk_widget_set_hexpand (GTK_WIDGET (self), TRUE);
       gtk_widget_set_vexpand (GTK_WIDGET (self), TRUE);
       gtk_revealer_set_transition_type (GTK_REVEALER (self->revealer),
@@ -236,12 +235,12 @@ panel_dock_child_new (PanelDockPosition position)
   return GTK_WIDGET (self);
 }
 
-PanelDockPosition
-panel_dock_child_get_position (PanelDockChild *self)
+PanelArea
+panel_dock_child_get_area (PanelDockChild *self)
 {
   g_return_val_if_fail (PANEL_IS_DOCK_CHILD (self), 0);
 
-  return self->position;
+  return self->area;
 }
 
 static void

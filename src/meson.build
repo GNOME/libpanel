@@ -27,12 +27,12 @@ libpanel_private_sources = [
   'panel-joined-menu.c',
   'panel-maximized-controls.c',
   'panel-resizer.c',
+  'panel-save-dialog-row.c',
   'panel-scaler.c',
 ]
 
 libpanel_sources = [
   'panel-dock.c',
-  'panel-dock-switcher.c',
   'panel-frame.c',
   'panel-frame-header.c',
   'panel-frame-header-bar.c',
@@ -41,18 +41,21 @@ libpanel_sources = [
   'panel-grid.c',
   'panel-grid-column.c',
   'panel-init.c',
+  'panel-layout.c',
+  'panel-layout-item.c',
   'panel-omni-bar.c',
   'panel-paned.c',
+  'panel-position.c',
   'panel-save-dialog.c',
   'panel-save-delegate.c',
   'panel-statusbar.c',
   'panel-theme-selector.c',
+  'panel-toggle-button.c',
   'panel-widget.c',
 ]
 
 libpanel_headers = [
   'libpanel.h',
-  'panel-dock-switcher.h',
   'panel-dock.h',
   'panel-frame.h',
   'panel-frame-header-bar.h',
@@ -62,17 +65,23 @@ libpanel_headers = [
   'panel-grid.h',
   'panel-grid-column.h',
   'panel-init.h',
+  'panel-layout.h',
+  'panel-layout-item.h',
   'panel-omni-bar.h',
   'panel-paned.h',
+  'panel-position.h',
+  'panel-save-dialog.h',
   'panel-save-delegate.h',
   'panel-statusbar.h',
   'panel-theme-selector.h',
+  'panel-toggle-button.h',
   'panel-version-macros.h',
+  'panel-types.h',
   'panel-widget.h',
 ]
 
 panel_enum_headers = [
-  'panel-dock.h',
+  'panel-types.h',
 ]
 
 libpanel_enums = gnome.mkenums_simple('panel-enums',

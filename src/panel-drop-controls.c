@@ -23,12 +23,14 @@
 #include "panel-dock-private.h"
 #include "panel-drop-controls-private.h"
 #include "panel-enums.h"
+#include "panel-frame-header.h"
 #include "panel-frame-private.h"
 #include "panel-frame-switcher-private.h"
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
 #include "panel-paned.h"
 #include "panel-resizer-private.h"
+#include "panel-widget.h"
 
 struct _PanelDropControls
 {
@@ -52,7 +54,7 @@ struct _PanelDropControls
   PanelDock         *dock;
   AdwTabPage        *drop_before_page;
 
-  PanelDockPosition  position;
+  PanelArea          area : 3;
 
   guint              in_drop : 1;
 };
@@ -61,7 +63,7 @@ G_DEFINE_TYPE (PanelDropControls, panel_drop_controls, GTK_TYPE_WIDGET)
 
 enum {
   PROP_0,
-  PROP_POSITION,
+  PROP_AREA,
   N_PROPS
 };
 
@@ -89,18 +91,18 @@ panel_drop_controls_drop_finished (PanelDropControls *self,
 }
 
 void
-panel_drop_controls_set_position (PanelDropControls *self,
-                                  PanelDockPosition  position)
+panel_drop_controls_set_area (PanelDropControls *self,
+                              PanelArea          area)
 {
   g_return_if_fail (PANEL_IS_DROP_CONTROLS (self));
-  g_return_if_fail (position <= PANEL_DOCK_POSITION_CENTER);
+  g_return_if_fail (area <= PANEL_AREA_CENTER);
 
-  self->position = position;
+  self->area = area;
 
-  switch (self->position)
+  switch (self->area)
     {
-    case PANEL_DOCK_POSITION_START:
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_START:
+    case PANEL_AREA_END:
       gtk_widget_show (GTK_WIDGET (self->top));
       gtk_widget_show (GTK_WIDGET (self->bottom));
       gtk_widget_show (GTK_WIDGET (self->center));
@@ -108,8 +110,8 @@ panel_drop_controls_set_position (PanelDropControls *self,
       gtk_widget_hide (GTK_WIDGET (self->right));
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_TOP:
+    case PANEL_AREA_BOTTOM:
       gtk_widget_hide (GTK_WIDGET (self->top));
       gtk_widget_hide (GTK_WIDGET (self->bottom));
       gtk_widget_show (GTK_WIDGET (self->center));
@@ -117,7 +119,7 @@ panel_drop_controls_set_position (PanelDropControls *self,
       gtk_widget_show (GTK_WIDGET (self->right));
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
       gtk_widget_show (GTK_WIDGET (self->center));
       gtk_widget_show (GTK_WIDGET (self->top));
       gtk_widget_show (GTK_WIDGET (self->bottom));
@@ -130,12 +132,12 @@ panel_drop_controls_set_position (PanelDropControls *self,
     }
 }
 
-PanelDockPosition
-panel_drop_controls_get_position (PanelDropControls *self)
+PanelArea
+panel_drop_controls_get_area (PanelDropControls *self)
 {
   g_return_val_if_fail (PANEL_IS_DROP_CONTROLS (self), 0);
 
-  return self->position;
+  return self->area;
 }
 
 static gboolean
@@ -170,7 +172,7 @@ on_drop_target_notify_value_cb (PanelDropControls *self,
       !(header = panel_frame_get_header (PANEL_FRAME (frame))))
     return;
 
-  /* TODO: Actually handle this based on position */
+  /* TODO: Actually handle this based on area */
 
   if (!panel_widget_get_reorderable (panel) ||
       (!panel_frame_header_can_drop (header, panel)))
@@ -286,7 +288,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
                         double             y,
                         GtkDropTarget     *drop_target)
 {
-  PanelDockPosition position;
+  PanelArea area;
   GtkOrientation orientation;
   PanelFrameHeader *header;
   PanelWidget *before_panel = NULL;
@@ -326,17 +328,17 @@ on_drop_target_drop_cb (PanelDropControls *self,
   g_assert (panel_frame_header_can_drop (header, panel));
 
   button = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (drop_target));
-  position = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "POSITION"));
+  area = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "AREA"));
   grid = PANEL_GRID (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID));
   orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (target));
 
-  switch (position)
+  switch (area)
     {
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
       /* Do Nothing */
       break;
 
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       if (grid != NULL)
         {
           PanelGridColumn *grid_column;
@@ -360,7 +362,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         }
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       if (grid != NULL)
         {
           PanelGridColumn *grid_column;
@@ -382,7 +384,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         }
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       if (grid != NULL)
         {
           PanelGridColumn *grid_column;
@@ -411,7 +413,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         }
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       if (grid != NULL)
         {
           PanelGridColumn *grid_column;
@@ -465,9 +467,9 @@ cleanup:
 
 static void
 setup_drop_target (PanelDropControls  *self,
-                   GtkWidget           *widget,
+                   GtkWidget          *widget,
                    GtkDropTarget     **targetptr,
-                   PanelDockPosition   position)
+                   PanelArea           area)
 {
   GType types[] = { PANEL_TYPE_WIDGET };
 
@@ -475,8 +477,8 @@ setup_drop_target (PanelDropControls  *self,
   g_assert (GTK_IS_WIDGET (widget));
 
   g_object_set_data (G_OBJECT (widget),
-                     "POSITION",
-                     GINT_TO_POINTER (position));
+                     "AREA",
+                     GINT_TO_POINTER (area));
 
   *targetptr = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY | GDK_ACTION_MOVE);
   gtk_drop_target_set_gtypes (*targetptr, types, G_N_ELEMENTS (types));
@@ -563,8 +565,8 @@ panel_drop_controls_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_POSITION:
-      g_value_set_enum (value, panel_drop_controls_get_position (self));
+    case PROP_AREA:
+      g_value_set_enum (value, panel_drop_controls_get_area (self));
       break;
 
     default:
@@ -582,8 +584,8 @@ panel_drop_controls_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_POSITION:
-      panel_drop_controls_set_position (self, g_value_get_enum (value));
+    case PROP_AREA:
+      panel_drop_controls_set_area (self, g_value_get_enum (value));
       break;
 
     default:
@@ -604,12 +606,10 @@ panel_drop_controls_class_init (PanelDropControlsClass *klass)
   widget_class->root = panel_drop_controls_root;
   widget_class->unroot = panel_drop_controls_unroot;
 
-  properties [PROP_POSITION] =
-    g_param_spec_enum ("position",
-                       "Position",
-                       "The position of the drop controls",
-                       PANEL_TYPE_DOCK_POSITION,
-                       PANEL_DOCK_POSITION_CENTER,
+  properties [PROP_AREA] =
+    g_param_spec_enum ("area", NULL, NULL,
+                       PANEL_TYPE_AREA,
+                       PANEL_AREA_CENTER,
                        (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -631,12 +631,12 @@ panel_drop_controls_init (PanelDropControls *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  setup_drop_target (self, GTK_WIDGET (self->bottom), &self->bottom_target, PANEL_DOCK_POSITION_BOTTOM);
-  setup_drop_target (self, GTK_WIDGET (self->center), &self->center_target, PANEL_DOCK_POSITION_CENTER);
-  setup_drop_target (self, GTK_WIDGET (self->left), &self->left_target, PANEL_DOCK_POSITION_START);
-  setup_drop_target (self, GTK_WIDGET (self->right), &self->right_target, PANEL_DOCK_POSITION_END);
-  setup_drop_target (self, GTK_WIDGET (self->top), &self->top_target, PANEL_DOCK_POSITION_TOP);
-  setup_drop_target (self, GTK_WIDGET (self), &self->drop_target, PANEL_DOCK_POSITION_CENTER);
+  setup_drop_target (self, GTK_WIDGET (self->bottom), &self->bottom_target, PANEL_AREA_BOTTOM);
+  setup_drop_target (self, GTK_WIDGET (self->center), &self->center_target, PANEL_AREA_CENTER);
+  setup_drop_target (self, GTK_WIDGET (self->left), &self->left_target, PANEL_AREA_START);
+  setup_drop_target (self, GTK_WIDGET (self->right), &self->right_target, PANEL_AREA_END);
+  setup_drop_target (self, GTK_WIDGET (self->top), &self->top_target, PANEL_AREA_TOP);
+  setup_drop_target (self, GTK_WIDGET (self), &self->drop_target, PANEL_AREA_CENTER);
 }
 
 gboolean

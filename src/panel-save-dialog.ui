@@ -1,81 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="PanelSaveDialog" parent="GtkDialog">
-    <style>
-      <class name="message"/>
-    </style>
-    <property name="title"></property>
-    <property name="resizable">false</property>
-    <child internal-child="headerbar">
-      <object class="GtkHeaderBar" id="headerbar">
-        <property name="show-title-buttons">0</property>
-      </object>
-    </child>
-    <child internal-child="content_area">
-      <object class="GtkBox">
-        <property name="margin-top">30</property>
-        <property name="margin-bottom">30</property>
-        <property name="margin-start">30</property>
-        <property name="margin-end">30</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
+  <template class="PanelSaveDialog" parent="AdwMessageDialog">
+    <property name="default-response">save</property>
+    <property name="close-response">cancel</property>
+    <signal name="response::cancel" handler="panel_save_dialog_response_cancel_cb"/>
+    <signal name="response::discard" handler="panel_save_dialog_response_discard_cb"/>
+    <signal name="response::save" handler="panel_save_dialog_response_save_cb"/>
+    <responses>
+      <response id="cancel" translatable="yes">_Cancel</response>
+      <response id="discard" translatable="yes" appearance="destructive">_Discard</response>
+      <response id="save" translatable="yes" appearance="suggested">_Save</response>
+    </responses>
+    <property name="extra-child">
+      <object class="AdwPreferencesPage" id="page">
         <child>
-          <object class="GtkLabel" id="title">
-            <style>
-              <class name="title-2"/>
-            </style>
-            <property name="label" translatable="yes">Save Changes?</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="wrap">true</property>
-            <property name="xalign">0</property>
-            <property name="max-width-chars">60</property>
-            <property name="label" translatable="yes">Open pages contain unsaved changes. Changes which are not saved will be permanently lost.</property>
-          </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesGroup" id="list">
+          <object class="AdwPreferencesGroup" id="group">
           </object>
         </child>
       </object>
-    </child>
-    <child internal-child="action_area">
-      <object class="GtkBox">
-        <property name="hexpand">true</property>
-        <property name="halign">fill</property>
-        <property name="homogeneous">true</property>
-        <style>
-          <class name="linked"/>
-        </style>
-        <child>
-          <object class="GtkButton" id="cancel_button">
-            <property name="hexpand">true</property>
-            <property name="use-underline">true</property>
-            <property name="label" translatable="yes">Cancel</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="discard_button">
-            <property name="hexpand">true</property>
-            <property name="use-underline">true</property>
-            <property name="label" translatable="yes">_Discard All</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="save_button">
-            <property name="hexpand">true</property>
-            <property name="use-underline">true</property>
-            <property name="label" translatable="yes">_Save</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <action-widgets>
-      <action-widget response="cancel">cancel_button</action-widget>
-      <action-widget response="no">discard_button</action-widget>
-      <action-widget response="yes">save_button</action-widget>
-    </action-widgets>
+    </property>
   </template>
 </interface>

@@ -1,6 +1,6 @@
-/* panel-switcher.h
+/* panel-layout-private.h
  *
- * Copyright 2021 Christian Hergert <chergert@redhat.com>
+ * Copyright 2022 Christian Hergert <chergert@redhat.com>
  *
  * This file is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,20 +20,10 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
-
-#include "panel-dock.h"
-#include "panel-version-macros.h"
+#include "panel-layout.h"
 
 G_BEGIN_DECLS
 
-#define PANEL_TYPE_DOCK_SWITCHER (panel_dock_switcher_get_type())
 
-PANEL_AVAILABLE_IN_ALL
-G_DECLARE_FINAL_TYPE (PanelDockSwitcher, panel_dock_switcher, PANEL, DOCK_SWITCHER, GtkWidget)
-
-PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_dock_switcher_new (PanelDock         *dock,
-                                    PanelDockPosition  position);
 
 G_END_DECLS

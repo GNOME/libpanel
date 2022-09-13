@@ -9,7 +9,7 @@
         <property name="vexpand">true</property>
         <child type="overlay">
           <object class="PanelDropControls" id="drop_controls">
-            <property name="position">center</property>
+            <property name="area">center</property>
             <property name="hexpand">true</property>
             <property name="vexpand">true</property>
             <property name="visible">false</property>
@@ -40,7 +40,9 @@
                 <property name="hexpand">true</property>
                 <child>
                   <object class="AdwTabView" id="tab_view">
-                    <signal name="setup-menu" handler="setup_menu_cb"/>
+                    <signal name="close-page" handler="panel_frame_close_page_cb" swapped="true" object="PanelFrame"/>
+                    <signal name="notify::selected-page" handler="panel_frame_notify_selected_page_cb" swapped="true" after="true" object="PanelFrame"/>
+                    <signal name="setup-menu" handler="panel_frame_setup_menu_cb"/>
                     <layout>
                       <property name="name">pages</property>
                     </layout>

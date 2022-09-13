@@ -22,7 +22,7 @@
 
 #include <gtk/gtk.h>
 
-#include "panel-dock.h"
+#include "panel-types.h"
 
 G_BEGIN_DECLS
 
@@ -30,15 +30,15 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (PanelResizer, panel_resizer, PANEL, RESIZER, GtkWidget)
 
-GtkWidget         *panel_resizer_new               (PanelDockPosition  position);
-PanelDockPosition  panel_resizer_get_position      (PanelResizer      *self);
-void               panel_resizer_set_position      (PanelResizer      *self,
-                                                    PanelDockPosition  position);
-GtkWidget         *panel_resizer_get_child         (PanelResizer      *self);
-void               panel_resizer_set_child         (PanelResizer      *self,
-                                                    GtkWidget         *child);
-GtkWidget         *panel_resizer_get_handle        (PanelResizer      *self);
-void               panel_resizer_set_drag_position (PanelResizer      *self,
-                                                    int                drag_position);
+GtkWidget *panel_resizer_new               (PanelArea     area);
+PanelArea  panel_resizer_get_area          (PanelResizer *self);
+void       panel_resizer_set_area          (PanelResizer *self,
+                                            PanelArea     area);
+GtkWidget *panel_resizer_get_child         (PanelResizer *self);
+void       panel_resizer_set_child         (PanelResizer *self,
+                                            GtkWidget    *child);
+GtkWidget *panel_resizer_get_handle        (PanelResizer *self);
+void       panel_resizer_set_drag_position (PanelResizer *self,
+                                            int           drag_position);
 
 G_END_DECLS

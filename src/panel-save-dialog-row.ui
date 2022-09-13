@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PanelSaveDialogRow" parent="AdwActionRow">
+    <child type="prefix">
+      <object class="GtkCheckButton" id="check">
+        <property name="active">true</property>
+        <property name="valign">center</property>
+        <signal name="notify::active" handler="on_notify_active_cb" swapped="true" object="PanelSaveDialogRow"/>
+      </object>
+    </child>
+    <property name="activatable-widget">check</property>
+  </template>
+</interface>

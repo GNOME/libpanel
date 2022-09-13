@@ -53,26 +53,6 @@ example_window_new (GtkApplication *application)
 }
 
 static gboolean
-on_save_cb (PanelSaveDelegate *delegate,
-            GTask             *task,
-            PanelWidget       *widget)
-{
-  g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
-  g_assert (G_IS_TASK (task));
-  g_assert (PANEL_IS_WIDGET (widget));
-
-  // actually do the save here, ideally asynchronously
-
-  g_print ("Actually save the file\n");
-
-  panel_widget_set_modified (widget, FALSE);
-  panel_save_delegate_set_progress (delegate, 1.0);
-  g_task_return_boolean (task, TRUE);
-
-  return TRUE;
-}
-
-static gboolean
 text_to_visible (GBinding     *binding,
                  const GValue *from_value,
                  GValue       *to_value,
@@ -88,31 +68,19 @@ example_window_add_document (ExampleWindow *self)
 {
   static guint count;
   PanelWidget *widget;
-  PanelSaveDelegate *save_delegate;
   char *title;
 
   g_return_if_fail (EXAMPLE_IS_WINDOW (self));
 
   title = g_strdup_printf ("Untitled Document %u", ++count);
-
-  save_delegate = panel_save_delegate_new ();
-  panel_save_delegate_set_title (save_delegate, title);
-  panel_save_delegate_set_subtitle (save_delegate, "~/Documents");
-
   widget = g_object_new (EXAMPLE_TYPE_PAGE,
                          "title", title,
                          "kind", PANEL_WIDGET_KIND_DOCUMENT,
                          "icon-name", "text-x-generic-symbolic",
                          "menu-model", self->page_menu,
                          "can-maximize", TRUE,
-                         "save-delegate", save_delegate,
                          "modified", TRUE,
                          NULL);
-
-  g_signal_connect (save_delegate,
-                    "save",
-                    G_CALLBACK (on_save_cb),
-                    widget);
 
   panel_grid_add (self->grid, widget);
   panel_widget_raise (widget);
@@ -125,7 +93,6 @@ example_window_add_document (ExampleWindow *self)
   g_object_bind_property_full (widget, "command-text", self->command, "visible", 0, text_to_visible, NULL, NULL, NULL);
   g_object_bind_property (widget, "command-text", self->command, "label", 0);
 
-  g_object_unref (save_delegate);
   g_free (title);
 }
 

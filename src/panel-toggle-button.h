@@ -1,6 +1,6 @@
-/* panel-theme-selector-private.h
+/* panel-switcher.h
  *
- * Copyright 2021-2022 Christian Hergert <chergert@redhat.com>
+ * Copyright 2021 Christian Hergert <chergert@redhat.com>
  *
  * This file is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -26,17 +26,13 @@
 
 G_BEGIN_DECLS
 
-#define PANEL_TYPE_THEME_SELECTOR (panel_theme_selector_get_type())
+#define PANEL_TYPE_TOGGLE_BUTTON (panel_toggle_button_get_type())
 
 PANEL_AVAILABLE_IN_ALL
-G_DECLARE_FINAL_TYPE (PanelThemeSelector, panel_theme_selector, PANEL, THEME_SELECTOR, GtkWidget)
+G_DECLARE_FINAL_TYPE (PanelToggleButton, panel_toggle_button, PANEL, TOGGLE_BUTTON, GtkWidget)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget  *panel_theme_selector_new             (void);
-PANEL_AVAILABLE_IN_ALL
-const char *panel_theme_selector_get_action_name (PanelThemeSelector *self);
-PANEL_AVAILABLE_IN_ALL
-void        panel_theme_selector_set_action_name (PanelThemeSelector *self,
-                                                  const char         *action_name);
+GtkWidget *panel_toggle_button_new (PanelDock *dock,
+                                    PanelArea  area);
 
 G_END_DECLS

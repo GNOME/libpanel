@@ -20,7 +20,9 @@
 
 #pragma once
 
-#include "panel-dock.h"
+#include <gtk/gtk.h>
+
+#include "panel-types.h"
 
 G_BEGIN_DECLS
 
@@ -28,10 +30,10 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (PanelDropControls, panel_drop_controls, PANEL, DROP_CONTROLS, GtkWidget)
 
-GtkWidget         *panel_drop_controls_new          (void);
-PanelDockPosition  panel_drop_controls_get_position (PanelDropControls *self);
-void               panel_drop_controls_set_position (PanelDropControls *self,
-                                                     PanelDockPosition  position);
-gboolean           panel_drop_controls_in_drop      (PanelDropControls *self);
+GtkWidget *panel_drop_controls_new      (void);
+PanelArea  panel_drop_controls_get_area (PanelDropControls *self);
+void       panel_drop_controls_set_area (PanelDropControls *self,
+                                         PanelArea          area);
+gboolean   panel_drop_controls_in_drop  (PanelDropControls *self);
 
 G_END_DECLS

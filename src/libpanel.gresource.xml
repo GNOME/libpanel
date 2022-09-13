@@ -2,12 +2,13 @@
 <gresources>
   <gresource prefix="/org/gnome/libpanel">
     <file compressed="true">stylesheet.css</file>
-    <file compressed="true" preprocess="xml-stripblanks">panel-dock-switcher.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-drop-controls.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-frame-header-bar.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-frame-header-bar-row.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-frame.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-save-dialog.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">panel-save-dialog-row.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-theme-selector.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">panel-toggle-button.ui</file>
   </gresource>
 </gresources>

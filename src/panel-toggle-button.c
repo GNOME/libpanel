@@ -22,61 +22,61 @@
 
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
-#include "panel-dock-switcher.h"
 #include "panel-enums.h"
+#include "panel-toggle-button.h"
+#include "panel-widget.h"
 
 #define TIMEOUT_EXPAND 500
-#define EMPTY_DRAG_SIZE 100
 
-struct _PanelDockSwitcher
+struct _PanelToggleButton
 {
-  GtkWidget          parent_instance;
+  GtkWidget        parent_instance;
 
-  PanelDockPosition  position;
+  PanelArea        area;
 
-  PanelDock         *dock;
+  PanelDock       *dock;
 
-  GtkToggleButton   *button;
-  GtkRevealer       *revealer;
-  GBinding          *binding;
+  GtkToggleButton *button;
+  GtkRevealer     *revealer;
+  GBinding        *binding;
 };
 
-G_DEFINE_TYPE (PanelDockSwitcher, panel_dock_switcher, GTK_TYPE_WIDGET)
+G_DEFINE_TYPE (PanelToggleButton, panel_toggle_button, GTK_TYPE_WIDGET)
 
 enum {
   PROP_0,
   PROP_DOCK,
-  PROP_POSITION,
+  PROP_AREA,
   N_PROPS
 };
 
 static GParamSpec *properties [N_PROPS];
 
 GtkWidget *
-panel_dock_switcher_new (PanelDock         *dock,
-                         PanelDockPosition  position)
+panel_toggle_button_new (PanelDock *dock,
+                         PanelArea  area)
 {
   g_return_val_if_fail (PANEL_IS_DOCK (dock), NULL);
-  g_return_val_if_fail (position == PANEL_DOCK_POSITION_START ||
-                        position == PANEL_DOCK_POSITION_END ||
-                        position == PANEL_DOCK_POSITION_TOP ||
-                        position == PANEL_DOCK_POSITION_BOTTOM,
+  g_return_val_if_fail (area == PANEL_AREA_START ||
+                        area == PANEL_AREA_END ||
+                        area == PANEL_AREA_TOP ||
+                        area == PANEL_AREA_BOTTOM,
                         NULL);
 
-  return g_object_new (PANEL_TYPE_DOCK_SWITCHER,
+  return g_object_new (PANEL_TYPE_TOGGLE_BUTTON,
                        "dock", dock,
-                       "position", position,
+                       "area", area,
                        NULL);
 }
 
 static gboolean
-panel_dock_switcher_switch_timeout (gpointer data)
+panel_toggle_button_switch_timeout (gpointer data)
 {
   GtkToggleButton *button = data;
 
   g_assert (GTK_IS_TOGGLE_BUTTON (button));
 
-  g_object_steal_data (G_OBJECT (button), "-panel-switch-timer");
+  g_object_steal_data (G_OBJECT (button), "-panel-toggle-timer");
   gtk_toggle_button_set_active (button, TRUE);
 
   return G_SOURCE_REMOVE;
@@ -98,11 +98,11 @@ drag_enter_cb (GtkDropControllerMotion *motion,
     {
       guint switch_timer = g_timeout_add_full (G_PRIORITY_DEFAULT,
                                                TIMEOUT_EXPAND,
-                                               panel_dock_switcher_switch_timeout,
+                                               panel_toggle_button_switch_timeout,
                                                g_object_ref (button),
                                                g_object_unref);
-      g_source_set_name_by_id (switch_timer, "[panel] panel_dock_switcher_switch_timeout");
-      g_object_set_data (G_OBJECT (button), "-panel-switch-timer", GUINT_TO_POINTER (switch_timer));
+      g_source_set_name_by_id (switch_timer, "[panel] panel_toggle_button_switch_timeout");
+      g_object_set_data (G_OBJECT (button), "-panel-toggle-timer", GUINT_TO_POINTER (switch_timer));
     }
 }
 
@@ -116,7 +116,7 @@ drag_leave_cb (GtkDropControllerMotion *motion,
   g_assert (GTK_IS_DROP_CONTROLLER_MOTION (motion));
 
   button = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (motion));
-  switch_timer = GPOINTER_TO_UINT (g_object_steal_data (G_OBJECT (button), "-panel-switch-timer"));
+  switch_timer = GPOINTER_TO_UINT (g_object_steal_data (G_OBJECT (button), "-panel-toggle-timer"));
   if (switch_timer)
     g_source_remove (switch_timer);
 }
@@ -133,11 +133,11 @@ notify_child_revealed_cb (GtkRevealer            *revealer,
 }
 
 static void
-panel_dock_switcher_panel_drag_begin_cb (PanelDockSwitcher *self,
+panel_toggle_button_panel_drag_begin_cb (PanelToggleButton *self,
                                          PanelWidget       *widget,
                                          PanelDock         *dock)
 {
-  g_assert (PANEL_IS_DOCK_SWITCHER (self));
+  g_assert (PANEL_IS_TOGGLE_BUTTON (self));
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
@@ -152,17 +152,17 @@ panel_dock_switcher_panel_drag_begin_cb (PanelDockSwitcher *self,
 }
 
 static void
-panel_dock_switcher_panel_drag_end_cb (PanelDockSwitcher *self,
+panel_toggle_button_panel_drag_end_cb (PanelToggleButton *self,
                                        PanelWidget       *widget,
                                        PanelDock         *dock)
 {
-  g_assert (PANEL_IS_DOCK_SWITCHER (self));
+  g_assert (PANEL_IS_TOGGLE_BUTTON (self));
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
   gtk_widget_remove_css_class (GTK_WIDGET (self), "drag-active");
 
-  if (!panel_dock_get_can_reveal_edge (dock, self->position))
+  if (!panel_dock_get_can_reveal_area (dock, self->area))
     {
       gtk_revealer_set_reveal_child (self->revealer, FALSE);
       gtk_toggle_button_set_active (self->button, FALSE);
@@ -170,7 +170,7 @@ panel_dock_switcher_panel_drag_end_cb (PanelDockSwitcher *self,
 }
 
 static void
-panel_dock_switcher_notify_can_reveal_cb (PanelDock   *dock,
+panel_toggle_button_notify_can_reveal_cb (PanelDock   *dock,
                                           GParamSpec  *pspec,
                                           GtkRevealer *revealer)
 {
@@ -197,10 +197,10 @@ panel_dock_switcher_notify_can_reveal_cb (PanelDock   *dock,
 }
 
 static void
-panel_dock_switcher_set_dock (PanelDockSwitcher *self,
+panel_toggle_button_set_dock (PanelToggleButton *self,
                               PanelDock         *dock)
 {
-  g_return_if_fail (PANEL_IS_DOCK_SWITCHER (self));
+  g_return_if_fail (PANEL_IS_TOGGLE_BUTTON (self));
   g_return_if_fail (!dock || PANEL_IS_DOCK (dock));
 
   if (dock == self->dock)
@@ -210,13 +210,13 @@ panel_dock_switcher_set_dock (PanelDockSwitcher *self,
     {
       g_clear_pointer (&self->binding, g_binding_unbind);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
+                                            G_CALLBACK (panel_toggle_button_notify_can_reveal_cb),
                                             self->revealer);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_dock_switcher_panel_drag_begin_cb),
+                                            G_CALLBACK (panel_toggle_button_panel_drag_begin_cb),
                                             self);
       g_signal_handlers_disconnect_by_func (self->dock,
-                                            G_CALLBACK (panel_dock_switcher_panel_drag_end_cb),
+                                            G_CALLBACK (panel_toggle_button_panel_drag_end_cb),
                                             self);
     }
 
@@ -227,13 +227,13 @@ panel_dock_switcher_set_dock (PanelDockSwitcher *self,
       const char *nick = NULL;
       char *notify = NULL;
 
-      switch (self->position)
+      switch (self->area)
         {
-        case PANEL_DOCK_POSITION_END: nick = "reveal-end"; break;
-        case PANEL_DOCK_POSITION_TOP: nick = "reveal-top"; break;
-        case PANEL_DOCK_POSITION_BOTTOM: nick = "reveal-bottom"; break;
-        case PANEL_DOCK_POSITION_START: nick = "reveal-start"; break;
-        case PANEL_DOCK_POSITION_CENTER:
+        case PANEL_AREA_END: nick = "reveal-end"; break;
+        case PANEL_AREA_TOP: nick = "reveal-top"; break;
+        case PANEL_AREA_BOTTOM: nick = "reveal-bottom"; break;
+        case PANEL_AREA_START: nick = "reveal-start"; break;
+        case PANEL_AREA_CENTER:
         default: break;
         }
 
@@ -241,26 +241,26 @@ panel_dock_switcher_set_dock (PanelDockSwitcher *self,
 
       /* Set default state before binding */
       gtk_toggle_button_set_active (self->button,
-                                    panel_dock_get_reveal_edge (self->dock, self->position));
+                                    panel_dock_get_reveal_area (self->dock, self->area));
       gtk_revealer_set_reveal_child (self->revealer,
-                                     panel_dock_get_can_reveal_edge (self->dock, self->position));
+                                     panel_dock_get_can_reveal_area (self->dock, self->area));
 
       self->binding = g_object_bind_property (self->dock, nick,
                                               self->button, "active",
                                               G_BINDING_BIDIRECTIONAL);
       g_signal_connect_object (self->dock,
                                "panel-drag-begin",
-                               G_CALLBACK (panel_dock_switcher_panel_drag_begin_cb),
+                               G_CALLBACK (panel_toggle_button_panel_drag_begin_cb),
                                self,
                                G_CONNECT_SWAPPED);
       g_signal_connect_object (self->dock,
                                "panel-drag-end",
-                               G_CALLBACK (panel_dock_switcher_panel_drag_end_cb),
+                               G_CALLBACK (panel_toggle_button_panel_drag_end_cb),
                                self,
                                G_CONNECT_SWAPPED);
       g_signal_connect_object (self->dock,
                                notify,
-                               G_CALLBACK (panel_dock_switcher_notify_can_reveal_cb),
+                               G_CALLBACK (panel_toggle_button_notify_can_reveal_cb),
                                self->revealer,
                                0);
 
@@ -269,56 +269,56 @@ panel_dock_switcher_set_dock (PanelDockSwitcher *self,
 }
 
 static void
-panel_dock_switcher_constructed (GObject *object)
+panel_toggle_button_constructed (GObject *object)
 {
-  PanelDockSwitcher *self = (PanelDockSwitcher *)object;
+  PanelToggleButton *self = (PanelToggleButton *)object;
 
-  g_assert (PANEL_IS_DOCK_SWITCHER (self));
+  g_assert (PANEL_IS_TOGGLE_BUTTON (self));
 
-  G_OBJECT_CLASS (panel_dock_switcher_parent_class)->constructed (object);
+  G_OBJECT_CLASS (panel_toggle_button_parent_class)->constructed (object);
 
-  switch (self->position)
+  switch (self->area)
     {
-    case PANEL_DOCK_POSITION_START:
+    case PANEL_AREA_START:
       g_object_set (self->button, "icon-name", "panel-left-symbolic", NULL);
       break;
 
-    case PANEL_DOCK_POSITION_END:
+    case PANEL_AREA_END:
       g_object_set (self->button, "icon-name", "panel-right-symbolic", NULL);
       break;
 
-    case PANEL_DOCK_POSITION_TOP:
+    case PANEL_AREA_TOP:
       g_object_set (self->button, "icon-name", "panel-top-symbolic", NULL);
       break;
 
-    case PANEL_DOCK_POSITION_BOTTOM:
+    case PANEL_AREA_BOTTOM:
       g_object_set (self->button, "icon-name", "panel-bottom-symbolic", NULL);
       break;
 
-    case PANEL_DOCK_POSITION_CENTER:
+    case PANEL_AREA_CENTER:
     default:
       break;
     }
 }
 
 static void
-panel_dock_switcher_dispose (GObject *object)
+panel_toggle_button_dispose (GObject *object)
 {
-  PanelDockSwitcher *self = (PanelDockSwitcher *)object;
+  PanelToggleButton *self = (PanelToggleButton *)object;
 
   g_clear_object (&self->dock);
   g_clear_pointer ((GtkWidget **)&self->revealer, gtk_widget_unparent);
 
-  G_OBJECT_CLASS (panel_dock_switcher_parent_class)->dispose (object);
+  G_OBJECT_CLASS (panel_toggle_button_parent_class)->dispose (object);
 }
 
 static void
-panel_dock_switcher_get_property (GObject    *object,
+panel_toggle_button_get_property (GObject    *object,
                                   guint       prop_id,
                                   GValue     *value,
                                   GParamSpec *pspec)
 {
-  PanelDockSwitcher *self = PANEL_DOCK_SWITCHER (object);
+  PanelToggleButton *self = PANEL_TOGGLE_BUTTON (object);
 
   switch (prop_id)
     {
@@ -326,8 +326,8 @@ panel_dock_switcher_get_property (GObject    *object,
       g_value_set_object (value, self->dock);
       break;
 
-    case PROP_POSITION:
-      g_value_set_enum (value, self->position);
+    case PROP_AREA:
+      g_value_set_enum (value, self->area);
       break;
 
     default:
@@ -336,21 +336,21 @@ panel_dock_switcher_get_property (GObject    *object,
 }
 
 static void
-panel_dock_switcher_set_property (GObject      *object,
+panel_toggle_button_set_property (GObject      *object,
                                   guint         prop_id,
                                   const GValue *value,
                                   GParamSpec   *pspec)
 {
-  PanelDockSwitcher *self = PANEL_DOCK_SWITCHER (object);
+  PanelToggleButton *self = PANEL_TOGGLE_BUTTON (object);
 
   switch (prop_id)
     {
     case PROP_DOCK:
-      panel_dock_switcher_set_dock (self, g_value_get_object (value));
+      panel_toggle_button_set_dock (self, g_value_get_object (value));
       break;
 
-    case PROP_POSITION:
-      self->position = g_value_get_enum (value);
+    case PROP_AREA:
+      self->area = g_value_get_enum (value);
       break;
 
     default:
@@ -359,47 +359,43 @@ panel_dock_switcher_set_property (GObject      *object,
 }
 
 static void
-panel_dock_switcher_class_init (PanelDockSwitcherClass *klass)
+panel_toggle_button_class_init (PanelToggleButtonClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->constructed = panel_dock_switcher_constructed;
-  object_class->dispose = panel_dock_switcher_dispose;
-  object_class->get_property = panel_dock_switcher_get_property;
-  object_class->set_property = panel_dock_switcher_set_property;
+  object_class->constructed = panel_toggle_button_constructed;
+  object_class->dispose = panel_toggle_button_dispose;
+  object_class->get_property = panel_toggle_button_get_property;
+  object_class->set_property = panel_toggle_button_set_property;
 
   properties [PROP_DOCK] =
-    g_param_spec_object ("dock",
-                         "Dock",
-                         "The dock for which to toggle edges",
+    g_param_spec_object ("dock", NULL, NULL,
                          PANEL_TYPE_DOCK,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
-  properties [PROP_POSITION] =
-    g_param_spec_enum ("position",
-                       "Position",
-                       "The dock position to toggle",
-                       PANEL_TYPE_DOCK_POSITION,
-                       PANEL_DOCK_POSITION_START,
+  properties [PROP_AREA] =
+    g_param_spec_enum ("area", NULL, NULL,
+                       PANEL_TYPE_AREA,
+                       PANEL_AREA_START,
                        (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-dock-switcher.ui");
-  gtk_widget_class_set_css_name (widget_class, "paneldockswitcher");
-  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, button);
-  gtk_widget_class_bind_template_child (widget_class, PanelDockSwitcher, revealer);
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-toggle-button.ui");
+  gtk_widget_class_set_css_name (widget_class, "paneltogglebutton");
+  gtk_widget_class_bind_template_child (widget_class, PanelToggleButton, button);
+  gtk_widget_class_bind_template_child (widget_class, PanelToggleButton, revealer);
   gtk_widget_class_bind_template_callback (widget_class, drag_enter_cb);
   gtk_widget_class_bind_template_callback (widget_class, drag_leave_cb);
   gtk_widget_class_bind_template_callback (widget_class, notify_child_revealed_cb);
 }
 
 static void
-panel_dock_switcher_init (PanelDockSwitcher *self)
+panel_toggle_button_init (PanelToggleButton *self)
 {
-  self->position = PANEL_DOCK_POSITION_START;
+  self->area = PANEL_AREA_START;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }

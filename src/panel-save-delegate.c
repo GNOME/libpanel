@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "panel-save-delegate.h"
+#include "panel-macros.h"
 
 typedef struct
 {
@@ -29,6 +30,7 @@ typedef struct
   char *icon_name;
   GIcon *icon;
   double progress;
+  guint is_draft : 1;
 } PanelSaveDelegatePrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (PanelSaveDelegate, panel_save_delegate, G_TYPE_OBJECT)
@@ -37,6 +39,7 @@ enum {
   PROP_0,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_IS_DRAFT,
   PROP_PROGRESS,
   PROP_SUBTITLE,
   PROP_TITLE,
@@ -44,6 +47,8 @@ enum {
 };
 
 enum {
+  CLOSE,
+  DISCARD,
   SAVE,
   N_SIGNALS
 };
@@ -71,13 +76,22 @@ panel_save_delegate_real_save_async (PanelSaveDelegate   *self,
                                      gpointer             user_data)
 {
   GTask *task = NULL;
+  gboolean ret = FALSE;
 
   g_assert (PANEL_IS_SAVE_DELEGATE (self));
   g_assert (!cancellable || G_IS_CANCELLABLE (cancellable));
 
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_save_delegate_real_save_async);
-  g_signal_emit (self, signals [SAVE], 0, task);
+
+  g_signal_emit (self, signals [SAVE], 0, task, &ret);
+
+  if (!ret)
+    g_task_return_new_error (task,
+                             G_IO_ERROR,
+                             G_IO_ERROR_FAILED,
+                             "No handler implemented save");
+
   g_clear_object (&task);
 }
 
@@ -140,6 +154,10 @@ panel_save_delegate_get_property (GObject    *object,
       g_value_set_string (value, panel_save_delegate_get_icon_name (self));
       break;
 
+    case PROP_IS_DRAFT:
+      g_value_set_boolean (value, panel_save_delegate_get_is_draft (self));
+      break;
+
     case PROP_PROGRESS:
       g_value_set_double (value, panel_save_delegate_get_progress (self));
       break;
@@ -173,6 +191,10 @@ panel_save_delegate_set_property (GObject      *object,
 
     case PROP_ICON_NAME:
       panel_save_delegate_set_icon_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_IS_DRAFT:
+      panel_save_delegate_set_is_draft (self, g_value_get_boolean (value));
       break;
 
     case PROP_PROGRESS:
@@ -240,6 +262,19 @@ panel_save_delegate_class_init (PanelSaveDelegateClass *klass)
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
+   * PanelSaveDelegate:is-draft:
+   *
+   * The "is-draft" property indicates that the document represented by the
+   * delegate is a draft and might be lost of not saved.
+   */
+  properties [PROP_IS_DRAFT] =
+    g_param_spec_boolean ("is-draft",
+                          "Is Draft",
+                          "If the delegate contents are ephemeral until saved",
+                          FALSE,
+                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  /**
    * PanelSaveDelegate:progress:
    *
    * The "progress" property contains progress between 0.0 and 1.0 and
@@ -304,6 +339,45 @@ panel_save_delegate_class_init (PanelSaveDelegateClass *klass)
                                  g_signal_accumulator_true_handled, NULL,
                                  NULL,
                                  G_TYPE_BOOLEAN, 1, G_TYPE_TASK);
+
+  /**
+   * PanelSaveDelegate::close:
+   * @self: a #PanelSaveDelegate
+   *
+   * This signal is emitted when the save delegate should close
+   * the widget it is related to. This can happen after saving as
+   * part of a close request and it is now save for the delegate to
+   * close.
+   *
+   * Implementations are encouraged to connect to this signal (or
+   * implement the virtual method) and call panel_widget_force_close().
+   */
+  signals [CLOSE] = g_signal_new ("close",
+                                  G_TYPE_FROM_CLASS (klass),
+                                  G_SIGNAL_RUN_LAST,
+                                  G_STRUCT_OFFSET (PanelSaveDelegateClass, close),
+                                  NULL, NULL,
+                                  NULL,
+                                  G_TYPE_NONE, 0);
+
+  /**
+   * PanelSaveDelegate::discard:
+   * @self: a #PanelSaveDelegate
+   *
+   * This signal is emitted when the user has requested that the
+   * delegate discard the changes instead of saving them.
+   *
+   * Implementations are encouraged to connect to this signal (or
+   * implement the virtual method) and revert the document to the
+   * last saved state and/or close the document.
+   */
+  signals [DISCARD] = g_signal_new ("discard",
+                                    G_TYPE_FROM_CLASS (klass),
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (PanelSaveDelegateClass, discard),
+                                    NULL, NULL,
+                                    NULL,
+                                    G_TYPE_NONE, 0);
 }
 
 static void
@@ -350,11 +424,8 @@ panel_save_delegate_set_icon_name (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (g_strcmp0 (priv->icon_name, icon_name) != 0)
+  if (panel_set_string (&priv->icon_name, icon_name))
     {
-      g_free (priv->icon_name);
-      priv->icon_name = g_strdup (icon_name);
-
       if (g_set_object (&priv->icon, NULL))
         g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
 
@@ -395,12 +466,8 @@ panel_save_delegate_set_subtitle (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (g_strcmp0 (priv->subtitle, subtitle) != 0)
-    {
-      g_free (priv->subtitle);
-      priv->subtitle = g_strdup (subtitle);
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SUBTITLE]);
-    }
+  if (panel_set_string (&priv->subtitle, subtitle))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SUBTITLE]);
 }
 
 /**
@@ -436,12 +503,8 @@ panel_save_delegate_set_title (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (g_strcmp0 (priv->title, title) != 0)
-    {
-      g_free (priv->title);
-      priv->title = g_strdup (title);
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
-    }
+  if (panel_set_string (&priv->title, title))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
 }
 
 double
@@ -531,4 +594,47 @@ panel_save_delegate_set_icon (PanelSaveDelegate *self,
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
     }
+}
+
+gboolean
+panel_save_delegate_get_is_draft (PanelSaveDelegate *self)
+{
+  PanelSaveDelegatePrivate *priv = panel_save_delegate_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_SAVE_DELEGATE (self), FALSE);
+
+  return priv->is_draft;
+}
+
+void
+panel_save_delegate_set_is_draft (PanelSaveDelegate *self,
+                                  gboolean           is_draft)
+{
+  PanelSaveDelegatePrivate *priv = panel_save_delegate_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
+
+  is_draft = !!is_draft;
+
+  if (is_draft != priv->is_draft)
+    {
+      priv->is_draft = is_draft;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_IS_DRAFT]);
+    }
+}
+
+void
+panel_save_delegate_close (PanelSaveDelegate *self)
+{
+  g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
+
+  g_signal_emit (self, signals [CLOSE], 0);
+}
+
+void
+panel_save_delegate_discard (PanelSaveDelegate *self)
+{
+  g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
+
+  g_signal_emit (self, signals [DISCARD], 0);
 }

@@ -23,7 +23,8 @@
 #include <adwaita.h>
 
 #include "panel-dock.h"
-#include "panel-dock-switcher.h"
+#include "panel-dock-child-private.h"
+#include "panel-enums.h"
 #include "panel-frame.h"
 #include "panel-frame-header.h"
 #include "panel-frame-switcher.h"
@@ -35,6 +36,7 @@
 #include "panel-resources.h"
 #include "panel-statusbar.h"
 #include "panel-theme-selector.h"
+#include "panel-toggle-button.h"
 #include "panel-widget.h"
 
 static GtkCssProvider *css_provider;
@@ -49,8 +51,9 @@ panel_init (void)
 
   g_resources_register (panel_get_resource ());
 
+  g_type_ensure (PANEL_TYPE_AREA);
   g_type_ensure (PANEL_TYPE_DOCK);
-  g_type_ensure (PANEL_TYPE_DOCK_SWITCHER);
+  g_type_ensure (PANEL_TYPE_DOCK_CHILD);
   g_type_ensure (PANEL_TYPE_FRAME);
   g_type_ensure (PANEL_TYPE_FRAME_HEADER);
   g_type_ensure (PANEL_TYPE_FRAME_SWITCHER);
@@ -60,6 +63,7 @@ panel_init (void)
   g_type_ensure (PANEL_TYPE_PANED);
   g_type_ensure (PANEL_TYPE_STATUSBAR);
   g_type_ensure (PANEL_TYPE_THEME_SELECTOR);
+  g_type_ensure (PANEL_TYPE_TOGGLE_BUTTON);
   g_type_ensure (PANEL_TYPE_WIDGET);
 
   css_provider = gtk_css_provider_new ();

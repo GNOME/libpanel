@@ -22,9 +22,11 @@
 
 #include <adwaita.h>
 
+#include "panel-frame-header.h"
 #include "panel-frame-private.h"
 #include "panel-frame-switcher.h"
 #include "panel-frame-tab-bar.h"
+#include "panel-widget.h"
 
 struct _PanelFrameTabBar
 {

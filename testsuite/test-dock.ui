@@ -3,7 +3,7 @@
     <child type="titlebar">
       <object class="GtkHeaderBar">
         <child>
-          <object class="PanelDockSwitcher">
+          <object class="PanelToggleButton">
             <property name="dock">dock</property>
           </object>
         </child>
