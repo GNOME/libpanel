@@ -27,6 +27,7 @@ libpanel_private_sources = [
   'panel-joined-menu.c',
   'panel-maximized-controls.c',
   'panel-resizer.c',
+  'panel-save-dialog-row.c',
   'panel-scaler.c',
 ]
 

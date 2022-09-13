@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PanelSaveDialogRow" parent="AdwActionRow">
+    <binding name="title">
+      <lookup name="title" type="PanelSaveDelegate">
+        <lookup name="delegate">PanelSaveDialogRow</lookup>
+      </lookup>
+    </binding>
+    <binding name="subtitle">
+      <lookup name="subtitle" type="PanelSaveDelegate">
+        <lookup name="delegate">PanelSaveDialogRow</lookup>
+      </lookup>
+    </binding>
+    <child type="prefix">
+      <object class="GtkCheckButton" id="check">
+        <property name="active">true</property>
+        <property name="valign">center</property>
+        <signal name="notify::active" handler="on_notify_active_cb" swapped="true" object="PanelSaveDialogRow"/>
+      </object>
+    </child>
+  </template>
+</interface>

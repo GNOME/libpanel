@@ -26,17 +26,17 @@
 
 #include "panel-save-delegate.h"
 #include "panel-save-dialog.h"
+#include "panel-save-dialog-row-private.h"
 
 struct _PanelSaveDialog
 {
-  GtkDialog            parent_instance;
-  GtkHeaderBar        *headerbar;
-  AdwPreferencesGroup *list;
+  AdwMessageDialog     parent_instance;
+  AdwPreferencesGroup *group;
   GTask               *task;
   guint                count;
 };
 
-G_DEFINE_TYPE (PanelSaveDialog, panel_save_dialog, GTK_TYPE_DIALOG)
+G_DEFINE_FINAL_TYPE (PanelSaveDialog, panel_save_dialog, ADW_TYPE_MESSAGE_DIALOG)
 
 /**
  * panel_save_dialog_new:
@@ -52,69 +52,71 @@ panel_save_dialog_new (void)
 }
 
 static void
-panel_save_dialog_response (GtkDialog *dialog,
-                            int        response)
+panel_save_dialog_response_cancel_cb (PanelSaveDialog *self,
+                                      const char      *response)
 {
-  PanelSaveDialog *self = (PanelSaveDialog *)dialog;
+  GTask *task;
 
   g_assert (PANEL_IS_SAVE_DIALOG (self));
 
-  if (response == GTK_RESPONSE_NO)
-    {
-    }
-  else if (response == GTK_RESPONSE_YES)
-    {
-    }
-  else
-    {
-      g_task_return_new_error (self->task,
-                               G_IO_ERROR,
-                               G_IO_ERROR_CANCELLED,
-                               "Operation was cancelled");
-      g_clear_object (&self->task);
-      gtk_window_destroy (GTK_WINDOW (dialog));
-      return;
-    }
+  task = g_steal_pointer (&self->task);
+  g_task_return_new_error (task,
+                           G_IO_ERROR,
+                           G_IO_ERROR_CANCELLED,
+                           "Operation was cancelled");
+  gtk_window_destroy (GTK_WINDOW (self));
+
+  g_clear_object (&task);
 }
 
 static void
-panel_save_dialog_constructed (GObject *object)
+panel_save_dialog_response_discard_cb (PanelSaveDialog *self,
+                                       const char      *response)
 {
-  PanelSaveDialog *self = (PanelSaveDialog *)object;
-  GtkWidget *box;
+  GTask *task;
 
-  G_OBJECT_CLASS (panel_save_dialog_parent_class)->constructed (object);
+  g_assert (PANEL_IS_SAVE_DIALOG (self));
 
-  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-  gtk_window_set_titlebar (GTK_WINDOW (self), box);
-  gtk_widget_hide (box);
+  task = g_steal_pointer (&self->task);
+
+  /* TODO: Discard widgets */
+  g_task_return_boolean (task, TRUE);
+
+  gtk_window_destroy (GTK_WINDOW (self));
+
+  g_clear_object (&task);
 }
 
 static void
-panel_save_dialog_dispose (GObject *object)
+panel_save_dialog_response_save_cb (PanelSaveDialog *self,
+                                    const char      *response)
 {
-  PanelSaveDialog *self = (PanelSaveDialog *)object;
+  GTask *task;
 
-  g_clear_object (&self->task);
+  g_assert (PANEL_IS_SAVE_DIALOG (self));
 
-  G_OBJECT_CLASS (panel_save_dialog_parent_class)->dispose (object);
+  task = g_steal_pointer (&self->task);
+
+  /* TODO: Save using delegates */
+  g_task_return_boolean (task, TRUE);
+
+  gtk_window_destroy (GTK_WINDOW (self));
+
+  g_clear_object (&task);
 }
 
 static void
 panel_save_dialog_class_init (PanelSaveDialogClass *klass)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-  GtkDialogClass *dialog_class = GTK_DIALOG_CLASS (klass);
-
-  object_class->constructed = panel_save_dialog_constructed;
-  object_class->dispose = panel_save_dialog_dispose;
-
-  dialog_class->response = panel_save_dialog_response;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-save-dialog.ui");
-  gtk_widget_class_bind_template_child (widget_class, PanelSaveDialog, list);
-  gtk_widget_class_bind_template_child (widget_class, PanelSaveDialog, headerbar);
+
+  gtk_widget_class_bind_template_child (widget_class, PanelSaveDialog, group);
+
+  gtk_widget_class_bind_template_callback (widget_class, panel_save_dialog_response_cancel_cb);
+  gtk_widget_class_bind_template_callback (widget_class, panel_save_dialog_response_discard_cb);
+  gtk_widget_class_bind_template_callback (widget_class, panel_save_dialog_response_save_cb);
 }
 
 static void
@@ -127,15 +129,13 @@ void
 panel_save_dialog_add_delegate (PanelSaveDialog   *self,
                                 PanelSaveDelegate *delegate)
 {
-  AdwActionRow *row;
-
   g_return_if_fail (PANEL_IS_SAVE_DIALOG (self));
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (delegate));
 
   self->count++;
 
-  row = ADW_ACTION_ROW (adw_action_row_new ());
-  adw_preferences_group_add (self->list, GTK_WIDGET (row));
+  adw_preferences_group_add (self->group,
+                             panel_save_dialog_row_new (delegate));
 }
 
 void

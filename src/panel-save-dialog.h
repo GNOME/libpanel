@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 #include "panel-types.h"
 
@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 #define PANEL_TYPE_SAVE_DIALOG (panel_save_dialog_get_type())
 
 PANEL_AVAILABLE_IN_ALL
-G_DECLARE_FINAL_TYPE (PanelSaveDialog, panel_save_dialog, PANEL, SAVE_DIALOG, GtkDialog)
+G_DECLARE_FINAL_TYPE (PanelSaveDialog, panel_save_dialog, PANEL, SAVE_DIALOG, AdwMessageDialog)
 
 PANEL_AVAILABLE_IN_ALL
 GtkWidget *panel_save_dialog_new          (void);
