@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 20:11+0000\n"
-"PO-Revision-Date: 2022-09-11 22:57+0200\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-13 22:39+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -22,27 +22,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Otevřít stránky"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Rám"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Posunout stránku v_levo"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Posunout stránku vp_ravo"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Posunout stránku nahor_u"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Posunout stránku _dolů"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Zavřít rám"
 
@@ -50,29 +50,65 @@ msgstr "Zavřít rám"
 msgid "Restore panel to previous location"
 msgstr "Obnovit panel na předchozí místo"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Uložit změny?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(nový)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Koncept „%s“ není uložen. Můžete jej uložit nebo zahodit."
+
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Uložit nebo zahodit koncept?"
+
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "Zaho_dit"
+
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "_Uložit j_ako…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Otevřené stránky obsahují neuložené změny. Změny, které nejsou uložené, budou "
-"trvale ztraceny."
+"„%s“ obsahuje neuložené změny. Můžete je uložit nebo zahodit."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Zrušit"
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "Uložit nebo zahodit změny?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "Vše zaho_dit"
-
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Uložit"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Otevřené dokumenty obsahují neuložené změny. Můžete je uložit nebo zahodit."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "_Uložit jen vybrané"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "Uložit vše"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "Vše zahodit"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Zrušit"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
