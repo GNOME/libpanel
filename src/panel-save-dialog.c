@@ -31,11 +31,18 @@
 struct _PanelSaveDialog
 {
   AdwMessageDialog     parent_instance;
+
   GPtrArray           *rows;
+  GCancellable        *cancellable;
+  GTask               *task;
+
   AdwPreferencesPage  *page;
   AdwPreferencesGroup *group;
-  GTask               *task;
+
   guint                close_after_save : 1;
+  guint                discarding : 1;
+  guint                saving : 1;
+  guint                suppress_close : 1;
 };
 
 typedef struct
@@ -84,14 +91,13 @@ panel_save_dialog_response_cancel_cb (PanelSaveDialog *self,
 
   g_assert (PANEL_IS_SAVE_DIALOG (self));
 
-  task = g_steal_pointer (&self->task);
-  g_task_return_new_error (task,
-                           G_IO_ERROR,
-                           G_IO_ERROR_CANCELLED,
-                           "Operation was cancelled");
-  gtk_window_destroy (GTK_WINDOW (self));
-
-  g_clear_object (&task);
+  if ((task = g_steal_pointer (&self->task)))
+    {
+      g_cancellable_cancel (self->cancellable);
+      if (!g_task_get_completed (task))
+        g_task_return_error_if_cancelled (task);
+      g_clear_object (&task);
+    }
 }
 
 static void
@@ -101,6 +107,8 @@ panel_save_dialog_response_discard_cb (PanelSaveDialog *self,
   GTask *task;
 
   g_assert (PANEL_IS_SAVE_DIALOG (self));
+
+  self->discarding = TRUE;
 
   task = g_steal_pointer (&self->task);
 
@@ -112,9 +120,8 @@ panel_save_dialog_response_discard_cb (PanelSaveDialog *self,
       panel_save_delegate_discard (delegate);
     }
 
-  g_task_return_boolean (task, TRUE);
-
-  gtk_window_destroy (GTK_WINDOW (self));
+  if (!g_task_get_completed (task))
+    g_task_return_boolean (task, TRUE);
 
   g_clear_object (&task);
 }
@@ -142,7 +149,8 @@ panel_save_dialog_save_cb (GObject      *object,
     }
   else if (save->close_after_save)
     {
-      panel_save_delegate_close (delegate);
+      if (!g_task_had_error (task))
+        panel_save_delegate_close (delegate);
     }
 
   g_ptr_array_remove (save->delegates, delegate);
@@ -168,6 +176,8 @@ panel_save_dialog_response_save_cb (PanelSaveDialog *self,
 
   adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", FALSE);
   adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
+
+  self->saving = TRUE;
 
   save = g_slice_new0 (Save);
   save->close_after_save = self->close_after_save;
@@ -240,12 +250,47 @@ set_response_visible (AdwMessageDialog *dialog,
   find_button_and_set_visible (GTK_WIDGET (narrow), label, visible);
 }
 
+static gboolean
+panel_save_dialog_close_request_idle_cb (gpointer user_data)
+{
+  PanelSaveDialog *self = user_data;
+
+  g_assert (PANEL_IS_SAVE_DIALOG (self));
+
+  if (self->saving || self->discarding)
+    return G_SOURCE_REMOVE;
+
+  if (!GTK_WINDOW_CLASS (panel_save_dialog_parent_class)->close_request (GTK_WINDOW (self)))
+    gtk_window_destroy (GTK_WINDOW (self));
+
+  return G_SOURCE_REMOVE;
+}
+
+static gboolean
+panel_save_dialog_close_request (GtkWindow *window)
+{
+  PanelSaveDialog *self = (PanelSaveDialog *)window;
+
+  g_assert (PANEL_IS_SAVE_DIALOG (self));
+
+  /* Defer to idle so that we can check if we are actively saving. */
+  if (self->suppress_close)
+    g_idle_add_full (G_PRIORITY_HIGH,
+                     panel_save_dialog_close_request_idle_cb,
+                     g_object_ref (self),
+                     g_object_unref);
+
+  return TRUE;
+}
+
 static void
 panel_save_dialog_dispose (GObject *object)
 {
   PanelSaveDialog *self = (PanelSaveDialog *)object;
 
   g_clear_pointer (&self->rows, g_ptr_array_unref);
+  g_clear_object (&self->cancellable);
+  g_clear_object (&self->task);
 
   G_OBJECT_CLASS (panel_save_dialog_parent_class)->dispose (object);
 }
@@ -293,10 +338,13 @@ panel_save_dialog_class_init (PanelSaveDialogClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GtkWindowClass *window_class = GTK_WINDOW_CLASS (klass);
 
   object_class->dispose = panel_save_dialog_dispose;
   object_class->get_property = panel_save_dialog_get_property;
   object_class->set_property = panel_save_dialog_set_property;
+
+  window_class->close_request = panel_save_dialog_close_request;
 
   /**
    * PanelSaveDialog:close-after-save:
@@ -326,6 +374,7 @@ static void
 panel_save_dialog_init (PanelSaveDialog *self)
 {
   self->rows = g_ptr_array_new ();
+  self->suppress_close = TRUE;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
@@ -454,6 +503,8 @@ panel_save_dialog_add_delegate (PanelSaveDialog   *self,
   g_return_if_fail (PANEL_IS_SAVE_DIALOG (self));
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (delegate));
 
+  panel_save_delegate_set_progress (delegate, 0);
+
   row = panel_save_dialog_row_new (delegate);
   g_signal_connect_object (row,
                            "notify::selected",
@@ -474,8 +525,13 @@ task_completed_cb (PanelSaveDialog *self,
   g_assert (PANEL_IS_SAVE_DIALOG (self));
   g_assert (G_IS_TASK (task));
 
+  self->saving = FALSE;
+  self->discarding = FALSE;
+
   if (self->task == task)
     g_clear_object (&self->task);
+
+  gtk_window_destroy (GTK_WINDOW (self));
 }
 
 void
@@ -491,18 +547,22 @@ panel_save_dialog_run_async (PanelSaveDialog     *self,
 
   g_object_ref_sink (self);
 
-  task = g_task_new (self, cancellable, callback, user_data);
+  if (cancellable == NULL)
+    self->cancellable = g_cancellable_new ();
+  else
+    self->cancellable = g_object_ref (cancellable);
+
+  task = g_task_new (self, self->cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_save_dialog_run_async);
 
   g_signal_connect_object (task,
-                           "notify::complete",
+                           "notify::completed",
                            G_CALLBACK (task_completed_cb),
                            self,
                            G_CONNECT_SWAPPED);
 
   if (self->rows->len == 0)
     {
-      gtk_window_destroy (GTK_WINDOW (self));
       g_task_return_boolean (task, TRUE);
       g_clear_object (&task);
       return;
