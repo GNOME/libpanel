@@ -1,0 +1,130 @@
+# Galician translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Fran Dieguez <frandieguez@gnome.org>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-13 19:51+0000\n"
+"PO-Revision-Date: 2022-09-13 22:09+0200\n"
+"Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
+"Language-Team: Galician <proxecto@trasno.gal>\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-DL-Team: gl\n"
+"X-DL-Module: libpanel\n"
+"X-DL-Branch: main\n"
+"X-DL-Domain: po\n"
+"X-DL-State: Translating\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 40.0\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Abrir páxinas"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Marco"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Mover a páxina á _esquerda"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Mover a páxina á _dereita"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Mover a páxina _arriba"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr ""
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Pechar marco"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Restaurar o panel á localización anterior"
+
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(novo)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "O borrador «%s» non foi gardado. Pode gardalo ou rexeitalo."
+
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Desexa gardar ou rexeitar borrador?"
+
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Rexeitar"
+
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "_Gardar como…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"«%s» contén cambios sen gardar. Os cambios poden gardarse ou rexeitarse."
+
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "Gardar ou rexeitar os cambios?"
+
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Gardar"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Abrir os documentos que conteñen cambios sen gardar. Os cambios poden "
+"gardarse ou rexeitarse."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "Gardar só os _seleccionados"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "Gardar todo"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "Rexeitar todo"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Seguir o estilo do sistema"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Estilo claro"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Estilo escuro"
