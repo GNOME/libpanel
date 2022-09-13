@@ -35,15 +35,24 @@ struct _PanelSaveDialog
   AdwPreferencesPage  *page;
   AdwPreferencesGroup *group;
   GTask               *task;
+  guint                close_after_save : 1;
 };
 
 typedef struct
 {
   GPtrArray *delegates;
-  guint n_active;
+  guint close_after_save : 1;
 } Save;
 
 G_DEFINE_FINAL_TYPE (PanelSaveDialog, panel_save_dialog, ADW_TYPE_MESSAGE_DIALOG)
+
+enum {
+  PROP_0,
+  PROP_CLOSE_AFTER_SAVE,
+  N_PROPS
+};
+
+static GParamSpec *properties [N_PROPS];
 
 static void
 save_free (gpointer data)
@@ -125,15 +134,20 @@ panel_save_dialog_save_cb (GObject      *object,
   g_assert (G_IS_TASK (task));
 
   save = g_task_get_task_data (task);
-  save->n_active--;
 
   if (!panel_save_delegate_save_finish (delegate, result, &error))
     {
       if (!g_task_had_error (task))
         g_task_return_error (task, g_steal_pointer (&error));
     }
+  else if (save->close_after_save)
+    {
+      panel_save_delegate_close (delegate);
+    }
 
-  if (save->n_active == 0)
+  g_ptr_array_remove (save->delegates, delegate);
+
+  if (save->delegates->len == 0)
     {
       if (!g_task_had_error (task))
         g_task_return_boolean (task, TRUE);
@@ -156,6 +170,7 @@ panel_save_dialog_response_save_cb (PanelSaveDialog *self,
   adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
 
   save = g_slice_new0 (Save);
+  save->close_after_save = self->close_after_save;
   save->delegates = g_ptr_array_new_with_free_func (g_object_unref);
   g_task_set_task_data (self->task, save, save_free);
 
@@ -165,7 +180,10 @@ panel_save_dialog_response_save_cb (PanelSaveDialog *self,
       PanelSaveDelegate *delegate = panel_save_dialog_row_get_delegate (row);
 
       if (!panel_save_dialog_row_get_selected (row))
-        continue;
+        {
+          panel_save_delegate_discard (delegate);
+          continue;
+        }
 
       g_ptr_array_add (save->delegates, g_object_ref (delegate));
 
@@ -233,12 +251,66 @@ panel_save_dialog_dispose (GObject *object)
 }
 
 static void
+panel_save_dialog_get_property (GObject    *object,
+                                guint       prop_id,
+                                GValue     *value,
+                                GParamSpec *pspec)
+{
+  PanelSaveDialog *self = PANEL_SAVE_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_CLOSE_AFTER_SAVE:
+      g_value_set_boolean (value, panel_save_dialog_get_close_after_save (self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+panel_save_dialog_set_property (GObject      *object,
+                                guint         prop_id,
+                                const GValue *value,
+                                GParamSpec   *pspec)
+{
+  PanelSaveDialog *self = PANEL_SAVE_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_CLOSE_AFTER_SAVE:
+      panel_save_dialog_set_close_after_save (self, g_value_get_boolean (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
 panel_save_dialog_class_init (PanelSaveDialogClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = panel_save_dialog_dispose;
+  object_class->get_property = panel_save_dialog_get_property;
+  object_class->set_property = panel_save_dialog_set_property;
+
+  /**
+   * PanelSaveDialog:close-after-save:
+   *
+   * This property requests that the widget close after saving.
+   */
+  properties [PROP_CLOSE_AFTER_SAVE] =
+    g_param_spec_boolean ("close-after-save", NULL, NULL,
+                          FALSE,
+                          (G_PARAM_READWRITE |
+                           G_PARAM_EXPLICIT_NOTIFY |
+                           G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-save-dialog.ui");
 
@@ -461,4 +533,27 @@ panel_save_dialog_run_finish (PanelSaveDialog  *self,
   g_return_val_if_fail (G_IS_TASK (result), FALSE);
 
   return g_task_propagate_boolean (G_TASK (result), error);
+}
+
+gboolean
+panel_save_dialog_get_close_after_save (PanelSaveDialog *self)
+{
+  g_return_val_if_fail (PANEL_IS_SAVE_DIALOG (self), FALSE);
+
+  return self->close_after_save;
+}
+
+void
+panel_save_dialog_set_close_after_save (PanelSaveDialog *self,
+                                        gboolean         close_after_save)
+{
+  g_return_if_fail (PANEL_IS_SAVE_DIALOG (self));
+
+  close_after_save = !!close_after_save;
+
+  if (close_after_save != self->close_after_save)
+    {
+      self->close_after_save = close_after_save;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CLOSE_AFTER_SAVE]);
+    }
 }

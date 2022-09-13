@@ -32,18 +32,23 @@ PANEL_AVAILABLE_IN_ALL
 G_DECLARE_FINAL_TYPE (PanelSaveDialog, panel_save_dialog, PANEL, SAVE_DIALOG, AdwMessageDialog)
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_save_dialog_new          (void);
+GtkWidget *panel_save_dialog_new                  (void);
 PANEL_AVAILABLE_IN_ALL
-void       panel_save_dialog_add_delegate (PanelSaveDialog      *self,
-                                           PanelSaveDelegate    *delegate);
+void       panel_save_dialog_add_delegate         (PanelSaveDialog      *self,
+                                                   PanelSaveDelegate    *delegate);
 PANEL_AVAILABLE_IN_ALL
-void       panel_save_dialog_run_async    (PanelSaveDialog      *self,
-                                           GCancellable         *cancellable,
-                                           GAsyncReadyCallback   callback,
-                                           gpointer              user_data);
+void       panel_save_dialog_run_async            (PanelSaveDialog      *self,
+                                                   GCancellable         *cancellable,
+                                                   GAsyncReadyCallback   callback,
+                                                   gpointer              user_data);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_save_dialog_run_finish   (PanelSaveDialog      *self,
-                                           GAsyncResult         *result,
-                                           GError              **error);
+gboolean   panel_save_dialog_run_finish           (PanelSaveDialog      *self,
+                                                   GAsyncResult         *result,
+                                                   GError              **error);
+PANEL_AVAILABLE_IN_ALL
+gboolean   panel_save_dialog_get_close_after_save (PanelSaveDialog      *self);
+PANEL_AVAILABLE_IN_ALL
+void       panel_save_dialog_set_close_after_save (PanelSaveDialog      *self,
+                                                   gboolean              close_after_save);
 
 G_END_DECLS
