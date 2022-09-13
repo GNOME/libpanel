@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include <glib/gi18n.h>
+
 #include "panel-save-delegate.h"
 #include "panel-save-dialog-row-private.h"
 
@@ -52,6 +54,46 @@ on_notify_active_cb (PanelSaveDialogRow *self,
   g_assert (GTK_IS_CHECK_BUTTON (check));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SELECTED]);
+}
+
+static gboolean
+map_title_with_draft (GBinding     *binding,
+                      const GValue *from_value,
+                      GValue       *to_value,
+                      gpointer      user_data)
+{
+  PanelSaveDelegate *delegate = user_data;
+  const char *str;
+
+  g_assert (G_IS_BINDING (binding));
+  g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
+
+  if ((str = g_value_get_string (from_value)))
+    {
+      if (panel_save_delegate_get_is_draft (delegate))
+        g_value_take_string (to_value,
+                             g_strdup_printf ("%s <span fgalpha='32767'>%s</span>",
+                                              str, _("(new)")));
+      else
+        g_value_set_string (to_value, str);
+    }
+
+  return TRUE;
+}
+
+static void
+panel_save_dialog_row_set_delegate (PanelSaveDialogRow *self,
+                                    PanelSaveDelegate  *delegate)
+{
+  g_assert (PANEL_IS_SAVE_DIALOG_ROW (self));
+  g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
+  g_assert (self->delegate == NULL);
+
+  g_set_object (&self->delegate, delegate);
+  g_object_bind_property_full (delegate, "title", self, "title",
+                               G_BINDING_SYNC_CREATE,
+                               map_title_with_draft, NULL,
+                               delegate, NULL);
 }
 
 static void
@@ -94,7 +136,7 @@ panel_save_dialog_row_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_DELEGATE:
-      self->delegate = g_value_dup_object (value);
+      panel_save_dialog_row_set_delegate (self, g_value_get_object (value));
       break;
 
     default:
@@ -172,4 +214,13 @@ panel_save_dialog_row_set_selected (PanelSaveDialogRow *self,
   g_return_if_fail (PANEL_IS_SAVE_DIALOG_ROW (self));
 
   gtk_check_button_set_active (self->check, selected);
+}
+
+void
+panel_save_dialog_row_set_selection_mode (PanelSaveDialogRow *self,
+                                          gboolean            selection_mode)
+{
+  g_return_if_fail (PANEL_IS_SAVE_DIALOG_ROW (self));
+
+  gtk_widget_set_visible (GTK_WIDGET (self->check), selection_mode);
 }

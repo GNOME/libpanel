@@ -30,10 +30,12 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (PanelSaveDialogRow, panel_save_dialog_row, PANEL, SAVE_DIALOG_ROW, AdwActionRow)
 
-GtkWidget         *panel_save_dialog_row_new          (PanelSaveDelegate  *delegate);
-PanelSaveDelegate *panel_save_dialog_row_get_delegate (PanelSaveDialogRow *self);
-gboolean           panel_save_dialog_row_get_selected (PanelSaveDialogRow *self);
-void               panel_save_dialog_row_set_selected (PanelSaveDialogRow *self,
-                                                       gboolean            selected);
+GtkWidget         *panel_save_dialog_row_new                (PanelSaveDelegate  *delegate);
+PanelSaveDelegate *panel_save_dialog_row_get_delegate       (PanelSaveDialogRow *self);
+gboolean           panel_save_dialog_row_get_selected       (PanelSaveDialogRow *self);
+void               panel_save_dialog_row_set_selected       (PanelSaveDialogRow *self,
+                                                             gboolean            selected);
+void               panel_save_dialog_row_set_selection_mode (PanelSaveDialogRow *self,
+                                                             gboolean            selection_mode);
 
 G_END_DECLS

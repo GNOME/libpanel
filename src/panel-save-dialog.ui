@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="PanelSaveDialog" parent="AdwMessageDialog">
-    <property name="heading" translatable="yes">Save or Discard Changes?</property>
-    <property name="body" translatable="yes">Open documents contain unsaved changes. Changes which are not saved will be permanently lost.</property>
     <property name="default-response">save</property>
     <property name="close-response">cancel</property>
     <signal name="response::cancel" handler="panel_save_dialog_response_cancel_cb"/>
@@ -14,7 +12,11 @@
       <response id="save" translatable="yes" appearance="suggested">_Save</response>
     </responses>
     <property name="extra-child">
-      <object class="AdwPreferencesGroup" id="group">
+      <object class="AdwPreferencesPage" id="page">
+        <child>
+          <object class="AdwPreferencesGroup" id="group">
+          </object>
+        </child>
       </object>
     </property>
   </template>

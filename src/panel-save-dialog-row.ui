@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="PanelSaveDialogRow" parent="AdwActionRow">
-    <binding name="title">
-      <lookup name="title" type="PanelSaveDelegate">
-        <lookup name="delegate">PanelSaveDialogRow</lookup>
-      </lookup>
-    </binding>
     <binding name="subtitle">
       <lookup name="subtitle" type="PanelSaveDelegate">
         <lookup name="delegate">PanelSaveDialogRow</lookup>
@@ -18,5 +13,6 @@
         <signal name="notify::active" handler="on_notify_active_cb" swapped="true" object="PanelSaveDialogRow"/>
       </object>
     </child>
+    <property name="activatable-widget">check</property>
   </template>
 </interface>
