@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 19:16+0000\n"
-"PO-Revision-Date: 2022-09-11 15:44-0400\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-13 15:43-0400\n"
 "Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -21,27 +21,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "打开页面"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "框架"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "左移页面(_L)"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "右移页面(_R)"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "上移页面(_U)"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "下移页面(_D)"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "关闭框架"
 
@@ -49,27 +49,62 @@ msgstr "关闭框架"
 msgid "Restore panel to previous location"
 msgstr "将面板恢复到先前的位置"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "保存更改？"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "（新建）"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
-msgstr "打开的页面包含未保存的修改。未保存的修改将彻底丢失。"
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "草稿“%s”尚未保存。请将其保存或丢弃。"
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "取消"
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "保存草稿还是将其丢弃？"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "全部丢弃(_D)"
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "丢弃(_D)"
 
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "另存为(_S)…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "“%s”包含未保存的修改。请将其保存或丢弃。"
+
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "保存修改还是将其丢弃？"
+
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "保存(S)"
+
+#: src/panel-save-dialog.c:407
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "打开的文档包含未保存的修改。请将修改保存或丢弃。"
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "仅保存选中项(_S)"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "全部保存"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "全部丢弃"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "取消(_C)"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
