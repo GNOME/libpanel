@@ -372,3 +372,7 @@ paneldropcontrols button:drop(active) {
   background-color: mix(@accent_bg_color, @accent_fg_color, .3);
   color: @theme_selected_fg_color;
 }
+
+panelprogressicon {
+  color: @accent_bg_color;
+}
