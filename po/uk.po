@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 11:01+0000\n"
-"PO-Revision-Date: 2022-09-11 14:21+0300\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-13 22:50+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -23,27 +23,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Відкриті сторінки"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Фрейм"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Пересунути сторінку _ліворуч"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Пересунути сторінку _праворуч"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Пересунути сторінку _вище"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Пересунути сторінку _нижче"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Закрити блок"
 
@@ -51,29 +51,78 @@ msgstr "Закрити блок"
 msgid "Restore panel to previous location"
 msgstr "Відновити попереднє розташування панелі"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Зберегти зміни?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(новий)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Чернетку «%s» не було збережено. Можна її зберегти або відкинути."
+
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Зберегти чи відкинути чернетку?"
+
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+#| msgid "_Discard All"
+msgid "_Discard"
+msgstr "_Відкинути"
+
+#: src/panel-save-dialog.c:362
+#| msgid "_Save"
+msgid "_Save As…"
+msgstr "Зберегти _як…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+#| msgid ""
+#| "Open pages contain unsaved changes. Changes which are not saved will be "
+#| "permanently lost."
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"На відкритих сторінках містяться незбережені зміни. Ці незбережені зміни "
-"буде втрачено без можливості відновлення."
+"У «%s» містяться незбережені зміни. Зміни можна зберегти або відкинути."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Скасувати"
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+#| msgid "Save Changes?"
+msgid "Save or Discard Changes?"
+msgstr "Зберегти чи відкинути зміни?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "Від_кинути усе"
-
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "З_берегти"
+
+#: src/panel-save-dialog.c:407
+#| msgid ""
+#| "Open pages contain unsaved changes. Changes which are not saved will be "
+#| "permanently lost."
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"У відкритих документах містяться незбережені зміни. Зміни можна зберегти або"
+" відкинути."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "Збе_регти лише позначені"
+
+#: src/panel-save-dialog.c:420
+#| msgid "_Save"
+msgid "Save All"
+msgstr "Зберегти все"
+
+#: src/panel-save-dialog.c:429
+#| msgid "_Discard All"
+msgid "Discard All"
+msgstr "Відкинути усе"
+
+#: src/panel-save-dialog.ui:10
+#| msgid "Cancel"
+msgid "_Cancel"
+msgstr "_Скасувати"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
