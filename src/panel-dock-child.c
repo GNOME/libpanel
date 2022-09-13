@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-dock.h"
 #include "panel-dock-child-private.h"
 #include "panel-enums.h"
 #include "panel-frame-private.h"

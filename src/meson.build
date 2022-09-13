@@ -74,11 +74,12 @@ libpanel_headers = [
   'panel-theme-selector.h',
   'panel-toggle-button.h',
   'panel-version-macros.h',
+  'panel-types.h',
   'panel-widget.h',
 ]
 
 panel_enum_headers = [
-  'panel-dock.h',
+  'panel-types.h',
 ]
 
 libpanel_enums = gnome.mkenums_simple('panel-enums',

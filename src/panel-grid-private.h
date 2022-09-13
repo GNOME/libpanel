@@ -20,9 +20,7 @@
 
 #pragma once
 
-#include "panel-dock.h"
 #include "panel-grid.h"
-#include "panel-grid-column.h"
 
 G_BEGIN_DECLS
 

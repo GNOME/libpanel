@@ -20,9 +20,11 @@
 
 #include "config.h"
 
-#include <adwaita.h>
 #include <glib/gi18n.h>
 
+#include <adwaita.h>
+
+#include "panel-save-delegate.h"
 #include "panel-save-dialog.h"
 
 struct _PanelSaveDialog

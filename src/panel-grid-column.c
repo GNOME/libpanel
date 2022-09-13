@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-frame.h"
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
 #include "panel-paned.h"

@@ -20,9 +20,12 @@
 
 #pragma once
 
+#include <adwaita.h>
+
 #define LIBPANEL_INSIDE
-# include "panel-dock.h"
+# include "panel-types.h"
 # include "panel-enums.h"
+# include "panel-dock.h"
 # include "panel-frame.h"
 # include "panel-frame-header.h"
 # include "panel-frame-header-bar.h"

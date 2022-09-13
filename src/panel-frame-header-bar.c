@@ -20,15 +20,18 @@
 
 #include "config.h"
 
-#include <adwaita.h>
 #include <glib/gi18n.h>
 
+#include <adwaita.h>
+
+#include "panel-dock-private.h"
+#include "panel-frame-private.h"
+#include "panel-frame-header.h"
 #include "panel-frame-header-bar.h"
 #include "panel-frame-header-bar-row-private.h"
-#include "panel-frame-private.h"
 #include "panel-joined-menu-private.h"
-#include "panel-dock-private.h"
 #include "panel-scaler-private.h"
+#include "panel-widget.h"
 
 struct _PanelFrameHeaderBar
 {

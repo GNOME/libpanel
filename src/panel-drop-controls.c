@@ -23,12 +23,14 @@
 #include "panel-dock-private.h"
 #include "panel-drop-controls-private.h"
 #include "panel-enums.h"
+#include "panel-frame-header.h"
 #include "panel-frame-private.h"
 #include "panel-frame-switcher-private.h"
 #include "panel-grid-private.h"
 #include "panel-grid-column-private.h"
 #include "panel-paned.h"
 #include "panel-resizer-private.h"
+#include "panel-widget.h"
 
 struct _PanelDropControls
 {

@@ -20,7 +20,9 @@
 
 #pragma once
 
-#include "panel-dock.h"
+#include <gtk/gtk.h>
+
+#include "panel-types.h"
 
 G_BEGIN_DECLS
 

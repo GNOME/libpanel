@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include "panel-frame.h"
+#include "panel-frame-header.h"
 #include "panel-frame-private.h"
 #include "panel-frame-tab-bar.h"
 #include "panel-grid-column.h"
@@ -27,6 +29,7 @@
 #include "panel-paned.h"
 #include "panel-resizer-private.h"
 #include "panel-save-dialog.h"
+#include "panel-widget.h"
 
 typedef struct
 {

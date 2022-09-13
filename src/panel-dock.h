@@ -22,25 +22,11 @@
 
 #include <gtk/gtk.h>
 
-#include "panel-frame.h"
-#include "panel-version-macros.h"
-#include "panel-widget.h"
+#include "panel-types.h"
 
 G_BEGIN_DECLS
 
 #define PANEL_TYPE_DOCK (panel_dock_get_type())
-
-typedef enum
-{
-  PANEL_AREA_START,
-  PANEL_AREA_END,
-  PANEL_AREA_TOP,
-  PANEL_AREA_BOTTOM,
-  PANEL_AREA_CENTER,
-} PanelArea;
-
-typedef void (*PanelFrameCallback) (PanelFrame *frame,
-                                    gpointer    user_data);
 
 PANEL_AVAILABLE_IN_ALL
 G_DECLARE_DERIVABLE_TYPE (PanelDock, panel_dock, PANEL, DOCK, GtkWidget)
@@ -56,63 +42,63 @@ struct _PanelDockClass
 };
 
 PANEL_AVAILABLE_IN_ALL
-GtkWidget *panel_dock_new                   (void);
+GtkWidget   *panel_dock_new                   (void);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_reveal_area       (PanelDock          *self,
-                                             PanelArea           area);
+gboolean     panel_dock_get_reveal_area       (PanelDock          *self,
+                                               PanelArea           area);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_reveal_area       (PanelDock          *self,
-                                             PanelArea           area,
-                                             gboolean            reveal);
+void         panel_dock_set_reveal_area       (PanelDock          *self,
+                                               PanelArea           area,
+                                               gboolean            reveal);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_reveal_start      (PanelDock          *self);
+gboolean     panel_dock_get_reveal_start      (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_reveal_end        (PanelDock          *self);
+gboolean     panel_dock_get_reveal_end        (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_reveal_top        (PanelDock          *self);
+gboolean     panel_dock_get_reveal_top        (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_reveal_bottom     (PanelDock          *self);
+gboolean     panel_dock_get_reveal_bottom     (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_reveal_start      (PanelDock          *self,
-                                             gboolean            reveal_start);
+void         panel_dock_set_reveal_start      (PanelDock          *self,
+                                               gboolean            reveal_start);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_reveal_end        (PanelDock          *self,
-                                             gboolean            reveal_end);
+void         panel_dock_set_reveal_end        (PanelDock          *self,
+                                               gboolean            reveal_end);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_reveal_top        (PanelDock          *self,
-                                             gboolean            reveal_top);
+void         panel_dock_set_reveal_top        (PanelDock          *self,
+                                               gboolean            reveal_top);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_reveal_bottom     (PanelDock          *self,
-                                             gboolean            reveal_bottom);
+void         panel_dock_set_reveal_bottom     (PanelDock          *self,
+                                               gboolean            reveal_bottom);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_can_reveal_area   (PanelDock          *self,
-                                             PanelArea           area);
+gboolean     panel_dock_get_can_reveal_area   (PanelDock          *self,
+                                               PanelArea           area);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_can_reveal_bottom (PanelDock          *self);
+gboolean     panel_dock_get_can_reveal_bottom (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_can_reveal_top    (PanelDock          *self);
+gboolean     panel_dock_get_can_reveal_top    (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_can_reveal_start  (PanelDock          *self);
+gboolean     panel_dock_get_can_reveal_start  (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-gboolean   panel_dock_get_can_reveal_end    (PanelDock          *self);
+gboolean     panel_dock_get_can_reveal_end    (PanelDock          *self);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_start_width       (PanelDock          *self,
-                                             int                 width);
+void         panel_dock_set_start_width       (PanelDock          *self,
+                                               int                 width);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_end_width         (PanelDock          *self,
-                                             int                 width);
+void         panel_dock_set_end_width         (PanelDock          *self,
+                                               int                 width);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_top_height        (PanelDock          *self,
-                                             int                 height);
+void         panel_dock_set_top_height        (PanelDock          *self,
+                                               int                 height);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_set_bottom_height     (PanelDock          *self,
-                                             int                 height);
+void         panel_dock_set_bottom_height     (PanelDock          *self,
+                                               int                 height);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_foreach_frame         (PanelDock          *self,
-                                             PanelFrameCallback  callback,
-                                             gpointer            user_data);
+void         panel_dock_foreach_frame         (PanelDock          *self,
+                                               PanelFrameCallback  callback,
+                                               gpointer            user_data);
 PANEL_AVAILABLE_IN_ALL
-void       panel_dock_remove                (PanelDock          *self,
-                                             GtkWidget          *child);
+void         panel_dock_remove                (PanelDock          *self,
+                                               GtkWidget          *child);
 
 G_END_DECLS

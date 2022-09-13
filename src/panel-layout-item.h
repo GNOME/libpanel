@@ -18,13 +18,9 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-
 #pragma once
 
-#include <glib-object.h>
-
-#include "panel-position.h"
-#include "panel-version-macros.h"
+#include "panel-types.h"
 
 G_BEGIN_DECLS
 

@@ -22,8 +22,9 @@
 
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
-#include "panel-toggle-button.h"
 #include "panel-enums.h"
+#include "panel-toggle-button.h"
+#include "panel-widget.h"
 
 #define TIMEOUT_EXPAND 500
 

@@ -48,6 +48,7 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-save-delegate.h"
 #include "panel-widget-private.h"
 
 typedef struct

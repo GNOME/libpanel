@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-dock.h"
 #include "panel-dock-child-private.h"
 #include "panel-handle-private.h"
 

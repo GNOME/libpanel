@@ -22,6 +22,7 @@
 
 #include "panel-frame.h"
 #include "panel-frame-header.h"
+#include "panel-widget.h"
 
 G_DEFINE_INTERFACE (PanelFrameHeader, panel_frame_header, GTK_TYPE_WIDGET)
 
