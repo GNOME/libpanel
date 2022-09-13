@@ -50,6 +50,18 @@ example_page_new (void)
 }
 
 static void
+example_page_save (ExamplePage       *self,
+                   GTask             *task,
+                   PanelSaveDelegate *delegate)
+{
+  g_assert (EXAMPLE_IS_PAGE (self));
+  g_assert (G_IS_TASK (task));
+  g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
+
+  g_task_return_boolean (task, TRUE);
+}
+
+static void
 on_vim_notify_cb (ExamplePage  *self,
                   GParamSpec   *pspec,
                   GtkIMContext *im_context)
@@ -135,6 +147,7 @@ example_page_class_init (ExamplePageClass *klass)
 static void
 example_page_init (ExamplePage *self)
 {
+  g_autoptr(PanelSaveDelegate) delegate = NULL;
   GtkWidget *scroller;
 
   scroller = gtk_scrolled_window_new ();
@@ -183,4 +196,15 @@ example_page_init (ExamplePage *self)
 
   gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scroller),
                                  GTK_WIDGET (self->text_view));
+
+  delegate = panel_save_delegate_new ();
+  g_signal_connect_object (delegate,
+                           "save",
+                           G_CALLBACK (example_page_save),
+                           self,
+                           G_CONNECT_SWAPPED);
+  g_object_bind_property (self, "title", delegate, "title", G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "icon", delegate, "icon", G_BINDING_SYNC_CREATE);
+  panel_save_delegate_set_subtitle (delegate, "Something about the document");
+  panel_widget_set_save_delegate (PANEL_WIDGET (self), delegate);
 }
