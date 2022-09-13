@@ -129,6 +129,7 @@ panel_frame_close_page_cb (PanelFrame *self,
   delegate = panel_widget_get_save_delegate (widget);
   dialog = PANEL_SAVE_DIALOG (panel_save_dialog_new ());
 
+  panel_save_dialog_set_close_after_save (dialog, TRUE);
   gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (root));
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   panel_save_dialog_add_delegate (dialog, delegate);
@@ -221,6 +222,7 @@ close_frame_action (GtkWidget  *widget,
   toplevel = gtk_widget_get_ancestor (widget, GTK_TYPE_WINDOW);
 
   dialog = panel_save_dialog_new ();
+  panel_save_dialog_set_close_after_save (PANEL_SAVE_DIALOG (dialog), TRUE);
   gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (toplevel));
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 
