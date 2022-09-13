@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
 "POT-Creation-Date: 2022-09-13 19:51+0000\n"
-"PO-Revision-Date: 2022-09-13 22:09+0200\n"
+"PO-Revision-Date: 2022-09-13 22:10+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -46,7 +46,7 @@ msgstr "Mover a páxina _arriba"
 
 #: src/panel-frame.ui:76
 msgid "Move Page _Down"
-msgstr ""
+msgstr "Mover a páxina _abaixo"
 
 #: src/panel-frame.ui:82
 msgid "Close Frame"
