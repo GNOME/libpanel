@@ -108,9 +108,9 @@ close_page_or_frame_action (GtkWidget  *widget,
 }
 
 static void
-panel_frame_save_cb (GObject      *object,
-                     GAsyncResult *result,
-                     gpointer      user_data)
+panel_frame_close_frame_save_cb (GObject      *object,
+                                 GAsyncResult *result,
+                                 gpointer      user_data)
 {
   PanelSaveDialog *dialog = (PanelSaveDialog *)object;
   PanelFrame *self = user_data;
@@ -174,7 +174,7 @@ close_frame_action (GtkWidget  *widget,
 
   panel_save_dialog_run_async (PANEL_SAVE_DIALOG (dialog),
                                NULL,
-                               panel_frame_save_cb,
+                               panel_frame_close_frame_save_cb,
                                g_object_ref (self));
 }
 
