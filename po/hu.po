@@ -1,0 +1,126 @@
+# Hungarian translation for libpanel.
+# Copyright (C) 2022 Free Software Foundation, Inc.
+# This file is distributed under the same license as the libpanel package.
+#
+# Balázs Meskó <mesko.balazs at fsf dot hu>, 2022.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-13 22:23+0000\n"
+"PO-Revision-Date: 2022-09-14 00:36+0200\n"
+"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 19.12.3\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Nyitott lapok"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Keret"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Lap mozgatása _balra"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Lap mozgatása j_obbra"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Lap mozgatása _fel"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Lap mozgatása _le"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Keret bezárása"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Panel visszaállítása az előző helyére"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(új)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "A(z) „%s” piszkozat nem lett elmentve. Elmenthető vagy elvethető."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Menti vagy elveti a piszkozatot?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Elvetés"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Mentés másként…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"A(z) „%s” mentetlen változtatásokat tartalmaz. A változtatások elmenthetők "
+"vagy elvethetők."
+
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "Menti vagy elveti a változtatásokat?"
+
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Mentés"
+
+#: src/panel-save-dialog.c:456
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"A megnyitott dokumentumok mentetlen változtatásokat tartalmaznak. A "
+"változtatások elmenthetők vagy elvethetők."
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "Csak a kijelöltek _mentése"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "Összes mentése"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "Összes elvetése"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Mégse"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Rendszerstílus követése"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Világos stílus"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Sötét stílus"
