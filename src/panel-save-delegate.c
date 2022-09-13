@@ -541,6 +541,8 @@ panel_save_delegate_save_async (PanelSaveDelegate   *self,
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
   g_return_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable));
 
+  panel_save_delegate_set_progress (self, .0);
+
   PANEL_SAVE_DELEGATE_GET_CLASS (self)->save_async (self, cancellable, callback, user_data);
 }
 
