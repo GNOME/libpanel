@@ -73,6 +73,7 @@ typedef struct
   guint             modified : 1;
   guint             needs_attention : 1;
   guint             saving : 1;
+  guint             force_close : 1;
 } PanelWidgetPrivate;
 
 typedef struct
@@ -1307,7 +1308,7 @@ _panel_widget_can_save (PanelWidget *self)
 
   g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
 
-  return !priv->saving && priv->modified && priv->save_delegate != NULL;
+  return !priv->saving && priv->modified && priv->save_delegate && !priv->force_close;
 }
 
 void
@@ -1319,6 +1320,24 @@ panel_widget_close (PanelWidget *self)
 
   if ((frame = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME)))
     _panel_frame_request_close (PANEL_FRAME (frame), self);
+}
+
+/**
+ * panel_widget_force_close:
+ * @self: a #PanelWidget
+ *
+ * Closes the widget without any save dialogs.
+ */
+void
+panel_widget_force_close (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  priv->force_close = TRUE;
+
+  panel_widget_close (self);
 }
 
 void

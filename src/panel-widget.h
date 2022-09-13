@@ -123,6 +123,8 @@ void               panel_widget_set_save_delegate             (PanelWidget      
 PANEL_AVAILABLE_IN_ALL
 void               panel_widget_close                         (PanelWidget                 *self);
 PANEL_AVAILABLE_IN_ALL
+void               panel_widget_force_close                   (PanelWidget                 *self);
+PANEL_AVAILABLE_IN_ALL
 void               panel_widget_insert_action_group           (PanelWidget                 *self,
                                                                const char                  *prefix,
                                                                GActionGroup                *group);
