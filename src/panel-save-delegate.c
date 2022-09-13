@@ -47,6 +47,7 @@ enum {
 };
 
 enum {
+  CLOSE,
   DISCARD,
   SAVE,
   N_SIGNALS
@@ -331,6 +332,26 @@ panel_save_delegate_class_init (PanelSaveDelegateClass *klass)
                                  G_TYPE_BOOLEAN, 1, G_TYPE_TASK);
 
   /**
+   * PanelSaveDelegate::close:
+   * @self: a #PanelSaveDelegate
+   *
+   * This signal is emitted when the save delegate should close
+   * the widget it is related to. This can happen after saving as
+   * part of a close request and it is now save for the delegate to
+   * close.
+   *
+   * Implementations are encouraged to connect to this signal (or
+   * implement the virtual method) and call panel_widget_force_close().
+   */
+  signals [CLOSE] = g_signal_new ("close",
+                                  G_TYPE_FROM_CLASS (klass),
+                                  G_SIGNAL_RUN_LAST,
+                                  G_STRUCT_OFFSET (PanelSaveDelegateClass, close),
+                                  NULL, NULL,
+                                  NULL,
+                                  G_TYPE_NONE, 0);
+
+  /**
    * PanelSaveDelegate::discard:
    * @self: a #PanelSaveDelegate
    *
@@ -591,6 +612,14 @@ panel_save_delegate_set_is_draft (PanelSaveDelegate *self,
       priv->is_draft = is_draft;
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_IS_DRAFT]);
     }
+}
+
+void
+panel_save_delegate_close (PanelSaveDelegate *self)
+{
+  g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
+
+  g_signal_emit (self, signals [CLOSE], 0);
 }
 
 void

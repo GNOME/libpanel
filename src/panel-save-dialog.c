@@ -37,7 +37,22 @@ struct _PanelSaveDialog
   GTask               *task;
 };
 
+typedef struct
+{
+  GPtrArray *delegates;
+  guint n_active;
+} Save;
+
 G_DEFINE_FINAL_TYPE (PanelSaveDialog, panel_save_dialog, ADW_TYPE_MESSAGE_DIALOG)
+
+static void
+save_free (gpointer data)
+{
+  Save *save = data;
+
+  g_clear_pointer (&save->delegates, g_ptr_array_unref);
+  g_slice_free (Save, save);
+}
 
 /**
  * panel_save_dialog_new:
@@ -96,21 +111,72 @@ panel_save_dialog_response_discard_cb (PanelSaveDialog *self,
 }
 
 static void
+panel_save_dialog_save_cb (GObject      *object,
+                           GAsyncResult *result,
+                           gpointer      user_data)
+{
+  PanelSaveDelegate *delegate = (PanelSaveDelegate *)object;
+  GTask *task = user_data;
+  GError *error = NULL;
+  Save *save;
+
+  g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
+  g_assert (G_IS_ASYNC_RESULT (result));
+  g_assert (G_IS_TASK (task));
+
+  save = g_task_get_task_data (task);
+  save->n_active--;
+
+  if (!panel_save_delegate_save_finish (delegate, result, &error))
+    {
+      if (!g_task_had_error (task))
+        g_task_return_error (task, g_steal_pointer (&error));
+    }
+
+  if (save->n_active == 0)
+    {
+      if (!g_task_had_error (task))
+        g_task_return_boolean (task, TRUE);
+    }
+
+  g_clear_object (&task);
+  g_clear_error (&error);
+}
+
+static void
 panel_save_dialog_response_save_cb (PanelSaveDialog *self,
                                     const char      *response)
 {
-  GTask *task;
+  Save *save;
 
   g_assert (PANEL_IS_SAVE_DIALOG (self));
+  g_assert (self->task != NULL);
 
-  task = g_steal_pointer (&self->task);
+  adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", FALSE);
+  adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
 
-  /* TODO: Save using delegates */
-  g_task_return_boolean (task, TRUE);
+  save = g_slice_new0 (Save);
+  save->delegates = g_ptr_array_new_with_free_func (g_object_unref);
+  g_task_set_task_data (self->task, save, save_free);
 
-  gtk_window_destroy (GTK_WINDOW (self));
+  for (guint i = 0; i < self->rows->len; i++)
+    {
+      PanelSaveDialogRow *row = g_ptr_array_index (self->rows, i);
+      PanelSaveDelegate *delegate = panel_save_dialog_row_get_delegate (row);
 
-  g_clear_object (&task);
+      if (!panel_save_dialog_row_get_selected (row))
+        continue;
+
+      g_ptr_array_add (save->delegates, g_object_ref (delegate));
+
+      panel_save_delegate_save_async (delegate,
+                                      g_task_get_cancellable (self->task),
+                                      panel_save_dialog_save_cb,
+                                      g_object_ref (self->task));
+    }
+
+  if (save->delegates->len == 0)
+    g_task_return_boolean (self->task, TRUE);
 }
 
 static void
@@ -328,6 +394,18 @@ panel_save_dialog_add_delegate (PanelSaveDialog   *self,
   panel_save_dialog_update (self);
 }
 
+static void
+task_completed_cb (PanelSaveDialog *self,
+                   GParamSpec      *pspec,
+                   GTask           *task)
+{
+  g_assert (PANEL_IS_SAVE_DIALOG (self));
+  g_assert (G_IS_TASK (task));
+
+  if (self->task == task)
+    g_clear_object (&self->task);
+}
+
 void
 panel_save_dialog_run_async (PanelSaveDialog     *self,
                              GCancellable        *cancellable,
@@ -343,6 +421,12 @@ panel_save_dialog_run_async (PanelSaveDialog     *self,
 
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_save_dialog_run_async);
+
+  g_signal_connect_object (task,
+                           "notify::complete",
+                           G_CALLBACK (task_completed_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
 
   if (self->rows->len == 0)
     {

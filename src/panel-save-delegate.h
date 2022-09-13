@@ -45,6 +45,7 @@ struct _PanelSaveDelegateClass
   gboolean (*save)        (PanelSaveDelegate  *self,
                            GTask              *task);
   void     (*discard)     (PanelSaveDelegate  *self);
+  void     (*close)       (PanelSaveDelegate  *self);
 
   /*< private >*/
   gpointer _reserved[8];
@@ -91,6 +92,8 @@ PANEL_AVAILABLE_IN_ALL
 gboolean           panel_save_delegate_save_finish   (PanelSaveDelegate    *self,
                                                       GAsyncResult         *result,
                                                       GError              **error);
+PANEL_AVAILABLE_IN_ALL
+void               panel_save_delegate_close         (PanelSaveDelegate    *self);
 PANEL_AVAILABLE_IN_ALL
 void               panel_save_delegate_discard       (PanelSaveDelegate    *self);
 
