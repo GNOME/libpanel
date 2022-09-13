@@ -11,7 +11,7 @@
     </child>
     <child type="suffix">
       <object class="PanelProgressIcon" id="progress">
-        <property name="progress">.66</property>
+        <property name="visible">false</property>
         <property name="valign">center</property>
         <property name="margin-start">6</property>
       </object>

@@ -83,6 +83,23 @@ map_title_with_draft (GBinding     *binding,
   return TRUE;
 }
 
+static gboolean
+map_progress_to_visible (GBinding     *binding,
+                         const GValue *from_value,
+                         GValue       *to_value,
+                         gpointer      user_data)
+{
+  double value;
+
+  g_assert (G_IS_BINDING (binding));
+  g_assert (G_VALUE_HOLDS_DOUBLE (from_value));
+  g_assert (G_VALUE_HOLDS_BOOLEAN (to_value));
+
+  value = g_value_get_double (from_value);
+  g_value_set_boolean (to_value, value > .0);
+  return TRUE;
+}
+
 static void
 panel_save_dialog_row_set_delegate (PanelSaveDialogRow *self,
                                     PanelSaveDelegate  *delegate)
@@ -98,6 +115,12 @@ panel_save_dialog_row_set_delegate (PanelSaveDialogRow *self,
                                delegate, NULL);
   g_object_bind_property (delegate, "subtitle", self, "subtitle",
                           G_BINDING_SYNC_CREATE);
+  g_object_bind_property (delegate, "progress", self->progress, "progress",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property_full (delegate, "progress", self->progress, "visible",
+                               G_BINDING_SYNC_CREATE,
+                               map_progress_to_visible, NULL,
+                               NULL, NULL);
 }
 
 static void
