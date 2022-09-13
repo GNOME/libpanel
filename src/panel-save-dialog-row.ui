@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="PanelSaveDialogRow" parent="AdwActionRow">
-    <binding name="subtitle">
-      <lookup name="subtitle" type="PanelSaveDelegate">
-        <lookup name="delegate">PanelSaveDialogRow</lookup>
-      </lookup>
-    </binding>
     <child type="prefix">
       <object class="GtkCheckButton" id="check">
         <property name="active">true</property>

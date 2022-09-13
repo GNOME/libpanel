@@ -94,6 +94,8 @@ panel_save_dialog_row_set_delegate (PanelSaveDialogRow *self,
                                G_BINDING_SYNC_CREATE,
                                map_title_with_draft, NULL,
                                delegate, NULL);
+  g_object_bind_property (delegate, "subtitle", self, "subtitle",
+                          G_BINDING_SYNC_CREATE);
 }
 
 static void
