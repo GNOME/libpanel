@@ -49,7 +49,7 @@ example_page_new (void)
   return g_object_new (EXAMPLE_TYPE_PAGE, NULL);
 }
 
-static void
+static gboolean
 example_page_save (ExamplePage       *self,
                    GTask             *task,
                    PanelSaveDelegate *delegate)
@@ -59,6 +59,8 @@ example_page_save (ExamplePage       *self,
   g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
 
   g_task_return_boolean (task, TRUE);
+
+  return TRUE;
 }
 
 static void
@@ -203,8 +205,10 @@ example_page_init (ExamplePage *self)
                            G_CALLBACK (example_page_save),
                            self,
                            G_CONNECT_SWAPPED);
+  g_signal_connect_swapped (delegate, "discard", G_CALLBACK (panel_widget_force_close), self);
+  g_signal_connect_swapped (delegate, "close", G_CALLBACK (panel_widget_force_close), self);
   g_object_bind_property (self, "title", delegate, "title", G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "icon", delegate, "icon", G_BINDING_SYNC_CREATE);
-  panel_save_delegate_set_subtitle (delegate, "Something about the document");
+  panel_save_delegate_set_subtitle (delegate, "~/Documents");
   panel_widget_set_save_delegate (PANEL_WIDGET (self), delegate);
 }
