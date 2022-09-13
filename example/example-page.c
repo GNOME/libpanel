@@ -176,7 +176,7 @@ example_page_class_init (ExamplePageClass *klass)
 static void
 example_page_init (ExamplePage *self)
 {
-  g_autoptr(PanelSaveDelegate) delegate = NULL;
+  PanelSaveDelegate *delegate = NULL;
   GtkWidget *scroller;
 
   scroller = gtk_scrolled_window_new ();
@@ -238,4 +238,5 @@ example_page_init (ExamplePage *self)
   g_object_bind_property (self, "icon", delegate, "icon", G_BINDING_SYNC_CREATE);
   panel_save_delegate_set_subtitle (delegate, "~/Documents");
   panel_widget_set_save_delegate (PANEL_WIDGET (self), delegate);
+  g_clear_object (&delegate);
 }
