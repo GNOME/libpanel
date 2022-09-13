@@ -70,6 +70,7 @@ libpanel_headers = [
   'panel-omni-bar.h',
   'panel-paned.h',
   'panel-position.h',
+  'panel-save-dialog.h',
   'panel-save-delegate.h',
   'panel-statusbar.h',
   'panel-theme-selector.h',

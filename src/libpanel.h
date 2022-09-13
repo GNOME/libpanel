@@ -40,6 +40,7 @@
 # include "panel-paned.h"
 # include "panel-position.h"
 # include "panel-save-delegate.h"
+# include "panel-save-dialog.h"
 # include "panel-statusbar.h"
 # include "panel-theme-selector.h"
 # include "panel-toggle-button.h"
