@@ -52,6 +52,11 @@ struct _PanelSaveDelegateClass
 PANEL_AVAILABLE_IN_ALL
 PanelSaveDelegate *panel_save_delegate_new           (void);
 PANEL_AVAILABLE_IN_ALL
+gboolean           panel_save_delegate_get_is_draft  (PanelSaveDelegate    *self);
+PANEL_AVAILABLE_IN_ALL
+void               panel_save_delegate_set_is_draft  (PanelSaveDelegate    *self,
+                                                      gboolean              is_draft);
+PANEL_AVAILABLE_IN_ALL
 const char        *panel_save_delegate_get_icon_name (PanelSaveDelegate    *self);
 PANEL_AVAILABLE_IN_ALL
 void               panel_save_delegate_set_icon_name (PanelSaveDelegate    *self,

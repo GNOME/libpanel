@@ -30,6 +30,7 @@ typedef struct
   char *icon_name;
   GIcon *icon;
   double progress;
+  guint is_draft : 1;
 } PanelSaveDelegatePrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (PanelSaveDelegate, panel_save_delegate, G_TYPE_OBJECT)
@@ -38,6 +39,7 @@ enum {
   PROP_0,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_IS_DRAFT,
   PROP_PROGRESS,
   PROP_SUBTITLE,
   PROP_TITLE,
@@ -141,6 +143,10 @@ panel_save_delegate_get_property (GObject    *object,
       g_value_set_string (value, panel_save_delegate_get_icon_name (self));
       break;
 
+    case PROP_IS_DRAFT:
+      g_value_set_boolean (value, panel_save_delegate_get_is_draft (self));
+      break;
+
     case PROP_PROGRESS:
       g_value_set_double (value, panel_save_delegate_get_progress (self));
       break;
@@ -174,6 +180,10 @@ panel_save_delegate_set_property (GObject      *object,
 
     case PROP_ICON_NAME:
       panel_save_delegate_set_icon_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_IS_DRAFT:
+      panel_save_delegate_set_is_draft (self, g_value_get_boolean (value));
       break;
 
     case PROP_PROGRESS:
@@ -239,6 +249,19 @@ panel_save_delegate_class_init (PanelSaveDelegateClass *klass)
                          "Icon Name",
                          NULL,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * PanelSaveDelegate:is-draft:
+   *
+   * The "is-draft" property indicates that the document represented by the
+   * delegate is a draft and might be lost of not saved.
+   */
+  properties [PROP_IS_DRAFT] =
+    g_param_spec_boolean ("is-draft",
+                          "Is Draft",
+                          "If the delegate contents are ephemeral until saved",
+                          FALSE,
+                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
    * PanelSaveDelegate:progress:
@@ -520,5 +543,32 @@ panel_save_delegate_set_icon (PanelSaveDelegate *self,
       g_clear_pointer (&priv->icon_name, g_free);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
+    }
+}
+
+gboolean
+panel_save_delegate_get_is_draft (PanelSaveDelegate *self)
+{
+  PanelSaveDelegatePrivate *priv = panel_save_delegate_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_SAVE_DELEGATE (self), FALSE);
+
+  return priv->is_draft;
+}
+
+void
+panel_save_delegate_set_is_draft (PanelSaveDelegate *self,
+                                  gboolean           is_draft)
+{
+  PanelSaveDelegatePrivate *priv = panel_save_delegate_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
+
+  is_draft = !!is_draft;
+
+  if (is_draft != priv->is_draft)
+    {
+      priv->is_draft = is_draft;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_IS_DRAFT]);
     }
 }
