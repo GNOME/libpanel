@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 13:11+0000\n"
-"PO-Revision-Date: 2022-09-11 15:24+0200\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-13 22:01+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -22,27 +22,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Öppna sidor"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Ram"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Flytta sida åt _vänster"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Flytta sida åt _höger"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Flytta sida _uppåt"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Flytta sida _nedåt"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Stäng ram"
 
@@ -50,29 +50,66 @@ msgstr "Stäng ram"
 msgid "Restore panel to previous location"
 msgstr "Återställ panel till föregående plats"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Spara ändringar?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(ny)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Utkastet ”%s” har inte sparats. Det kan sparas eller förkastas."
+
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Spara eller förkasta utkast?"
+
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Förkasta"
+
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "_Spara som…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Öppna sidor innehåller osparade ändringar. Ändringar som inte har "
-"sparats kommer att förloras permanent."
+"”%s” innehåller osparade ändringar. Ändringar kan sparas eller förkastas."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Avbryt"
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "Spara eller förkasta ändringar?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "_Förkasta alla"
-
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Spara"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Öppna dokument innehåller osparade ändringar. Ändringar kan sparas eller "
+"förkastas."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "_Spara endast markerade"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "Spara alla"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "Förkasta alla"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "A_vbryt"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
