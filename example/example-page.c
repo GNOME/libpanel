@@ -50,6 +50,29 @@ example_page_new (void)
 }
 
 static gboolean
+tick_cb (gpointer user_data)
+{
+  GTask *task = user_data;
+  PanelSaveDelegate *delegate = g_task_get_source_object (task);
+  double progress = panel_save_delegate_get_progress (delegate);
+
+  if (g_task_had_error (task) ||
+      g_task_return_error_if_cancelled (task))
+    return G_SOURCE_REMOVE;
+
+  progress = CLAMP (progress+.005, .0, 1.);
+  panel_save_delegate_set_progress (delegate, progress);
+
+  if (progress >= 1.)
+    {
+      g_task_return_boolean (task, TRUE);
+      return G_SOURCE_REMOVE;
+    }
+
+  return G_SOURCE_CONTINUE;
+}
+
+static gboolean
 example_page_save (ExamplePage       *self,
                    GTask             *task,
                    PanelSaveDelegate *delegate)
@@ -58,7 +81,11 @@ example_page_save (ExamplePage       *self,
   g_assert (G_IS_TASK (task));
   g_assert (PANEL_IS_SAVE_DELEGATE (delegate));
 
-  g_task_return_boolean (task, TRUE);
+  g_timeout_add_full (G_PRIORITY_DEFAULT,
+                      30,
+                      tick_cb,
+                      g_object_ref (task),
+                      g_object_unref);
 
   return TRUE;
 }

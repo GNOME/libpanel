@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="PanelSaveDialogRow" parent="AdwActionRow">
+    <property name="activatable-widget">check</property>
     <child type="prefix">
       <object class="GtkCheckButton" id="check">
         <property name="active">true</property>
@@ -8,6 +9,12 @@
         <signal name="notify::active" handler="on_notify_active_cb" swapped="true" object="PanelSaveDialogRow"/>
       </object>
     </child>
-    <property name="activatable-widget">check</property>
+    <child type="suffix">
+      <object class="PanelProgressIcon" id="progress">
+        <property name="progress">.66</property>
+        <property name="valign">center</property>
+        <property name="margin-start">6</property>
+      </object>
+    </child>
   </template>
 </interface>

@@ -22,6 +22,7 @@
 
 #include <glib/gi18n.h>
 
+#include "panel-progress-icon-private.h"
 #include "panel-save-delegate.h"
 #include "panel-save-dialog-row-private.h"
 
@@ -32,6 +33,7 @@ struct _PanelSaveDialogRow
   PanelSaveDelegate *delegate;
 
   GtkCheckButton    *check;
+  PanelProgressIcon *progress;
 };
 
 enum {
@@ -174,7 +176,10 @@ panel_save_dialog_row_class_init (PanelSaveDialogRowClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-save-dialog-row.ui");
   gtk_widget_class_bind_template_child (widget_class, PanelSaveDialogRow, check);
+  gtk_widget_class_bind_template_child (widget_class, PanelSaveDialogRow, progress);
   gtk_widget_class_bind_template_callback (widget_class, on_notify_active_cb);
+
+  g_type_ensure (PANEL_TYPE_PROGRESS_ICON);
 }
 
 static void
