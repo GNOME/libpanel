@@ -76,13 +76,22 @@ panel_save_delegate_real_save_async (PanelSaveDelegate   *self,
                                      gpointer             user_data)
 {
   GTask *task = NULL;
+  gboolean ret = FALSE;
 
   g_assert (PANEL_IS_SAVE_DELEGATE (self));
   g_assert (!cancellable || G_IS_CANCELLABLE (cancellable));
 
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_save_delegate_real_save_async);
-  g_signal_emit (self, signals [SAVE], 0, task);
+
+  g_signal_emit (self, signals [SAVE], 0, task, &ret);
+
+  if (!ret)
+    g_task_return_new_error (task,
+                             G_IO_ERROR,
+                             G_IO_ERROR_FAILED,
+                             "No handler implemented save");
+
   g_clear_object (&task);
 }
 
