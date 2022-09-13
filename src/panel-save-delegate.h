@@ -44,6 +44,7 @@ struct _PanelSaveDelegateClass
                            GError            **error);
   gboolean (*save)        (PanelSaveDelegate  *self,
                            GTask              *task);
+  void     (*discard)     (PanelSaveDelegate  *self);
 
   /*< private >*/
   gpointer _reserved[8];
@@ -90,5 +91,7 @@ PANEL_AVAILABLE_IN_ALL
 gboolean           panel_save_delegate_save_finish   (PanelSaveDelegate    *self,
                                                       GAsyncResult         *result,
                                                       GError              **error);
+PANEL_AVAILABLE_IN_ALL
+void               panel_save_delegate_discard       (PanelSaveDelegate    *self);
 
 G_END_DECLS

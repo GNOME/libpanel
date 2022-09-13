@@ -47,6 +47,7 @@ enum {
 };
 
 enum {
+  DISCARD,
   SAVE,
   N_SIGNALS
 };
@@ -328,6 +329,25 @@ panel_save_delegate_class_init (PanelSaveDelegateClass *klass)
                                  g_signal_accumulator_true_handled, NULL,
                                  NULL,
                                  G_TYPE_BOOLEAN, 1, G_TYPE_TASK);
+
+  /**
+   * PanelSaveDelegate::discard:
+   * @self: a #PanelSaveDelegate
+   *
+   * This signal is emitted when the user has requested that the
+   * delegate discard the changes instead of saving them.
+   *
+   * Implementations are encouraged to connect to this signal (or
+   * implement the virtual method) and revert the document to the
+   * last saved state and/or close the document.
+   */
+  signals [DISCARD] = g_signal_new ("discard",
+                                    G_TYPE_FROM_CLASS (klass),
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (PanelSaveDelegateClass, discard),
+                                    NULL, NULL,
+                                    NULL,
+                                    G_TYPE_NONE, 0);
 }
 
 static void
@@ -571,4 +591,12 @@ panel_save_delegate_set_is_draft (PanelSaveDelegate *self,
       priv->is_draft = is_draft;
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_IS_DRAFT]);
     }
+}
+
+void
+panel_save_delegate_discard (PanelSaveDelegate *self)
+{
+  g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
+
+  g_signal_emit (self, signals [DISCARD], 0);
 }

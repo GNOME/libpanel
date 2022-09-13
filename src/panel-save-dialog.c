@@ -80,7 +80,14 @@ panel_save_dialog_response_discard_cb (PanelSaveDialog *self,
 
   task = g_steal_pointer (&self->task);
 
-  /* TODO: Discard widgets */
+  for (guint i = 0; i < self->rows->len; i++)
+    {
+      PanelSaveDialogRow *row = g_ptr_array_index (self->rows, i);
+      PanelSaveDelegate *delegate = panel_save_dialog_row_get_delegate (row);
+
+      panel_save_delegate_discard (delegate);
+    }
+
   g_task_return_boolean (task, TRUE);
 
   gtk_window_destroy (GTK_WINDOW (self));
