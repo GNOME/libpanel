@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
 "POT-Creation-Date: 2022-09-13 19:34+0000\n"
-"PO-Revision-Date: 2022-09-13 23:54+0200\n"
+"PO-Revision-Date: 2022-09-13 23:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -59,7 +59,7 @@ msgstr "(novo)"
 #: src/panel-save-dialog.c:351
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
-msgstr "Skica“%s” još nije spremljena. Može se spremiti ili odbaciti."
+msgstr "Skica “%s” još nije spremljena. Može se spremiti ili odbaciti."
 
 #: src/panel-save-dialog.c:354
 msgid "Save or Discard Draft?"
@@ -98,7 +98,7 @@ msgstr ""
 
 #: src/panel-save-dialog.c:412
 msgid "Only _Save Selected"
-msgstr "Samo _spremi odabrano"
+msgstr "Spremi _samo odabrano"
 
 #: src/panel-save-dialog.c:420
 msgid "Save All"
