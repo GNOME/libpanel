@@ -97,7 +97,8 @@ panel_layout_load_1 (PanelLayout  *self,
                      GVariant     *variant,
                      GError      **error)
 {
-  g_autoptr(GVariant) items = NULL;
+  GVariant *items = NULL;
+  gboolean ret = FALSE;
 
   g_assert (PANEL_IS_LAYOUT (self));
   g_assert (variant != NULL);
@@ -109,26 +110,33 @@ panel_layout_load_1 (PanelLayout  *self,
 
       for (gsize i = 0; i < n_children; i++)
         {
-          g_autoptr(GVariant) itemv = g_variant_get_child_value (items, i);
-          g_autoptr(GVariant) infov = g_variant_get_variant (itemv);
+          GVariant *itemv = g_variant_get_child_value (items, i);
+          GVariant *infov = g_variant_get_variant (itemv);
           PanelLayoutItem *item = _panel_layout_item_new_from_variant (infov, error);
 
+          g_clear_pointer (&infov, g_variant_unref);
+          g_clear_pointer (&itemv, g_variant_unref);
+
           if (item == NULL)
-            return FALSE;
+            goto cleanup;
 
           g_ptr_array_add (self->items, g_steal_pointer (&item));
         }
 
-      return TRUE;
+      ret = TRUE;
+
+      goto cleanup;
     }
-  else
-    {
-      g_set_error_literal (error,
-                           G_IO_ERROR,
-                           G_IO_ERROR_INVALID_DATA,
-                           "items missing from variant");
-      return FALSE;
-    }
+
+  g_set_error_literal (error,
+                       G_IO_ERROR,
+                       G_IO_ERROR_INVALID_DATA,
+                       "items missing from variant");
+
+cleanup:
+  g_clear_pointer (&items, g_variant_unref);
+
+  return ret;
 }
 
 static gboolean

@@ -303,7 +303,8 @@ panel_layout_item_has_metadata (PanelLayoutItem     *self,
                                 const char          *key,
                                 const GVariantType **value_type)
 {
-  g_autoptr(GVariant) value = NULL;
+  GVariant *value;
+  gboolean ret = FALSE;
 
   g_return_val_if_fail (PANEL_IS_LAYOUT_ITEM (self), FALSE);
   g_return_val_if_fail (key != NULL, FALSE);
@@ -315,10 +316,12 @@ panel_layout_item_has_metadata (PanelLayoutItem     *self,
       if (value_type != NULL)
         *value_type = g_variant_get_type (value);
 
-      return TRUE;
+      ret = TRUE;
+
+      g_variant_unref (value);
     }
 
-  return FALSE;
+  return ret;
 }
 
 /**
@@ -367,7 +370,7 @@ panel_layout_item_get_metadata (PanelLayoutItem *self,
                                 const char      *format,
                                 ...)
 {
-  g_autoptr(GVariant) value = NULL;
+  GVariant *value;
   va_list args;
 
   g_return_if_fail (PANEL_IS_LAYOUT_ITEM (self));
@@ -383,6 +386,8 @@ panel_layout_item_get_metadata (PanelLayoutItem *self,
   va_start (args, format);
   g_variant_get_va (value, format, NULL, &args);
   va_end (args);
+
+  g_variant_unref (value);
 }
 
 /**
@@ -512,8 +517,8 @@ PanelLayoutItem *
 _panel_layout_item_new_from_variant (GVariant  *variant,
                                      GError   **error)
 {
-  g_autoptr(GVariant) positionv = NULL;
-  g_autoptr(GVariant) metadatav = NULL;
+  GVariant *positionv = NULL;
+  GVariant *metadatav = NULL;
   PanelLayoutItem *self;
 
   g_return_val_if_fail (variant != NULL, NULL);
@@ -526,8 +531,9 @@ _panel_layout_item_new_from_variant (GVariant  *variant,
 
   if ((positionv = g_variant_lookup_value (variant, "position", NULL)))
     {
-      g_autoptr(GVariant) child = g_variant_get_variant (positionv);
+      GVariant *child = g_variant_get_variant (positionv);
       self->position = _panel_position_new_from_variant (child);
+      g_clear_pointer (&child, g_variant_unref);
     }
 
   if ((metadatav = g_variant_lookup_value (variant, "metadata", G_VARIANT_TYPE_VARDICT)))
@@ -540,10 +546,14 @@ _panel_layout_item_new_from_variant (GVariant  *variant,
 
       while (g_variant_iter_loop (&iter, "{sv}", &key, &value))
         {
-          g_autoptr(GVariant) unwrapped = g_variant_get_variant (value);
+          GVariant *unwrapped = g_variant_get_variant (value);
           panel_layout_item_set_metadata_value (self, key, unwrapped);
+          g_clear_pointer (&unwrapped, g_variant_unref);
         }
     }
+
+  g_clear_pointer (&positionv, g_variant_unref);
+  g_clear_pointer (&metadatav, g_variant_unref);
 
   return self;
 }
