@@ -1,0 +1,119 @@
+# Occitan translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Quentin PAGÈS <pages_quentin@hotmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-14 14:14+0000\n"
+"PO-Revision-Date: 2022-09-14 19:00+0200\n"
+"Last-Translator: Quentin PAGÈS\n"
+"Language-Team: Occitan <totenoc@gmail.com>\n"
+"Language: oc\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Paginas dobèrtas"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Quadre"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Desplaçar la pagina cap a _esquèrra"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Desplaçar la pagina cap a _drecha"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Desplaçar la pagina _amont"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Desplaçar la pagina _aval"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Tampar lo quadre"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Restaurar lo panèl a l’emplaçament precedent"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(nòu)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Lo borrolhon « %s » es pas enregistrat. Se pòt enregistrar o ignorar."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Enregistrar o ignorar lo borrolhon ?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Ignorar"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Enregistrar jos…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "« %s » conten de modificacions pas enregistradas. Pòdon èsser enregistradas o ignoradas."
+
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "Enregistrar o ignorar las modificacions ?"
+
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Enregistrar"
+
+#: src/panel-save-dialog.c:456
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "Los documents dobèrts contenon de modificacions pas enregistradas. Pòdon èsser enregistradas o ignoradas."
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "Enregistrar la _seleccion solament"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "Enregistrar tot"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "_Tot ignorar"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Anullar"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Seguir lo tèma del sistèma"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Estil clar"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Estil escur"
