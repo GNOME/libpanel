@@ -185,7 +185,7 @@ panel_action_muxer_list_groups (PanelActionMuxer *self)
       g_array_append_val (ar, prefix);
     }
 
-  return (char **)g_array_free (ar, FALSE);
+  return (char **)(gpointer)g_array_free (ar, FALSE);
 }
 
 static void
@@ -481,7 +481,7 @@ panel_action_muxer_list_actions (GActionGroup *group)
       g_clear_pointer (&action_names, g_strfreev);
     }
 
-  return (char **)g_array_free (ar, FALSE);
+  return (char **)(gpointer)g_array_free (ar, FALSE);
 }
 
 static gboolean
