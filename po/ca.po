@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 15:37+0000\n"
-"PO-Revision-Date: 2022-09-11 15:37+0000\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-14 15:37+0000\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <gnome@llistes.softcatala.org>\n"
 "Language: ca\n"
@@ -20,27 +20,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Obre les pàgines"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Marc"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "_Mou la pàgina cap a l'esquerra"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "M_ou la pàgina cap a la dreta"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Mo_u la pàgina amunt"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Mou _la pàgina avall"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Tanca el marc"
 
@@ -48,29 +48,65 @@ msgstr "Tanca el marc"
 msgid "Restore panel to previous location"
 msgstr "Restaura el plafó a la ubicació anterior"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Voleu desar els canvis?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(nou)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
-msgstr ""
-"Les pàgines obertes contenen canvis sense desar. Els canvis que no es desen "
-"es perdran permanentment."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "No s'ha desat l'esborrany «%s». Es pot desar o descartar."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Cancel·la"
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Voleu desar o descartar l'esborrany?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "_Descarta-ho tot"
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Descarta-ho"
 
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "_Anomena i desa…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "«%s» conté canvis sense desar. Els canvis es poden desar o descartar."
+
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "Voleu desar o descartar els canvis?"
+
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Desa"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Els documents oberts contenen canvis sense desar. Els canvis es poden desar "
+"o descartar."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "_Desa només els seleccionats"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "Desa-ho tot"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "Descarta-ho tot"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Cancel·la"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
