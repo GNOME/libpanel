@@ -22,7 +22,7 @@
 
 #include "panel-dock.h"
 #include "panel-enums.h"
-#include "panel-position-private.h"
+#include "panel-position.h"
 
 struct _PanelPosition
 {
@@ -381,7 +381,7 @@ panel_position_is_indeterminate (PanelPosition *self)
 }
 
 GVariant *
-_panel_position_to_variant (PanelPosition *self)
+panel_position_to_variant (PanelPosition *self)
 {
   GVariantDict dict;
 
@@ -435,7 +435,7 @@ _panel_position_to_variant (PanelPosition *self)
 }
 
 PanelPosition *
-_panel_position_new_from_variant (GVariant *variant)
+panel_position_new_from_variant (GVariant *variant)
 {
 
   PanelPosition *self;

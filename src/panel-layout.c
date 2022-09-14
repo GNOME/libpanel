@@ -22,7 +22,7 @@
 
 #include "panel-layout.h"
 #include "panel-layout-item-private.h"
-#include "panel-position-private.h"
+#include "panel-position.h"
 
 struct _PanelLayout
 {

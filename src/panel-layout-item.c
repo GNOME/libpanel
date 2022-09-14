@@ -22,7 +22,7 @@
 
 #include "panel-layout-item-private.h"
 #include "panel-macros.h"
-#include "panel-position-private.h"
+#include "panel-position.h"
 
 struct _PanelLayoutItem
 {
@@ -475,7 +475,7 @@ _panel_layout_item_to_variant (PanelLayoutItem *self,
   if (self->position != NULL)
     g_variant_builder_add_parsed (builder,
                                   "{'position',<%v>}",
-                                  _panel_position_to_variant (self->position));
+                                  panel_position_to_variant (self->position));
 
   if (self->id != NULL)
     g_variant_builder_add_parsed (builder, "{'id',<%s>}", self->id);
@@ -532,7 +532,7 @@ _panel_layout_item_new_from_variant (GVariant  *variant,
   if ((positionv = g_variant_lookup_value (variant, "position", NULL)))
     {
       GVariant *child = g_variant_get_variant (positionv);
-      self->position = _panel_position_new_from_variant (child);
+      self->position = panel_position_new_from_variant (child);
       g_clear_pointer (&child, g_variant_unref);
     }
 

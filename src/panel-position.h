@@ -33,6 +33,10 @@ G_DECLARE_FINAL_TYPE (PanelPosition, panel_position, PANEL, POSITION, GObject)
 PANEL_AVAILABLE_IN_ALL
 PanelPosition *panel_position_new              (void);
 PANEL_AVAILABLE_IN_ALL
+PanelPosition *panel_position_new_from_variant (GVariant      *variant);
+PANEL_AVAILABLE_IN_ALL
+GVariant      *panel_position_to_variant       (PanelPosition *self);
+PANEL_AVAILABLE_IN_ALL
 PanelArea      panel_position_get_area         (PanelPosition *self);
 PANEL_AVAILABLE_IN_ALL
 gboolean       panel_position_get_area_set     (PanelPosition *self);
