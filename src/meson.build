@@ -195,10 +195,8 @@ if generate_gir
           sources: libpanel_gir.get(0),
           install: true,
       install_dir: vapidir,
-         packages: [ 'gio-2.0',
-                     'gtk4',
-                     'libadwaita-1'
-                   ],
+         packages: [ 'gio-2.0', 'gtk4', 'libadwaita-1' ],
+        vapi_dirs: [vapidir],
     )
   endif
 endif
