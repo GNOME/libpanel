@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 10:54+0000\n"
-"PO-Revision-Date: 2022-09-11 13:00+0200\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-14 16:12+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -23,27 +23,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Otwarte strony"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Ramka"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Prze_nieś stronę w lewo"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "_Przenieś stronę w prawo"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Przenieś _stronę w górę"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Przenieś stronę w _dół"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Zamknij ramkę"
 
@@ -51,29 +51,63 @@ msgstr "Zamknij ramkę"
 msgid "Restore panel to previous location"
 msgstr "Przywraca panel do poprzedniego położenia"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Zapisać zmiany?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(nowy)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
-msgstr ""
-"Otwarte strony zawierają zmiany, które zostaną bezpowrotnie utracone, jeśli "
-"nie zostaną zapisane."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Szkic „%s” nie został zapisany. Można go zapisać lub odrzucić."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Anuluj"
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Zapisać czy odrzucić szkic?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "_Odrzuć wszystkie"
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Odrzuć"
 
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "Zapi_sz jako…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "Dokument „%s” zawiera zmiany, które można zapisać lub odrzucić."
+
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "Zapisać czy odrzucić zmiany?"
+
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Zapisz"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "Otwarte dokumenty zawierają zmiany, które można zapisać lub odrzucić."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "Zapisz tylko zaz_naczone"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "Zapisz wszystkie"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "Odrzuć wszystkie"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Anuluj"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
