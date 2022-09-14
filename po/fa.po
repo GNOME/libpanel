@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-12 06:46+0000\n"
-"PO-Revision-Date: 2022-09-12 14:44+0430\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-14 13:47+0430\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -21,27 +21,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "صفحه‌های گشوده"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "قاب"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "جابه‌جایی صفحه به _راست"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "جابه‌جایی به _چپ"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "جابه‌جایی صفحه به _بالا"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "جابه‌جایی صفحه به −پایین"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "بستن قاب"
 
@@ -49,29 +49,66 @@ msgstr "بستن قاب"
 msgid "Restore panel to previous location"
 msgstr "بازگردانی تابلو به مکان پیشین"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "ذخیرهٔ تغییرات؟"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(جدید)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "پیش‌نویس «%s» ذخیره نشده. می‌تواند ذخیره شده یا دور انداخته شود."
+
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "ذخیره یا دور انداختن پیش‌نویس؟"
+
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_دور انداختن"
+
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "_ذخیره به شکل…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"صفحه‌های گشوده دارای تغییرات ذخیره نشده‌اند. تغیرراتی که ذخیره نشده‌اند "
-"برای همیشه از دست خواهند رفت."
+"«%s» دارای تغییراتی ذخیره نشده است. تغییرات می‌تواند ذخیره یا دور انداخته شود."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "لغو"
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "ذخیره یا دور انداختن تغییرات؟"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "_دور انداختن همه"
-
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "ذخیره"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"سندهای گشوده دارای تغییراتی ذخیره نشده‌اند. تغییرات می‌تواند ذخیره یا دور "
+"انداخته شود."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "فقط _ذخیرهٔ گزیده"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "ذخیرهٔ همه"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "دور انداختن همه"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_لغو"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
