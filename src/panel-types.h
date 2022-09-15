@@ -34,8 +34,6 @@ typedef struct _PanelFrameSwitcher  PanelFrameSwitcher;
 typedef struct _PanelFrameTabBar    PanelFrameTabBar;
 typedef struct _PanelGrid           PanelGrid;
 typedef struct _PanelGridColumn     PanelGridColumn;
-typedef struct _PanelLayout         PanelLayout;
-typedef struct _PanelLayoutItem     PanelLayoutItem;
 typedef struct _PanelOmniBar        PanelOmniBar;
 typedef struct _PanelPaned          PanelPaned;
 typedef struct _PanelPosition       PanelPosition;
