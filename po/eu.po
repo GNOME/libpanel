@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 19:44+0000\n"
-"PO-Revision-Date: 2022-09-11 22:47+0000\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-15 22:47+0000\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
@@ -19,27 +19,27 @@ msgstr "Project-Id-Version: libpanel main\n"
 msgid "Open Pages"
 msgstr "Ireki orriak"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Markoa"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Eraman orria e_zkerrera"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Eraman orria e_skuinera"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Erama orria _gora"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Eraman orria _behera"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Itxi markoa"
 
@@ -47,27 +47,63 @@ msgstr "Itxi markoa"
 msgid "Restore panel to previous location"
 msgstr "Leheneratu panela aurreko kokalekura"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Aldaketak gorde?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(berria)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
-msgstr "Orri irekiek gorde gabeko aldaketak dituzte. Gorde ez diren aldaketak betiko galduko dira."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "“%s” zirriborroa ez da gorde. Gorde edo baztertu egin daiteke."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Utzi"
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Gorde ala baztertu zirriborroa?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "Baztertu _dena"
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Baztertu"
 
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "Gorde _honela…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "“%s” dokumentuak gorde gabeko aldaketak ditu. Aldaketak gorde edo baztertu egin daitezke."
+
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "Gorde ala baztertu aldaketak?"
+
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Gorde"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "Dokumentu irekiek gorde gabeko aldaketak dituzte. Aldaketak gorde edo baztertu egin daitezke."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "_Gorde hautatutakoak soilik"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "Gorde dena"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "Baztertu dena"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Utzi"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
