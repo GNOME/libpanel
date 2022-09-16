@@ -410,6 +410,14 @@ panel_dock_child_foreach_frame (PanelDockChild     *self,
     }
 }
 
+int
+panel_dock_child_get_drag_position (PanelDockChild *self)
+{
+  g_return_val_if_fail (PANEL_IS_DOCK_CHILD (self), -1);
+
+  return panel_resizer_get_drag_position (self->resizer);
+}
+
 void
 panel_dock_child_set_drag_position (PanelDockChild *self,
                                     int             drag_position)

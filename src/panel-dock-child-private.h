@@ -45,6 +45,7 @@ void       panel_dock_child_set_dragging      (PanelDockChild     *self,
 void       panel_dock_child_foreach_frame     (PanelDockChild     *self,
                                                PanelFrameCallback  callback,
                                                gpointer            user_data);
+int        panel_dock_child_get_drag_position (PanelDockChild     *self);
 void       panel_dock_child_set_drag_position (PanelDockChild     *self,
                                                int                 drag_position);
 

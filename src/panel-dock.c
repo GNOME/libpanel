@@ -237,6 +237,62 @@ page_unmaximize_action (GtkWidget  *widget,
     }
 }
 
+static int
+get_drag_size (PanelDock *self,
+               PanelArea  area,
+               int        fallback)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
+  g_assert (PANEL_IS_DOCK (self));
+
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (priv->grid));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (PANEL_IS_DOCK_CHILD (child))
+        {
+          if (area == panel_dock_child_get_area (PANEL_DOCK_CHILD (child)))
+            {
+              int ret = panel_dock_child_get_drag_position (PANEL_DOCK_CHILD (child));
+
+              if (ret > 0)
+                return ret;
+            }
+        }
+    }
+
+  return fallback;
+}
+
+static int
+panel_dock_get_start_width (PanelDock *self)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+  return get_drag_size (self, PANEL_AREA_START, priv->start_width);
+}
+
+static int
+panel_dock_get_end_width (PanelDock *self)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+  return get_drag_size (self, PANEL_AREA_END, priv->end_width);
+}
+
+static int
+panel_dock_get_top_height (PanelDock *self)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+  return get_drag_size (self, PANEL_AREA_TOP, priv->top_height);
+}
+
+static int
+panel_dock_get_bottom_height (PanelDock *self)
+{
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+  return get_drag_size (self, PANEL_AREA_BOTTOM, priv->bottom_height);
+}
+
 static void
 panel_dock_dispose (GObject *object)
 {
@@ -256,7 +312,6 @@ panel_dock_get_property (GObject    *object,
                          GParamSpec *pspec)
 {
   PanelDock *self = PANEL_DOCK (object);
-  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
 
   switch (prop_id)
     {
@@ -293,19 +348,19 @@ panel_dock_get_property (GObject    *object,
       break;
 
     case PROP_START_WIDTH:
-      g_value_set_int (value, priv->start_width);
+      g_value_set_int (value, panel_dock_get_start_width (self));
       break;
 
     case PROP_END_WIDTH:
-      g_value_set_int (value, priv->end_width);
+      g_value_set_int (value, panel_dock_get_end_width (self));
       break;
 
     case PROP_TOP_HEIGHT:
-      g_value_set_int (value, priv->top_height);
+      g_value_set_int (value, panel_dock_get_top_height (self));
       break;
 
     case PROP_BOTTOM_HEIGHT:
-      g_value_set_int (value, priv->bottom_height);
+      g_value_set_int (value, panel_dock_get_bottom_height (self));
       break;
 
     default:
