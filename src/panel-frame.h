@@ -77,5 +77,7 @@ GtkWidget         *panel_frame_get_placeholder   (PanelFrame       *self);
 PANEL_AVAILABLE_IN_ALL
 void               panel_frame_set_placeholder   (PanelFrame       *self,
                                                   GtkWidget        *placeholder);
+PANEL_AVAILABLE_IN_ALL
+PanelPosition     *panel_frame_get_position      (PanelFrame       *self);
 
 G_END_DECLS

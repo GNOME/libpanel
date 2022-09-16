@@ -30,6 +30,8 @@
 #include "panel-grid-column-private.h"
 #include "panel-joined-menu-private.h"
 #include "panel-paned.h"
+#include "panel-position.h"
+#include "panel-resizer-private.h"
 #include "panel-save-delegate.h"
 #include "panel-save-dialog.h"
 #include "panel-scaler-private.h"
@@ -1357,4 +1359,59 @@ panel_frame_get_closeable (PanelFrame *self)
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
   return priv->closeable;
+}
+
+/**
+ * panel_frame_get_position:
+ * @self: a #PanelFrame
+ *
+ * Gets the #PanelPosition for the frame.
+ *
+ * Returns: (transfer full): a #PanelPosition
+ */
+PanelPosition *
+panel_frame_get_position (PanelFrame *self)
+{
+  PanelPosition *position;
+  GtkWidget *last_resizer = NULL;
+
+  g_return_val_if_fail (PANEL_IS_FRAME (self), NULL);
+
+  position = panel_position_new ();
+
+  for (GtkWidget *parent = gtk_widget_get_parent (GTK_WIDGET (self));
+       parent != NULL;
+       parent = gtk_widget_get_parent (parent))
+    {
+      if (PANEL_IS_DOCK_CHILD (parent))
+        {
+          panel_position_set_area (position,
+                                   panel_dock_child_get_area (PANEL_DOCK_CHILD (parent)));
+          break;
+        }
+
+      if (PANEL_IS_RESIZER (parent))
+        {
+          last_resizer = parent;
+          continue;
+        }
+
+      if (PANEL_IS_PANED (parent))
+        {
+          GtkOrientation orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (parent));
+          int index = 0;
+
+          for (GtkWidget *sibling = gtk_widget_get_prev_sibling (last_resizer);
+               sibling != NULL;
+               sibling = gtk_widget_get_prev_sibling (sibling))
+            index++;
+
+          if (orientation == GTK_ORIENTATION_HORIZONTAL)
+            panel_position_set_column (position, index);
+          else if (orientation == GTK_ORIENTATION_VERTICAL)
+            panel_position_set_row (position, index);
+        }
+    }
+
+  return g_steal_pointer (&position);
 }
