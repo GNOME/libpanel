@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 18:56+0000\n"
-"PO-Revision-Date: 2022-09-11 21:15+0200\n"
+"POT-Creation-Date: 2022-09-16 14:18+0000\n"
+"PO-Revision-Date: 2022-09-16 21:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups."
 "com>\n"
@@ -26,27 +26,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Odprte strani"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Okno"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Premakni stran _levo"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Premakni stran _desno"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Premakni stran _navzgor"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Premakni stran _navzdol"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Zapri okno"
 
@@ -54,29 +54,67 @@ msgstr "Zapri okno"
 msgid "Restore panel to previous location"
 msgstr "Obnovi pult na predhodno mesto"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Ali želite shraniti spremembe?"
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(novo)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Osnutek »%s« ni shranjen. Lahko ga shranite ali zavržete."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Ali želite shraniti ali zavreči osnutek?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Zavrzi"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Shrani kot …"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Odprte strani vsebujejo spremembe, ki še niso shranjene. Spremembe, ki niso "
-"shranjene, bodo trajno izgubljene."
+"Dokument »%s« vsebuje spremembe, ki še niso shranjene. Lahko jih sprejmete "
+"ali zavržete."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Prekliči"
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "Ali želite shraniti ali zavreči spremembe?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "Zavrzi _vse"
-
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Shrani"
+
+#: src/panel-save-dialog.c:456
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Odprti dokumenti vsebujejo spremembe, ki še niso shranjene. Lahko jih "
+"shranite ali zavržete."
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "Shrani le _izbrano"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "Shrani vse"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "Zavrzi vse"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Prekliči"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
