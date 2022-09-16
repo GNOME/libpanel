@@ -526,6 +526,14 @@ panel_resizer_get_handle (PanelResizer *self)
   return GTK_WIDGET (self->handle);
 }
 
+int
+panel_resizer_get_drag_position (PanelResizer *self)
+{
+  g_return_val_if_fail (PANEL_IS_RESIZER (self), -1);
+
+  return self->drag_position_set ? self->drag_position : -1;
+}
+
 void
 panel_resizer_set_drag_position (PanelResizer *self,
                                  int           drag_position)

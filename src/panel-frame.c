@@ -1415,3 +1415,33 @@ panel_frame_get_position (PanelFrame *self)
 
   return g_steal_pointer (&position);
 }
+
+int
+panel_frame_get_requested_size (PanelFrame *self)
+{
+  GtkWidget *resizer;
+
+  g_return_val_if_fail (PANEL_IS_FRAME (self), -1);
+
+  if (!(resizer = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_RESIZER)))
+    return -1;
+
+  return panel_resizer_get_drag_position (PANEL_RESIZER (resizer));
+}
+
+void
+panel_frame_set_requested_size (PanelFrame *self,
+                                int         requested_size)
+{
+  GtkWidget *resizer;
+
+  g_return_if_fail (PANEL_IS_FRAME (self));
+
+  if (!(resizer = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_RESIZER)))
+    {
+      g_warning_once ("Attempt to set requested size for unrooted frame");
+      return;
+    }
+
+  panel_resizer_set_drag_position (PANEL_RESIZER (resizer), requested_size);
+}

@@ -38,6 +38,7 @@ GtkWidget *panel_resizer_get_child         (PanelResizer *self);
 void       panel_resizer_set_child         (PanelResizer *self,
                                             GtkWidget    *child);
 GtkWidget *panel_resizer_get_handle        (PanelResizer *self);
+int        panel_resizer_get_drag_position (PanelResizer *self);
 void       panel_resizer_set_drag_position (PanelResizer *self,
                                             int           drag_position);
 
