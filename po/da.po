@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-12 10:15+0000\n"
-"PO-Revision-Date: 2022-09-13 15:21+0200\n"
+"POT-Creation-Date: 2022-09-14 13:18+0000\n"
+"PO-Revision-Date: 2022-09-14 15:23+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -22,27 +22,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Åbne sider"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Ramme"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Flyt siden til _venstre"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Flyt siden til _højre"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Flyt siden _op"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Flyt siden _ned"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Luk ramme"
 
@@ -50,29 +50,67 @@ msgstr "Luk ramme"
 msgid "Restore panel to previous location"
 msgstr "Gendan panel til forrige placering"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Gem ændringer?"
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(ny)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Kladden “%s” er ikke gemt. Du kan gemme eller kassere den."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Gem eller kassér kladde?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Kassér"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Gem som …"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Åbne sider indeholder ændringer, der ikke er gemt. Ændringer, som ikke "
-"gemmes, vil blive tabt for altid."
+"“%s” indeholder ændringer, der ikke er gemt. Ændringer kan gemmes eller "
+"kasseres."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Annullér"
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "Gem eller kassér ændringer?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "_Kassér alt"
-
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Gem"
+
+#: src/panel-save-dialog.c:456
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Åbne dokumenter indeholder ændringer, der ikke er gemt. Ændringer kan "
+"gemmes eller kasseres."
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "Gem _kun valgte"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "Gem alle"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "Kassér alle"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Annullér"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
