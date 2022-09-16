@@ -48,6 +48,7 @@
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-frame-private.h"
+#include "panel-position.h"
 #include "panel-save-delegate.h"
 #include "panel-widget-private.h"
 
@@ -1548,4 +1549,40 @@ panel_widget_action_set_enabled (PanelWidget *self,
           break;
         }
     }
+}
+
+/**
+ * panel_widget_get_position:
+ * @self: a #PanelWidget
+ *
+ * Gets teh position of the widget within the dock.
+ *
+ * Returns: (transfer full) (nullable): a #PanelPosition or %NULL if the
+ *   widget isn't within a #PanelFrame.
+ */
+PanelPosition *
+panel_widget_get_position (PanelWidget *self)
+{
+  PanelFrame *frame;
+  PanelPosition *position;
+  guint n_pages;
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  if (!(frame = PANEL_FRAME (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_FRAME))))
+    return NULL;
+
+  position = panel_frame_get_position (frame);
+  n_pages = panel_frame_get_n_pages (frame);
+
+  for (guint i = 0; i < n_pages; i++)
+    {
+      if (panel_frame_get_page (frame, i) == self)
+        {
+          panel_position_set_depth (position, i);
+          break;
+        }
+    }
+
+  return g_steal_pointer (&position);
 }

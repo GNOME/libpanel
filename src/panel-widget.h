@@ -110,6 +110,8 @@ PANEL_AVAILABLE_IN_ALL
 void               panel_widget_set_menu_model                (PanelWidget                 *self,
                                                                GMenuModel                  *menu_model);
 PANEL_AVAILABLE_IN_ALL
+PanelPosition     *panel_widget_get_position                  (PanelWidget                 *self);
+PANEL_AVAILABLE_IN_ALL
 void               panel_widget_raise                         (PanelWidget                 *self);
 PANEL_AVAILABLE_IN_ALL
 GtkWidget         *panel_widget_get_default_focus             (PanelWidget                 *self);
