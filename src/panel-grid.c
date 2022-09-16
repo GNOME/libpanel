@@ -732,3 +732,31 @@ panel_grid_agree_to_close_finish (PanelGrid     *self,
 
   return g_task_propagate_boolean (G_TASK (result), error);
 }
+
+/**
+ * panel_grid_foreach_frame:
+ * @self: a #PanelGrid
+ * @callback: (scope call): a #PanelFrameCallback
+ * @user_data: closure data for @callback
+ *
+ * Calls @callback for each #PanelFrame within @grid.
+ */
+void
+panel_grid_foreach_frame (PanelGrid          *self,
+                          PanelFrameCallback  callback,
+                          gpointer            user_data)
+{
+  guint n_columns;
+
+  g_return_if_fail (PANEL_IS_GRID (self));
+  g_return_if_fail (callback != NULL);
+
+  n_columns = panel_grid_get_n_columns (self);
+
+  for (guint i = 0; i < n_columns; i++)
+    {
+      PanelGridColumn *column = panel_grid_get_column (self, i);
+
+      panel_grid_column_foreach_frame (column, callback, user_data);
+    }
+}
