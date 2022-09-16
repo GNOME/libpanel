@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-12 03:25+0000\n"
-"PO-Revision-Date: 2022-09-12 07:51+0200\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-16 10:51+0200\n"
 "Last-Translator: Daniel Mustieles García <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -23,27 +23,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Páginas abiertas"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Fotograma"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Mover página a la _izquierda"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Mover página a la _derecha"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "_Subir página"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "_Bajar página"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Cerrar marco"
 
@@ -51,29 +51,66 @@ msgstr "Cerrar marco"
 msgid "Restore panel to previous location"
 msgstr "Restaurar el panel a su ubicación anterior"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "¿Quiere guardar los cambios?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(nuevo)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "El borrador «%s» no se ha guardado. Se puede guardar o descartar."
+
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "¿Quiere guardar el borrador o descartarlo?"
+
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Descartar"
+
+#: src/panel-save-dialog.c:362
+msgid "_Save As…"
+msgstr "Guardar _como…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Las paginas abiertas contienen cambios sin guardar. Los cambios que no se "
-"guarden se perderán de forma permanente."
+"«%s» contiene cambios sin guardar. Los cambios se pueden guardar o descartar."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Cancelar"
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+msgid "Save or Discard Changes?"
+msgstr "¿Quiere guardar los cambios o descartarlos?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "_Descartar todo"
-
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Guardar"
+
+#: src/panel-save-dialog.c:407
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Los documentos abiertos contienen cambios sin guardar. Los cambios se pueden "
+"guardar o descartar."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "_Guardar sĺo lo seleccionado"
+
+#: src/panel-save-dialog.c:420
+msgid "Save All"
+msgstr "Guardar todo"
+
+#: src/panel-save-dialog.c:429
+msgid "Discard All"
+msgstr "_Descartar todo"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "C_ancelar"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
