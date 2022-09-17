@@ -1258,9 +1258,11 @@ panel_dock_set_panel_size (PanelDock *self,
                            PanelArea  area,
                            int        size)
 {
+  PanelDockPrivate *priv = panel_dock_get_instance_private (self);
+
   g_return_if_fail (PANEL_IS_DOCK (self));
 
-  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (self));
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (priv->grid));
        child;
        child = gtk_widget_get_next_sibling (child))
     {
