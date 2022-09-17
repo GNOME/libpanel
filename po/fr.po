@@ -1,0 +1,127 @@
+# French translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Guillaume Bernard <associations@guillaume-bernard.fr>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-15 00:03+0000\n"
+"PO-Revision-Date: 2022-09-16 22:23+0200\n"
+"Last-Translator: Guillaume Bernard <associations@guillaume-bernard.fr>\n"
+"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Ouvrir les pages"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Cadre"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Déplacer la page vers la _gauche"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Déplacer la page vers la _droite"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Déplacer la page vers le _haut"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Déplacer la page vers le _bas"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Fermer le cadre"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Restaurer le panneau à son emplacement précédent"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(nouveau)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr ""
+"Le brouillon « %s » n’a pas été enregistré. Il peut être enregistré ou "
+"abandonné."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Enregistrer ou abandonner le brouillon ?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Abandonner"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "Enregi_strer sous…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"« %s » contient des modifications non enregistrées. Les modifications "
+"peuvent être enregistrées ou abandonnées."
+
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "Enregistrer ou abandonner les modifications ?"
+
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Enregistrer"
+
+#: src/panel-save-dialog.c:456
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Les documents ouverts contiennent des modifications non enregistrées. Les "
+"modifications peuvent être enregistrées ou abandonnées."
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "N’enregistrer que les documents sélectionnés"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "Tout enregistrer"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "Tout abandonner"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "A_nnuler"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Suivre le thème système"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Thème clair"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Thème sombre"
