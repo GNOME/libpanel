@@ -960,12 +960,18 @@ panel_frame_remove (PanelFrame  *self,
                     PanelWidget *panel)
 {
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  PanelWidget *old_visible_child;
   GtkWidget *dock_child;
   GtkWidget *grid;
   AdwTabPage *page;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
+
+  old_visible_child = panel_frame_get_visible_child (self);
+
+  if (old_visible_child == panel)
+    old_visible_child = NULL;
 
   page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (panel));
   adw_tab_view_close_page (priv->tab_view, page);
@@ -980,6 +986,9 @@ panel_frame_remove (PanelFrame  *self,
             g_object_notify (G_OBJECT (dock_child), "empty");
         }
     }
+
+  if (old_visible_child != NULL)
+    panel_frame_set_visible_child (self, old_visible_child);
 
   if ((grid = gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_GRID)))
     _panel_grid_update_closeable (PANEL_GRID (grid));
