@@ -467,3 +467,17 @@ panel_position_new_from_variant (GVariant *variant)
 
   return self;
 }
+
+gboolean
+panel_position_equal (PanelPosition *a,
+                      PanelPosition *b)
+{
+  return a->area_set == b->area_set &&
+         a->column_set == b->column_set &&
+         a->row_set == b->row_set &&
+         a->depth_set == b->depth_set &&
+         (!a->area_set || a->area == b->area) &&
+         (!a->column_set || a->column == b->column) &&
+         (!a->row_set || a->row == b->row) &&
+         (!a->depth_set || a->depth == b->depth);
+}
