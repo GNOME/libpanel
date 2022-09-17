@@ -50,6 +50,11 @@ struct _PanelWidgetClass
 PANEL_AVAILABLE_IN_ALL
 GtkWidget         *panel_widget_new                           (void);
 PANEL_AVAILABLE_IN_ALL
+const char        *panel_widget_get_id                        (PanelWidget                 *self);
+PANEL_AVAILABLE_IN_ALL
+void               panel_widget_set_id                        (PanelWidget                 *self,
+                                                               const char                  *id);
+PANEL_AVAILABLE_IN_ALL
 GtkWidget         *panel_widget_get_child                     (PanelWidget                 *self);
 PANEL_AVAILABLE_IN_ALL
 void               panel_widget_set_child                     (PanelWidget                 *self,

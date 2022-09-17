@@ -51,6 +51,7 @@
 #include "panel-position.h"
 #include "panel-save-delegate.h"
 #include "panel-widget-private.h"
+#include "panel-macros.h"
 
 typedef struct
 {
@@ -59,6 +60,7 @@ typedef struct
   char              *title;
   char              *icon_name;
   GIcon             *icon;
+  char              *id;
   GMenuModel        *menu_model;
   PanelSaveDelegate *save_delegate;
   PanelActionMuxer  *action_muxer;
@@ -94,6 +96,7 @@ enum {
   PROP_CHILD,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_ID,
   PROP_MENU_MODEL,
   PROP_MODIFIED,
   PROP_NEEDS_ATTENTION,
@@ -377,6 +380,10 @@ panel_widget_get_property (GObject    *object,
       g_value_set_string (value, panel_widget_get_icon_name (self));
       break;
 
+    case PROP_ID:
+      g_value_set_string (value, panel_widget_get_id (self));
+      break;
+
     case PROP_MENU_MODEL:
       g_value_set_object (value, panel_widget_get_menu_model (self));
       break;
@@ -434,6 +441,10 @@ panel_widget_set_property (GObject      *object,
 
     case PROP_ICON_NAME:
       panel_widget_set_icon_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_ID:
+      panel_widget_set_id (self, g_value_get_string (value));
       break;
 
     case PROP_MENU_MODEL:
@@ -522,6 +533,13 @@ panel_widget_class_init (PanelWidgetClass *klass)
     g_param_spec_string ("icon-name",
                          "Icon Name",
                          "Icon Name",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_ID] =
+    g_param_spec_string ("id",
+                         "Identifier",
+                         "The identifier for the widget which can be used for saving state",
                          NULL,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
@@ -763,6 +781,28 @@ panel_widget_set_icon (PanelWidget *self,
 
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
     }
+}
+
+const char *
+panel_widget_get_id (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  return priv->id;
+}
+
+void
+panel_widget_set_id (PanelWidget *self,
+                     const char  *id)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if (panel_set_string (&priv->id, id))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ID]);
 }
 
 gboolean
