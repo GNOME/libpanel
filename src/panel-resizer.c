@@ -46,6 +46,7 @@ G_DEFINE_TYPE (PanelResizer, panel_resizer, GTK_TYPE_WIDGET)
 enum {
   PROP_0,
   PROP_CHILD,
+  PROP_DRAG_POSITION,
   N_PROPS
 };
 
@@ -147,6 +148,8 @@ panel_resizer_drag_update_cb (PanelResizer   *self,
     self->drag_position = self->drag_orig_size + offset_y;
   else if (self->area == PANEL_AREA_BOTTOM)
     self->drag_position = gtk_widget_get_height (GTK_WIDGET (self)) - offset_y;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_DRAG_POSITION]);
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
 }
@@ -381,6 +384,10 @@ panel_resizer_get_property (GObject    *object,
       g_value_set_object (value, panel_resizer_get_child (self));
       break;
 
+    case PROP_DRAG_POSITION:
+      g_value_set_int (value, self->drag_position);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -426,6 +433,10 @@ panel_resizer_class_init (PanelResizerClass *klass)
                          "Child",
                          GTK_TYPE_WIDGET,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_DRAG_POSITION] =
+    g_param_spec_int ("drag-position", NULL, NULL, G_MININT, G_MAXINT, 0,
+                      (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
@@ -542,6 +553,8 @@ panel_resizer_set_drag_position (PanelResizer *self,
 
   self->drag_position_set = drag_position >= 0;
   self->drag_position = MAX (drag_position, 0);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_DRAG_POSITION]);
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
 }
