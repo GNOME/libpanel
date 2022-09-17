@@ -1,3 +1,21 @@
+libpanel 1.0
+============
+
+ * Documentation updates
+ * Translation updates
+ * Various dock improvements to grabs
+ * Switch to GBindingGroup
+ * PanelSaveChangesDialog implements the new GNOME save workflow
+ * PanelPosition has been added
+ * Improvements to PanelFrame
+ * PanelDockPosition has been renamed to PanelArea
+ * PanelDockSwitcher has been renamed to PanelToggleButton
+ * Various convenience API additions
+
+This somewhat commits to API stability, but we do expect to iterate
+on API/ABI in upcoming releases, and therefore 1.0 ABI may be short
+lived so that we are not stuck maintaining it forever.
+
 libpanel 1.0.alpha1
 ===================
 
