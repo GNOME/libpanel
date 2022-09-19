@@ -1,0 +1,120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Gnome Translation Project\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-17 21:43+0000\n"
+"PO-Revision-Date: 2022-09-19 10:01+0545\n"
+"Last-Translator: Pawan Chitrakar <chautari@gmail.com>\n"
+"Language-Team: Nepali Translation Team <chautari@gmail.com>\n"
+"Language: ne\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "खोलेको पृष्ठहरू"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "फ्रेम"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "पृष्ठ बाँया सार्नुहोस्"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "पृष्ठ दाँया सार्नुहोस्"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "पृष्ठ माथि सार्नुहोस्"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "पृष्ठ तल सार्नुहोस्"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "फ्रेम बन्द गर्नुहोस्"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "अघिल्लो स्थानमा प्यानल पुनर्स्थापना गर्नुहोस्"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(नयाँ)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "ड्राफ्ट \"%s\" बचत गरिएको छैन । यसलाई बचत गर्न वा त्याग्न सकिन्छ।"
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "खेस्रा (ड्राफ्ट) बचत वा परित्याग गर्नुहुन्छ?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "छोड्नुहोस्"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "यस रूपमा बचत गर्नुहोस्..."
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "\"%s\" ले बचत नगरिएका परिवर्तनहरू समाविष्ट गर्दछ । परिवर्तनहरू बचत गर्न वा त्याग्न सकिन्छ ।"
+
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "परिवर्तनहरू बचत गर्नुहुन्छ वा त्याग्नुहुन्छ?"
+
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "बचत गर्नुहोस्"
+
+#: src/panel-save-dialog.c:456
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "खुला कागजातले बचत नगरिएका परिवर्तनहरू समाविष्ट गर्दछ । परिवर्तनहरू बचत गर्न वा त्याग्न सकिन्छ ।"
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "चयन गरिएको मात्र बचत गर्नुहोस्"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "सबै बचत गर्नुहोस्"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "सबै छोड्नुहोस्"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "रद्द गर्नुहोस्"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "प्रणाली शैली पछ्याउनुहोस्"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "हल्का शैली"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "गाढा शैली"
