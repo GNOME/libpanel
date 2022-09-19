@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-11 11:22+0000\n"
-"PO-Revision-Date: 2022-09-11 16:09+0300\n"
+"POT-Creation-Date: 2022-09-13 19:34+0000\n"
+"PO-Revision-Date: 2022-09-19 22:56+0300\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -23,27 +23,27 @@ msgstr ""
 msgid "Open Pages"
 msgstr "Atverti puslapius"
 
-#: src/panel-frame.ui:58
+#: src/panel-frame.ui:60
 msgid "Frame"
 msgstr "Kadras"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Move Page _Left"
 msgstr "Eiti puslapiu _kairėn"
 
-#: src/panel-frame.ui:65
+#: src/panel-frame.ui:67
 msgid "Move Page _Right"
 msgstr "Eiti puslapiu _dešinėn"
 
-#: src/panel-frame.ui:70
+#: src/panel-frame.ui:72
 msgid "Move Page _Up"
 msgstr "Eiti puslapiu _aukštyn"
 
-#: src/panel-frame.ui:74
+#: src/panel-frame.ui:76
 msgid "Move Page _Down"
 msgstr "Eiti puslapiu že_myn"
 
-#: src/panel-frame.ui:80
+#: src/panel-frame.ui:82
 msgid "Close Frame"
 msgstr "Užverti kadrą"
 
@@ -51,29 +51,77 @@ msgstr "Užverti kadrą"
 msgid "Restore panel to previous location"
 msgstr "Grąžinti ankstesnę skydelio padėtį"
 
-#: src/panel-save-dialog.ui:27
-msgid "Save Changes?"
-msgstr "Įrašyti pakeitimus?"
+#: src/panel-save-dialog-row.c:76
+msgid "(new)"
+msgstr "(naujas)"
 
-#: src/panel-save-dialog.ui:35
-msgid ""
-"Open pages contain unsaved changes. Changes which are not saved will be "
-"permanently lost."
-msgstr ""
-"Atverti puslapius su neįrašytais pakeitimais. Neįrašyti pakeitimai bus "
-"negrįžtamai prarasti."
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:351
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Juodraštis „%s“ neįrašytas. Jį galima įrašyti arba išmesti."
 
-#: src/panel-save-dialog.ui:56
-msgid "Cancel"
-msgstr "Atsisakyti"
+#: src/panel-save-dialog.c:354
+msgid "Save or Discard Draft?"
+msgstr "Įrašyti ar išmesti juodraštį?"
 
-#: src/panel-save-dialog.ui:63
-msgid "_Discard All"
-msgstr "_Atmesti viską"
+#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.ui:11
+#| msgid "_Discard All"
+msgid "_Discard"
+msgstr "_Išmesti"
 
-#: src/panel-save-dialog.ui:70
+#: src/panel-save-dialog.c:362
+#| msgid "_Save"
+msgid "_Save As…"
+msgstr "Į_rašyti taip…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:371
+#, c-format
+#| msgid ""
+#| "Open pages contain unsaved changes. Changes which are not saved will be "
+#| "permanently lost."
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "„%s“ yra neįrašytų pakeitimų. Pakeitimus galima įrašyti arba išmesti."
+
+#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+#| msgid "Save Changes?"
+msgid "Save or Discard Changes?"
+msgstr "Įrašyti ar išmesti pakeitimus?"
+
+#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "Į_rašyti"
+
+#: src/panel-save-dialog.c:407
+#| msgid ""
+#| "Open pages contain unsaved changes. Changes which are not saved will be "
+#| "permanently lost."
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Atvertuose dokumentuose yra neįrašytų pakeitimų. Pakeitimus galima įrašyti "
+"arba išmesti."
+
+#: src/panel-save-dialog.c:412
+msgid "Only _Save Selected"
+msgstr "Į_rašyti tik pažymėtus"
+
+#: src/panel-save-dialog.c:420
+#| msgid "_Save"
+msgid "Save All"
+msgstr "Įrašyti visus"
+
+#: src/panel-save-dialog.c:429
+#| msgid "_Discard All"
+msgid "Discard All"
+msgstr "Išmesti visus"
+
+#: src/panel-save-dialog.ui:10
+#| msgid "Cancel"
+msgid "_Cancel"
+msgstr "_Atsisakyti"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
