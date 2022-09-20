@@ -1,0 +1,130 @@
+# Brazilian Portuguese translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Leôndias Araújo <leorusvellt@hotmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-19 19:57+0000\n"
+"PO-Revision-Date: 2022-09-20 14:54-0300\n"
+"Last-Translator: Leôndias Araújo <leorusvellt@hotmail.com>\n"
+"Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-DL-Team: pt_BR\n"
+"X-DL-Module: libpanel\n"
+"X-DL-Branch: main\n"
+"X-DL-Domain: po\n"
+"X-DL-State: Translating\n"
+"X-Generator: Gtranslator 42.0\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Abrir páginas"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Quadro"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Mover página para _esquerda"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Mover página para _direita"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Mover página para _cima"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Mover página para _baixo"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Fechar quadro"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Restaurar o painel para o local anterior"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(novo)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "O rascunho “%s” não foi salvo. Ele pode ser salvo ou descartado."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Salvar ou descartar rascunho?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Descartar"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Salvar como…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"“%s” contém alterações não salvas. As alterações podem ser salvas ou "
+"descartadas."
+
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "Salvar ou descartar alterações?"
+
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Salvar"
+
+#: src/panel-save-dialog.c:456
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Documentos abertos contêm alterações não salvas. As alterações podem ser "
+"salvas ou descartadas."
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "Apenas _salvar a seleção"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "Salvar tudo"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "Descartar tudo"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Seguir estilo do sistema"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Estilo claro"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Estilo escuro"
