@@ -1,0 +1,120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-20 18:39+0000\n"
+"PO-Revision-Date: 2022-09-21 20:42+0200\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: \n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "გვერდების გახსნა"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "კადრი"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "გვერდის _მარცხნივ გაწევა"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "გვერდის _მარჯვნივ გაწევა"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "გვერდის _ზემოთ აწევა"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "გვერდის ქვემოთ ჩამოწევა"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "ჩარჩოს დახურვა"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "პანელის წინა მდებარეობის აღდგენა"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(ახალი)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "მონახაზი \"%s\" არ არის შენახული. შეგიძლიათ შეინახოთ ის, ან არა."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "შევინახო მონახაზი, თუ არა?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_გადაყრა"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_შენახვა, როგორც…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:420
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "%s შეუნახავ ცვლილებებს შეიცავს. ცვლილებები შეგიძლიათ შეინახოთ, ან არა."
+
+#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+msgid "Save or Discard Changes?"
+msgstr "შევინახო ცვლილებები, თუ არა?"
+
+#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_შენახვა"
+
+#: src/panel-save-dialog.c:456
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "ღია დოკუმენტი შეუნახავ ცვლილებებს შეიცავს. ცვლილებები შეგიძლიათ შეინახოთ, ან არა."
+
+#: src/panel-save-dialog.c:461
+msgid "Only _Save Selected"
+msgstr "მხოლოდ _მონიშნულის შენახვა"
+
+#: src/panel-save-dialog.c:469
+msgid "Save All"
+msgstr "ყველას შენახვა"
+
+#: src/panel-save-dialog.c:478
+msgid "Discard All"
+msgstr "ყველაფრის მოცილება"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_გაუქმება"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "სისტემის სტილის მიყოლა"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "ღია სტილი"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "მუქი სტილი"
