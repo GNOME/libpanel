@@ -447,6 +447,7 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
 
   self->bindings = g_binding_group_new ();
   g_binding_group_bind (self->bindings, "title", self->title, "label", 0);
+  g_binding_group_bind (self->bindings, "tooltip", self->title_button, "tooltip-text", 0);
   g_binding_group_bind_full (self->bindings, "modified",
                              self->modified, "label",
                              0, boolean_to_modified, NULL, NULL, NULL);
@@ -479,6 +480,7 @@ panel_frame_header_bar_page_changed (PanelFrameHeader *header,
   if (page == NULL)
     {
       gtk_label_set_label (self->title, NULL);
+      gtk_widget_set_tooltip_text (GTK_WIDGET (self->title_button), NULL);
       gtk_label_set_attributes (self->title, NULL);
       gtk_widget_hide (GTK_WIDGET (self->modified));
       gtk_image_clear (self->image);
