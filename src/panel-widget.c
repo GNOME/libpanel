@@ -61,6 +61,7 @@ typedef struct
   char              *icon_name;
   GIcon             *icon;
   char              *id;
+  char              *tooltip;
   GMenuModel        *menu_model;
   PanelSaveDelegate *save_delegate;
   PanelActionMuxer  *action_muxer;
@@ -104,6 +105,7 @@ enum {
   PROP_REORDERABLE,
   PROP_SAVE_DELEGATE,
   PROP_TITLE,
+  PROP_TOOLTIP,
   N_PROPS
 };
 
@@ -396,6 +398,10 @@ panel_widget_get_property (GObject    *object,
       g_value_set_string (value, panel_widget_get_title (self));
       break;
 
+    case PROP_TOOLTIP:
+      g_value_set_string (value, panel_widget_get_tooltip (self));
+      break;
+
     case PROP_CHILD:
       g_value_set_object (value, panel_widget_get_child (self));
       break;
@@ -457,6 +463,10 @@ panel_widget_set_property (GObject      *object,
 
     case PROP_TITLE:
       panel_widget_set_title (self, g_value_get_string (value));
+      break;
+
+    case PROP_TOOLTIP:
+      panel_widget_set_tooltip (self, g_value_get_string (value));
       break;
 
     case PROP_CHILD:
@@ -579,6 +589,18 @@ panel_widget_class_init (PanelWidgetClass *klass)
     g_param_spec_string ("title",
                          "Title",
                          "Title",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * PanelWidget:tooltip:
+   *
+   * The tooltip to display in tabs for the widget.
+   *
+   * Since: 1.2
+   */
+  properties [PROP_TOOLTIP] =
+    g_param_spec_string ("tooltip", NULL, NULL,
                          NULL,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
@@ -724,11 +746,9 @@ panel_widget_set_icon_name (PanelWidget *self,
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
 
-  if (g_strcmp0 (priv->icon_name, icon_name) != 0)
+  if (panel_set_string (&priv->icon_name, icon_name))
     {
       g_clear_object (&priv->icon);
-      g_free (priv->icon_name);
-      priv->icon_name = g_strdup (icon_name);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
     }
@@ -866,12 +886,45 @@ panel_widget_set_title (PanelWidget *self,
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
 
-  if (g_strcmp0 (priv->title, title) != 0)
-    {
-      g_free (priv->title);
-      priv->title = g_strdup (title);
-      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
-    }
+  if (panel_set_string (&priv->title, title))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
+}
+
+/**
+ * panel_widget_get_tooltip:
+ * @self: a #PanelWidget
+ *
+ * Gets the tooltip for the widget.
+ *
+ * Returns: (transfer none) (nullable): the tooltip or %NULL
+ */
+const char *
+panel_widget_get_tooltip (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  return priv->tooltip;
+}
+
+/**
+ * panel_widget_set_tooltip:
+ * @self: a #PanelWidget
+ * @tooltip: (transfer none) (nullable): the tooltip or %NULL
+ *
+ * Sets the tooltip for the widget to be displayed in tabs.
+ */
+void
+panel_widget_set_tooltip (PanelWidget *self,
+                          const char  *tooltip)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+
+  if (panel_set_string (&priv->tooltip, tooltip))
+    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TOOLTIP]);
 }
 
 /**
