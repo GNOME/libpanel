@@ -172,7 +172,8 @@ on_button_toggled (GtkWidget        *button,
 static void
 rebuild_child (GtkWidget  *self,
                GIcon      *icon,
-               const char *title)
+               const char *title,
+               const char *tooltip)
 {
   GtkWidget *button_child;
 
@@ -197,6 +198,8 @@ rebuild_child (GtkWidget  *self,
       gtk_widget_add_css_class (self, "text-button");
     }
 
+  gtk_widget_set_tooltip_text (self, tooltip);
+
   if (button_child)
     {
       gtk_widget_set_halign (GTK_WIDGET (button_child), GTK_ALIGN_CENTER);
@@ -214,6 +217,7 @@ update_button (PanelFrameSwitcher *self,
                GtkWidget          *button)
 {
   char *title = NULL;
+  char *tooltip = NULL;
   GIcon *icon = NULL;
   gboolean needs_attention = FALSE;
 
@@ -225,9 +229,10 @@ update_button (PanelFrameSwitcher *self,
                 "title", &title,
                 "icon", &icon,
                 "needs-attention", &needs_attention,
+                "tooltip", &tooltip,
                 NULL);
 
-  rebuild_child (button, icon, title);
+  rebuild_child (button, icon, title, tooltip);
 
   gtk_widget_set_visible (button, (title != NULL || icon != NULL));
 
@@ -237,6 +242,7 @@ update_button (PanelFrameSwitcher *self,
     gtk_widget_remove_css_class (button, "needs-attention");
 
   g_free (title);
+  g_free (tooltip);
   g_clear_object (&icon);
 }
 
