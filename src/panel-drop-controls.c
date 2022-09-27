@@ -250,7 +250,7 @@ on_drop_target_leave_cb (PanelDropControls *self,
   panel_drop_controls_drop_finished (self, FALSE);
 }
 
-static void
+static GdkDragAction
 on_drop_target_enter_cb (PanelDropControls *self,
                          double             x,
                          double             y,
@@ -263,6 +263,8 @@ on_drop_target_enter_cb (PanelDropControls *self,
   self->drop_before_page= NULL;
 
   gtk_widget_queue_allocate (GTK_WIDGET (self));
+
+  return GDK_ACTION_MOVE;
 }
 
 static GtkWidget *
