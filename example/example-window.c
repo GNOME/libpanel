@@ -69,12 +69,15 @@ example_window_add_document (ExampleWindow *self)
   static guint count;
   PanelWidget *widget;
   char *title;
+  char *tooltip;
 
   g_return_if_fail (EXAMPLE_IS_WINDOW (self));
 
   title = g_strdup_printf ("Untitled Document %u", ++count);
+  tooltip = g_strdup_printf ("Draft: %s", title);
   widget = g_object_new (EXAMPLE_TYPE_PAGE,
                          "title", title,
+                         "tooltip", tooltip,
                          "kind", PANEL_WIDGET_KIND_DOCUMENT,
                          "icon-name", "text-x-generic-symbolic",
                          "menu-model", self->page_menu,
@@ -94,6 +97,7 @@ example_window_add_document (ExampleWindow *self)
   g_object_bind_property (widget, "command-text", self->command, "label", 0);
 
   g_free (title);
+  g_free (tooltip);
 }
 
 static void
