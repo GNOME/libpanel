@@ -372,6 +372,7 @@
                     <child>
                       <object class="PanelWidget">
                         <property name="title">Color</property>
+                        <property name="tooltip">Color</property>
                         <property name="can-maximize">true</property>
                         <property name="icon-name">color-select-symbolic</property>
                         <child>
