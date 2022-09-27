@@ -1,3 +1,10 @@
+libpanel 1.0.1
+==============
+
+ * Drag-n-Drop fixes
+ * Remove use of g_autofree to fix builds for MSVC
+ * Translation updates
+
 libpanel 1.0
 ============
 
