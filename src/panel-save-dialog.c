@@ -394,7 +394,7 @@ panel_save_dialog_update (PanelSaveDialog *self)
       if (panel_save_delegate_get_is_draft (delegate))
         {
           const char *title = panel_save_delegate_get_title (delegate);
-          g_autofree char *body = NULL;
+          char *body;
 
           /* translators: %s is replaced with the document title */
           body = g_strdup_printf (_("The draft “%s” has not been saved. It can be saved or discarded."), title);
@@ -410,11 +410,13 @@ panel_save_dialog_update (PanelSaveDialog *self)
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("_Save As…"));
           set_response_visible (ADW_MESSAGE_DIALOG (self), "save", TRUE);
+
+          g_free (body);
         }
       else
         {
           const char *title = panel_save_delegate_get_title (delegate);
-          g_autofree char *body = NULL;
+          char *body;
 
           /* translators: %s is replaced with the document title */
           body = g_strdup_printf (_("“%s” contains unsaved changes. Changes can be saved or discarded."), title);
@@ -430,6 +432,8 @@ panel_save_dialog_update (PanelSaveDialog *self)
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("_Save"));
           set_response_visible (ADW_MESSAGE_DIALOG (self), "save", TRUE);
+
+          g_free (body);
         }
 
       gtk_widget_hide (GTK_WIDGET (self->page));
