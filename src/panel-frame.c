@@ -889,6 +889,7 @@ panel_frame_add_before (PanelFrame  *self,
   page = adw_tab_view_insert (priv->tab_view, GTK_WIDGET (panel), position);
 
   g_object_bind_property (panel, "title", page, "title", G_BINDING_SYNC_CREATE);
+  g_object_bind_property (panel, "tooltip", page, "tooltip", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "icon", page, "icon", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "needs-attention", page, "needs-attention", G_BINDING_SYNC_CREATE);
   g_object_bind_property (panel, "busy", page, "loading", G_BINDING_SYNC_CREATE);
