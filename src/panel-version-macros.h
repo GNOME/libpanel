@@ -115,7 +115,6 @@
 # define PANEL_DEPRECATED_IN_1_0                _PANEL_EXTERN
 # define PANEL_DEPRECATED_IN_1_0_FOR(f)         _PANEL_EXTERN
 #endif
-
 #if PANEL_VERSION_MAX_ALLOWED < PANEL_VERSION_1_0
 # define PANEL_AVAILABLE_IN_1_0                 PANEL_UNAVAILABLE(1, 0)
 #else
@@ -135,3 +134,13 @@
 # define PANEL_AVAILABLE_IN_1_2                 _PANEL_EXTERN
 #endif
 
+PANEL_AVAILABLE_IN_1_2
+guint    panel_get_major_version (void);
+PANEL_AVAILABLE_IN_1_2
+guint    panel_get_minor_version (void);
+PANEL_AVAILABLE_IN_1_2
+guint    panel_get_micro_version (void);
+PANEL_AVAILABLE_IN_1_2
+gboolean panel_check_version     (guint major,
+                                  guint minor,
+                                  guint micro);

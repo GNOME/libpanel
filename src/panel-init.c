@@ -85,3 +85,29 @@ panel_finalize (void)
 
   g_resources_unregister (panel_get_resource ());
 }
+
+guint
+panel_get_major_version (void)
+{
+  return PANEL_MAJOR_VERSION;
+}
+
+guint
+panel_get_micro_version (void)
+{
+  return PANEL_MICRO_VERSION;
+}
+
+guint
+panel_get_minor_version (void)
+{
+  return PANEL_MINOR_VERSION;
+}
+
+gboolean
+panel_check_version (guint major,
+                     guint minor,
+                     guint micro)
+{
+  return PANEL_CHECK_VERSION (major, minor, micro);
+}
