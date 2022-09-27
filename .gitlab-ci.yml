@@ -32,7 +32,7 @@ nightly@aarch64:
 
 fedora:
   stage: build
-  image: fedora:latest
+  image: fedora:37
   interruptible: true
   needs: []
   script:
