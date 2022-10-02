@@ -28,6 +28,12 @@
 #include "panel-frame-tab-bar.h"
 #include "panel-widget.h"
 
+#define REMOVED_SHORTCUTS \
+  (ADW_TAB_VIEW_SHORTCUT_CONTROL_HOME \
+  | ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_HOME \
+  | ADW_TAB_VIEW_SHORTCUT_CONTROL_END \
+  | ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_END)
+
 struct _PanelFrameTabBar
 {
   GtkWidget          parent_instance;
@@ -95,6 +101,10 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
 
   if (self->frame)
     {
+      AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
+
+      adw_tab_view_add_shortcuts (tab_view, REMOVED_SHORTCUTS);
+
       g_signal_handlers_disconnect_by_func (self->frame,
                                             G_CALLBACK (on_notify_closeable_cb),
                                             self);
@@ -110,6 +120,8 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
     {
       AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
       GMenuModel *menu_model = _panel_frame_get_tab_menu (self->frame);
+
+      adw_tab_view_remove_shortcuts (tab_view, REMOVED_SHORTCUTS);
 
       g_signal_connect_object (self->frame,
                                "notify::closeable",
