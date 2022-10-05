@@ -1,0 +1,126 @@
+# Dutch translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Philip Goto <philip.goto@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-09-27 04:41+0000\n"
+"PO-Revision-Date: 2022-10-05 21:09+0200\n"
+"Last-Translator: Nathan Follens <nfollens@gnome.org>\n"
+"Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Geopende pagina’s"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Kader"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Pagina naar _links verplaatsen"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Pagina naar _rechts verplaatsen"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Pagina naar _boven verplaatsen"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Pagina naar _onderen verplaatsen"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Kader sluiten"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Paneel naar vorige locatie herstellen"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(nieuw)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr ""
+"Het concept ‘%s’ is niet opgeslagen. Het kan opgeslagen of verworpen worden."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Concept opslaan of verwerpen?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Verwerpen"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "Op_slaan als…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:422
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"‘%s’ bevat niet-opgeslagen wijzigingen. Wijzigingen kunnen opgeslagen of "
+"verworpen worden."
+
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+msgid "Save or Discard Changes?"
+msgstr "Wijzigingen opslaan of verwerpen?"
+
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "Op_slaan"
+
+#: src/panel-save-dialog.c:460
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Geopende documenten bevatten niet-opgeslagen wijzigingen. Wijzigingen kunnen "
+"opgeslagen of verworpen worden."
+
+#: src/panel-save-dialog.c:465
+msgid "Only _Save Selected"
+msgstr "Alleen geselecteerde op_slaan"
+
+#: src/panel-save-dialog.c:473
+msgid "Save All"
+msgstr "Alles opslaan"
+
+#: src/panel-save-dialog.c:482
+msgid "Discard All"
+msgstr "Alles verwerpen"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Annuleren"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Systeemstijl volgen"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Lichte stijl"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Donkere stijl"
