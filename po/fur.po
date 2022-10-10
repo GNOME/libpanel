@@ -1,0 +1,119 @@
+# Friulian translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Fabio Tomat <f.t.public@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-10-06 19:28+0000\n"
+"PO-Revision-Date: 2022-10-10 12:28+0200\n"
+"Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
+"Language-Team: Friulian <fur@li.org>\n"
+"Language: fur\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Vierç pagjinis"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Ricuadri"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Môf pagjine a çamp_e"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Môf pagjine a _diestre"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Môf pagjine in _sù"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Môf pagjine in _jù"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Siere ricuadri"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Ripristine il panel ae posizion precedente"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(gnûf)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Il stampon “%s” nol è stât salvât. Al è pussibil salvâlu o scartâlu."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Salvâ o scartâ il stampon?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Scarte"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Salve come…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:422
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "“%s” al conten modifichis che no son stadis salvadis. Al è pussibil salvâ o scartâ lis modifichis."
+
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+msgid "Save or Discard Changes?"
+msgstr "Salvâ o scartâ lis modifichis?"
+
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Salve"
+
+#: src/panel-save-dialog.c:460
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "Vierç i documents che a contegnin modifichis che no son stadis salvadis. Al è pussibil salvâ o scartâ lis modifichis. "
+
+#: src/panel-save-dialog.c:465
+msgid "Only _Save Selected"
+msgstr "_Salve dome i selezionâts"
+
+#: src/panel-save-dialog.c:473
+msgid "Save All"
+msgstr "Salve dut"
+
+#: src/panel-save-dialog.c:482
+msgid "Discard All"
+msgstr "Scarte dut"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Anule"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Va daûr dal stîl di sisteme"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Stîl clâr"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Stîl scûr"
