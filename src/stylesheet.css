@@ -65,6 +65,9 @@ panelpaned panelframe panelframeswitcher {
   background: @panel_bg_color;
   color: @panel_fg_color;
 }
+panelpaned panelframe panelframeswitcher:backdrop {
+  color: alpha(currentColor, .5);
+}
 panelpaned.horizontal panelframe panelframeswitcher {
   padding: 2px;
   min-width: 40px;
@@ -239,6 +242,9 @@ panelstatusbar > button label {
 panelframe panelframetabbar {
   border-bottom: 1px solid alpha(@borders,.6);
   min-height: 44px;
+}
+panelframe panelframetabbar:backdrop {
+  color: alpha(currentColor, .5);
 }
 panelframe panelframetabbar > overlay > box.focus-handle,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframetabbar box.focus-handle {
