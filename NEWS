@@ -1,3 +1,9 @@
+libpanel 1.0.2
+==============
+
+ * CSS improvements for backdrop
+ * Block tabbar from handling ctrl+home and similar shortcuts
+
 libpanel 1.0.1
 ==============
 
