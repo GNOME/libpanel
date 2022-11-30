@@ -1,0 +1,125 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sveinn í Felli <sv1@fellsnet.is>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-10-31 20:22+0000\n"
+"PO-Revision-Date: 2022-11-30 19:47+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Opna síður"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Rammi"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Færa síðu ti_l vinstri"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Fæ_ra síðu til hægri"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Færa síðu _upp"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Færa síðu n_iður"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Loka ramma"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Endurheimta spjald á fyrri staðsetningu"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(nýtt)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr ""
+"Drögin “%s” hafa ekki verið vistuð. Hægt er að vista þau eða henda þeim."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Vista e'a henda drögum?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Henda"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "Vista _sem…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:422
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"“%s” inniheldur óvistaðar breytingar. Hægt er að vista breytingarnar eða"
+" henda þeim."
+
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+msgid "Save or Discard Changes?"
+msgstr "Vista eða henda breytingum?"
+
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "Vi_sta"
+
+#: src/panel-save-dialog.c:460
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Opin skjöl innihalda óvistaðar breytingar. Hægt er að vista breytingarnar eða"
+" henda þeim."
+
+#: src/panel-save-dialog.c:465
+msgid "Only _Save Selected"
+msgstr "Einungis vi_sta valið"
+
+#: src/panel-save-dialog.c:473
+msgid "Save All"
+msgstr "Vista allt"
+
+#: src/panel-save-dialog.c:482
+msgid "Discard All"
+msgstr "Henda öllu"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "Hæ_tta við"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Fylgja stíl kerfis"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Ljós stíll"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Dökkur stíll"
