@@ -1,0 +1,127 @@
+# Interlingue translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# OIS <NONE>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-11-30 19:48+0000\n"
+"PO-Revision-Date: 2022-12-23 23:03+0700\n"
+"Last-Translator: OIS <NONE>\n"
+"Language-Team:  <NONE>\n"
+"Language: ie\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-DL-Team: ie\n"
+"X-DL-Module: libpanel\n"
+"X-DL-Branch: main\n"
+"X-DL-Domain: po\n"
+"X-DL-State: Translating\n"
+"Plural-Forms: nplurals=2; plural=(n!=1)\n"
+"X-Generator: Gtranslator 42.0\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Apertet págines"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Cadre"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Mover li págine a _levul"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Mover li págine a _dextri"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Mover li págine ad-_up"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Mover li págine a _bass"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Cluder li cadre"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Restituer li panel al su precedent position"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(nov)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr ""
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr ""
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr ""
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Gardar quam…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:422
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+msgid "Save or Discard Changes?"
+msgstr ""
+
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Gardar"
+
+#: src/panel-save-dialog.c:460
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+
+#: src/panel-save-dialog.c:465
+msgid "Only _Save Selected"
+msgstr "Gardar _solmen selectet"
+
+#: src/panel-save-dialog.c:473
+msgid "Save All"
+msgstr "Gardar omni"
+
+#: src/panel-save-dialog.c:482
+msgid "Discard All"
+msgstr ""
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "A_nullar"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Stil de sistema"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Stil clar"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Stil obscur"
