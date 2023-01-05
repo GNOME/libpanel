@@ -1,0 +1,120 @@
+# Belarusian translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Yuras Shumovich <shumovichy@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2022-11-30 19:48+0000\n"
+"PO-Revision-Date: 2023-01-06 01:05+0300\n"
+"Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
+"Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
+"Language: be\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Адкрытыя старонкі"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Фрэйм"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Перамясціць старонку ў_лева"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Перамясціць старонку ў_права"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Перамясціць старонку ў_верх"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Перамясціць старонку ў_ніз"
+
+#: src/panel-frame.ui:82
+msgid "Close Frame"
+msgstr "Закрыць фрэйм"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Аднавіць папярэдняе размяшчэнне панэлі"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(новы)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:400
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Чарнавік «%s» не захаваны. Яго можна захаваць або скасаваць."
+
+#: src/panel-save-dialog.c:403
+msgid "Save or Discard Draft?"
+msgstr "Захаваць чарнавік ці скасаваць?"
+
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Скасаваць"
+
+#: src/panel-save-dialog.c:411
+msgid "_Save As…"
+msgstr "_Захаваць як…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:422
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "«%s» змяшчае незахаваныя змены. Змены можна захаваць або скасаваць."
+
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+msgid "Save or Discard Changes?"
+msgstr "Захаваць змены або скасаваць?"
+
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Захаваць"
+
+#: src/panel-save-dialog.c:460
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "Адкрытыя дакументы змяшчаюць незахаваныя змены. Змены можна захаваць або скасаваць."
+
+#: src/panel-save-dialog.c:465
+msgid "Only _Save Selected"
+msgstr "Захаваць толькі _выбраныя"
+
+#: src/panel-save-dialog.c:473
+msgid "Save All"
+msgstr "Захаваць усе"
+
+#: src/panel-save-dialog.c:482
+msgid "Discard All"
+msgstr "Скасаваць усе"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Адмена"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Прытрымлівацца стылю сістэмы"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Светлы стыль"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Цёмны стыль"
