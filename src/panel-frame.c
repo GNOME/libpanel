@@ -246,6 +246,77 @@ close_frame_action (GtkWidget  *widget,
 }
 
 static void
+panel_frame_close_all_cb (GObject      *object,
+                          GAsyncResult *result,
+                          gpointer      user_data)
+{
+  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  PanelFrame *self = user_data;
+  GError *error = NULL;
+
+  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (G_IS_ASYNC_RESULT (result));
+  g_assert (PANEL_IS_FRAME (self));
+
+  if (!panel_save_dialog_run_finish (dialog, result, &error))
+    {
+      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        g_warning ("%s", error->message);
+      g_clear_error (&error);
+    }
+
+  g_clear_object (&self);
+}
+
+static void
+close_all_action (GtkWidget  *widget,
+                  const char *action_name,
+                  GVariant   *param)
+{
+  PanelFrame *self = (PanelFrame *)widget;
+  g_autoptr(GPtrArray) to_close = NULL;
+  GtkWidget *toplevel;
+  GtkWidget *dialog;
+  guint n_pages;
+
+  g_assert (PANEL_IS_FRAME (self));
+
+  if (!(n_pages = panel_frame_get_n_pages (self)))
+    return;
+
+  g_object_ref (self);
+
+  toplevel = gtk_widget_get_ancestor (widget, GTK_TYPE_WINDOW);
+  to_close = g_ptr_array_new_with_free_func (g_object_unref);
+
+  dialog = panel_save_dialog_new ();
+  panel_save_dialog_set_close_after_save (PANEL_SAVE_DIALOG (dialog), TRUE);
+  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (toplevel));
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+
+  for (guint i = 0; i < n_pages; i++)
+    {
+      PanelWidget *page = panel_frame_get_page (self, i);
+
+      if (_panel_widget_can_save (page))
+        panel_save_dialog_add_delegate (PANEL_SAVE_DIALOG (dialog),
+                                        panel_widget_get_save_delegate (page));
+      else
+        g_ptr_array_add (to_close, g_object_ref (page));
+    }
+
+  for (guint i = 0; i < to_close->len; i++)
+    panel_widget_close (g_ptr_array_index (to_close, i));
+
+  panel_save_dialog_run_async (PANEL_SAVE_DIALOG (dialog),
+                               NULL,
+                               panel_frame_close_all_cb,
+                               g_object_ref (self));
+
+  g_object_unref (self);
+}
+
+static void
 frame_page_action (GtkWidget  *widget,
                    const char *action_name,
                    GVariant   *param)
@@ -792,6 +863,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   gtk_widget_class_install_action (widget_class, "frame.close-page-or-frame", NULL, close_page_or_frame_action);
   gtk_widget_class_install_action (widget_class, "frame.close", NULL, close_frame_action);
   gtk_widget_class_install_action (widget_class, "frame.page", "i", frame_page_action);
+  gtk_widget_class_install_action (widget_class, "frame.close-all", NULL, close_all_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceright, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-right", NULL);
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_braceleft, GDK_CONTROL_MASK | GDK_SHIFT_MASK, "page.move-left", NULL);

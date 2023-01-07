@@ -79,6 +79,10 @@
     </section>
     <section>
       <item>
+        <attribute name="label" translatable="yes">Close All Pages</attribute>
+        <attribute name="action">frame.close-all</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">Close Frame</attribute>
         <attribute name="action">frame.close</attribute>
       </item>
