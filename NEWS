@@ -1,3 +1,15 @@
+libpanel 1.1.0
+==============
+
+This is the first alpha release as we progress towards GNOME 44.
+
+ * DnD fixes
+ * PanelWidget:tooltip property to set tooltips on tabs
+ * Disable ctrl+home/end from adwaita for tabs by default
+ * CSS tweaks
+ * A new frame.close-all action
+ * Translation updates
+
 libpanel 1.0
 ============
 
