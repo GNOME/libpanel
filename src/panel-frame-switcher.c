@@ -356,8 +356,7 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
                                       double              y,
                                       GtkDragSource      *source)
 {
-  GtkStackPage *page = NULL;
-  GListModel *pages;
+  PanelWidget *page;
   GtkWidget *child;
   guint i = 0;
 
@@ -384,18 +383,17 @@ panel_frame_switcher_drag_prepare_cb (PanelFrameSwitcher *self,
         i++;
     }
 
-  pages = G_LIST_MODEL (panel_frame_get_pages (self->frame));
-  page = g_list_model_get_item (pages, i);
-  child = gtk_stack_page_get_child (page);
-  g_clear_object (&page);
+  page = panel_frame_get_page (self->frame, i);
 
-  if (!PANEL_IS_WIDGET (child) ||
-      !panel_widget_get_reorderable (PANEL_WIDGET (child)))
+  g_assert (!page || PANEL_IS_WIDGET (page));
+
+  if (!PANEL_IS_WIDGET (page) ||
+      !panel_widget_get_reorderable (PANEL_WIDGET (page)))
     return NULL;
 
-  self->drag_panel = PANEL_WIDGET (child);
+  self->drag_panel = page;
 
-  return gdk_content_provider_new_typed (PANEL_TYPE_WIDGET, child);
+  return gdk_content_provider_new_typed (PANEL_TYPE_WIDGET, page);
 }
 
 #define MAX_WIDTH  250.0
