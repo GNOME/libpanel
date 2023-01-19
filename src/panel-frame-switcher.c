@@ -179,11 +179,12 @@ rebuild_child (GtkWidget  *self,
 
   button_child = NULL;
 
+  if (title && (!tooltip || !tooltip[0]))
+    tooltip = title;
+
   if (icon != NULL)
     {
       button_child = gtk_image_new_from_gicon (icon);
-      if (title != NULL)
-        gtk_widget_set_tooltip_text (GTK_WIDGET (self), title);
 
       gtk_widget_remove_css_class (self, "text-button");
       gtk_widget_add_css_class (self, "image-button");
@@ -191,8 +192,6 @@ rebuild_child (GtkWidget  *self,
   else if (title != NULL)
     {
       button_child = gtk_label_new (title);
-
-      gtk_widget_set_tooltip_text (GTK_WIDGET (self), NULL);
 
       gtk_widget_remove_css_class (self, "image-button");
       gtk_widget_add_css_class (self, "text-button");
