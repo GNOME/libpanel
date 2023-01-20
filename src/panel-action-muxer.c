@@ -119,7 +119,7 @@ panel_action_muxer_dispose (GObject *object)
   self->actions = NULL;
   g_clear_pointer (&self->actions_disabled, gtk_bitset_unref);
 
-  G_OBJECT_CLASS (panel_action_muxer_parent_class)->finalize (object);
+  G_OBJECT_CLASS (panel_action_muxer_parent_class)->dispose (object);
 }
 
 static void
