@@ -68,6 +68,10 @@ void               panel_frame_set_visible_child  (PanelFrame       *self,
                                                    PanelWidget      *widget);
 PANEL_AVAILABLE_IN_ALL
 PanelWidget       *panel_frame_get_visible_child  (PanelFrame       *self);
+PANEL_AVAILABLE_IN_1_2
+void               panel_frame_set_child_pinned   (PanelFrame       *self,
+                                                   PanelWidget      *child,
+                                                   gboolean          pinned);
 PANEL_AVAILABLE_IN_ALL
 PanelWidget       *panel_frame_get_page           (PanelFrame       *self,
                                                    guint             n);

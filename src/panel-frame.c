@@ -367,6 +367,7 @@ panel_frame_update_actions (PanelFrame *self)
   PanelActionMuxer *action_group = NULL;
   PanelWidget *visible_child;
   GtkWidget *grid;
+  gboolean pinned;
 
   g_assert (PANEL_IS_FRAME (self));
 
@@ -374,15 +375,21 @@ panel_frame_update_actions (PanelFrame *self)
   visible_child = panel_frame_get_visible_child (self);
 
   if (visible_child != NULL)
-    action_group = _panel_widget_get_action_muxer (visible_child);
+    {
+      AdwTabPage *page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (visible_child));
+
+      action_group = _panel_widget_get_action_muxer (visible_child);
+      pinned = adw_tab_page_get_pinned (page);
+    }
+
   gtk_widget_insert_action_group (GTK_WIDGET (self),
                                   "page",
                                   G_ACTION_GROUP (action_group));
 
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-right", grid  && visible_child);
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-left", grid && visible_child);
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-down", grid && visible_child);
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-up", grid && visible_child);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-right", grid  && visible_child && !pinned);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-left", grid && visible_child && !pinned);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-down", grid && visible_child && !pinned);
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "page.move-up", grid && visible_child && !pinned);
   gtk_widget_action_set_enabled (GTK_WIDGET (self),
                                  "frame.close-page-or-frame",
                                  grid && (visible_child || priv->closeable));
@@ -1184,6 +1191,31 @@ panel_frame_set_visible_child (PanelFrame  *self,
 
   if ((page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (widget))))
     adw_tab_view_set_selected_page (priv->tab_view, page);
+}
+
+/**
+ * panel_frame_set_child_pinned:
+ * @self: a #PanelFrame
+ * @child: (not nullable): a #PanelWidget
+ * @pinned: if @widget should be pinned
+ *
+ * Set pinned state of @child.
+ *
+ * Since: 1.2
+ */
+void
+panel_frame_set_child_pinned (PanelFrame  *self,
+                              PanelWidget *child,
+                              gboolean     pinned)
+{
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  AdwTabPage *page;
+
+  g_return_if_fail (PANEL_IS_FRAME (self));
+  g_return_if_fail (PANEL_IS_WIDGET (child));
+
+  if ((page = adw_tab_view_get_page (priv->tab_view, GTK_WIDGET (child))))
+    adw_tab_view_set_page_pinned (priv->tab_view, page, pinned);
 }
 
 AdwTabView *
