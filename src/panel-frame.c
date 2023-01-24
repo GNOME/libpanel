@@ -51,6 +51,7 @@ typedef struct
   PanelDropControls *drop_controls;
 
   guint              closeable : 1;
+  guint              empty : 1;
 } PanelFramePrivate;
 
 #define SIZE_AT_END 50
@@ -668,6 +669,26 @@ panel_frame_setup_menu_cb (AdwTabView *tab_view,
 }
 
 static void
+on_notify_selected_page_cb (PanelFrame *self,
+                            GParamSpec *pspec,
+                            AdwTabView *tab_view)
+{
+  PanelFramePrivate *priv = panel_frame_get_instance_private (self);
+  gboolean empty;
+
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (ADW_IS_TAB_VIEW (tab_view));
+
+  empty = adw_tab_view_get_selected_page (tab_view) == NULL;
+
+  if (empty != priv->empty)
+    {
+      priv->empty = empty;
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_EMPTY]);
+    }
+}
+
+static void
 panel_frame_compute_expand (GtkWidget *widget,
                             gboolean  *hexpand,
                             gboolean  *vexpand)
@@ -878,10 +899,18 @@ panel_frame_init (PanelFrame *self)
   PanelFramePrivate *priv = panel_frame_get_instance_private (self);
   PanelJoinedMenu *menu;
 
+  priv->empty = TRUE;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   _panel_dock_update_orientation (GTK_WIDGET (self),
                                   gtk_orientable_get_orientation (GTK_ORIENTABLE (self)));
+
+  g_signal_connect_object (priv->tab_view,
+                           "notify::selected-page",
+                           G_CALLBACK (on_notify_selected_page_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
 
   /* Locate GtkStack within tab view and alter homogeneous
    * values so that we have more flexibility in sizing.
@@ -936,7 +965,6 @@ panel_frame_add_before (PanelFrame  *self,
   GtkWidget *dock = NULL;
   GtkWidget *dock_child;
   GtkWidget *grid;
-  gboolean empty;
   int position;
 
   g_return_if_fail (PANEL_IS_FRAME (self));
@@ -957,7 +985,6 @@ panel_frame_add_before (PanelFrame  *self,
       position = adw_tab_view_get_n_pages (priv->tab_view);
     }
 
-  empty = panel_frame_get_empty (self);
   page = adw_tab_view_insert (priv->tab_view, GTK_WIDGET (panel), position);
 
   g_object_bind_property (panel, "title", page, "title", G_BINDING_SYNC_CREATE);
@@ -974,9 +1001,6 @@ panel_frame_add_before (PanelFrame  *self,
     _panel_grid_update_closeable (PANEL_GRID (grid));
 
   panel_frame_update_actions (self);
-
-  if (empty)
-    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_EMPTY]);
 
   if (dock_child != NULL && dock != NULL)
     {
@@ -1076,7 +1100,7 @@ panel_frame_get_empty (PanelFrame *self)
 
   g_return_val_if_fail (PANEL_IS_FRAME (self), FALSE);
 
-  return adw_tab_view_get_n_pages (priv->tab_view) == 0;
+  return priv->empty;
 }
 
 /**
