@@ -699,6 +699,15 @@ on_notify_selected_page_cb (PanelFrame *self,
 }
 
 static void
+panel_frame_real_page_closed (PanelFrame  *self,
+                              PanelWidget *page)
+{
+  g_assert (PANEL_IS_FRAME (self));
+  g_assert (PANEL_IS_WIDGET (page));
+
+}
+
+static void
 panel_frame_compute_expand (GtkWidget *widget,
                             gboolean  *hexpand,
                             gboolean  *vexpand)
@@ -838,6 +847,8 @@ panel_frame_class_init (PanelFrameClass *klass)
   widget_class->root = panel_frame_root;
   widget_class->unroot = panel_frame_unroot;
   widget_class->compute_expand = panel_frame_compute_expand;
+
+  klass->page_closed = panel_frame_real_page_closed;
 
   properties [PROP_CLOSEABLE] =
     g_param_spec_boolean ("closeable",
