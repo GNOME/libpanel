@@ -35,6 +35,9 @@ struct _PanelFrameClass
 {
   GtkWidgetClass parent_class;
 
+  void  (*page_closed)    (PanelFrame   *self,
+                           PanelWidget  *widget);
+
   /*< private >*/
   gpointer _reserved[8];
 };
