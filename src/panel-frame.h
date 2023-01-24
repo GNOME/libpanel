@@ -39,7 +39,7 @@ struct _PanelFrameClass
                            PanelWidget  *widget);
 
   /*< private >*/
-  gpointer _reserved[8];
+  gpointer _reserved[7];
 };
 
 PANEL_AVAILABLE_IN_ALL
