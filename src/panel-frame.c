@@ -74,8 +74,7 @@ enum {
   PROP_ORIENTATION,
 };
 
-enum
-{
+enum {
   PAGE_CLOSED,
   N_SIGNALS
 };
@@ -134,10 +133,10 @@ panel_frame_close_page_cb (PanelFrame *self,
     adw_tab_view_set_selected_page (tab_view, tab_page);
 
   if (!_panel_widget_can_save (widget))
-  {
-    g_signal_emit (self, signals [PAGE_CLOSED], 0, widget);
-    return FALSE;
-  }
+    {
+      g_signal_emit (self, signals [PAGE_CLOSED], 0, widget);
+      return FALSE;
+    }
 
   root = gtk_widget_get_root (GTK_WIDGET (self));
   delegate = panel_widget_get_save_delegate (widget);
@@ -875,7 +874,7 @@ panel_frame_class_init (PanelFrameClass *klass)
    * @self: a #PanelFrame
    * @widget: a #PanelWidget
    *
-   * This signal is emitted when the page widget will be closed. 
+   * This signal is emitted when the page widget will be closed.
    *
    * Since: 1.2
    */
@@ -884,8 +883,11 @@ panel_frame_class_init (PanelFrameClass *klass)
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (PanelFrameClass, page_closed),
-                  NULL, NULL, NULL,
-                  G_TYPE_NONE, 1, PANEL_TYPE_WIDGET);
+                  NULL, NULL,
+                  NULL,
+                  G_TYPE_NONE,
+                  1,
+                  PANEL_TYPE_WIDGET);
 
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
