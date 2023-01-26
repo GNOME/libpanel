@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include <glib/gi18n-lib.h>
 #include <adwaita.h>
 
 #include "panel-dock.h"
@@ -48,6 +49,9 @@ panel_init (void)
     return;
 
   adw_init ();
+
+  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 
   g_resources_register (panel_get_resource ());
 
