@@ -1,14 +1,14 @@
 # Hebrew translation for libpanel.
 # Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libpanel package.
-# Yosef Or Boczko <yoseforb@gmail.com>, 2022.
+# Yosef Or Boczko <yoseforb@gmail.com>, 2022-2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-17 16:16+0000\n"
-"PO-Revision-Date: 2022-09-17 23:04+0300\n"
+"POT-Creation-Date: 2023-01-25 21:04+0000\n"
+"PO-Revision-Date: 2023-01-27 10:15+0200\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <>\n"
 "Language: he\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
 "2 : 3)\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Gtranslator 40.0\n"
+"X-Generator: Gtranslator 42.0\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -45,6 +45,10 @@ msgid "Move Page _Down"
 msgstr "העברת עמוד _מטה"
 
 #: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "סגירת כל הדפים"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "סגירת מסגרת"
 
@@ -66,7 +70,7 @@ msgstr "הטיוטה „%s” לא נשמרה. ניתן לשמור או להשל
 msgid "Save or Discard Draft?"
 msgstr "לשמור או להשליך את הטיוטה?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "השל_כה"
@@ -76,34 +80,34 @@ msgid "_Save As…"
 msgstr "שמירה _בשם…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:420
+#: src/panel-save-dialog.c:422
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr "‏„%s„ מכיל שינויים שלא נשמרו. ניתן לשמור או להשליך את השינויים."
 
-#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
 msgid "Save or Discard Changes?"
 msgstr "לשמור או להשליך את השינויים?"
 
-#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_שמירה"
 
-#: src/panel-save-dialog.c:456
+#: src/panel-save-dialog.c:460
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "מסמכים פתוחים מכילים שינויים שלא נשמרו. ניתן לשמור או להשליך את השינויים."
 
-#: src/panel-save-dialog.c:461
+#: src/panel-save-dialog.c:465
 msgid "Only _Save Selected"
 msgstr "_שמירת הנבחרים בלבד"
 
-#: src/panel-save-dialog.c:469
+#: src/panel-save-dialog.c:473
 msgid "Save All"
 msgstr "שמירת הכל"
 
-#: src/panel-save-dialog.c:478
+#: src/panel-save-dialog.c:482
 msgid "Discard All"
 msgstr "השלכת הכל"
 
