@@ -1,17 +1,17 @@
 # Turkish translation for libpanel.
-# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# Copyright (C) 2022-2023 libpanel's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libpanel package.
 #
-# Sabri Ünal <libreajans@gmail.com>, 2022.
-# Emin Tufan Çetin <etcetin@gmail.com>, 2022.
+# Sabri Ünal <libreajans@gmail.com>, 2022, 2023.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-13 19:34+0000\n"
-"PO-Revision-Date: 2022-09-14 10:55+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2023-01-25 21:04+0000\n"
+"PO-Revision-Date: 2023-01-27 23:32+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -45,6 +45,10 @@ msgid "Move Page _Down"
 msgstr "Sayfayı _Aşağı Taşı"
 
 #: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Tüm Sayfaları Kapat"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "Çerçeveyi Kapat"
 
@@ -52,61 +56,61 @@ msgstr "Çerçeveyi Kapat"
 msgid "Restore panel to previous location"
 msgstr "Paneli önceki konumuna geri yükle"
 
-#: src/panel-save-dialog-row.c:76
+#: src/panel-save-dialog-row.c:78
 msgid "(new)"
 msgstr "(yeni)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:351
+#: src/panel-save-dialog.c:400
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "“%s” taslağı kaydedilmedi. Kaydedilebilir veya vazgeçilebilir."
 
-#: src/panel-save-dialog.c:354
+#: src/panel-save-dialog.c:403
 msgid "Save or Discard Draft?"
 msgstr "Taslağı Kaydet ya da Vazgeç?"
 
-#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Vazgeç"
 
-#: src/panel-save-dialog.c:362
+#: src/panel-save-dialog.c:411
 msgid "_Save As…"
 msgstr "Farklı _Kaydet…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:371
+#: src/panel-save-dialog.c:422
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"“%s” kaydedilmemiş değişiklikler içeriyor. Değişiklikler kaydedilebilir ya da "
-"vazgeçilebilir."
+"“%s” kaydedilmemiş değişiklikler içeriyor. Değişiklikler kaydedilebilir ya "
+"da vazgeçilebilir."
 
-#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
 msgid "Save or Discard Changes?"
 msgstr "Değişiklikleri Kaydet ya da Vazgeç?"
 
-#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Kaydet"
 
-#: src/panel-save-dialog.c:407
+#: src/panel-save-dialog.c:460
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Açık belgelerde kaydedilmemiş değişiklikler var. Değişiklikler kaydedilebilir "
-"ya da vazgeçilebilir."
+"Açık belgelerde kaydedilmemiş değişiklikler var. Değişiklikler "
+"kaydedilebilir ya da vazgeçilebilir."
 
-#: src/panel-save-dialog.c:412
+#: src/panel-save-dialog.c:465
 msgid "Only _Save Selected"
 msgstr "Yalnızca Seçiliyi _Kaydet"
 
-#: src/panel-save-dialog.c:420
+#: src/panel-save-dialog.c:473
 msgid "Save All"
 msgstr "Tümünü Kaydet"
 
-#: src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:482
 msgid "Discard All"
 msgstr "Tümünden Vazgeç"
 
