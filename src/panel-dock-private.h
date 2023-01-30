@@ -45,5 +45,8 @@ void       _panel_dock_remove_frame       (PanelDock      *self,
                                            PanelFrame     *frame);
 void       _panel_dock_update_orientation (GtkWidget      *widget,
                                            GtkOrientation  orientation);
+PanelFrame *
+           _panel_dock_create_frame       (PanelDock      *self,
+                                           PanelPosition  *position);
 
 G_END_DECLS

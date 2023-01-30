@@ -283,6 +283,24 @@ get_prev_frame (PanelFrame *frame)
   return NULL;
 }
 
+static GtkWidget *
+create_frame (PanelDropControls *self,
+              PanelFrame        *target)
+{
+  PanelPosition *position = panel_frame_get_position (target);
+  PanelDock *dock = PANEL_DOCK (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK));
+  GtkWidget *frame;
+
+  if (dock != NULL)
+    frame = GTK_WIDGET (_panel_dock_create_frame (dock, position));
+  else
+    frame = panel_frame_new ();
+
+  g_clear_object (&position);
+
+  return frame;
+}
+
 static gboolean
 on_drop_target_drop_cb (PanelDropControls *self,
                         const GValue      *value,
@@ -355,7 +373,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         {
           GtkWidget *new_frame;
 
-          new_frame = panel_frame_new ();
+          new_frame = create_frame (self, target);
           gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
           panel_paned_insert_after (PANEL_PANED (paned),
                                     new_frame,
@@ -379,7 +397,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         {
           GtkWidget *new_frame;
 
-          new_frame = panel_frame_new ();
+          new_frame = create_frame (self, target);
           gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
           panel_paned_insert_after (PANEL_PANED (paned), new_frame, GTK_WIDGET (target));
           target = PANEL_FRAME (new_frame);
@@ -406,7 +424,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         {
           GtkWidget *new_frame;
 
-          new_frame = panel_frame_new ();
+          new_frame = create_frame (self, target);
           gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
           panel_paned_insert_after (PANEL_PANED (paned),
                                     new_frame,
@@ -428,7 +446,7 @@ on_drop_target_drop_cb (PanelDropControls *self,
         {
           GtkWidget *new_frame;
 
-          new_frame = panel_frame_new ();
+          new_frame = create_frame (self, target);
           gtk_orientable_set_orientation (GTK_ORIENTABLE (new_frame), orientation);
           panel_paned_insert_after (PANEL_PANED (paned), new_frame, GTK_WIDGET (target));
           target = PANEL_FRAME (new_frame);

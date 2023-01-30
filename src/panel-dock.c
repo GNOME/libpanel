@@ -23,12 +23,15 @@
 #include "panel-dock.h"
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
+#include "panel-frame-header.h"
 #include "panel-frame-private.h"
 #include "panel-grid-private.h"
 #include "panel-grid-column.h"
 #include "panel-maximized-controls-private.h"
 #include "panel-paned.h"
+#include "panel-position.h"
 #include "panel-resizer-private.h"
+#include "panel-frame-tab-bar.h"
 #include "panel-widget.h"
 
 typedef struct
@@ -74,6 +77,7 @@ enum {
 };
 
 enum {
+  CREATE_FRAME,
   PANEL_DRAG_BEGIN,
   PANEL_DRAG_END,
   N_SIGNALS
@@ -291,6 +295,39 @@ panel_dock_get_bottom_height (PanelDock *self)
 {
   PanelDockPrivate *priv = panel_dock_get_instance_private (self);
   return get_drag_size (self, PANEL_AREA_BOTTOM, priv->bottom_height);
+}
+
+static PanelFrame *
+panel_dock_real_create_frame (PanelDock     *self,
+                              PanelPosition *position)
+{
+  PanelFrame *frame;
+
+  g_assert (PANEL_IS_DOCK (self));
+  g_assert (PANEL_IS_POSITION (position));
+
+  frame = PANEL_FRAME (panel_frame_new ());
+
+  if (panel_position_get_area (position) == PANEL_AREA_CENTER)
+    panel_frame_set_header (frame, PANEL_FRAME_HEADER (panel_frame_tab_bar_new ()));
+
+  return frame;
+}
+
+PanelFrame *
+_panel_dock_create_frame (PanelDock     *self,
+                          PanelPosition *position)
+{
+  PanelFrame *ret = NULL;
+
+  g_assert (PANEL_IS_DOCK (self));
+  g_assert (PANEL_IS_POSITION (position));
+
+  g_signal_emit (self, signals [CREATE_FRAME], 0, position, &ret);
+
+  g_assert (!ret || PANEL_IS_FRAME (ret));
+
+  return ret;
 }
 
 static void
@@ -542,6 +579,26 @@ panel_dock_class_init (PanelDockClass *klass)
                   NULL, NULL, NULL,
                   G_TYPE_NONE, 1, PANEL_TYPE_WIDGET);
 
+  /**
+   * PanelDock::create-frame:
+   * @self: a #PanelDock
+   * @position: the position for the frame
+   *
+   * This signal is emitted when a new frame is needed.
+   *
+   * Since: 1.2
+   */
+  signals [CREATE_FRAME] =
+    g_signal_new_class_handler ("create-frame",
+                                G_TYPE_FROM_CLASS (klass),
+                                G_SIGNAL_RUN_LAST,
+                                G_CALLBACK (panel_dock_real_create_frame),
+                                g_signal_accumulator_first_wins, NULL,
+                                NULL,
+                                PANEL_TYPE_FRAME,
+                                1,
+                                PANEL_TYPE_POSITION);
+
   gtk_widget_class_install_action (widget_class, "page.unmaximize", NULL, page_unmaximize_action);
 
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_F11, GDK_SHIFT_MASK, "page.unmaximize", NULL);
@@ -737,7 +794,7 @@ panel_dock_add_child (GtkBuildable *buildable,
       if (area != PANEL_AREA_CENTER && PANEL_IS_WIDGET (object))
         {
           GtkWidget *paned = panel_dock_child_get_child (PANEL_DOCK_CHILD (dock_child));
-          GtkWidget *frame;
+          PanelFrame *frame;
 
           if (paned == NULL)
             {
@@ -746,14 +803,21 @@ panel_dock_add_child (GtkBuildable *buildable,
               panel_dock_child_set_child (PANEL_DOCK_CHILD (dock_child), paned);
             }
 
-          if (!(frame = find_first_frame (paned)))
+          if (!(frame = PANEL_FRAME (find_first_frame (paned))))
             {
-              frame = panel_frame_new ();
+              PanelPosition *position = panel_position_new ();
+
+              position = g_object_new (PANEL_TYPE_POSITION,
+                                       "area", panel_dock_child_get_area (PANEL_DOCK_CHILD (dock_child)),
+                                       NULL);
+              frame = _panel_dock_create_frame (self, position);
               gtk_orientable_set_orientation (GTK_ORIENTABLE (frame), orientation);
-              panel_paned_append (PANEL_PANED (paned), frame);
+              panel_paned_append (PANEL_PANED (paned), GTK_WIDGET (frame));
+
+              g_object_unref (position);
             }
 
-          panel_frame_add (PANEL_FRAME (frame), PANEL_WIDGET (object));
+          panel_frame_add (frame, PANEL_WIDGET (object));
         }
       else
         {
@@ -1020,15 +1084,22 @@ prepare_for_drag (PanelDock *self,
 
       if (paned == NULL)
         {
-          GtkWidget *frame;
+          PanelPosition *position;
+          PanelFrame *frame;
+
+          position = g_object_new (PANEL_TYPE_POSITION,
+                                   "area", area,
+                                   NULL);
 
           paned = panel_paned_new ();
           gtk_orientable_set_orientation (GTK_ORIENTABLE (paned), orientation);
           panel_dock_child_set_child (PANEL_DOCK_CHILD (child), paned);
 
-          frame = panel_frame_new ();
+          frame = _panel_dock_create_frame (self, position);
           gtk_orientable_set_orientation (GTK_ORIENTABLE (frame), orientation);
-          panel_paned_append (PANEL_PANED (paned), frame);
+          panel_paned_append (PANEL_PANED (paned), GTK_WIDGET (frame));
+
+          g_object_unref (position);
         }
     }
 

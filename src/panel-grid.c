@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-dock-private.h"
 #include "panel-frame.h"
 #include "panel-frame-header.h"
 #include "panel-frame-private.h"
@@ -27,6 +28,7 @@
 #include "panel-grid-column.h"
 #include "panel-grid-private.h"
 #include "panel-paned.h"
+#include "panel-position.h"
 #include "panel-resizer-private.h"
 #include "panel-save-dialog.h"
 #include "panel-widget.h"
@@ -83,14 +85,29 @@ panel_grid_reexpand (PanelGrid *self)
 static PanelFrame *
 panel_grid_real_create_frame (PanelGrid *self)
 {
-  PanelFrame *frame;
-  PanelFrameHeader *header;
+  PanelPosition *position;
+  PanelFrame *frame = NULL;
+  PanelDock *dock;
 
   g_assert (PANEL_IS_GRID (self));
 
-  frame = PANEL_FRAME (panel_frame_new ());
-  header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
-  panel_frame_set_header (frame, header);
+  if ((dock = PANEL_DOCK (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK))))
+    {
+      position = g_object_new (PANEL_TYPE_POSITION,
+                               "area", PANEL_AREA_CENTER,
+                               NULL);
+      frame = _panel_dock_create_frame (dock, position);
+      g_object_unref (position);
+    }
+
+  if (frame == NULL)
+    {
+      PanelFrameHeader *header;
+
+      frame = PANEL_FRAME (panel_frame_new ());
+      header = PANEL_FRAME_HEADER (panel_frame_tab_bar_new ());
+      panel_frame_set_header (frame, header);
+    }
 
   return frame;
 }
