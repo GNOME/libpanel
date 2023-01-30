@@ -40,9 +40,9 @@ libadwaita_dep = dependency('libadwaita-1', version: adwaita_req)
 
 # Setup commonly used config data
 config_h = configuration_data()
-config_h.set_quoted('PACKAGE_NAME', 'libdrafting')
+config_h.set_quoted('PACKAGE_NAME', 'libpanel')
 config_h.set_quoted('PACKAGE_VERSION', meson.project_version())
-config_h.set_quoted('GETTEXT_PACKAGE', 'drafting')
+config_h.set_quoted('GETTEXT_PACKAGE', 'libpanel')
 config_h.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
 
 # Specify minimum library versions
