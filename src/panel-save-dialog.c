@@ -212,6 +212,8 @@ find_button_and_set_visible (GtkWidget  *parent,
                              const char *label,
                              gboolean    visible)
 {
+  g_assert (!parent || GTK_IS_WIDGET (parent));
+
   for (GtkWidget *child = gtk_widget_get_first_child (parent);
        child != NULL;
        child = gtk_widget_get_next_sibling (child))
@@ -243,11 +245,11 @@ set_response_visible (AdwMessageDialog *dialog,
   if (!(label = adw_message_dialog_get_response_label (dialog, response)))
     return;
 
-  wide = gtk_widget_get_template_child (GTK_WIDGET (dialog), ADW_TYPE_MESSAGE_DIALOG, "wide_response_box");
-  narrow = gtk_widget_get_template_child (GTK_WIDGET (dialog), ADW_TYPE_MESSAGE_DIALOG, "narrow_response_box");
+  if ((wide = gtk_widget_get_template_child (GTK_WIDGET (dialog), ADW_TYPE_MESSAGE_DIALOG, "wide_response_box")))
+    find_button_and_set_visible (GTK_WIDGET (wide), label, visible);
 
-  find_button_and_set_visible (GTK_WIDGET (wide), label, visible);
-  find_button_and_set_visible (GTK_WIDGET (narrow), label, visible);
+  if ((narrow = gtk_widget_get_template_child (GTK_WIDGET (dialog), ADW_TYPE_MESSAGE_DIALOG, "narrow_response_box")))
+    find_button_and_set_visible (GTK_WIDGET (narrow), label, visible);
 }
 
 static gboolean
