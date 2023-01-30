@@ -75,6 +75,7 @@ enum {
 };
 
 enum {
+  ADOPT_WIDGET,
   PAGE_CLOSED,
   N_SIGNALS
 };
@@ -573,6 +574,17 @@ panel_frame_update_drop (PanelFrame *self)
   panel_drop_controls_set_area (priv->drop_controls, area);
 }
 
+static gboolean
+panel_frame_can_adopt (PanelFrame  *self,
+                       PanelWidget *widget)
+{
+  gboolean ret = GDK_EVENT_PROPAGATE;
+
+  g_signal_emit (self, signals [ADOPT_WIDGET], 0, widget, &ret);
+
+  return ret == GDK_EVENT_PROPAGATE;
+}
+
 static void
 on_panel_drag_begin_cb (PanelFrame  *self,
                         PanelWidget *widget,
@@ -584,7 +596,8 @@ on_panel_drag_begin_cb (PanelFrame  *self,
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
-  if (priv->header != NULL &&
+  if (panel_frame_can_adopt (self, widget) &&
+      priv->header != NULL &&
       panel_frame_header_can_drop (priv->header, widget))
     gtk_widget_show (GTK_WIDGET (priv->drop_controls));
 }
@@ -887,6 +900,33 @@ panel_frame_class_init (PanelFrameClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
+  g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
+
+  /**
+   * PanelFrame::adopt-widget
+   * @self: a #PanelFrame
+   * @widget: a #PanelWidget
+   *
+   * This signal is emitted when the frame should decide if it can adopt
+   * a #PanelWidget dropped on the frame.
+   *
+   * If @GDK_EVENT_STOP is returned, then the widget will not be adopted.
+   *
+   * Returns: %GDK_EVENT_STOP or %GDK_EVENT_PROPAGATE
+   *
+   * Since: 1.2
+   */
+  signals [ADOPT_WIDGET] =
+    g_signal_new ("adopt-widget",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (PanelFrameClass, adopt_widget),
+                  g_signal_accumulator_true_handled, NULL,
+                  NULL,
+                  G_TYPE_BOOLEAN,
+                  1,
+                  PANEL_TYPE_WIDGET);
+
   /**
    * PanelFrame::page-closed:
    * @self: a #PanelFrame
@@ -906,8 +946,6 @@ panel_frame_class_init (PanelFrameClass *klass)
                   G_TYPE_NONE,
                   1,
                   PANEL_TYPE_WIDGET);
-
-  g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
   gtk_widget_class_set_css_name (widget_class, "panelframe");
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
