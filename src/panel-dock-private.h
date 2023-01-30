@@ -48,5 +48,7 @@ void       _panel_dock_update_orientation (GtkWidget      *widget,
 PanelFrame *
            _panel_dock_create_frame       (PanelDock      *self,
                                            PanelPosition  *position);
+gboolean   _panel_dock_can_adopt          (PanelDock      *self,
+                                           PanelWidget    *widget);
 
 G_END_DECLS

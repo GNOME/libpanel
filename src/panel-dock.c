@@ -77,6 +77,7 @@ enum {
 };
 
 enum {
+  ADOPT_WIDGET,
   CREATE_FRAME,
   PANEL_DRAG_BEGIN,
   PANEL_DRAG_END,
@@ -328,6 +329,24 @@ _panel_dock_create_frame (PanelDock     *self,
   g_assert (!ret || PANEL_IS_FRAME (ret));
 
   return ret;
+}
+
+gboolean
+_panel_dock_can_adopt (PanelDock   *dock,
+                       PanelWidget *widget)
+{
+  gboolean ret = GDK_EVENT_PROPAGATE;
+
+  g_signal_emit (dock, signals [ADOPT_WIDGET], 0, widget, &ret);
+
+  return ret == GDK_EVENT_PROPAGATE;
+}
+
+static gboolean
+panel_dock_real_adopt_widget (PanelDock   *dock,
+                              PanelWidget *widget)
+{
+  return GDK_EVENT_PROPAGATE;
 }
 
 static void
@@ -598,6 +617,34 @@ panel_dock_class_init (PanelDockClass *klass)
                                 PANEL_TYPE_FRAME,
                                 1,
                                 PANEL_TYPE_POSITION);
+
+  /**
+   * PanelDock::adopt-widget:
+   * @self: a #PanelDock
+   * @widget: a #PanelWidget
+   *
+   * Signal is emitted when a widget is requesting to be added via a
+   * drag-n-drop event.
+   *
+   * This is generally propagated via #PanelFrame::adopt-widget to the
+   * dock so that applications do not need to attach signal handlers
+   * to every #PanelFrame.
+   *
+   * Returns: %GDK_EVENT_STOP to prevent dropping, otherwise
+   *   %GDK_EVENT_PROPAGATE to allow adopting the widget.
+   *
+   * Since: 1.2
+   */
+  signals [ADOPT_WIDGET] =
+    g_signal_new_class_handler ("adopt-widget",
+                                G_TYPE_FROM_CLASS (klass),
+                                G_SIGNAL_RUN_LAST,
+                                G_CALLBACK (panel_dock_real_adopt_widget),
+                                g_signal_accumulator_true_handled, NULL,
+                                NULL,
+                                G_TYPE_BOOLEAN,
+                                1,
+                                PANEL_TYPE_WIDGET);
 
   gtk_widget_class_install_action (widget_class, "page.unmaximize", NULL, page_unmaximize_action);
 

@@ -575,6 +575,21 @@ panel_frame_update_drop (PanelFrame *self)
 }
 
 static gboolean
+panel_frame_real_adopt_widget (PanelFrame  *self,
+                               PanelWidget *widget)
+{
+  PanelDock *dock;
+
+  if ((dock = PANEL_DOCK (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK))))
+    {
+      if (!_panel_dock_can_adopt (dock, widget))
+        return GDK_EVENT_STOP;
+    }
+
+  return GDK_EVENT_PROPAGATE;
+}
+
+static gboolean
 panel_frame_can_adopt (PanelFrame  *self,
                        PanelWidget *widget)
 {
@@ -869,6 +884,7 @@ panel_frame_class_init (PanelFrameClass *klass)
   widget_class->compute_expand = panel_frame_compute_expand;
 
   klass->page_closed = panel_frame_real_page_closed;
+  klass->adopt_widget = panel_frame_real_adopt_widget;
 
   properties [PROP_CLOSEABLE] =
     g_param_spec_boolean ("closeable",
