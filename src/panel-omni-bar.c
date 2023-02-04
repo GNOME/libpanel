@@ -285,10 +285,20 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
   g_object_class_override_property (object_class, PROP_ACTION_NAME, "action-name");
   g_object_class_override_property (object_class, PROP_ACTION_TARGET, "action-target");
 
+  /**
+   * PanelOmniBar:action-tooltip:
+   *
+   * The tooltip for the action.
+   */
   properties[PROP_ACTION_TOOLTIP] =
     g_param_spec_string ("action-tooltip", NULL, NULL, NULL,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:icon-name:
+   *
+   * The name of the icon to use.
+   */
   properties [PROP_ICON_NAME] =
     g_param_spec_string ("icon-name",
                          "Icon Name",
@@ -296,6 +306,11 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          NULL,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:menu-model:
+   *
+   * The menu module the the omni bar menu.
+   */
   properties [PROP_MENU_MODEL] =
     g_param_spec_object ("menu-model",
                          "Menu Model",
@@ -303,6 +318,11 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          G_TYPE_MENU_MODEL,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:popover:
+   *
+   * The popover to show.
+   */
   properties [PROP_POPOVER] =
     g_param_spec_object ("popover",
                          "Popover",
@@ -310,6 +330,11 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          GTK_TYPE_POPOVER,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:progress:
+   *
+   * The current progress value.
+   */
   properties [PROP_PROGRESS] =
     g_param_spec_double ("progress",
                          "Progress",
