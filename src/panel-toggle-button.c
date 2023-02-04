@@ -29,7 +29,16 @@
 /**
  * PanelToggleButton:
  *
- * The `PanelToggleButton` is a button used to toggle the visibility of a [class@PanelDock].
+ * The `PanelToggleButton` is a button used to toggle the visibility
+ * of an area [class@PanelDock].
+ *
+ * <picture>
+ *   <source srcset="toggle-button-dark.png" media="(prefers-color-scheme: dark)">
+ *   <img src="toggle-button.png" alt="toggle-button">
+ * </picture>
+ *
+ * It will automatically reveal or unreveal the specified area from
+ * #PanelToggleButton:dock.
  */
 
 #define TIMEOUT_EXPAND 500

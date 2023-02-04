@@ -35,6 +35,14 @@ base_url = "https://gitlab.gnome.org/GNOME/libpanel/-/blob/main/"
 
 [extra]
 urlmap_file = "urlmap.js"
+content_images = [
+    "images/omni-bar.png",
+    "images/omni-bar-dark.png",
+    "images/theme-selector.png",
+    "images/theme-selector-dark.png",
+    "images/toggle-button.png",
+    "images/toggle-button-dark.png",
+]
 
 [[object]]
 pattern = "DEPRECATED_IN_*"

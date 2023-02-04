@@ -31,6 +31,12 @@
  *
  * There is also a prefix and suffix area that can contain more
  * widgets.
+ *
+ * <picture>
+ *   <source srcset="omni-bar-dark.png" media="(prefers-color-scheme: dark)">
+ *   <img src="omni-bar.png" alt="omni-bar">
+ * </picture>
+ *
  */
 typedef struct
 {

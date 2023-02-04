@@ -30,6 +30,11 @@
  * A widget that allow selecting theme preference between "dark",
  * "light" and "follow" the system preference.
  *
+ * <picture>
+ *   <source srcset="theme-selector-dark.png" media="(prefers-color-scheme: dark)">
+ *   <img src="theme-selector.png" alt="theme-selector">
+ * </picture>
+ *
  * Upon activation it will activate the named action in
  * #PanelThemeSelector:action-name.
  */
