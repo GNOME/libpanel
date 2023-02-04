@@ -6,7 +6,7 @@ repository_url = "https://gitlab.gnome.org/GNOME/libpanel.git"
 authors = "Christian Hergert"
 license = "LGPL"
 description = "A dock/panel library for GTK 4"
-dependencies = [ "GObject-2.0", "Libadwaita-1", "Gtk-4.0"]
+dependencies = [ "GObject-2.0", "Gtk-4.0", "Adw-1" ]
 devhelp = true
 search_index = true
 
@@ -15,15 +15,15 @@ search_index = true
   description = "The base type system library"
   docs_url = "https://developer.gnome.org/gobject/stable"
 
-  [dependencies."Libadwaita-1"]
-  name = "Libadwaita"
-  description = "Building blocks for modern GNOME applications"
-  docs_url = "https://gnome.pages.gitlab.gnome.org/libadwaita/doc/"
-
   [dependencies."Gtk-4.0"]
   name = "GTK"
   description = "The GTK toolkit"
   docs_url = "https://docs.gtk.org/gtk4/"
+
+  [dependencies."Adw-1"]
+  name = "Libadwaita"
+  description = "Building blocks for modern GNOME applications"
+  docs_url = "https://gnome.pages.gitlab.gnome.org/libadwaita/doc/"
 
 [theme]
 name = "basic"
@@ -35,6 +35,9 @@ base_url = "https://gitlab.gnome.org/GNOME/libpanel/-/blob/main/"
 
 [extra]
 urlmap_file = "urlmap.js"
+content_files = [
+    "introduction.md"
+]
 content_images = [
     "images/omni-bar.png",
     "images/omni-bar-dark.png",

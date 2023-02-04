@@ -27,7 +27,8 @@
 /**
  * PanelPosition:
  *
- * Specify a position in the dock.
+ * Specify a position in the dock. You receive a #PanelPosition in the
+ * handler to [signal@PanelDock::create-frame].
  */
 struct _PanelPosition
 {
