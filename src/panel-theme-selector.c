@@ -24,6 +24,15 @@
 
 #include "panel-theme-selector.h"
 
+/**
+ * PanelThemeSelector:
+ *
+ * A widget that allow selecting theme preference between "dark",
+ * "light" and "follow" the system preference.
+ *
+ * Upon activation it will activate the named action in
+ * #PanelThemeSelector:action-name.
+ */
 struct _PanelThemeSelector
 {
   GtkWidget        parent_instance;
@@ -47,6 +56,13 @@ enum {
 
 static GParamSpec *properties [N_PROPS];
 
+/**
+ * panel_theme_selector_new:
+ *
+ * Create a new #ThemeSelector.
+ *
+ * Returns: a newly created #PanelThemeSelector.
+ */
 GtkWidget *
 panel_theme_selector_new (void)
 {
@@ -142,6 +158,11 @@ panel_theme_selector_class_init (PanelThemeSelectorClass *klass)
   object_class->get_property = panel_theme_selector_get_property;
   object_class->set_property = panel_theme_selector_set_property;
 
+  /**
+   * PanelThemeSelector:action-name
+   *
+   * The name of the action activated on activation.
+   */
   properties [PROP_ACTION_NAME] =
     g_param_spec_string ("action-name",
                          "Action Name",
@@ -187,6 +208,14 @@ panel_theme_selector_init (PanelThemeSelector *self)
   on_notify_dark_cb (self, NULL, style_manager);
 }
 
+/**
+ * panel_theme_selector_get_action_name:
+ * @self: a #PanelThemeSelector
+ *
+ * Gets the name of the action that will be activated.
+ *
+ * Returns: (transfer none): the name of the action.
+ */
 const char *
 panel_theme_selector_get_action_name (PanelThemeSelector *self)
 {
@@ -195,6 +224,13 @@ panel_theme_selector_get_action_name (PanelThemeSelector *self)
   return self->action_name;
 }
 
+/**
+ * panel_theme_selector_set_action_name:
+ * @self: a #PanelThemeSelector
+ * @action_name: (transfer none): the action name.
+ *
+ * Sets the name of the action that will be activated.
+ */
 void
 panel_theme_selector_set_action_name (PanelThemeSelector *self,
                                       const char         *action_name)

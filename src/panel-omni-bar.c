@@ -22,6 +22,16 @@
 
 #include "panel-omni-bar.h"
 
+/**
+ * PanelOmniBar:
+ * A multi-use widget for user interaction in the window header bar.
+ *
+ * You can add widgets, a popover to provide action items, an icone,
+ * updates on progress and pulse the main widget.
+ *
+ * There is also a prefix and suffix area that can contain more
+ * widgets.
+ */
 typedef struct
 {
   GtkBox         *box;
@@ -64,6 +74,8 @@ static GParamSpec *properties [N_PROPS];
  * panel_omni_bar_get_popover:
  * @self: a #PanelOmniBar
  *
+ * Get the current popover or %NULL if none is setup.
+ *
  * Returns: (transfer none) (nullable): a #GtkPopover or %NULL
  */
 GtkPopover *
@@ -76,6 +88,13 @@ panel_omni_bar_get_popover (PanelOmniBar *self)
   return priv->popover;
 }
 
+/**
+ * panel_omni_bar_set_popover:
+ * @self: a #PanelOmniBar
+ * @popover: (transfer none) (nullable): a #GtkPopover or %NULL
+ *
+ * Set the omnibar popover, that will appear when clicking on the omni bar.
+ */
 void
 panel_omni_bar_set_popover (PanelOmniBar *self,
                             GtkPopover   *popover)
@@ -368,6 +387,15 @@ panel_omni_bar_init (PanelOmniBar *self)
 #define GET_PRIORITY(w)   GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w),"PRIORITY"))
 #define SET_PRIORITY(w,i) g_object_set_data(G_OBJECT(w),"PRIORITY",GINT_TO_POINTER(i))
 
+/**
+ * panel_omni_bar_add_prefix:
+ * @self: a #PanelOmniBar
+ * @priority: the priority
+ * @widget: (transfer none): the widget to add at the start.
+ *
+ * Add a widget at the start of the container, ordered by priority.
+ * The highest the priority, the closest to the start.
+ */
 void
 panel_omni_bar_add_prefix (PanelOmniBar *self,
                            int           priority,
@@ -393,6 +421,15 @@ panel_omni_bar_add_prefix (PanelOmniBar *self,
   gtk_box_insert_child_after (priv->prefix, widget, sibling);
 }
 
+/**
+ * panel_omni_bar_add_suffix:
+ * @self: a #PanelOmniBar
+ * @priority: the priority
+ * @widget: (transfer none): the widget to add toward the end.
+ *
+ * Add a widget toward the end of the container, ordered by priority.
+ * The highest the priority, the closest to the start.
+ */
 void
 panel_omni_bar_add_suffix (PanelOmniBar *self,
                            int           priority,
@@ -418,6 +455,14 @@ panel_omni_bar_add_suffix (PanelOmniBar *self,
   gtk_box_insert_child_after (priv->suffix, widget, sibling);
 }
 
+/**
+ * panel_omni_bar_remove:
+ * @self: a #PanelOmniBar
+ * @widget: The widget to remove.
+ *
+ * Remove a widget from the omni bar. Currently only prefix or suffix
+ * widgets are supported.
+ */
 void
 panel_omni_bar_remove (PanelOmniBar *self,
                        GtkWidget    *widget)
@@ -518,6 +563,14 @@ actionable_iface_init (GtkActionableInterface *iface)
   iface->set_action_target_value = set_action_target;
 }
 
+/**
+ * panel_omni_bar_get_progress:
+ * @self: a #PanelOmniBar
+ *
+ * Get the progress value displayed on the omni bar.
+ *
+ * Returns: the progress value.
+ */
 double
 panel_omni_bar_get_progress (PanelOmniBar *self)
 {
@@ -528,6 +581,13 @@ panel_omni_bar_get_progress (PanelOmniBar *self)
   return gtk_progress_bar_get_fraction (priv->progress_bar);
 }
 
+/**
+ * panel_omni_bar_set_progress:
+ * @self: a #PanelOmniBar
+ * @progress: the progress value
+ *
+ * Set the progress value displayed on the omni bar.
+ */
 void
 panel_omni_bar_set_progress (PanelOmniBar *self,
                              double        progress)
@@ -601,6 +661,13 @@ progress_bar_start_pulsing (GtkProgressBar *progress)
 }
 
 
+/**
+ * panel_omni_bar_start_pulsing:
+ * @self: a #PanelOmniBar
+ *
+ * Start pulsing the omni bar. Use
+ * @panel_omni_bar_stop_pulsing to stop.
+ */
 void
 panel_omni_bar_start_pulsing (PanelOmniBar *self)
 {
@@ -612,6 +679,13 @@ panel_omni_bar_start_pulsing (PanelOmniBar *self)
   gtk_widget_show (GTK_WIDGET (priv->progress_bar));
 }
 
+/**
+ * panel_omni_bar_stop_pulsing:
+ * @self: #PanelOmniBar
+ *
+ * Stop pulsing the omni bar, that was started with
+ * @panel_omni_bar_start_pulsing.
+ */
 void
 panel_omni_bar_stop_pulsing (PanelOmniBar *self)
 {

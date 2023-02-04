@@ -53,6 +53,12 @@
 #include "panel-widget-private.h"
 #include "panel-macros.h"
 
+/**
+ * PanelWidget:
+ *
+ * PanelWidget is the base Widget class for widget added to a
+ * #PanelFrame.
+ */
 typedef struct
 {
   GtkWidget         *child;
@@ -803,6 +809,14 @@ panel_widget_set_icon (PanelWidget *self,
     }
 }
 
+/**
+ * panel_widget_get_id:
+ * @self: a #PanelWidget
+ *
+ * Get the id of the panel widget.
+ *
+ * Returns: (transfer none): The id of the panel widget.
+ */
 const char *
 panel_widget_get_id (PanelWidget *self)
 {
@@ -813,6 +827,13 @@ panel_widget_get_id (PanelWidget *self)
   return priv->id;
 }
 
+/**
+ * panel_widget_set_id:
+ * @self: a #PanelWidget
+ * @id: (transfer none) the id to set for the panel widget.
+ *
+ * Set the id of the panel widget.
+ */
 void
 panel_widget_set_id (PanelWidget *self,
                      const char  *id)
@@ -825,6 +846,14 @@ panel_widget_set_id (PanelWidget *self,
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ID]);
 }
 
+/**
+ * panel_widget_get_modified:
+ * @self: a #PanelWidget
+ *
+ * Get the modified status of a panel widget
+ *
+ * Returns: the modified status of the panel widget.
+ */
 gboolean
 panel_widget_get_modified (PanelWidget *self)
 {
@@ -835,6 +864,13 @@ panel_widget_get_modified (PanelWidget *self)
   return priv->modified;
 }
 
+/**
+ * panel_widget_set_modified:
+ * @self: a #PanelWidget
+ * @modified: the modified status
+ *
+ * Set the modified status of a panel widget.
+ */
 void
 panel_widget_set_modified (PanelWidget *self,
                            gboolean     modified)

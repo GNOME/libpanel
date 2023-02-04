@@ -25,6 +25,12 @@
 #define GET_PRIORITY(w)   GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w),"PRIORITY"))
 #define SET_PRIORITY(w,i) g_object_set_data(G_OBJECT(w),"PRIORITY",GINT_TO_POINTER(i))
 
+/**
+ * PanelStatusbar:
+ *
+ * A panel status bar is meant to displayed at the bottom of the
+ * window. It can contain widget in the prefix and in the suffix.
+ */
 struct _PanelStatusbar
 {
   GtkWidget  parent_instance;
@@ -37,6 +43,13 @@ static void buildable_iface_init (GtkBuildableIface *iface);
 G_DEFINE_TYPE_WITH_CODE (PanelStatusbar, panel_statusbar, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init))
 
+/**
+ * panel_statusbar_new:
+ *
+ * Create a new #PanelStatusbar.
+ *
+ * Returns: a newly created #PanelStatusBar.
+ */
 GtkWidget *
 panel_statusbar_new (void)
 {
@@ -158,6 +171,15 @@ update_expander (PanelStatusbar *self)
   gtk_widget_set_visible (self->expander, has_hexpand == FALSE);
 }
 
+/**
+ * panel_statusbar_add_prefix:
+ * @self: a #PanelStatusbar
+ * @priority: the priority
+ * @widget: (transfer none): a #GtkWidget to add.
+ *
+ * Add a widget into the prefix with @priority. The higher the
+ * priority the closer to the start the widget will be added.
+ */
 void
 panel_statusbar_add_prefix (PanelStatusbar *self,
                             int             priority,
@@ -191,6 +213,15 @@ panel_statusbar_add_prefix (PanelStatusbar *self,
   update_expander (self);
 }
 
+/**
+ * panel_statusbar_add_suffix:
+ * @self: a #PanelStatusbar
+ * @priority: the priority
+ * @widget: (transfer none): a #GtkWidget to add.
+ *
+ * Add a widget into the suffix with @priority. The higher the
+ * priority the closer to the start the widget will be added.
+ */
 void
 panel_statusbar_add_suffix (PanelStatusbar *self,
                             int             priority,
@@ -224,6 +255,13 @@ panel_statusbar_add_suffix (PanelStatusbar *self,
   update_expander (self);
 }
 
+/**
+ * panel_statusbar_remove:
+ * @self: a #PanelStatusbar
+ * @widget: (transfer none): a #GtkWidget to remove.
+ *
+ * Remove @widget fron the #PanelStatusbar.
+ */
 void
 panel_statusbar_remove (PanelStatusbar *self,
                         GtkWidget      *widget)

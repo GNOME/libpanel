@@ -37,6 +37,16 @@
 #include "panel-scaler-private.h"
 #include "panel-widget-private.h"
 
+/**
+ * PanelFrame:
+ *
+ * The #PanelFrame is the widget containing panels to display in an
+ * area. The widgets are added internally in an [class@Adw.TabView] to
+ * display then one at a time like in a stack.
+ *
+ * A #PanelFrame can also have a header widget that will be displayed
+ * above the panels.
+ */
 typedef struct
 {
   PanelFrameHeader  *header;
@@ -85,6 +95,12 @@ static guint signals [N_SIGNALS];
 static GParamSpec *properties [N_PROPS];
 static GtkBuildableIface *parent_buildable;
 
+/**
+ * panel_frame_new:
+ * Create a new #PanelFrame.
+ *
+ * Returns: The new #PanelFrame object.
+ */
 GtkWidget *
 panel_frame_new (void)
 {
@@ -1057,6 +1073,14 @@ modified_to_indicator_icon (GBinding     *binding,
   return TRUE;
 }
 
+/**
+ * panel_frame_add_before:
+ * @self: a #PanelFrame
+ * @panel: (transfer none): the #PanelWidget to add.
+ * @sibling: (transfer none): the sibling #PanelWidget to add the panel before.
+ *
+ * Add @panel before @sibling in the #PanelFrame.
+ */
 void
 panel_frame_add_before (PanelFrame  *self,
                         PanelWidget *panel,
@@ -1136,7 +1160,7 @@ panel_frame_add_before (PanelFrame  *self,
 /**
  * panel_frame_add:
  * @self: a #PanelFrame
- * @panel: a widget to add
+ * @panel: a #PanelWidget to add
  *
  * Adds a widget to the frame.
  */
@@ -1150,7 +1174,7 @@ panel_frame_add (PanelFrame  *self,
 /**
  * panel_frame_remove:
  * @self: a #PanelFrame
- * @panel: a widget to add
+ * @panel: a #PanelWidget to remove.
  *
  * Removes a widget from the frame.
  */
@@ -1195,6 +1219,14 @@ panel_frame_remove (PanelFrame  *self,
   panel_frame_update_actions (self);
 }
 
+/**
+ * panel_frame_get_empty:
+ * @self: a #PanelFrame
+ *
+ * Tells if panel frame empty.
+ *
+ * Returns: %TRUE if the panel is empty.
+ */
 gboolean
 panel_frame_get_empty (PanelFrame *self)
 {
@@ -1406,6 +1438,14 @@ _panel_frame_transfer (PanelFrame  *self,
     _panel_grid_update_focus (PANEL_GRID (grid));
 }
 
+/**
+ * panel_frame_get_n_pages:
+ * @self: a #PanelFrame
+ *
+ * Get the number of pages in the panel frame.
+ *
+ * Returns: The number of pages.
+ */
 guint
 panel_frame_get_n_pages (PanelFrame *self)
 {
@@ -1584,6 +1624,14 @@ _panel_frame_request_close (PanelFrame  *self,
     adw_tab_view_close_page (priv->tab_view, page);
 }
 
+/**
+ * panel_frame_get_closeable:
+ * @self: a #PanelFrame
+ *
+ * Tell if the panel frame is closeable.
+ *
+ * Returns: %TRUE if the panel frame is closeable.
+ */
 gboolean
 panel_frame_get_closeable (PanelFrame *self)
 {
@@ -1649,6 +1697,14 @@ panel_frame_get_position (PanelFrame *self)
   return g_steal_pointer (&position);
 }
 
+/**
+ * panel_frame_get_requested_size:
+ * @self: a %PanelFrame
+ *
+ * Get the requested size for the panel frame.
+ *
+ * Returns: the requested size.
+ */
 int
 panel_frame_get_requested_size (PanelFrame *self)
 {
@@ -1662,6 +1718,13 @@ panel_frame_get_requested_size (PanelFrame *self)
   return panel_resizer_get_drag_position (PANEL_RESIZER (resizer));
 }
 
+/**
+ * panel_frame_set_requested_size:
+ * @self: a %PanelFrame.
+ * @requested_size: the requested size.
+ *
+ * Set the requested size for the panel frame.
+ */
 void
 panel_frame_set_requested_size (PanelFrame *self,
                                 int         requested_size)

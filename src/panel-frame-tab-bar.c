@@ -34,6 +34,12 @@
   | ADW_TAB_VIEW_SHORTCUT_CONTROL_END \
   | ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_END)
 
+/**
+ * PanelFrameTabBar:
+ *
+ * A #PanelFrameHeader that implement switching between tab views in a
+ * #PanelFrame.
+ */
 struct _PanelFrameTabBar
 {
   GtkWidget          parent_instance;
@@ -214,8 +220,23 @@ panel_frame_tab_bar_get_property (GObject    *object,
     g_value_set_boolean (value, adw_tab_bar_get_##name (self->tab_bar)); \
     break
 
+    /**
+     * PanelFrameTabBar:autohide:
+     *
+     * Whether the tabs automatically hide.
+     */
     WRAP_BOOLEAN_PROPERTY (PROP_AUTOHIDE, autohide);
+    /**
+     * PanelFrameTabBar:expand-tabs:
+     *
+     * Whether tabs expand to full width.
+     */
     WRAP_BOOLEAN_PROPERTY (PROP_EXPAND_TABS, expand_tabs);
+    /**
+     * PanelFrameTabBar:inverted:
+     *
+     * Whether tabs use inverted layout.
+     */
     WRAP_BOOLEAN_PROPERTY (PROP_INVERTED, inverted);
 
 #undef WRAP_BOOLEAN_PROPERTY
@@ -423,8 +444,53 @@ void panel_frame_tab_bar_set_##name (PanelFrameTabBar *self, \
   adw_tab_bar_set_##name (self->tab_bar, value); \
 }
 
+/**
+ * panel_frame_tab_bar_get_autohide:
+ * @self: a #PanelFrameTabBar
+ *
+ * Gets whether the tabs automatically hide.
+ *
+ * Returns: the value of the autohide property.
+ */
+/**
+ * panel_frame_tab_bar_set_autohide:
+ * @self: a #PanelFrameTabBar
+ * @vale: the autohide value
+ *
+ * Sets whether the tabs automatically hide.
+ */
   WRAP_BOOLEAN_PROPERTY (autohide);
+/**
+ * panel_frame_tab_bar_get_expand_tabs:
+ * @self: a #PanelFrameTabBar
+ *
+ * Gets whether tabs expand to full width.
+ *
+ * Returns: the value of the expand_tabs property.
+ */
+/**
+ * panel_frame_tab_bar_set_expand_tabs:
+ * @self: a #PanelFrameTabBar
+ * @vale: the expand_tabs value
+ *
+ * Sets whether tabs expand to full width.
+ */
   WRAP_BOOLEAN_PROPERTY (expand_tabs);
+/**
+ * panel_frame_tab_bar_get_inverted:
+ * @self: a #PanelFrameTabBar
+ *
+ * Gets whether tabs use inverted layout.
+ *
+ * Returns: the value of the inverted property.
+ */
+/**
+ * panel_frame_tab_bar_set_inverted:
+ * @self: a #PanelFrameTabBar
+ * @vale: the inverted value
+ *
+ * Sets whether tabs tabs use inverted layout.
+ */
   WRAP_BOOLEAN_PROPERTY (inverted);
 
 #undef WRAP_BOOLEAN_PROPERTY

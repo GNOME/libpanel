@@ -26,6 +26,12 @@
 #include "panel-toggle-button.h"
 #include "panel-widget.h"
 
+/**
+ * PanelToggleButton:
+ *
+ * The `PanelToggleButton` is a button used to toggle the visibility of a [class@PanelDock].
+ */
+
 #define TIMEOUT_EXPAND 500
 
 struct _PanelToggleButton
@@ -52,6 +58,15 @@ enum {
 
 static GParamSpec *properties [N_PROPS];
 
+/**
+ * panel_toggle_button_new:
+ * @dock: (not nullable) #PanelDock the panel to control
+ * @area: #PanelArea the panel area. A value of [const@PanelArea.PANEL_AREA_CENTER] invalid.
+ *
+ * Create a new `PanelToggleButton` to hide the `dock` in the `area`.
+ *
+ * Returns: a newly created #PanelToggleButton
+ */
 GtkWidget *
 panel_toggle_button_new (PanelDock *dock,
                          PanelArea  area)
@@ -369,11 +384,20 @@ panel_toggle_button_class_init (PanelToggleButtonClass *klass)
   object_class->get_property = panel_toggle_button_get_property;
   object_class->set_property = panel_toggle_button_set_property;
 
+  /**
+   * PanelToggleButton:dock:
+   *
+   * The associated #PanelDock
+   */
   properties [PROP_DOCK] =
     g_param_spec_object ("dock", NULL, NULL,
                          PANEL_TYPE_DOCK,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
+  /**
+   * PanelToggleButton:area:
+   *
+   * The area this button will reveal.
+   */
   properties [PROP_AREA] =
     g_param_spec_enum ("area", NULL, NULL,
                        PANEL_TYPE_AREA,

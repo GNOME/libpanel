@@ -29,8 +29,9 @@
 /**
  * PanelFrameSwitcher:
  *
- * The `PanelFrameSwitcher` shows a row of buttons to switch between `GtkStack`
- * pages.
+ * A #PanelFrameSwitcher is a #PanelFrameHeader that shows a row of
+ * buttons to switch between #GtkStack pages, not disimilar to a
+ * #GtkStackSwitcher.
  */
 
 #define TIMEOUT_EXPAND 500

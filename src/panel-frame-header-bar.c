@@ -33,6 +33,15 @@
 #include "panel-scaler-private.h"
 #include "panel-widget.h"
 
+/**
+ * PanelFrameHeaderBar:
+ *
+ * A header bar for #PanelFrame. It can optionally show an icon, it
+ * can have a popover to be displace, and it can also have prefix and
+ * suffix widgets.
+ *
+ * It is an implementation of #PanelFrameHeader
+ */
 struct _PanelFrameHeaderBar
 {
   GtkWidget          parent_instance;
@@ -377,6 +386,11 @@ panel_frame_header_bar_class_init (PanelFrameHeaderBarClass *klass)
   object_class->get_property = panel_frame_header_bar_get_property;
   object_class->set_property = panel_frame_header_bar_set_property;
 
+  /**
+   * PanelFrameHeaderBar:show-icon:
+   *
+   * Whether to show the icon or not.
+   */
   properties [PROP_SHOW_ICON] =
     g_param_spec_boolean ("show-icon",
                           "Show Icon",
@@ -577,6 +591,14 @@ panel_frame_header_bar_get_menu_popover (PanelFrameHeaderBar *self)
   return GTK_POPOVER_MENU (gtk_menu_button_get_popover (self->menu_button));
 }
 
+/**
+ * panel_frame_header_bar_get_show_icon:
+ * @self: a #PanelFrameHeaderBar
+ *
+ * Tell whether it show the icon or not.
+ *
+ * Returns: whether to show the icon.
+ */
 gboolean
 panel_frame_header_bar_get_show_icon (PanelFrameHeaderBar *self)
 {
@@ -585,6 +607,13 @@ panel_frame_header_bar_get_show_icon (PanelFrameHeaderBar *self)
   return self->show_icon;
 }
 
+/**
+ * panel_frame_header_bar_set_show_icon:
+ * @self: a #PanelFrameHeaderBar
+ * @show_icon: whether to show the icon
+ *
+ * Set whether to show the icon or not.
+ */
 void
 panel_frame_header_bar_set_show_icon (PanelFrameHeaderBar *self,
                                       gboolean             show_icon)
