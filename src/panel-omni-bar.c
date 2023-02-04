@@ -104,7 +104,7 @@ panel_omni_bar_set_popover (PanelOmniBar *self,
  *
  * Create a new #PanelOmniBar.
  *
- * Returns: (transfer full): a newly created #PanelOmniBar
+ * Returns: a newly created #PanelOmniBar
  */
 GtkWidget *
 panel_omni_bar_new (void)

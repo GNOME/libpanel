@@ -69,7 +69,7 @@ enum {
  *
  * Create a new #PanelFrameTabBar.
  *
- * Returns: (transfer full): a newly created #PanelFrameTabBar
+ * Returns: a newly created #PanelFrameTabBar
  */
 GtkWidget *
 panel_frame_tab_bar_new (void)

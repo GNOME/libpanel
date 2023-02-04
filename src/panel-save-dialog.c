@@ -75,7 +75,7 @@ save_free (gpointer data)
  *
  * Create a new #PanelSaveDialog.
  *
- * Returns: (transfer full): a newly created #PanelSaveDialog
+ * Returns: a newly created #PanelSaveDialog
  */
 GtkWidget *
 panel_save_dialog_new (void)

@@ -258,7 +258,7 @@ panel_widget_save_action (GtkWidget  *widget,
  *
  * Create a new #PanelWidget.
  *
- * Returns: (transfer full): a newly created #PanelWidget
+ * Returns: a newly created #PanelWidget
  */
 GtkWidget *
 panel_widget_new (void)
