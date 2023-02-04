@@ -1,0 +1,131 @@
+# Greek translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# geoapos <geoapostolidis999@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2023-02-01 03:04+0000\n"
+"PO-Revision-Date: 2023-02-04 18:40+0200\n"
+"Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>\n"
+"Language-Team: Greek <gnome-el-list@gnome.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Άνοιγμα σελίδων"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Πλαίσιο"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Μετακίνηση σελίδας _αριστερά"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Μετακίνηση σελίδας _δεξιά"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Μετακίνηση σελίδας προς τα _επάνω"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Μετακίνηση σελίδας προς τα _κάτω"
+
+#: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Κλείσιμο όλων των σελίδων"
+
+#: src/panel-frame.ui:86
+msgid "Close Frame"
+msgstr "Κλείσιμο πλαισίου"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Επαναφορά πίνακα στη προηγούμενη τοποθεσία"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(νέο)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:402
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr ""
+"Το πρόχειρο \"%s\" δεν έχει αποθηκευτεί. Μπορεί να αποθηκευτεί ή να "
+"απορριφθεί."
+
+#: src/panel-save-dialog.c:405
+msgid "Save or Discard Draft?"
+msgstr "Αποθήκευση ή απόρριψη προχείρου;"
+
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Απόρριψη"
+
+#: src/panel-save-dialog.c:413
+msgid "_Save As…"
+msgstr "_Αποθήκευση ως"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:424
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Το \"%s\" περιέχει αλλαγές που δεν έχουν αποθηκευτεί. Οι αλλαγές μπορούν να "
+"αποθηκευτούν η να απορριφθούν."
+
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
+msgid "Save or Discard Changes?"
+msgstr "Αποθήκευση ή απόρριψη αλλαγών;"
+
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Αποθήκευση"
+
+#: src/panel-save-dialog.c:462
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Ανοιχτά έγγραφα περιέχουν μη αποθηκευμένες αλλαγές. Οι αλλαγές μπορούν να "
+"αποθηκευτούν η να απορριφθούν."
+
+#: src/panel-save-dialog.c:467
+msgid "Only _Save Selected"
+msgstr "Μόνο η _αποθήκευση είναι επιλεγμένη"
+
+#: src/panel-save-dialog.c:475
+msgid "Save All"
+msgstr "Αποθήκευση όλων"
+
+#: src/panel-save-dialog.c:484
+msgid "Discard All"
+msgstr "Απόρριψη όλων"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Ακύρωση"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "Ακολουθήστε το στυλ του συστήματος"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "Φωτεινό στυλ"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "Σκούρο στυλ"
