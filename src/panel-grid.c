@@ -346,8 +346,8 @@ panel_grid_get_empty_frame (PanelGrid *self)
 
 /**
  * panel_grid_add:
- * @self a #PanelGrid
- * @widget (transfer none): a #PanelWidget the widget to add.
+ * @self: a #PanelGrid
+ * @widget: (transfer none): a #PanelWidget the widget to add.
  *
  * Add a #PanelWidget to the grid.
  */
