@@ -37,43 +37,43 @@ Example builder for a `PanelDock`:
     <child type="end">
         <object class="PanelPaned">
             <property name="orientation">vertical</property>
-                <child>
-                    <object class="PanelFrame">
-                        <child>
-                            <object class="PanelWidget">
-                                <property name="title">Color</property>
-                                <property name="tooltip">Color</property>
-                                <property name="can-maximize">true</property>
-                                <property name="icon-name">color-select-symbolic</property>
-                                <child>
-                                    <object class="GtkColorChooserWidget"></object>
-                                </child>
-                            </object>
-                        </child>
-                        <child>
-                            <object class="PanelWidget">
-                                <property name="title">Swatches</property>
-                                <property name="icon-name">preferences-color-symbolic</property>
-                                <property name="can-maximize">true</property>
-                                <child>
-                                    <object class="GtkScrolledWindow">
-                                        <child>
-                                            <object class="GtkListBox"></object>
-                                        </child>
-                                    </object>
-                                </child>
-                            </object>
-                        </child>
-                  </object>
-              </child>
-          </object>
+            <child>
+                <object class="PanelFrame">
+                    <child>
+                        <object class="PanelWidget">
+                            <property name="title">Color</property>
+                            <property name="tooltip">Color</property>
+                            <property name="can-maximize">true</property>
+                            <property name="icon-name">color-select-symbolic</property>
+                            <child>
+                                <object class="GtkColorChooserWidget"></object>
+                            </child>
+                        </object>
+                    </child>
+                    <child>
+                        <object class="PanelWidget">
+                            <property name="title">Swatches</property>
+                            <property name="icon-name">preferences-color-symbolic</property>
+                            <property name="can-maximize">true</property>
+                            <child>
+                                <object class="GtkScrolledWindow">
+                                    <child>
+                                        <object class="GtkListBox"></object>
+                                    </child>
+                                </object>
+                            </child>
+                        </object>
+                    </child>
+                </object>
+            </child>
+        </object>
     </child>
 </object>
 ```
 
-This builder fragment creates a #PanelDock with a paned on the
-end area. [class@PanelPaned] is the widget representing the area. It will
-contain frames.
+This builder fragment creates a #PanelDock with a paned on the end
+area. [class@PanelPaned] is the widget representing the area, it will
+contain other widgets.
 
 ### Frames
 
@@ -81,16 +81,19 @@ contain frames.
 managed by a switcher widget. These #PanelWidget will be the
 containers for your widgets.
 
+Frame are meant to contain widgets that you can move from one dock
+panel to another, and receive widgets from a different location. It
+will handle all that logic for you.
+
 A panel frame will have a [class@PanelFrameSwitcher] to manage
-switching between the stacked widget. It will also handle the users
-moving the widget between frames.
+switching between the stacked widget.
 
 ### Showing paned
 
 You can control the visibility (or reveal) of the various paned areas
 of the dock. One easy way is to put a [class@PanelToggleButton] that
-will be bound to one of the four areas, that will automatically reveal
-or hide the paned.
+will be bound to one of the four areas of a [class@PanelDock]. The
+button will automatically reveal or hide the paned when clicked on.
 
 A toggle button for the area in the left (start in the English locale):
 
@@ -105,16 +108,23 @@ The center area is the main user interface. Typically you would have
 the documents displayed, and when all the paned areas are hidden, it
 would remain the only visible part.
 
-Widgets are layout in a [class@PanelGrid] that you add. You connect to
-the [signal@PanelGrid::create-frame] signal to be able to create
-frames as requested.
+Widgets can be layout in a [class@PanelGrid] that you add. You connect
+to the [signal@PanelGrid::create-frame] signal to be able to create
+frames as requested. This will allow to manage multiple views of
+document, switch between them etc,
+
+Otherwise place a [class@PanelWidget] as a child to contain your own
+widgets as its children.
+
+Currently the only way to build the center area is by using a `.ui`
+file and [class@Gtk.Builder].
 
 ## Status bar
 
 A [class@PanelStatusbar] can be added at the end of the window content
 box. This is typically where you'd add a [class@PanelToggleButton] for
 the area %PANEL_AREA_BOTTOM. The status bar widget can be used
-independently from the presence of a panel dok.
+independently from the presence of a panel dock.
 
 ## Omni bar
 
