@@ -46,9 +46,9 @@ typedef struct _PanelWidget         PanelWidget;
 
 /**
  * PanelArea:
- * @PANEL_AREA_START: the area of the panel that is at the horizontal start. The
- *    is defined by the direction of the user language. In English, it the left
- *    side.
+ * @PANEL_AREA_START: the area of the panel that is at the horizontal
+ *    start. The side is defined by the direction of the user
+ *    language. In English, it is the left side.
  * @PANEL_AREA_END: the area of the panel that is at the end.
  * @PANEL_AREA_TOP: the area at the top of the panel.
  * @PANEL_AREA_BOTTOM: the area at the bottom of the panel.

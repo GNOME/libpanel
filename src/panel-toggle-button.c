@@ -30,7 +30,7 @@
  * PanelToggleButton:
  *
  * The `PanelToggleButton` is a button used to toggle the visibility
- * of an area [class@PanelDock].
+ * of a [class@PanelDock] area.
  *
  * <picture>
  *   <source srcset="toggle-button-dark.png" media="(prefers-color-scheme: dark)">
@@ -70,9 +70,10 @@ static GParamSpec *properties [N_PROPS];
 /**
  * panel_toggle_button_new:
  * @dock: (not nullable) #PanelDock the panel to control
- * @area: #PanelArea the panel area. A value of [const@PanelArea.PANEL_AREA_CENTER] invalid.
+ * @area: #PanelArea the panel area. A value of
+ *   [const@PanelArea.PANEL_AREA_CENTER] invalid.
  *
- * Create a new `PanelToggleButton` to hide the `dock` in the `area`.
+ * Creates a new #PanelToggleButton to hide the @dock in the @area.
  *
  * Returns: a newly created #PanelToggleButton
  */

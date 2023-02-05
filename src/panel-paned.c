@@ -443,7 +443,7 @@ panel_paned_update_handles (PanelPaned *self)
  * @self: a #PanelPaned
  * @child: (transfer none): a #GtkWidget
  *
- * Remove a widget from the paned.
+ * Removes a widget from the paned.
  */
 void
 panel_paned_remove (PanelPaned *self,
@@ -480,7 +480,7 @@ panel_paned_remove (PanelPaned *self,
  * @position: the position
  * @child: (transfer none): a #GtkWidget to insert.
  *
- * Insert a widget at position in the paned.
+ * Inserts a widget at position in the paned.
  */
 void
 panel_paned_insert (PanelPaned *self,
@@ -540,7 +540,7 @@ panel_paned_append (PanelPaned *self,
  * @self: a #PanelPaned
  * @child: (transfer none): a #GtkWidget to prepend.
  *
- * Prepend a widget in the paned.
+ * Prepends a widget in the paned.
  */
 void
 panel_paned_prepend (PanelPaned *self,
@@ -555,7 +555,7 @@ panel_paned_prepend (PanelPaned *self,
  * @child: (transfer none): a #GtkWidget to insert.
  * @sibling: (transfer none): the widget after which to insert.
  *
- * Insert a widget afer @sibling in the paned.
+ * Inserts a widget afer @sibling in the paned.
  */
 void
 panel_paned_insert_after (PanelPaned *self,

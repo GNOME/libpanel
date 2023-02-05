@@ -28,8 +28,8 @@
 /**
  * PanelStatusbar:
  *
- * A panel status bar is meant to displayed at the bottom of the
- * window. It can contain widget in the prefix and in the suffix.
+ * A panel status bar is meant to be displayed at the bottom of the
+ * window. It can contain widgets in the prefix and in the suffix.
  */
 struct _PanelStatusbar
 {
@@ -177,7 +177,7 @@ update_expander (PanelStatusbar *self)
  * @priority: the priority
  * @widget: (transfer none): a #GtkWidget to add.
  *
- * Add a widget into the prefix with @priority. The higher the
+ * Adds a widget into the prefix with @priority. The higher the
  * priority the closer to the start the widget will be added.
  */
 void
@@ -219,7 +219,7 @@ panel_statusbar_add_prefix (PanelStatusbar *self,
  * @priority: the priority
  * @widget: (transfer none): a #GtkWidget to add.
  *
- * Add a widget into the suffix with @priority. The higher the
+ * Adds a widget into the suffix with @priority. The higher the
  * priority the closer to the start the widget will be added.
  */
 void
@@ -260,7 +260,7 @@ panel_statusbar_add_suffix (PanelStatusbar *self,
  * @self: a #PanelStatusbar
  * @widget: (transfer none): a #GtkWidget to remove.
  *
- * Remove @widget fron the #PanelStatusbar.
+ * Removes @widget from the #PanelStatusbar.
  */
 void
 panel_statusbar_remove (PanelStatusbar *self,

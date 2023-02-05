@@ -36,7 +36,8 @@
 /**
  * PanelGrid:
  *
- * The #PanelGrid is the widget used to layout all the dock item.
+ * The #PanelGrid is a widget used to layout the dock item in the
+ * center area.
  */
 typedef struct
 {
@@ -60,7 +61,7 @@ static guint signals [N_SIGNALS];
 /**
  * panel_grid_new:
  *
- * Create a new #PanelGrid.
+ * Creates a new #PanelGrid.
  *
  * Returns: (transfer full): a newly created #PanelGrid
  */
@@ -566,7 +567,7 @@ _panel_grid_insert_column (PanelGrid *self,
  * @self: a #PanelGrid
  * @position: The position to insert the column at.
  *
- * Insert a column at @position.
+ * Inserts a column at @position.
  */
 void
 panel_grid_insert_column (PanelGrid *self,
@@ -579,7 +580,7 @@ panel_grid_insert_column (PanelGrid *self,
  * panel_grid_get_n_columns:
  * @self: a #PanelGrid
  *
- * Get the number of columns in the grid.
+ * Gets the number of columns in the grid.
  *
  * Returns: The number of columns.
  */

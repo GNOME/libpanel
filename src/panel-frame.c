@@ -40,9 +40,9 @@
 /**
  * PanelFrame:
  *
- * The #PanelFrame is the widget containing panels to display in an
+ * The #PanelFrame is a widget containing panels to display in an
  * area. The widgets are added internally in an [class@Adw.TabView] to
- * display then one at a time like in a stack.
+ * display them one at a time like in a stack.
  *
  * A #PanelFrame can also have a header widget that will be displayed
  * above the panels.
@@ -99,7 +99,7 @@ static GtkBuildableIface *parent_buildable;
  * panel_frame_new:
  * Create a new #PanelFrame.
  *
- * Returns: The new #PanelFrame object.
+ * Returns: a newly created #PanelFrame object.
  */
 GtkWidget *
 panel_frame_new (void)
@@ -1223,7 +1223,7 @@ panel_frame_remove (PanelFrame  *self,
  * panel_frame_get_empty:
  * @self: a #PanelFrame
  *
- * Tells if panel frame empty.
+ * Tells if the panel frame is empty.
  *
  * Returns: %TRUE if the panel is empty.
  */
@@ -1442,7 +1442,7 @@ _panel_frame_transfer (PanelFrame  *self,
  * panel_frame_get_n_pages:
  * @self: a #PanelFrame
  *
- * Get the number of pages in the panel frame.
+ * Gets the number of pages in the panel frame.
  *
  * Returns: The number of pages.
  */
@@ -1628,7 +1628,7 @@ _panel_frame_request_close (PanelFrame  *self,
  * panel_frame_get_closeable:
  * @self: a #PanelFrame
  *
- * Tell if the panel frame is closeable.
+ * Tells if the panel frame is closeable.
  *
  * Returns: %TRUE if the panel frame is closeable.
  */
@@ -1701,7 +1701,7 @@ panel_frame_get_position (PanelFrame *self)
  * panel_frame_get_requested_size:
  * @self: a %PanelFrame
  *
- * Get the requested size for the panel frame.
+ * Gets the requested size for the panel frame.
  *
  * Returns: the requested size.
  */
@@ -1723,7 +1723,7 @@ panel_frame_get_requested_size (PanelFrame *self)
  * @self: a %PanelFrame.
  * @requested_size: the requested size.
  *
- * Set the requested size for the panel frame.
+ * Sets the requested size for the panel frame.
  */
 void
 panel_frame_set_requested_size (PanelFrame *self,

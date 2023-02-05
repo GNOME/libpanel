@@ -56,8 +56,8 @@
 /**
  * PanelWidget:
  *
- * PanelWidget is the base Widget class for widget added to a
- * #PanelFrame.
+ * PanelWidget is the base widget class for widgets added to a
+ * #PanelFrame. It can be use as-is or you can subclass it.
  */
 typedef struct
 {
@@ -813,7 +813,7 @@ panel_widget_set_icon (PanelWidget *self,
  * panel_widget_get_id:
  * @self: a #PanelWidget
  *
- * Get the id of the panel widget.
+ * Gets the id of the panel widget.
  *
  * Returns: (transfer none): The id of the panel widget.
  */
@@ -830,9 +830,9 @@ panel_widget_get_id (PanelWidget *self)
 /**
  * panel_widget_set_id:
  * @self: a #PanelWidget
- * @id: (transfer none) the id to set for the panel widget.
+ * @id: (transfer none): the id to set for the panel widget.
  *
- * Set the id of the panel widget.
+ * Sets the id of the panel widget.
  */
 void
 panel_widget_set_id (PanelWidget *self,
@@ -850,7 +850,7 @@ panel_widget_set_id (PanelWidget *self,
  * panel_widget_get_modified:
  * @self: a #PanelWidget
  *
- * Get the modified status of a panel widget
+ * Gets the modified status of a panel widget
  *
  * Returns: the modified status of the panel widget.
  */
@@ -869,7 +869,7 @@ panel_widget_get_modified (PanelWidget *self)
  * @self: a #PanelWidget
  * @modified: the modified status
  *
- * Set the modified status of a panel widget.
+ * Sets the modified status of a panel widget.
  */
 void
 panel_widget_set_modified (PanelWidget *self,

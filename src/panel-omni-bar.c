@@ -26,7 +26,7 @@
  * PanelOmniBar:
  * A multi-use widget for user interaction in the window header bar.
  *
- * You can add widgets, a popover to provide action items, an icone,
+ * You can add widgets, a popover to provide action items, an icon,
  * updates on progress and pulse the main widget.
  *
  * There is also a prefix and suffix area that can contain more
@@ -80,7 +80,7 @@ static GParamSpec *properties [N_PROPS];
  * panel_omni_bar_get_popover:
  * @self: a #PanelOmniBar
  *
- * Get the current popover or %NULL if none is setup.
+ * Gets the current popover or %NULL if none is setup.
  *
  * Returns: (transfer none) (nullable): a #GtkPopover or %NULL
  */
@@ -99,7 +99,7 @@ panel_omni_bar_get_popover (PanelOmniBar *self)
  * @self: a #PanelOmniBar
  * @popover: (transfer none) (nullable): a #GtkPopover or %NULL
  *
- * Set the omnibar popover, that will appear when clicking on the omni bar.
+ * Sets the omnibar popover, that will appear when clicking on the omni bar.
  */
 void
 panel_omni_bar_set_popover (PanelOmniBar *self,
@@ -315,7 +315,7 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
   /**
    * PanelOmniBar:menu-model:
    *
-   * The menu module the the omni bar menu.
+   * The menu model of the omni bar menu.
    */
   properties [PROP_MENU_MODEL] =
     g_param_spec_object ("menu-model",
@@ -458,7 +458,7 @@ panel_omni_bar_add_prefix (PanelOmniBar *self,
  * @priority: the priority
  * @widget: (transfer none): the widget to add toward the end.
  *
- * Add a widget toward the end of the container, ordered by priority.
+ * Add a widget towards the end of the container, ordered by priority.
  * The highest the priority, the closest to the start.
  */
 void
@@ -491,7 +491,7 @@ panel_omni_bar_add_suffix (PanelOmniBar *self,
  * @self: a #PanelOmniBar
  * @widget: The widget to remove.
  *
- * Remove a widget from the omni bar. Currently only prefix or suffix
+ * Removes a widget from the omni bar. Currently only prefix or suffix
  * widgets are supported.
  */
 void
@@ -598,7 +598,7 @@ actionable_iface_init (GtkActionableInterface *iface)
  * panel_omni_bar_get_progress:
  * @self: a #PanelOmniBar
  *
- * Get the progress value displayed on the omni bar.
+ * Gets the progress value displayed in the omni bar.
  *
  * Returns: the progress value.
  */
@@ -617,7 +617,7 @@ panel_omni_bar_get_progress (PanelOmniBar *self)
  * @self: a #PanelOmniBar
  * @progress: the progress value
  *
- * Set the progress value displayed on the omni bar.
+ * Sets the progress value displayed in the omni bar.
  */
 void
 panel_omni_bar_set_progress (PanelOmniBar *self,
@@ -696,7 +696,7 @@ progress_bar_start_pulsing (GtkProgressBar *progress)
  * panel_omni_bar_start_pulsing:
  * @self: a #PanelOmniBar
  *
- * Start pulsing the omni bar. Use
+ * Starts pulsing the omni bar. Use
  * @panel_omni_bar_stop_pulsing to stop.
  */
 void
@@ -714,7 +714,7 @@ panel_omni_bar_start_pulsing (PanelOmniBar *self)
  * panel_omni_bar_stop_pulsing:
  * @self: #PanelOmniBar
  *
- * Stop pulsing the omni bar, that was started with
+ * Stops pulsing the omni bar, that was started with
  * @panel_omni_bar_start_pulsing.
  */
 void

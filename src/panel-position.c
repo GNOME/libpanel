@@ -27,7 +27,7 @@
 /**
  * PanelPosition:
  *
- * Specify a position in the dock. You receive a #PanelPosition in the
+ * Specifies a position in the dock. You receive a #PanelPosition in the
  * handler to [signal@PanelDock::create-frame].
  */
 struct _PanelPosition
@@ -457,7 +457,7 @@ panel_position_is_indeterminate (PanelPosition *self)
  *
  * Convert a #PanelPosition to a #GVariant.
  *
- * Return: (transfer full) (nullable): the new #GVariant containing
+ * Returns: (transfer full) (nullable): the new #GVariant containing
  * the positon values
  */
 GVariant *
@@ -562,7 +562,7 @@ panel_position_new_from_variant (GVariant *variant)
  * @a: a #PanelPosition
  * @b: another #PanelPosition
  *
- * Compare two #PanelPosition.
+ * Compares two #PanelPosition.
  *
  * Returns: whether the two pane positions are equal.
  */

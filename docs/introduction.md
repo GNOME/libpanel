@@ -11,7 +11,7 @@ It also provides a few other independent widgets like
 
 A typical UI using libpanel would see in the top level content box a
 [class@PanelDock]. You can also add a [class@PanelStatusbar] at the
-bottom, indepedently.
+bottom, independently.
 
 ## Dock
 
@@ -81,7 +81,7 @@ contain other widgets.
 managed by a switcher widget. These #PanelWidget will be the
 containers for your widgets.
 
-Frame are meant to contain widgets that you can move from one dock
+Frames are meant to contain widgets that you can move from one dock
 panel to another, and receive widgets from a different location. It
 will handle all that logic for you.
 

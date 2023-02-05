@@ -37,8 +37,8 @@
 /**
  * PanelFrameTabBar:
  *
- * A #PanelFrameHeader that implement switching between tab views in a
- * #PanelFrame.
+ * A #PanelFrameHeader that implements switching between tab views in
+ * a #PanelFrame.
  */
 struct _PanelFrameTabBar
 {
@@ -455,7 +455,7 @@ void panel_frame_tab_bar_set_##name (PanelFrameTabBar *self, \
 /**
  * panel_frame_tab_bar_set_autohide:
  * @self: a #PanelFrameTabBar
- * @vale: the autohide value
+ * @value: the autohide value
  *
  * Sets whether the tabs automatically hide.
  */
@@ -471,7 +471,7 @@ void panel_frame_tab_bar_set_##name (PanelFrameTabBar *self, \
 /**
  * panel_frame_tab_bar_set_expand_tabs:
  * @self: a #PanelFrameTabBar
- * @vale: the expand_tabs value
+ * @value: the expand_tabs value
  *
  * Sets whether tabs expand to full width.
  */
@@ -487,7 +487,7 @@ void panel_frame_tab_bar_set_##name (PanelFrameTabBar *self, \
 /**
  * panel_frame_tab_bar_set_inverted:
  * @self: a #PanelFrameTabBar
- * @vale: the inverted value
+ * @value: the inverted value
  *
  * Sets whether tabs tabs use inverted layout.
  */

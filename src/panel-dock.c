@@ -46,7 +46,8 @@
  * represent the main area, that is always displayed and resized
  * depending on the reveal state of the surrounding areas.
  *
- * It will contain a #PanelDockChild for each of the areas in use..
+ * It will contain a #PanelDockChild for each of the areas in use,
+ * albeit this is done by the widget.
  */
 typedef struct
 {
@@ -912,7 +913,7 @@ buildable_iface_init (GtkBuildableIface *iface)
  * panel_dock_get_reveal_bottom:
  * @self: a #PanelDock
  *
- * Tell if the bottom area is revealed.
+ * Tells if the bottom area is revealed.
  *
  * Returns: The reveal state of the bottom area.
  */
@@ -928,7 +929,7 @@ panel_dock_get_reveal_bottom (PanelDock *self)
  * panel_dock_get_reveal_end:
  * @self: a #PanelDock
  *
- * Tell if the end area is revealed.
+ * Tells if the end area is revealed.
  *
  * Returns: The reveal state of the end area.
  */
@@ -944,7 +945,7 @@ panel_dock_get_reveal_end (PanelDock *self)
  * panel_dock_get_reveal_start:
  * @self: a #PanelDock
  *
- * Tell if the start area is revealed.
+ * Tells if the start area is revealed.
  *
  * Returns: The reveal state of the start area.
  */
@@ -960,7 +961,7 @@ panel_dock_get_reveal_start (PanelDock *self)
  * panel_dock_get_reveal_top:
  * @self: a #PanelDock
  *
- * Tell if the top area is revealed.
+ * Tells if the top area is revealed.
  *
  * Returns: The reveal state of the top area.
  */
@@ -977,7 +978,7 @@ panel_dock_get_reveal_top (PanelDock *self)
  * @self: a #PanelDock
  * @area: the #PanelArea to return the reveal status of.
  *
- * Tell if an area if revealed.
+ * Tells if an area if revealed.
  *
  * Returns: The reveal state.
  */
@@ -1008,7 +1009,7 @@ panel_dock_get_reveal_area (PanelDock *self,
  * @self: a #PanelDock
  * @reveal_bottom: reveal the bottom area.
  *
- * Set the reveal status of the bottom area.
+ * Sets the reveal status of the bottom area.
  */
 void
 panel_dock_set_reveal_bottom (PanelDock *self,
@@ -1028,7 +1029,7 @@ panel_dock_set_reveal_bottom (PanelDock *self,
  * @self: a #PanelDock
  * @reveal_end: reveal the end area.
  *
- * Set the reveal status of the end area.
+ * Sets the reveal status of the end area.
  */
 void
 panel_dock_set_reveal_end (PanelDock *self,
@@ -1048,7 +1049,7 @@ panel_dock_set_reveal_end (PanelDock *self,
  * @self: a #PanelDock
  * @reveal_start: reveal the start area.
  *
- * Set the reveal status of the start area.
+ * Sets the reveal status of the start area.
  */
 void
 panel_dock_set_reveal_start (PanelDock *self,
@@ -1068,7 +1069,7 @@ panel_dock_set_reveal_start (PanelDock *self,
  * @self: a #PanelDock
  * @reveal_top: reveal the top area.
  *
- * Set the reveal status of the top area.
+ * Sets the reveal status of the top area.
  */
 void
 panel_dock_set_reveal_top (PanelDock *self,
@@ -1089,7 +1090,7 @@ panel_dock_set_reveal_top (PanelDock *self,
  * @area: a #PanelArea. %PANEL_AREA_CENTER is an invalid value.
  * @reveal: reveal the area.
  *
- * Set the reveal status of the area.
+ * Sets the reveal status of the area.
  */
 void
 panel_dock_set_reveal_area (PanelDock *self,
@@ -1173,7 +1174,7 @@ _panel_dock_get_end_child (PanelDock *self)
  * @self: a #PanelDock
  * @area: the panel area to check.
  *
- * Tell if the panel area can be revealed.
+ * Tells if the panel area can be revealed.
  *
  * Returns: whether it can reveal the area or not. If the is no child
  * or the child is empty, will return %FALSE.
@@ -1196,7 +1197,7 @@ panel_dock_get_can_reveal_area (PanelDock *self,
  * panel_dock_get_can_reveal_bottom:
  * @self: a #PanelDock
  *
- * Tell if the bottom panel area can be revealed.
+ * Tells if the bottom panel area can be revealed.
  *
  * Returns: whether it can reveal the bottom area or not. If the is no
  * child or the child is empty, will return %FALSE.
@@ -1211,7 +1212,7 @@ panel_dock_get_can_reveal_bottom (PanelDock *self)
  * panel_dock_get_can_reveal_top:
  * @self: a #PanelDock
  *
- * Tell if the top panel area can be revealed.
+ * Tells if the top panel area can be revealed.
  *
  * Returns: whether it can reveal the top area or not. If the is no
  * child or the child is empty, will return %FALSE.
@@ -1226,7 +1227,7 @@ panel_dock_get_can_reveal_top (PanelDock *self)
  * panel_dock_get_can_reveal_start:
  * @self: a #PanelDock
  *
- * Tell if the start panel area can be revealed.
+ * Tells if the start panel area can be revealed.
  *
  * Returns: whether it can reveal the start area or not. If the is no
  * child or the child is empty, will return %FALSE.
@@ -1241,7 +1242,7 @@ panel_dock_get_can_reveal_start (PanelDock *self)
  * panel_dock_get_can_reveal_end:
  * @self: a #PanelDock
  *
- * Tell if the end panel area can be revealed.
+ * Tells if the end panel area can be revealed.
  *
  * Returns: whether it can reveal the end area or not. If the is no
  * child or the child is empty, will return %FALSE.
@@ -1616,7 +1617,7 @@ panel_dock_set_bottom_height (PanelDock *self,
 /**
  * panel_dock_remove:
  * @self: a #PanelDock
- * @widget: (transfer none) a #GtkWidget to remove
+ * @widget: (transfer none): a #GtkWidget to remove
  *
  * Removes a widget from the dock. If @widget is not a #DockChild,
  * then the closest #DockChild parent is removed.
