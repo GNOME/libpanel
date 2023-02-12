@@ -1,13 +1,13 @@
 # Basque translation for libpanel.
 # Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libpanel package.
-# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2022.
+# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2022, 2023.
 #
 msgid ""
 msgstr "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-13 19:34+0000\n"
-"PO-Revision-Date: 2022-09-15 22:47+0000\n"
+"POT-Creation-Date: 2023-01-25 21:04+0000\n"
+"PO-Revision-Date: 2023-02-12 22:47+0000\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
@@ -40,6 +40,10 @@ msgid "Move Page _Down"
 msgstr "Eraman orria _behera"
 
 #: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Itxi orri guztiak"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "Itxi markoa"
 
@@ -47,57 +51,57 @@ msgstr "Itxi markoa"
 msgid "Restore panel to previous location"
 msgstr "Leheneratu panela aurreko kokalekura"
 
-#: src/panel-save-dialog-row.c:76
+#: src/panel-save-dialog-row.c:78
 msgid "(new)"
 msgstr "(berria)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:351
+#: src/panel-save-dialog.c:400
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "“%s” zirriborroa ez da gorde. Gorde edo baztertu egin daiteke."
 
-#: src/panel-save-dialog.c:354
+#: src/panel-save-dialog.c:403
 msgid "Save or Discard Draft?"
 msgstr "Gorde ala baztertu zirriborroa?"
 
-#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Baztertu"
 
-#: src/panel-save-dialog.c:362
+#: src/panel-save-dialog.c:411
 msgid "_Save As…"
 msgstr "Gorde _honela…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:371
+#: src/panel-save-dialog.c:422
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr "“%s” dokumentuak gorde gabeko aldaketak ditu. Aldaketak gorde edo baztertu egin daitezke."
 
-#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
 msgid "Save or Discard Changes?"
 msgstr "Gorde ala baztertu aldaketak?"
 
-#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Gorde"
 
-#: src/panel-save-dialog.c:407
+#: src/panel-save-dialog.c:460
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr "Dokumentu irekiek gorde gabeko aldaketak dituzte. Aldaketak gorde edo baztertu egin daitezke."
 
-#: src/panel-save-dialog.c:412
+#: src/panel-save-dialog.c:465
 msgid "Only _Save Selected"
 msgstr "_Gorde hautatutakoak soilik"
 
-#: src/panel-save-dialog.c:420
+#: src/panel-save-dialog.c:473
 msgid "Save All"
 msgstr "Gorde dena"
 
-#: src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:482
 msgid "Discard All"
 msgstr "Baztertu dena"
 
