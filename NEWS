@@ -1,3 +1,16 @@
+libpanel 1.1.1
+==============
+
+This release corresponds to GNOME 44.beta.
+
+ * Tooltip improvements
+ * Improved page closed handling
+ * PanelDock::create-frame(position) signal was added.
+ * PanelDock::adpot-widget() signal was added.
+ * Correctness fixes in PanelActionMuxer.
+ * Improved i18n support.
+ * Translation updates
+
 libpanel 1.1.0
 ==============
 
