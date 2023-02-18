@@ -26,9 +26,9 @@ datadir = join_paths(prefix, get_option('datadir'))
 vapidir = join_paths(datadir, 'vala', 'vapi')
 
 # Check dependencies
-glib_req_version = '2.72'
-gtk_req_version = '4.6'
-adwaita_req_version = '1.0'
+glib_req_version = '2.74'
+gtk_req_version = '4.8'
+adwaita_req_version = '1.2'
 
 glib_req = '>= @0@'.format(glib_req_version)
 gtk_req = '>= @0@'.format(gtk_req_version)
