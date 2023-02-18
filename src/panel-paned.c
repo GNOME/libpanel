@@ -27,6 +27,11 @@
 #include "panel-paned.h"
 #include "panel-resizer-private.h"
 
+/**
+ * PanelPaned:
+ *
+ * A #PanelPaned is the concrete widget for a panel area.
+ */
 struct _PanelPaned
 {
   GtkWidget      parent_instance;
@@ -433,6 +438,13 @@ panel_paned_update_handles (PanelPaned *self)
     }
 }
 
+/**
+ * panel_paned_remove:
+ * @self: a #PanelPaned
+ * @child: (transfer none): a #GtkWidget
+ *
+ * Removes a widget from the paned.
+ */
 void
 panel_paned_remove (PanelPaned *self,
                     GtkWidget  *child)
@@ -449,7 +461,7 @@ panel_paned_remove (PanelPaned *self,
   panel_paned_update_handles (self);
   gtk_widget_queue_resize (GTK_WIDGET (self));
 
-  /* If we find a dock child, we might have changed it's reveal
+  /* If we find a dock child, we might have changed its reveal
    * status and need to propagate that up.
    */
   if (gtk_widget_get_first_child (GTK_WIDGET (self)) ==
@@ -462,6 +474,14 @@ panel_paned_remove (PanelPaned *self,
     }
 }
 
+/**
+ * panel_paned_insert:
+ * @self: a #PanelPaned
+ * @position: the position
+ * @child: (transfer none): a #GtkWidget to insert.
+ *
+ * Inserts a widget at position in the paned.
+ */
 void
 panel_paned_insert (PanelPaned *self,
                     int         position,
@@ -501,6 +521,13 @@ panel_paned_insert (PanelPaned *self,
   gtk_widget_queue_resize (GTK_WIDGET (self));
 }
 
+/**
+ * panel_paned_append:
+ * @self: a #PanelPaned
+ * @child: (transfer none): a #GtkWidget to append.
+ *
+ * Append a widget in the paned.
+ */
 void
 panel_paned_append (PanelPaned *self,
                     GtkWidget  *child)
@@ -508,6 +535,13 @@ panel_paned_append (PanelPaned *self,
   panel_paned_insert (self, -1, child);
 }
 
+/**
+ * panel_paned_prepend:
+ * @self: a #PanelPaned
+ * @child: (transfer none): a #GtkWidget to prepend.
+ *
+ * Prepends a widget in the paned.
+ */
 void
 panel_paned_prepend (PanelPaned *self,
                      GtkWidget  *child)
@@ -515,6 +549,14 @@ panel_paned_prepend (PanelPaned *self,
   panel_paned_insert (self, 0, child);
 }
 
+/**
+ * panel_paned_insert_after:
+ * @self: a #PanelPaned
+ * @child: (transfer none): a #GtkWidget to insert.
+ * @sibling: (transfer none): the widget after which to insert.
+ *
+ * Inserts a widget afer @sibling in the paned.
+ */
 void
 panel_paned_insert_after (PanelPaned *self,
                           GtkWidget  *child,
@@ -547,6 +589,14 @@ panel_paned_insert_after (PanelPaned *self,
   panel_paned_insert (self, position, child);
 }
 
+/**
+ * panel_paned_get_n_children:
+ * @self: a #PanelPaned
+ *
+ * Gets the number of children in the paned.
+ *
+ * Returns: the number of children.
+ */
 guint
 panel_paned_get_n_children (PanelPaned *self)
 {

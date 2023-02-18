@@ -22,6 +22,22 @@
 
 #include "panel-omni-bar.h"
 
+/**
+ * PanelOmniBar:
+ * A multi-use widget for user interaction in the window header bar.
+ *
+ * You can add widgets, a popover to provide action items, an icon,
+ * updates on progress and pulse the main widget.
+ *
+ * There is also a prefix and suffix area that can contain more
+ * widgets.
+ *
+ * <picture>
+ *   <source srcset="omni-bar-dark.png" media="(prefers-color-scheme: dark)">
+ *   <img src="omni-bar.png" alt="omni-bar">
+ * </picture>
+ *
+ */
 typedef struct
 {
   GtkBox         *box;
@@ -64,6 +80,8 @@ static GParamSpec *properties [N_PROPS];
  * panel_omni_bar_get_popover:
  * @self: a #PanelOmniBar
  *
+ * Gets the current popover or %NULL if none is setup.
+ *
  * Returns: (transfer none) (nullable): a #GtkPopover or %NULL
  */
 GtkPopover *
@@ -76,6 +94,13 @@ panel_omni_bar_get_popover (PanelOmniBar *self)
   return priv->popover;
 }
 
+/**
+ * panel_omni_bar_set_popover:
+ * @self: a #PanelOmniBar
+ * @popover: (transfer none) (nullable): a #GtkPopover or %NULL
+ *
+ * Sets the omnibar popover, that will appear when clicking on the omni bar.
+ */
 void
 panel_omni_bar_set_popover (PanelOmniBar *self,
                             GtkPopover   *popover)
@@ -266,10 +291,20 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
   g_object_class_override_property (object_class, PROP_ACTION_NAME, "action-name");
   g_object_class_override_property (object_class, PROP_ACTION_TARGET, "action-target");
 
+  /**
+   * PanelOmniBar:action-tooltip:
+   *
+   * The tooltip for the action.
+   */
   properties[PROP_ACTION_TOOLTIP] =
     g_param_spec_string ("action-tooltip", NULL, NULL, NULL,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:icon-name:
+   *
+   * The name of the icon to use.
+   */
   properties [PROP_ICON_NAME] =
     g_param_spec_string ("icon-name",
                          "Icon Name",
@@ -277,6 +312,11 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          NULL,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:menu-model:
+   *
+   * The menu model of the omni bar menu.
+   */
   properties [PROP_MENU_MODEL] =
     g_param_spec_object ("menu-model",
                          "Menu Model",
@@ -284,6 +324,11 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          G_TYPE_MENU_MODEL,
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:popover:
+   *
+   * The popover to show.
+   */
   properties [PROP_POPOVER] =
     g_param_spec_object ("popover",
                          "Popover",
@@ -291,6 +336,11 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          GTK_TYPE_POPOVER,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelOmniBar:progress:
+   *
+   * The current progress value.
+   */
   properties [PROP_PROGRESS] =
     g_param_spec_double ("progress",
                          "Progress",
@@ -368,6 +418,15 @@ panel_omni_bar_init (PanelOmniBar *self)
 #define GET_PRIORITY(w)   GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w),"PRIORITY"))
 #define SET_PRIORITY(w,i) g_object_set_data(G_OBJECT(w),"PRIORITY",GINT_TO_POINTER(i))
 
+/**
+ * panel_omni_bar_add_prefix:
+ * @self: a #PanelOmniBar
+ * @priority: the priority
+ * @widget: (transfer none): the widget to add at the start.
+ *
+ * Add a widget at the start of the container, ordered by priority.
+ * The highest the priority, the closest to the start.
+ */
 void
 panel_omni_bar_add_prefix (PanelOmniBar *self,
                            int           priority,
@@ -393,6 +452,15 @@ panel_omni_bar_add_prefix (PanelOmniBar *self,
   gtk_box_insert_child_after (priv->prefix, widget, sibling);
 }
 
+/**
+ * panel_omni_bar_add_suffix:
+ * @self: a #PanelOmniBar
+ * @priority: the priority
+ * @widget: (transfer none): the widget to add toward the end.
+ *
+ * Add a widget towards the end of the container, ordered by priority.
+ * The highest the priority, the closest to the start.
+ */
 void
 panel_omni_bar_add_suffix (PanelOmniBar *self,
                            int           priority,
@@ -418,6 +486,14 @@ panel_omni_bar_add_suffix (PanelOmniBar *self,
   gtk_box_insert_child_after (priv->suffix, widget, sibling);
 }
 
+/**
+ * panel_omni_bar_remove:
+ * @self: a #PanelOmniBar
+ * @widget: The widget to remove.
+ *
+ * Removes a widget from the omni bar. Currently only prefix or suffix
+ * widgets are supported.
+ */
 void
 panel_omni_bar_remove (PanelOmniBar *self,
                        GtkWidget    *widget)
@@ -518,6 +594,14 @@ actionable_iface_init (GtkActionableInterface *iface)
   iface->set_action_target_value = set_action_target;
 }
 
+/**
+ * panel_omni_bar_get_progress:
+ * @self: a #PanelOmniBar
+ *
+ * Gets the progress value displayed in the omni bar.
+ *
+ * Returns: the progress value.
+ */
 double
 panel_omni_bar_get_progress (PanelOmniBar *self)
 {
@@ -528,6 +612,13 @@ panel_omni_bar_get_progress (PanelOmniBar *self)
   return gtk_progress_bar_get_fraction (priv->progress_bar);
 }
 
+/**
+ * panel_omni_bar_set_progress:
+ * @self: a #PanelOmniBar
+ * @progress: the progress value
+ *
+ * Sets the progress value displayed in the omni bar.
+ */
 void
 panel_omni_bar_set_progress (PanelOmniBar *self,
                              double        progress)
@@ -601,6 +692,13 @@ progress_bar_start_pulsing (GtkProgressBar *progress)
 }
 
 
+/**
+ * panel_omni_bar_start_pulsing:
+ * @self: a #PanelOmniBar
+ *
+ * Starts pulsing the omni bar. Use
+ * @panel_omni_bar_stop_pulsing to stop.
+ */
 void
 panel_omni_bar_start_pulsing (PanelOmniBar *self)
 {
@@ -612,6 +710,13 @@ panel_omni_bar_start_pulsing (PanelOmniBar *self)
   gtk_widget_show (GTK_WIDGET (priv->progress_bar));
 }
 
+/**
+ * panel_omni_bar_stop_pulsing:
+ * @self: #PanelOmniBar
+ *
+ * Stops pulsing the omni bar, that was started with
+ * @panel_omni_bar_start_pulsing.
+ */
 void
 panel_omni_bar_stop_pulsing (PanelOmniBar *self)
 {

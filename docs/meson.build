@@ -32,7 +32,10 @@ if get_option('docs').allowed() and get_option('introspection').allowed()
       '--content-dir=@0@'.format(meson.current_source_dir()),
       '@INPUT@',
     ],
-    depend_files: [ libpanel_toml ],
+    depend_files: [
+      libpanel_toml,
+      'introduction.md'
+    ],
     build_by_default: true,
     install: true,
     install_dir: docdir,

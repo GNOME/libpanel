@@ -24,6 +24,12 @@
 #include "panel-enums.h"
 #include "panel-position.h"
 
+/**
+ * PanelPosition:
+ *
+ * Specifies a position in the dock. You receive a #PanelPosition in the
+ * handler to [signal@PanelDock::create-frame].
+ */
 struct _PanelPosition
 {
   GObject parent_instance;
@@ -158,22 +164,42 @@ panel_position_class_init (PanelPositionClass *klass)
   object_class->get_property = panel_position_get_property;
   object_class->set_property = panel_position_set_property;
 
+  /**
+   * PanelPosition:area
+   *
+   * The area.
+   */
   properties[PROP_AREA] =
     g_param_spec_enum ("area", NULL, NULL,
                        PANEL_TYPE_AREA,
                        PANEL_AREA_CENTER,
                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelPosition:area-set
+   *
+   * The area is set.
+   */
   properties[PROP_AREA_SET] =
     g_param_spec_boolean ("area-set", NULL, NULL,
                           FALSE,
                           (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelPosition:column
+   *
+   * The column in the position.
+   */
   properties[PROP_COLUMN] =
     g_param_spec_uint ("column", NULL, NULL,
                        0, G_MAXUINT, 0,
                        (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * PanelPosition:column-set
+   *
+   * The column is set.
+   */
   properties[PROP_COLUMN_SET] =
     g_param_spec_boolean ("column-set", NULL, NULL,
                           FALSE,
@@ -208,6 +234,13 @@ panel_position_init (PanelPosition *self)
   self->area = PANEL_AREA_CENTER;
 }
 
+/**
+ * panel_position_new:
+ *
+ * Create a position.
+ *
+ * Returns: (transfer full): a newly created instance of #PanelPosition.
+ */
 PanelPosition *
 panel_position_new (void)
 {
@@ -235,6 +268,14 @@ panel_position_new (void)
       }                                                                    \
   } G_STMT_END
 
+/**
+ * panel_position_get_area:
+ * @self: a #PanelPosition
+ *
+ * Gets the area.
+ *
+ * Returns: the area.
+ */
 PanelArea
 panel_position_get_area (PanelPosition *self)
 {
@@ -243,6 +284,13 @@ panel_position_get_area (PanelPosition *self)
   return self->area;
 }
 
+/**
+ * panel_position_set_area:
+ * @self: a #PanelPosition
+ * @area: the #PanelArea
+ *
+ * Sets the area.
+ */
 void
 panel_position_set_area (PanelPosition *self,
                          PanelArea      area)
@@ -253,6 +301,14 @@ panel_position_set_area (PanelPosition *self,
   SET_MEMBER (area, area, PROP_AREA);
 }
 
+/**
+ * panel_position_get_area_set:
+ * @self: a #PanelPosition
+ *
+ * Gets wether the area is set.
+ *
+ * Returns: the wether the area is set.
+ */
 gboolean
 panel_position_get_area_set (PanelPosition *self)
 {
@@ -261,6 +317,13 @@ panel_position_get_area_set (PanelPosition *self)
   return self->area_set;
 }
 
+/**
+ * panel_position_set_area_set:
+ * @self: a #PanelPosition
+ * @area_set: whether the area is set.
+ *
+ * Sets whether the area is set.
+ */
 void
 panel_position_set_area_set (PanelPosition *self,
                              gboolean       area_set)
@@ -372,6 +435,14 @@ panel_position_set_row_set (PanelPosition *self,
   SET_MEMBER_SET (row_set, row_set, PROP_ROW_SET);
 }
 
+/**
+ * panel_position_is_indeterminate:
+ * @self: a #PanelPosition
+ *
+ * Tells is the position is indeterminate.
+ *
+ * Returns: whether the position is indeterminate.
+ */
 gboolean
 panel_position_is_indeterminate (PanelPosition *self)
 {
@@ -380,6 +451,15 @@ panel_position_is_indeterminate (PanelPosition *self)
   return !self->area_set || !self->column_set || !self->row_set;
 }
 
+/**
+ * panel_position_to_variant:
+ * @self: a #PanelPosition
+ *
+ * Convert a #PanelPosition to a #GVariant.
+ *
+ * Returns: (transfer full) (nullable): the new #GVariant containing
+ * the positon values
+ */
 GVariant *
 panel_position_to_variant (PanelPosition *self)
 {
@@ -434,6 +514,15 @@ panel_position_to_variant (PanelPosition *self)
   return g_variant_dict_end (&dict);
 }
 
+/**
+ * panel_position_new_from_variant:
+ * @variant: a #GVariant
+ *
+ * Create a #PanelPosition from a #GVariant.
+ *
+ * Returns: (transfer full) (nullable): A newly created #PanelPosition
+ *   from the #GVariant.
+ */
 PanelPosition *
 panel_position_new_from_variant (GVariant *variant)
 {
@@ -468,6 +557,15 @@ panel_position_new_from_variant (GVariant *variant)
   return self;
 }
 
+/**
+ * panel_position_equal:
+ * @a: a #PanelPosition
+ * @b: another #PanelPosition
+ *
+ * Compares two #PanelPosition.
+ *
+ * Returns: whether the two pane positions are equal.
+ */
 gboolean
 panel_position_equal (PanelPosition *a,
                       PanelPosition *b)

@@ -24,6 +24,11 @@
 #include "panel-frame-header.h"
 #include "panel-widget.h"
 
+/**
+ * PanelFrameHeader:
+ *
+ * An interface implemented by the header of a #PanelFrame.
+ */
 G_DEFINE_INTERFACE (PanelFrameHeader, panel_frame_header, GTK_TYPE_WIDGET)
 
 static void
@@ -86,6 +91,15 @@ panel_frame_header_get_frame (PanelFrameHeader *self)
   return frame;
 }
 
+/**
+ * panel_frame_header_can_drop:
+ * @self: a #PanelFrameHeader
+ * @wigdet: (transfer none): a #PanelWidget
+ *
+ * Tells if the panel widget can be drop onto the panel frame.
+ *
+ * Returns: whether the widget can be dropped.
+ */
 gboolean
 panel_frame_header_can_drop (PanelFrameHeader *self,
                              PanelWidget      *widget)
@@ -117,6 +131,15 @@ panel_frame_header_page_changed (PanelFrameHeader *self,
     PANEL_FRAME_HEADER_GET_IFACE (self)->page_changed (self, widget);
 }
 
+/**
+ * panel_frame_header_add_prefix:
+ * @self: a #PanelFrameHeader
+ * @priority: the priority
+ * @child: a #GtkWidget
+ *
+ * Add a widget into a the prefix area with a priority. The highest
+ * the priority the closest to the start.
+ */
 void
 panel_frame_header_add_prefix (PanelFrameHeader *self,
                                int               priority,
@@ -128,6 +151,15 @@ panel_frame_header_add_prefix (PanelFrameHeader *self,
   PANEL_FRAME_HEADER_GET_IFACE (self)->add_prefix (self, priority, child);
 }
 
+/**
+ * panel_frame_header_add_suffix:
+ * @self: a #PanelFrameHeader
+ * @priority: the priority
+ * @child: a #GtkWidget
+ *
+ * Add a widget into a the suffix area with a priority. The highest
+ * the priority the closest to the start.
+ */
 void
 panel_frame_header_add_suffix (PanelFrameHeader *self,
                                int               priority,

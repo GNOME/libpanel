@@ -33,6 +33,12 @@
 #include "panel-save-dialog.h"
 #include "panel-widget.h"
 
+/**
+ * PanelGrid:
+ *
+ * The #PanelGrid is a widget used to layout the dock item in the
+ * center area.
+ */
 typedef struct
 {
   PanelPaned *columns;
@@ -55,7 +61,7 @@ static guint signals [N_SIGNALS];
 /**
  * panel_grid_new:
  *
- * Create a new #PanelGrid.
+ * Creates a new #PanelGrid.
  *
  * Returns: (transfer full): a newly created #PanelGrid
  */
@@ -339,6 +345,13 @@ panel_grid_get_empty_frame (PanelGrid *self)
   return ret;
 }
 
+/**
+ * panel_grid_add:
+ * @self: a #PanelGrid
+ * @widget: (transfer none): a #PanelWidget the widget to add.
+ *
+ * Add a #PanelWidget to the grid.
+ */
 void
 panel_grid_add (PanelGrid   *self,
                 PanelWidget *widget)
@@ -549,6 +562,13 @@ _panel_grid_insert_column (PanelGrid *self,
   _panel_grid_update_closeable (self);
 }
 
+/**
+ * panel_grid_insert_column:
+ * @self: a #PanelGrid
+ * @position: The position to insert the column at.
+ *
+ * Inserts a column at @position.
+ */
 void
 panel_grid_insert_column (PanelGrid *self,
                           guint      position)
@@ -556,6 +576,14 @@ panel_grid_insert_column (PanelGrid *self,
   _panel_grid_insert_column (self, position);
 }
 
+/**
+ * panel_grid_get_n_columns:
+ * @self: a #PanelGrid
+ *
+ * Gets the number of columns in the grid.
+ *
+ * Returns: The number of columns.
+ */
 guint
 panel_grid_get_n_columns (PanelGrid *self)
 {
@@ -714,6 +742,15 @@ panel_grid_agree_to_close_cb (GObject      *object,
   g_clear_object (&task);
 }
 
+/**
+ * panel_grid_agree_to_close_async:
+ * @self: a #PanelGrid
+ * @cancellable:
+ * @callback: (not nullable) (scope call): callback called when ready
+ * @user_data: (closure callback): data to pass to @callback
+ *
+ * Request to close, asynchronously. This will display the save dialog.
+ */
 void
 panel_grid_agree_to_close_async (PanelGrid           *self,
                                  GCancellable        *cancellable,
@@ -739,6 +776,14 @@ panel_grid_agree_to_close_async (PanelGrid           *self,
                                g_steal_pointer (&task));
 }
 
+/**
+ * panel_grid_agree_to_close_finish:
+ * @self: #PanelGrid
+ * @result:
+ * @error: (nullable): The #GError
+ *
+ * Returns:
+ */
 gboolean
 panel_grid_agree_to_close_finish (PanelGrid     *self,
                                   GAsyncResult  *result,

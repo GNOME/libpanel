@@ -34,6 +34,21 @@
 #include "panel-frame-tab-bar.h"
 #include "panel-widget.h"
 
+/**
+ * PanelDock:
+ *
+ * The #PanelDock is a widget designed to contain widgets that can be
+ * docked. Use the #PanelDock as the top widget of your dockable UI.
+ *
+ * A #PanelDock is divided in 5 areas: %PANEL_AREA_TOP,
+ * %PANEL_AREA_BOTTOM, %PANEL_AREA_START, %PANEL_AREA_END represent
+ * the surrounding areas that can revealed. %PANEL_AREA_CENTER
+ * represent the main area, that is always displayed and resized
+ * depending on the reveal state of the surrounding areas.
+ *
+ * It will contain a #PanelDockChild for each of the areas in use,
+ * albeit this is done by the widget.
+ */
 typedef struct
 {
   GtkOverlay *overlay;
@@ -87,6 +102,12 @@ enum {
 static GParamSpec *properties [N_PROPS];
 static guint signals [N_SIGNALS];
 
+/**
+ * panel_dock_new:
+ * Create a new #PanelDock.
+ *
+ * Returns: a newly created #PanelDock
+ */
 GtkWidget *
 panel_dock_new (void)
 {
@@ -888,6 +909,14 @@ buildable_iface_init (GtkBuildableIface *iface)
   iface->add_child = panel_dock_add_child;
 }
 
+/**
+ * panel_dock_get_reveal_bottom:
+ * @self: a #PanelDock
+ *
+ * Tells if the bottom area is revealed.
+ *
+ * Returns: The reveal state of the bottom area.
+ */
 gboolean
 panel_dock_get_reveal_bottom (PanelDock *self)
 {
@@ -896,6 +925,14 @@ panel_dock_get_reveal_bottom (PanelDock *self)
   return priv->reveal_bottom;
 }
 
+/**
+ * panel_dock_get_reveal_end:
+ * @self: a #PanelDock
+ *
+ * Tells if the end area is revealed.
+ *
+ * Returns: The reveal state of the end area.
+ */
 gboolean
 panel_dock_get_reveal_end (PanelDock *self)
 {
@@ -904,6 +941,14 @@ panel_dock_get_reveal_end (PanelDock *self)
   return priv->reveal_end;
 }
 
+/**
+ * panel_dock_get_reveal_start:
+ * @self: a #PanelDock
+ *
+ * Tells if the start area is revealed.
+ *
+ * Returns: The reveal state of the start area.
+ */
 gboolean
 panel_dock_get_reveal_start (PanelDock *self)
 {
@@ -912,6 +957,14 @@ panel_dock_get_reveal_start (PanelDock *self)
   return priv->reveal_start;
 }
 
+/**
+ * panel_dock_get_reveal_top:
+ * @self: a #PanelDock
+ *
+ * Tells if the top area is revealed.
+ *
+ * Returns: The reveal state of the top area.
+ */
 gboolean
 panel_dock_get_reveal_top (PanelDock *self)
 {
@@ -920,6 +973,15 @@ panel_dock_get_reveal_top (PanelDock *self)
   return priv->reveal_top;
 }
 
+/**
+ * panel_dock_get_reveal_area:
+ * @self: a #PanelDock
+ * @area: the #PanelArea to return the reveal status of.
+ *
+ * Tells if an area if revealed.
+ *
+ * Returns: The reveal state.
+ */
 gboolean
 panel_dock_get_reveal_area (PanelDock *self,
                             PanelArea  area)
@@ -942,6 +1004,13 @@ panel_dock_get_reveal_area (PanelDock *self,
     }
 }
 
+/**
+ * panel_dock_set_reveal_bottom:
+ * @self: a #PanelDock
+ * @reveal_bottom: reveal the bottom area.
+ *
+ * Sets the reveal status of the bottom area.
+ */
 void
 panel_dock_set_reveal_bottom (PanelDock *self,
                               gboolean   reveal_bottom)
@@ -955,6 +1024,13 @@ panel_dock_set_reveal_bottom (PanelDock *self,
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_BOTTOM]);
 }
 
+/**
+ * panel_dock_set_reveal_end:
+ * @self: a #PanelDock
+ * @reveal_end: reveal the end area.
+ *
+ * Sets the reveal status of the end area.
+ */
 void
 panel_dock_set_reveal_end (PanelDock *self,
                            gboolean   reveal_end)
@@ -968,6 +1044,13 @@ panel_dock_set_reveal_end (PanelDock *self,
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_END]);
 }
 
+/**
+ * panel_dock_set_reveal_start:
+ * @self: a #PanelDock
+ * @reveal_start: reveal the start area.
+ *
+ * Sets the reveal status of the start area.
+ */
 void
 panel_dock_set_reveal_start (PanelDock *self,
                              gboolean   reveal_start)
@@ -981,6 +1064,13 @@ panel_dock_set_reveal_start (PanelDock *self,
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_START]);
 }
 
+/**
+ * panel_dock_set_reveal_top:
+ * @self: a #PanelDock
+ * @reveal_top: reveal the top area.
+ *
+ * Sets the reveal status of the top area.
+ */
 void
 panel_dock_set_reveal_top (PanelDock *self,
                            gboolean   reveal_top)
@@ -994,6 +1084,14 @@ panel_dock_set_reveal_top (PanelDock *self,
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_REVEAL_TOP]);
 }
 
+/**
+ * panel_dock_set_reveal_area:
+ * @self: a #PanelDock
+ * @area: a #PanelArea. %PANEL_AREA_CENTER is an invalid value.
+ * @reveal: reveal the area.
+ *
+ * Sets the reveal status of the area.
+ */
 void
 panel_dock_set_reveal_area (PanelDock *self,
                             PanelArea  area,
@@ -1071,6 +1169,16 @@ _panel_dock_get_end_child (PanelDock *self)
   return panel_dock_get_child_for_area (self, PANEL_AREA_END);
 }
 
+/**
+ * panel_dock_get_can_reveal_area:
+ * @self: a #PanelDock
+ * @area: the panel area to check.
+ *
+ * Tells if the panel area can be revealed.
+ *
+ * Returns: whether it can reveal the area or not. If the is no child
+ * or the child is empty, will return %FALSE.
+ */
 gboolean
 panel_dock_get_can_reveal_area (PanelDock *self,
                                 PanelArea  area)
@@ -1085,24 +1193,60 @@ panel_dock_get_can_reveal_area (PanelDock *self,
   return !panel_dock_child_get_empty (PANEL_DOCK_CHILD (child));
 }
 
+/**
+ * panel_dock_get_can_reveal_bottom:
+ * @self: a #PanelDock
+ *
+ * Tells if the bottom panel area can be revealed.
+ *
+ * Returns: whether it can reveal the bottom area or not. If the is no
+ * child or the child is empty, will return %FALSE.
+ */
 gboolean
 panel_dock_get_can_reveal_bottom (PanelDock *self)
 {
   return panel_dock_get_can_reveal_area (self, PANEL_AREA_BOTTOM);
 }
 
+/**
+ * panel_dock_get_can_reveal_top:
+ * @self: a #PanelDock
+ *
+ * Tells if the top panel area can be revealed.
+ *
+ * Returns: whether it can reveal the top area or not. If the is no
+ * child or the child is empty, will return %FALSE.
+ */
 gboolean
 panel_dock_get_can_reveal_top (PanelDock *self)
 {
   return panel_dock_get_can_reveal_area (self, PANEL_AREA_TOP);
 }
 
+/**
+ * panel_dock_get_can_reveal_start:
+ * @self: a #PanelDock
+ *
+ * Tells if the start panel area can be revealed.
+ *
+ * Returns: whether it can reveal the start area or not. If the is no
+ * child or the child is empty, will return %FALSE.
+ */
 gboolean
 panel_dock_get_can_reveal_start (PanelDock *self)
 {
   return panel_dock_get_can_reveal_area (self, PANEL_AREA_START);
 }
 
+/**
+ * panel_dock_get_can_reveal_end:
+ * @self: a #PanelDock
+ *
+ * Tells if the end panel area can be revealed.
+ *
+ * Returns: whether it can reveal the end area or not. If the is no
+ * child or the child is empty, will return %FALSE.
+ */
 gboolean
 panel_dock_get_can_reveal_end (PanelDock *self)
 {
@@ -1394,6 +1538,13 @@ panel_dock_set_panel_size (PanelDock *self,
     }
 }
 
+/**
+ * panel_dock_set_start_width:
+ * @self: a #PanelDock
+ * @width: the width
+ *
+ * Set the width of the start area.
+ */
 void
 panel_dock_set_start_width (PanelDock *self,
                             int        width)
@@ -1406,6 +1557,13 @@ panel_dock_set_start_width (PanelDock *self,
   panel_dock_set_panel_size (self, PANEL_AREA_START, width);
 }
 
+/**
+ * panel_dock_set_end_width:
+ * @self: a #PanelDock
+ * @width: the width
+ *
+ * Set the width of the end area.
+ */
 void
 panel_dock_set_end_width (PanelDock *self,
                           int        width)
@@ -1418,6 +1576,13 @@ panel_dock_set_end_width (PanelDock *self,
   panel_dock_set_panel_size (self, PANEL_AREA_END, width);
 }
 
+/**
+ * panel_dock_set_top_height:
+ * @self: a #PanelDock
+ * @height: the height
+ *
+ * Set the height of the top area.
+ */
 void
 panel_dock_set_top_height (PanelDock *self,
                            int        height)
@@ -1430,6 +1595,13 @@ panel_dock_set_top_height (PanelDock *self,
   panel_dock_set_panel_size (self, PANEL_AREA_TOP, height);
 }
 
+/**
+ * panel_dock_set_bottom_height:
+ * @self: a #PanelDock
+ * @height: the height
+ *
+ * Set the height of the bottom area.
+ */
 void
 panel_dock_set_bottom_height (PanelDock *self,
                               int        height)
@@ -1442,6 +1614,14 @@ panel_dock_set_bottom_height (PanelDock *self,
   panel_dock_set_panel_size (self, PANEL_AREA_BOTTOM, height);
 }
 
+/**
+ * panel_dock_remove:
+ * @self: a #PanelDock
+ * @widget: (transfer none): a #GtkWidget to remove
+ *
+ * Removes a widget from the dock. If @widget is not a #DockChild,
+ * then the closest #DockChild parent is removed.
+ */
 void
 panel_dock_remove (PanelDock *self,
                    GtkWidget *widget)
