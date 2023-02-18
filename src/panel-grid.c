@@ -63,7 +63,7 @@ static guint signals [N_SIGNALS];
  *
  * Creates a new #PanelGrid.
  *
- * Returns: (transfer full): a newly created #PanelGrid
+ * Returns: a newly created #PanelGrid
  */
 GtkWidget *
 panel_grid_new (void)

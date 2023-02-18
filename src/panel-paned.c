@@ -56,7 +56,7 @@ enum {
  *
  * Create a new #PanelPaned.
  *
- * Returns: (transfer full): a newly created #PanelPaned
+ * Returns: a newly created #PanelPaned
  */
 GtkWidget *
 panel_paned_new (void)

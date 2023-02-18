@@ -50,7 +50,7 @@ static GParamSpec *properties [N_PROPS];
  *
  * Create a new #PanelFrameHeaderBarRow.
  *
- * Returns: (transfer full): a newly created #PanelFrameHeaderBarRow
+ * Returns: a newly created #PanelFrameHeaderBarRow
  */
 GtkWidget *
 panel_frame_header_bar_row_new (void)
