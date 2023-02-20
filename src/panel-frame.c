@@ -37,6 +37,12 @@
 #include "panel-scaler-private.h"
 #include "panel-widget-private.h"
 
+#define REMOVED_SHORTCUTS \
+  (ADW_TAB_VIEW_SHORTCUT_CONTROL_HOME \
+  | ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_HOME \
+  | ADW_TAB_VIEW_SHORTCUT_CONTROL_END \
+  | ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_END)
+
 /**
  * PanelFrame:
  *
@@ -1020,6 +1026,8 @@ panel_frame_init (PanelFrame *self)
   priv->empty = TRUE;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  adw_tab_view_remove_shortcuts (priv->tab_view, REMOVED_SHORTCUTS);
 
   _panel_dock_update_orientation (GTK_WIDGET (self),
                                   gtk_orientable_get_orientation (GTK_ORIENTABLE (self)));
