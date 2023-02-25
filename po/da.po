@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-14 13:18+0000\n"
+"POT-Creation-Date: 2023-01-25 21:04+0000\n"
 "PO-Revision-Date: 2022-09-14 15:23+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -43,6 +43,11 @@ msgid "Move Page _Down"
 msgstr "Flyt siden _ned"
 
 #: src/panel-frame.ui:82
+#| msgid "Close Frame"
+msgid "Close All Pages"
+msgstr "Luk alle sider"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "Luk ramme"
 
@@ -64,7 +69,7 @@ msgstr "Kladden “%s” er ikke gemt. Du kan gemme eller kassere den."
 msgid "Save or Discard Draft?"
 msgstr "Gem eller kassér kladde?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:427
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Kassér"
@@ -74,37 +79,37 @@ msgid "_Save As…"
 msgstr "_Gem som …"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:420
+#: src/panel-save-dialog.c:422
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "“%s” indeholder ændringer, der ikke er gemt. Ændringer kan gemmes eller "
 "kasseres."
 
-#: src/panel-save-dialog.c:423 src/panel-save-dialog.c:454
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
 msgid "Save or Discard Changes?"
 msgstr "Gem eller kassér ændringer?"
 
-#: src/panel-save-dialog.c:431 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Gem"
 
-#: src/panel-save-dialog.c:456
+#: src/panel-save-dialog.c:460
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Åbne dokumenter indeholder ændringer, der ikke er gemt. Ændringer kan "
-"gemmes eller kasseres."
+"Åbne dokumenter indeholder ændringer, der ikke er gemt. Ændringer kan gemmes "
+"eller kasseres."
 
-#: src/panel-save-dialog.c:461
+#: src/panel-save-dialog.c:465
 msgid "Only _Save Selected"
 msgstr "Gem _kun valgte"
 
-#: src/panel-save-dialog.c:469
+#: src/panel-save-dialog.c:473
 msgid "Save All"
 msgstr "Gem alle"
 
-#: src/panel-save-dialog.c:478
+#: src/panel-save-dialog.c:482
 msgid "Discard All"
 msgstr "Kassér alle"
 
