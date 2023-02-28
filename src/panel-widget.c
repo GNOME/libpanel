@@ -51,7 +51,6 @@
 #include "panel-position.h"
 #include "panel-save-delegate.h"
 #include "panel-widget-private.h"
-#include "panel-macros.h"
 
 /**
  * PanelWidget:
@@ -752,7 +751,7 @@ panel_widget_set_icon_name (PanelWidget *self,
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
 
-  if (panel_set_string (&priv->icon_name, icon_name))
+  if (g_set_str (&priv->icon_name, icon_name))
     {
       g_clear_object (&priv->icon);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
@@ -842,7 +841,7 @@ panel_widget_set_id (PanelWidget *self,
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
 
-  if (panel_set_string (&priv->id, id))
+  if (g_set_str (&priv->id, id))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ID]);
 }
 
@@ -922,7 +921,7 @@ panel_widget_set_title (PanelWidget *self,
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
 
-  if (panel_set_string (&priv->title, title))
+  if (g_set_str (&priv->title, title))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
 }
 
@@ -959,7 +958,7 @@ panel_widget_set_tooltip (PanelWidget *self,
 
   g_return_if_fail (PANEL_IS_WIDGET (self));
 
-  if (panel_set_string (&priv->tooltip, tooltip))
+  if (g_set_str (&priv->tooltip, tooltip))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TOOLTIP]);
 }
 

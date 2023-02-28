@@ -21,7 +21,6 @@
 #include "config.h"
 
 #include "panel-save-delegate.h"
-#include "panel-macros.h"
 
 typedef struct
 {
@@ -424,7 +423,7 @@ panel_save_delegate_set_icon_name (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (panel_set_string (&priv->icon_name, icon_name))
+  if (g_set_str (&priv->icon_name, icon_name))
     {
       if (g_set_object (&priv->icon, NULL))
         g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
@@ -466,7 +465,7 @@ panel_save_delegate_set_subtitle (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (panel_set_string (&priv->subtitle, subtitle))
+  if (g_set_str (&priv->subtitle, subtitle))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SUBTITLE]);
 }
 
@@ -503,7 +502,7 @@ panel_save_delegate_set_title (PanelSaveDelegate *self,
 
   g_return_if_fail (PANEL_IS_SAVE_DELEGATE (self));
 
-  if (panel_set_string (&priv->title, title))
+  if (g_set_str (&priv->title, title))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_TITLE]);
 }
 
