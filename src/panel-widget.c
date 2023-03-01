@@ -352,6 +352,7 @@ panel_widget_dispose (GObject *object)
   g_clear_pointer (&priv->title, g_free);
   g_clear_pointer (&priv->icon_name, g_free);
   g_clear_object (&priv->icon);
+  g_clear_pointer (&priv->id, g_free);
   g_clear_pointer (&priv->tooltip, g_free);
   g_clear_object (&priv->menu_model);
   g_clear_object (&priv->save_delegate);
