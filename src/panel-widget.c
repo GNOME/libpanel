@@ -61,7 +61,6 @@
 typedef struct
 {
   GtkWidget         *child;
-  GQuark             kind;
   char              *title;
   char              *icon_name;
   GIcon             *icon;
@@ -74,15 +73,17 @@ typedef struct
   GtkWidget         *maximize_frame;
   GtkWidget         *maximize_dock_child;
 
-  guint             busy_count;
+  GQuark             kind;
 
-  guint             reorderable : 1;
-  guint             can_maximize : 1;
-  guint             maximized : 1;
-  guint             modified : 1;
-  guint             needs_attention : 1;
-  guint             saving : 1;
-  guint             force_close : 1;
+  guint              busy_count;
+
+  guint              reorderable : 1;
+  guint              can_maximize : 1;
+  guint              maximized : 1;
+  guint              modified : 1;
+  guint              needs_attention : 1;
+  guint              saving : 1;
+  guint              force_close : 1;
 } PanelWidgetPrivate;
 
 typedef struct
@@ -347,11 +348,11 @@ panel_widget_dispose (GObject *object)
       g_clear_object (&priv->action_muxer);
     }
 
-  g_clear_pointer (&priv->icon_name, g_free);
-  g_clear_pointer (&priv->title, g_free);
   g_clear_pointer (&priv->child, gtk_widget_unparent);
-  g_clear_pointer (&priv->tooltip, g_free);
+  g_clear_pointer (&priv->title, g_free);
+  g_clear_pointer (&priv->icon_name, g_free);
   g_clear_object (&priv->icon);
+  g_clear_pointer (&priv->tooltip, g_free);
   g_clear_object (&priv->menu_model);
   g_clear_object (&priv->save_delegate);
 
