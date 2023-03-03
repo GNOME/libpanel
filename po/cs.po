@@ -2,14 +2,14 @@
 # Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libpanel package.
 #
-# Marek Černocký <marek@manet.cz>, 2022.
+# Marek Černocký <marek@manet.cz>, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-13 19:34+0000\n"
-"PO-Revision-Date: 2022-09-13 22:39+0200\n"
+"POT-Creation-Date: 2023-01-25 21:04+0000\n"
+"PO-Revision-Date: 2023-03-03 12:36+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -43,6 +43,10 @@ msgid "Move Page _Down"
 msgstr "Posunout stránku _dolů"
 
 #: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Zavřít všechny stránky"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "Zavřít rám"
 
@@ -50,59 +54,58 @@ msgstr "Zavřít rám"
 msgid "Restore panel to previous location"
 msgstr "Obnovit panel na předchozí místo"
 
-#: src/panel-save-dialog-row.c:76
+#: src/panel-save-dialog-row.c:78
 msgid "(new)"
 msgstr "(nový)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:351
+#: src/panel-save-dialog.c:400
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "Koncept „%s“ není uložen. Můžete jej uložit nebo zahodit."
 
-#: src/panel-save-dialog.c:354
+#: src/panel-save-dialog.c:403
 msgid "Save or Discard Draft?"
 msgstr "Uložit nebo zahodit koncept?"
 
-#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "Zaho_dit"
 
-#: src/panel-save-dialog.c:362
+#: src/panel-save-dialog.c:411
 msgid "_Save As…"
 msgstr "_Uložit j_ako…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:371
+#: src/panel-save-dialog.c:422
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr ""
-"„%s“ obsahuje neuložené změny. Můžete je uložit nebo zahodit."
+msgstr "„%s“ obsahuje neuložené změny. Můžete je uložit nebo zahodit."
 
-#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
 msgid "Save or Discard Changes?"
 msgstr "Uložit nebo zahodit změny?"
 
-#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Uložit"
 
-#: src/panel-save-dialog.c:407
+#: src/panel-save-dialog.c:460
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "Otevřené dokumenty obsahují neuložené změny. Můžete je uložit nebo zahodit."
 
-#: src/panel-save-dialog.c:412
+#: src/panel-save-dialog.c:465
 msgid "Only _Save Selected"
 msgstr "_Uložit jen vybrané"
 
-#: src/panel-save-dialog.c:420
+#: src/panel-save-dialog.c:473
 msgid "Save All"
 msgstr "Uložit vše"
 
-#: src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:482
 msgid "Discard All"
 msgstr "Vše zahodit"
 
