@@ -1,15 +1,15 @@
 # Polish translation for libpanel.
-# Copyright © 2022 the libpanel authors.
+# Copyright © 2022-2023 the libpanel authors.
 # This file is distributed under the same license as the libpanel package.
-# Piotr Drąg <piotrdrag@gmail.com>, 2022.
-# Aviary.pl <community-poland@mozilla.org>, 2022.
+# Piotr Drąg <piotrdrag@gmail.com>, 2022-2023.
+# Aviary.pl <community-poland@mozilla.org>, 2022-2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-09-13 19:34+0000\n"
-"PO-Revision-Date: 2022-09-14 16:12+0200\n"
+"POT-Creation-Date: 2023-01-25 21:04+0000\n"
+"PO-Revision-Date: 2023-03-04 17:45+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -44,6 +44,10 @@ msgid "Move Page _Down"
 msgstr "Przenieś stronę w _dół"
 
 #: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Zamknij wszystkie strony"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "Zamknij ramkę"
 
@@ -51,57 +55,57 @@ msgstr "Zamknij ramkę"
 msgid "Restore panel to previous location"
 msgstr "Przywraca panel do poprzedniego położenia"
 
-#: src/panel-save-dialog-row.c:76
+#: src/panel-save-dialog-row.c:78
 msgid "(new)"
 msgstr "(nowy)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:351
+#: src/panel-save-dialog.c:400
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "Szkic „%s” nie został zapisany. Można go zapisać lub odrzucić."
 
-#: src/panel-save-dialog.c:354
+#: src/panel-save-dialog.c:403
 msgid "Save or Discard Draft?"
 msgstr "Zapisać czy odrzucić szkic?"
 
-#: src/panel-save-dialog.c:358 src/panel-save-dialog.c:378
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Odrzuć"
 
-#: src/panel-save-dialog.c:362
+#: src/panel-save-dialog.c:411
 msgid "_Save As…"
 msgstr "Zapi_sz jako…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:371
+#: src/panel-save-dialog.c:422
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr "Dokument „%s” zawiera zmiany, które można zapisać lub odrzucić."
 
-#: src/panel-save-dialog.c:374 src/panel-save-dialog.c:405
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
 msgid "Save or Discard Changes?"
 msgstr "Zapisać czy odrzucić zmiany?"
 
-#: src/panel-save-dialog.c:382 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Zapisz"
 
-#: src/panel-save-dialog.c:407
+#: src/panel-save-dialog.c:460
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr "Otwarte dokumenty zawierają zmiany, które można zapisać lub odrzucić."
 
-#: src/panel-save-dialog.c:412
+#: src/panel-save-dialog.c:465
 msgid "Only _Save Selected"
 msgstr "Zapisz tylko zaz_naczone"
 
-#: src/panel-save-dialog.c:420
+#: src/panel-save-dialog.c:473
 msgid "Save All"
 msgstr "Zapisz wszystkie"
 
-#: src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:482
 msgid "Discard All"
 msgstr "Odrzuć wszystkie"
 
