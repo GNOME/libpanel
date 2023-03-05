@@ -1,14 +1,14 @@
 # Bulgarian translation of libpanel po-file.
-# Copyright (C) 2022 Alexander Shopov.
+# Copyright (C) 2022, 2023 Alexander Shopov.
 # This file is distributed under the same license as the libpanel package.
-# Alexander Shopov <ash@kambanaria.org>, 2022.
+# Alexander Shopov <ash@kambanaria.org>, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-10-05 19:09+0000\n"
-"PO-Revision-Date: 2022-10-06 21:26+0200\n"
+"POT-Creation-Date: 2023-02-28 19:59+0000\n"
+"PO-Revision-Date: 2023-03-05 09:23+0200\n"
 "Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "Language: bg\n"
@@ -42,6 +42,10 @@ msgid "Move Page _Down"
 msgstr "Преместване на страницата над_олу"
 
 #: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Затваряне на всички страници"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "Затваряне на рамка"
 
@@ -54,54 +58,54 @@ msgid "(new)"
 msgstr "(нова)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:400
+#: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "Черновата „%s“ не е запазена. Може да я запазите или отхвърлите."
 
-#: src/panel-save-dialog.c:403
+#: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
 msgstr "Запазване или отхвърляне на черновата?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Отхвърляне"
 
-#: src/panel-save-dialog.c:411
+#: src/panel-save-dialog.c:413
 msgid "_Save As…"
 msgstr "_Запазване като…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:422
+#: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr "В „%s“ има незапазени промени. Може да ги запазите или отхвърлите."
 
-#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
 msgstr "Запазване или отхвърляне на промените?"
 
-#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Запазване"
 
-#: src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "В някои отворени документи има незапазени промени. Може да ги запазите или "
 "отхвърлите."
 
-#: src/panel-save-dialog.c:465
+#: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
 msgstr "Запазване _само на избраните"
 
-#: src/panel-save-dialog.c:473
+#: src/panel-save-dialog.c:475
 msgid "Save All"
 msgstr "Запазване на всички"
 
-#: src/panel-save-dialog.c:482
+#: src/panel-save-dialog.c:484
 msgid "Discard All"
 msgstr "Отхвърляне на всички"
 
