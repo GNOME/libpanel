@@ -308,7 +308,7 @@ close_all_action (GtkWidget  *widget,
                   GVariant   *param)
 {
   PanelFrame *self = (PanelFrame *)widget;
-  g_autoptr(GPtrArray) to_close = NULL;
+  GPtrArray *to_close = NULL;
   GtkWidget *toplevel;
   GtkWidget *dialog;
   guint n_pages;
@@ -347,6 +347,7 @@ close_all_action (GtkWidget  *widget,
                                panel_frame_close_all_cb,
                                g_object_ref (self));
 
+  g_ptr_array_unref (to_close);
   g_object_unref (self);
 }
 
