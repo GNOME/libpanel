@@ -261,6 +261,16 @@ panelframe panelframetabbar button.frame-close-button {
   min-width: 28px;
   min-height: 28px;
 }
+panelframe panelframetabbar tabbox {
+  padding: 0;
+}
+panelframe panelframetabbar tabbox tabboxchild {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+panelframe panelframetabbar .end-action {
+  padding: 0;
+}
 
 splitbutton.omnibar > button {
   margin-bottom: 0;
