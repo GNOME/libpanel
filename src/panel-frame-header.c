@@ -94,7 +94,7 @@ panel_frame_header_get_frame (PanelFrameHeader *self)
 /**
  * panel_frame_header_can_drop:
  * @self: a #PanelFrameHeader
- * @wigdet: (transfer none): a #PanelWidget
+ * @widget: (transfer none): a #PanelWidget
  *
  * Tells if the panel widget can be drop onto the panel frame.
  *

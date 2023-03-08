@@ -443,7 +443,7 @@ void panel_frame_tab_bar_set_##name (PanelFrameTabBar *self, \
 /**
  * panel_frame_tab_bar_set_autohide:
  * @self: a #PanelFrameTabBar
- * @value: the autohide value
+ * @autohide: the autohide value
  *
  * Sets whether the tabs automatically hide.
  */
@@ -459,7 +459,7 @@ void panel_frame_tab_bar_set_##name (PanelFrameTabBar *self, \
 /**
  * panel_frame_tab_bar_set_expand_tabs:
  * @self: a #PanelFrameTabBar
- * @value: the expand_tabs value
+ * @expand_tabs: the expand_tabs value
  *
  * Sets whether tabs expand to full width.
  */
@@ -475,7 +475,7 @@ void panel_frame_tab_bar_set_##name (PanelFrameTabBar *self, \
 /**
  * panel_frame_tab_bar_set_inverted:
  * @self: a #PanelFrameTabBar
- * @value: the inverted value
+ * @inverted: the inverted value
  *
  * Sets whether tabs tabs use inverted layout.
  */

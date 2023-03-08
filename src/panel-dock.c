@@ -626,6 +626,8 @@ panel_dock_class_init (PanelDockClass *klass)
    *
    * This signal is emitted when a new frame is needed.
    *
+   * Returns: (transfer full) (not nullable): a #PanelFrame
+   *
    * Since: 1.2
    */
   signals [CREATE_FRAME] =

@@ -99,6 +99,6 @@ void         panel_dock_foreach_frame         (PanelDock          *self,
                                                gpointer            user_data);
 PANEL_AVAILABLE_IN_ALL
 void         panel_dock_remove                (PanelDock          *self,
-                                               GtkWidget          *child);
+                                               GtkWidget          *widget);
 
 G_END_DECLS
