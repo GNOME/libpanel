@@ -64,6 +64,11 @@ const char        *panel_widget_get_title                     (PanelWidget      
 PANEL_AVAILABLE_IN_ALL
 void               panel_widget_set_title                     (PanelWidget                 *self,
                                                                const char                  *title);
+PANEL_AVAILABLE_IN_1_2
+GdkPaintable      *panel_widget_get_icon_paintable            (PanelWidget                 *self);
+PANEL_AVAILABLE_IN_1_2
+void               panel_widget_set_icon_paintable            (PanelWidget                 *self,
+                                                               GdkPaintable                *paintable);
 PANEL_AVAILABLE_IN_ALL
 GIcon             *panel_widget_get_icon                      (PanelWidget                 *self);
 PANEL_AVAILABLE_IN_ALL

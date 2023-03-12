@@ -64,6 +64,7 @@ typedef struct
   char              *title;
   char              *icon_name;
   GIcon             *icon;
+  GdkPaintable      *icon_paintable;
   char              *id;
   char              *tooltip;
   GMenuModel        *menu_model;
@@ -103,6 +104,7 @@ enum {
   PROP_CHILD,
   PROP_ICON,
   PROP_ICON_NAME,
+  PROP_ICON_PAINTABLE,
   PROP_ID,
   PROP_MENU_MODEL,
   PROP_MODIFIED,
@@ -390,6 +392,10 @@ panel_widget_get_property (GObject    *object,
       g_value_set_string (value, panel_widget_get_icon_name (self));
       break;
 
+    case PROP_ICON_PAINTABLE:
+      g_value_set_object (value, panel_widget_get_icon_paintable (self));
+      break;
+
     case PROP_ID:
       g_value_set_string (value, panel_widget_get_id (self));
       break;
@@ -455,6 +461,10 @@ panel_widget_set_property (GObject      *object,
 
     case PROP_ICON_NAME:
       panel_widget_set_icon_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_ICON_PAINTABLE:
+      panel_widget_set_icon_paintable (self, g_value_get_object (value));
       break;
 
     case PROP_ID:
@@ -552,6 +562,11 @@ panel_widget_class_init (PanelWidgetClass *klass)
                          "Icon Name",
                          "Icon Name",
                          NULL,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_ICON_PAINTABLE] =
+    g_param_spec_object ("icon-paintable", NULL, NULL,
+                         GDK_TYPE_PAINTABLE,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_ID] =
@@ -757,9 +772,70 @@ panel_widget_set_icon_name (PanelWidget *self,
   if (g_set_str (&priv->icon_name, icon_name))
     {
       g_clear_object (&priv->icon);
+      g_clear_object (&priv->icon_paintable);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_PAINTABLE]);
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
     }
+}
+
+/**
+ * panel_widget_get_icon_paintable:
+ * @self: a #PanelWidget
+ *
+ * Returns: (transfer none) (nullable): a #GdkPaintable
+ */
+GdkPaintable *
+panel_widget_get_icon_paintable (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), NULL);
+
+  if (priv->icon_paintable == NULL)
+    {
+      if (priv->icon_name != NULL)
+        priv->icon_paintable = (GdkPaintable *)
+          gtk_icon_theme_lookup_icon (gtk_icon_theme_get_for_display (gdk_display_get_default ()),
+                                      priv->icon_name, NULL,
+                                      16,
+                                      gtk_widget_get_scale_factor (GTK_WIDGET (self)),
+                                      gtk_widget_get_direction (GTK_WIDGET (self)),
+                                      0);
+      else if (priv->icon != NULL)
+        priv->icon_paintable = (GdkPaintable *)
+          gtk_icon_theme_lookup_by_gicon (gtk_icon_theme_get_for_display (gdk_display_get_default ()),
+                                          priv->icon,
+                                          16,
+                                          gtk_widget_get_scale_factor (GTK_WIDGET (self)),
+                                          gtk_widget_get_direction (GTK_WIDGET (self)),
+                                          0);
+    }
+
+  return priv->icon_paintable;
+}
+
+void
+panel_widget_set_icon_paintable (PanelWidget  *self,
+                                 GdkPaintable *icon_paintable)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_if_fail (PANEL_IS_WIDGET (self));
+  g_return_if_fail (!icon_paintable || GDK_IS_PAINTABLE (icon_paintable));
+
+  if (icon_paintable != NULL)
+    g_object_ref (icon_paintable);
+
+  g_clear_object (&priv->icon_paintable);
+  g_clear_object (&priv->icon);
+  g_clear_pointer (&priv->icon_name, g_free);
+
+  priv->icon_paintable = icon_paintable;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_PAINTABLE]);
 }
 
 /**
@@ -805,6 +881,12 @@ panel_widget_set_icon (PanelWidget *self,
         {
           g_clear_pointer (&priv->icon_name, g_free);
           g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_NAME]);
+        }
+
+      if (priv->icon_paintable != NULL)
+        {
+          g_clear_object (&priv->icon_paintable);
+          g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON_PAINTABLE]);
         }
 
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_ICON]);
