@@ -1,3 +1,14 @@
+libpanel 1.2.0
+==============
+
+Changes in libpanel 1.2.0 (GNOME 44.0)
+
+ * CSS fixes for libadwaita 1.4
+ * Fix various gidoc warnings
+ * Remove use of g_autoptr() which creeped in
+ * Translation updates
+
+
 libpanel 1.1.2
 ==============
 
