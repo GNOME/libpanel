@@ -44,6 +44,8 @@
 # include "panel-position.h"
 # include "panel-save-delegate.h"
 # include "panel-save-dialog.h"
+# include "panel-session.h"
+# include "panel-session-item.h"
 # include "panel-statusbar.h"
 # include "panel-theme-selector.h"
 # include "panel-toggle-button.h"
