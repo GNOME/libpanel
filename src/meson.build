@@ -85,6 +85,13 @@ panel_enum_headers = [
   'panel-types.h',
 ]
 
+libpanel_marshal = gnome.genmarshal('panel-marshal',
+            internal: true,
+              prefix: 'panel_marshal',
+             sources: ['panel-marshal.defs'],
+  valist_marshallers: true,
+)
+
 libpanel_enums = gnome.mkenums_simple('panel-enums',
      body_prefix: '#include "config.h"',
    header_prefix: '#include "panel-version-macros.h"',
@@ -103,12 +110,14 @@ libpanel_gresources = gnome.compile_resources(
 libpanel_generated_sources = [
   libpanel_gresources[0],
   libpanel_enums[0],
+  libpanel_marshal[0],
 ]
 
 libpanel_generated_headers = [
   panel_version_h,
   libpanel_gresources[1],
   libpanel_enums[1],
+  libpanel_marshal[1],
 ]
 
 libpanel_deps = [
