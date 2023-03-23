@@ -49,11 +49,13 @@ panel_set_strv (char               ***dest,
   return FALSE;
 }
 
-#if !GLIB_CHECK_VERSION(2, 75, 0)
 static inline gboolean
-g_set_str (char       **str_pointer,
-           const char  *new_str)
+panel_set_str (char       **str_pointer,
+               const char  *new_str)
 {
+#if GLIB_CHECK_VERSION(2, 75, 0) && !defined(GLIB_VERSION_MAX_ALLOWED)
+  return g_set_str (str_pointer, new_str);
+#else
   char *copy;
 
   if (*str_pointer == new_str ||
@@ -65,7 +67,7 @@ g_set_str (char       **str_pointer,
   *str_pointer = copy;
 
   return TRUE;
-}
 #endif
+}
 
 G_END_DECLS

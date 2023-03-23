@@ -101,7 +101,7 @@ panel_settings_set_schema_id (PanelSettings *self,
   g_assert (PANEL_IS_SETTINGS (self));
   g_assert (schema_id != NULL);
 
-  if (g_set_str (&self->schema_id, schema_id))
+  if (panel_set_str (&self->schema_id, schema_id))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SCHEMA_ID]);
 }
 
