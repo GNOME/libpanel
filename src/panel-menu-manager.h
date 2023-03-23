@@ -48,7 +48,7 @@ guint                 panel_menu_manager_add_resource         (PanelMenuManager 
 PANEL_AVAILABLE_IN_1_4
 guint                 panel_menu_manager_merge                (PanelMenuManager  *self,
                                                                const char        *menu_id,
-                                                               GMenuModel        *model);
+                                                               GMenuModel        *menu_model);
 PANEL_AVAILABLE_IN_1_4
 void                  panel_menu_manager_remove               (PanelMenuManager  *self,
                                                                guint              merge_id);

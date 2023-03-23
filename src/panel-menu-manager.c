@@ -20,7 +20,10 @@
 
 #include <string.h>
 
+#include <gtk/gtk.h>
+
 #include "panel-menu-manager.h"
+#include "panel-util-private.h"
 
 struct _PanelMenuManager
 {
@@ -128,7 +131,7 @@ panel_menu_manager_menu_contains (PanelMenuManager *self,
   const char *label;
   const char *link_id;
 
-  g_assert (IDEME_IS_MENU_MANAGER (self));
+  g_assert (PANEL_IS_MENU_MANAGER (self));
   g_assert (G_IS_MENU (menu));
   g_assert (G_IS_MENU_ITEM (item));
 
@@ -142,7 +145,7 @@ panel_menu_manager_menu_contains (PanelMenuManager *self,
    * appears, as that could be an item that gets hidden.
    */
   if (g_menu_item_get_attribute (item, "id", "&s", &id) &&
-      !ide_str_empty0 (id) &&
+      !panel_str_empty0 (id) &&
       (find_with_attribute_string (G_MENU_MODEL (menu), "id", id) < 0))
     return FALSE;
 
@@ -255,7 +258,7 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
           g_menu_model_get_item_attribute (model, j, "id", "s", &j_id);
           g_menu_model_get_item_attribute (model, j, "label", "s", &j_label);
 
-          if (ide_str_equal0 (i_after, j_id) || ide_str_equal0 (i_after, j_label))
+          if (panel_str_equal0 (i_after, j_id) || panel_str_equal0 (i_after, j_label))
             {
               /* You might think we need to place the item *AFTER*
                * our position "j". But since we remove the row where
@@ -295,7 +298,7 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
           g_menu_model_get_item_attribute (model, j, "id", "s", &j_id);
           g_menu_model_get_item_attribute (model, j, "label", "s", &j_label);
 
-          if (ide_str_equal0 (i_before, j_id) || ide_str_equal0 (i_before, j_label))
+          if (panel_str_equal0 (i_before, j_id) || panel_str_equal0 (i_before, j_label))
             {
               /*
                * This item needs to be placed before this item we just found.
@@ -315,7 +318,7 @@ panel_menu_manager_add_to_menu (PanelMenuManager *self,
                                 GMenu            *menu,
                                 GMenuItem        *item)
 {
-  g_assert (IDEME_IS_MENU_MANAGER (self));
+  g_assert (PANEL_IS_MENU_MANAGER (self));
   g_assert (G_IS_MENU (menu));
   g_assert (G_IS_MENU_ITEM (item));
 
@@ -339,7 +342,7 @@ panel_menu_manager_merge_model (PanelMenuManager *self,
 {
   guint n_items;
 
-  g_assert (IDEME_IS_MENU_MANAGER (self));
+  g_assert (PANEL_IS_MENU_MANAGER (self));
   g_assert (G_IS_MENU (menu));
   g_assert (G_IS_MENU_MODEL (model));
   g_assert (merge_id > 0);
@@ -439,7 +442,7 @@ panel_menu_manager_merge_builder (PanelMenuManager *self,
   const GSList *iter;
   GSList *list;
 
-  g_assert (IDEME_IS_MENU_MANAGER (self));
+  g_assert (PANEL_IS_MENU_MANAGER (self));
   g_assert (GTK_IS_BUILDER (builder));
   g_assert (merge_id > 0);
 
@@ -522,7 +525,7 @@ panel_menu_manager_merge_builder (PanelMenuManager *self,
 PanelMenuManager *
 panel_menu_manager_new (void)
 {
-  return g_object_new (IDEME_TYPE_MENU_MANAGER, NULL);
+  return g_object_new (PANEL_TYPE_MENU_MANAGER, NULL);
 }
 
 guint
@@ -533,7 +536,7 @@ panel_menu_manager_add_filename (PanelMenuManager  *self,
   GtkBuilder *builder;
   guint merge_id;
 
-  g_return_val_if_fail (IDEME_IS_MENU_MANAGER (self), 0);
+  g_return_val_if_fail (PANEL_IS_MENU_MANAGER (self), 0);
   g_return_val_if_fail (filename != NULL, 0);
 
   builder = gtk_builder_new ();
@@ -571,7 +574,7 @@ panel_menu_manager_merge (PanelMenuManager *self,
   GMenu *menu;
   guint merge_id;
 
-  g_return_val_if_fail (IDEME_IS_MENU_MANAGER (self), 0);
+  g_return_val_if_fail (PANEL_IS_MENU_MANAGER (self), 0);
   g_return_val_if_fail (menu_id != NULL, 0);
   g_return_val_if_fail (G_IS_MENU_MODEL (menu_model), 0);
 
@@ -608,7 +611,7 @@ panel_menu_manager_remove (PanelMenuManager *self,
   GHashTableIter iter;
   GMenu *menu;
 
-  g_return_if_fail (IDEME_IS_MENU_MANAGER (self));
+  g_return_if_fail (PANEL_IS_MENU_MANAGER (self));
   g_return_if_fail (merge_id != 0);
 
   g_hash_table_iter_init (&iter, self->models);
@@ -654,7 +657,7 @@ panel_menu_manager_get_menu_by_id (PanelMenuManager *self,
 {
   GMenu *menu;
 
-  g_return_val_if_fail (IDEME_IS_MENU_MANAGER (self), NULL);
+  g_return_val_if_fail (PANEL_IS_MENU_MANAGER (self), NULL);
   g_return_val_if_fail (menu_id != NULL, NULL);
 
   menu = g_hash_table_lookup (self->models, menu_id);
@@ -685,7 +688,7 @@ panel_menu_manager_add_resource (PanelMenuManager  *self,
   GtkBuilder *builder;
   guint merge_id;
 
-  g_return_val_if_fail (IDEME_IS_MENU_MANAGER (self), 0);
+  g_return_val_if_fail (PANEL_IS_MENU_MANAGER (self), 0);
   g_return_val_if_fail (resource != NULL, 0);
 
   if (g_str_has_prefix (resource, "resource://"))
@@ -717,7 +720,7 @@ panel_menu_manager_add_resource (PanelMenuManager  *self,
 const char * const *
 panel_menu_manager_get_menu_ids (PanelMenuManager *self)
 {
-  g_return_val_if_fail (IDEME_IS_MENU_MANAGER (self), NULL);
+  g_return_val_if_fail (PANEL_IS_MENU_MANAGER (self), NULL);
 
   if (self->cached_keys == NULL)
     {
@@ -753,7 +756,7 @@ panel_menu_manager_set_attribute_string (PanelMenuManager *self,
 {
   g_autoptr(GMenuItem) item = NULL;
 
-  g_return_if_fail (IDEME_IS_MENU_MANAGER (self));
+  g_return_if_fail (PANEL_IS_MENU_MANAGER (self));
   g_return_if_fail (G_IS_MENU (menu));
   g_return_if_fail (attribute != NULL);
 
@@ -791,7 +794,7 @@ panel_menu_manager_find_item_by_id (PanelMenuManager *self,
   GHashTableIter iter;
   GMenu *menu = NULL;
 
-  g_return_val_if_fail (IDEME_IS_MENU_MANAGER (self), NULL);
+  g_return_val_if_fail (PANEL_IS_MENU_MANAGER (self), NULL);
 
   if (id == NULL)
     return NULL;
@@ -807,7 +810,7 @@ panel_menu_manager_find_item_by_id (PanelMenuManager *self,
           g_autofree char *item_id = NULL;
 
           if (g_menu_model_get_item_attribute (G_MENU_MODEL (menu), i, "id", "s", &item_id) &&
-              ide_str_equal0 (id, item_id))
+              panel_str_equal0 (id, item_id))
             {
               if (position != NULL)
                 *position = i;
