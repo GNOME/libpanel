@@ -34,6 +34,7 @@
 # include "panel-grid.h"
 # include "panel-grid-column.h"
 # include "panel-init.h"
+# include "panel-menu-manager.h"
 # include "panel-omni-bar.h"
 # include "panel-paned.h"
 # include "panel-position.h"
