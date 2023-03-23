@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "panel-save-delegate.h"
+#include "panel-util-private.h"
 
 typedef struct
 {

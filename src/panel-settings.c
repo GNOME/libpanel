@@ -27,6 +27,7 @@
 #include "panel-marshal.h"
 #include "panel-settings.h"
 #include "panel-layered-settings.h"
+#include "panel-util-private.h"
 
 /**
  * SECTION:panel-settings

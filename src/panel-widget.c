@@ -50,6 +50,7 @@
 #include "panel-frame-private.h"
 #include "panel-position.h"
 #include "panel-save-delegate.h"
+#include "panel-util-private.h"
 #include "panel-widget-private.h"
 
 /**
