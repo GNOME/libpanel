@@ -41,6 +41,7 @@ libpanel_sources = [
   'panel-frame-tab-bar.c',
   'panel-grid.c',
   'panel-grid-column.c',
+  'panel-gsettings-action-group.c',
   'panel-init.c',
   'panel-omni-bar.c',
   'panel-paned.c',
@@ -55,6 +56,7 @@ libpanel_sources = [
 
 libpanel_headers = [
   'libpanel.h',
+  'panel-action-group.h',
   'panel-dock.h',
   'panel-frame.h',
   'panel-frame-header-bar.h',
@@ -63,6 +65,7 @@ libpanel_headers = [
   'panel-frame-tab-bar.h',
   'panel-grid.h',
   'panel-grid-column.h',
+  'panel-gsettings-action-group.h',
   'panel-init.h',
   'panel-omni-bar.h',
   'panel-paned.h',

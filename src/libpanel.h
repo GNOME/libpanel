@@ -34,6 +34,7 @@
 # include "panel-frame-tab-bar.h"
 # include "panel-grid.h"
 # include "panel-grid-column.h"
+# include "panel-gsettings-action-group.h"
 # include "panel-init.h"
 # include "panel-menu-manager.h"
 # include "panel-omni-bar.h"
