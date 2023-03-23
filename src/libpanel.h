@@ -26,6 +26,7 @@
 # include "panel-types.h"
 # include "panel-enums.h"
 # include "panel-action-group.h"
+# include "panel-action-muxer.h"
 # include "panel-dock.h"
 # include "panel-frame.h"
 # include "panel-frame-header.h"

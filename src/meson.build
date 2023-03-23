@@ -19,7 +19,6 @@ panel_version_h = configure_file(
 
 libpanel_private_sources = [
   'gsettings-mapping.c',
-  'panel-action-muxer.c',
   'panel-dock-child.c',
   'panel-drop-controls.c',
   'panel-frame-header-bar-row.c',
@@ -33,6 +32,7 @@ libpanel_private_sources = [
 ]
 
 libpanel_sources = [
+  'panel-action-muxer.c',
   'panel-dock.c',
   'panel-frame.c',
   'panel-frame-header.c',
@@ -57,6 +57,7 @@ libpanel_sources = [
 libpanel_headers = [
   'libpanel.h',
   'panel-action-group.h',
+  'panel-action-muxer.h',
   'panel-dock.h',
   'panel-frame.h',
   'panel-frame-header-bar.h',
