@@ -507,8 +507,8 @@ panel_session_item_get_metadata (PanelSessionItem *self,
  * If @expected_type is non-%NULL, any non-%NULL value returned from this
  * function will match @expected_type.
  *
- * Returns: (transfer full): a non-floating #GVariant which should be
- *   released with g_variant_unref(); otherwise %NULL.
+ * Returns: (transfer full) (nullable): a non-floating #GVariant which should
+ *   be released with g_variant_unref(); otherwise %NULL.
  */
 GVariant *
 panel_session_item_get_metadata_value (PanelSessionItem     *self,
