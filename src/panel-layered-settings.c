@@ -282,6 +282,13 @@ panel_layered_settings_get_default_value (PanelLayeredSettings *self,
   return g_settings_get_default_value (panel_layered_settings_get_primary_settings (self), key);
 }
 
+/**
+ * panel_layered_settings_get_user_value:
+ * @self: a #PanelLayeredSettings
+ * @key: the key to get the user value for
+ *
+ * Returns: (nullable) (transfer full): the user's value, if set
+ */
 GVariant *
 panel_layered_settings_get_user_value (PanelLayeredSettings *self,
                                        const char           *key)
