@@ -37,6 +37,7 @@
 # include "panel-grid-column.h"
 # include "panel-gsettings-action-group.h"
 # include "panel-init.h"
+# include "panel-inhibitor.h"
 # include "panel-layered-settings.h"
 # include "panel-menu-manager.h"
 # include "panel-omni-bar.h"
