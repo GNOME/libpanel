@@ -51,4 +51,5 @@
 # include "panel-theme-selector.h"
 # include "panel-toggle-button.h"
 # include "panel-widget.h"
+# include "panel-workbench.h"
 #undef LIBPANEL_INSIDE

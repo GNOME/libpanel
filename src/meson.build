@@ -58,6 +58,8 @@ libpanel_sources = [
   'panel-theme-selector.c',
   'panel-toggle-button.c',
   'panel-widget.c',
+  'panel-workbench.c',
+  'panel-workspace.c',
 ]
 
 libpanel_headers = [
@@ -91,6 +93,7 @@ libpanel_headers = [
   'panel-version-macros.h',
   'panel-types.h',
   'panel-widget.h',
+  'panel-workbench.h',
 ]
 
 panel_enum_headers = [
