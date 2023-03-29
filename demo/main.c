@@ -70,7 +70,7 @@ main (int argc,
   GtkApplication *app;
   int ret;
 
-  app = g_object_new (ADW_TYPE_APPLICATION,
+  app = g_object_new (PANEL_TYPE_APPLICATION,
                       "application-id", "org.gnome.libpanel.demo",
                       NULL);
   g_signal_connect (app, "activate", G_CALLBACK (on_activate), NULL);
