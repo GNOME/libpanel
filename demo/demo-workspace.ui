@@ -11,6 +11,13 @@
         <child type="start">
           <object class="PanelToggleButton">
             <property name="area">start</property>
+            <property name="dock">dock</property>
+          </object>
+        </child>
+        <child type="end">
+          <object class="PanelToggleButton">
+            <property name="area">end</property>
+            <property name="dock">dock</property>
           </object>
         </child>
         <child type="end">
@@ -19,6 +26,10 @@
             <property name="menu-model">primary_menu</property>
           </object>
         </child>
+      </object>
+    </child>
+    <child internal-child="dock">
+      <object class="PanelDock" id="dock">
       </object>
     </child>
     <child internal-child="start_area">
@@ -50,6 +61,7 @@
         <child type="suffix">
           <object class="PanelToggleButton">
             <property name="area">bottom</property>
+            <property name="dock">dock</property>
           </object>
         </child>
       </object>
