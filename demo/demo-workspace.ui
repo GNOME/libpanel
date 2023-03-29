@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="DemoWorkspace" parent="PanelDocumentWorkspace">
+    <child type="titlebar">
+      <object class="AdwHeaderBar">
+        <child type="title">
+          <object class="AdwWindowTitle">
+            <property name="title">Panel Demo</property>
+          </object>
+        </child>
+        <child type="start">
+          <object class="PanelToggleButton">
+            <property name="area">start</property>
+          </object>
+        </child>
+        <child type="end">
+          <object class="GtkMenuButton">
+            <property name="icon-name">open-menu-symbolic</property>
+            <property name="menu-model">primary_menu</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child internal-child="start_area">
+      <object class="PanelPaned">
+        <child>
+          <object class="PanelFrame">
+            <child>
+              <object class="PanelWidget">
+                <property name="title">Files</property>
+                <property name="icon-name">folder-symbolic</property>
+                <property name="vexpand">true</property>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="hscrollbar-policy">never</property>
+                    <child>
+                      <object class="GtkListView">
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child internal-child="statusbar">
+      <object class="PanelStatusbar">
+        <child type="suffix">
+          <object class="PanelToggleButton">
+            <property name="area">bottom</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label">Quit</attribute>
+        <attribute name="action">app.quit</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

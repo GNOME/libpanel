@@ -20,44 +20,17 @@
 
 #include <libpanel.h>
 
-static void
-add_widgetry (PanelDocumentWorkspace *workspace)
-{
-  GtkWidget *titlebar;
-  PanelWidget *test1;
-  PanelPosition *position1;
-
-  /* NOTE:
-   *
-   * You probably would want to create a subclass of PanelDocumentWorkspace
-   * instead of manually setting up all of this widgetry.
-   */
-
-  titlebar = adw_header_bar_new ();
-  panel_document_workspace_set_titlebar (workspace, titlebar);
-
-  position1 = panel_position_new ();
-  panel_position_set_area (position1, PANEL_AREA_START);
-  test1 = PANEL_WIDGET (panel_widget_new ());
-  panel_widget_set_title (test1, "Test 1");
-  panel_widget_set_icon_name (test1, "folder-symbolic");
-  panel_widget_set_child (test1, gtk_label_new ("Test 1"));
-  panel_document_workspace_add_widget (workspace, test1, position1);
-
-  g_clear_object (&position1);
-}
+#include "demo-workspace.h"
 
 static void
 on_activate (GtkApplication *app,
              gpointer        user_data)
 {
   PanelWorkbench *workbench;
-  GtkWidget *workspace;
+  DemoWorkspace *workspace;
 
   workbench = panel_workbench_new ();
-  workspace = panel_document_workspace_new ();
-
-  add_widgetry (PANEL_DOCUMENT_WORKSPACE (workspace));
+  workspace = demo_workspace_new ();
 
   panel_workbench_add_workspace (workbench, PANEL_WORKSPACE (workspace));
   panel_workbench_focus_workspace (workbench, PANEL_WORKSPACE (workspace));
