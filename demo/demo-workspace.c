@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "demo-page.h"
 #include "demo-workspace.h"
 
 struct _DemoWorkspace
@@ -28,6 +29,19 @@ struct _DemoWorkspace
 };
 
 G_DEFINE_FINAL_TYPE (DemoWorkspace, demo_workspace, PANEL_TYPE_DOCUMENT_WORKSPACE)
+
+static void
+add_page_action (GtkWidget  *widget,
+                 const char *action_name,
+                 GVariant   *param)
+{
+  DemoWorkspace *self = DEMO_WORKSPACE (widget);
+  DemoPage *page = demo_page_new ();
+
+  panel_document_workspace_add_widget (PANEL_DOCUMENT_WORKSPACE (self),
+                                       PANEL_WIDGET (page),
+                                       NULL);
+}
 
 static void
 demo_workspace_dispose (GObject *object)
@@ -44,6 +58,8 @@ demo_workspace_class_init (DemoWorkspaceClass *klass)
   object_class->dispose = demo_workspace_dispose;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/demo/demo-workspace.ui");
+
+  gtk_widget_class_install_action (widget_class, "workspace.add-page", NULL, add_page_action);
 }
 
 static void

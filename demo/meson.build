@@ -5,6 +5,7 @@ demo_dependencies = [
 
 demo_sources = [
   'main.c',
+  'demo-page.c',
   'demo-workspace.c',
 
   gnome.compile_resources(

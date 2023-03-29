@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="DemoPage" parent="PanelWidget">
+    <property name="title">Untitled Document</property>
+    <property name="icon-name">text-x-generic-symbolic</property>
+    <property name="hexpand">true</property>
+    <property name="vexpand">true</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <child>
+          <object class="GtkTextView">
+            <property name="top-margin">12</property>
+            <property name="bottom-margin">12</property>
+            <property name="left-margin">12</property>
+            <property name="right-margin">12</property>
+            <property name="monospace">true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

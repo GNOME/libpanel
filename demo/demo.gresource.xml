@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/libpanel/demo">
+    <file compressed="true" preprocess="xml-stripblanks">demo-page.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">demo-workspace.ui</file>
   </gresource>
 </gresources>

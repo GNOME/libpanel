@@ -14,6 +14,12 @@
             <property name="dock">dock</property>
           </object>
         </child>
+        <child type="start">
+          <object class="GtkButton">
+            <property name="icon-name">list-add-symbolic</property>
+            <property name="action-name">workspace.add-page</property>
+          </object>
+        </child>
         <child type="end">
           <object class="PanelToggleButton">
             <property name="area">end</property>
