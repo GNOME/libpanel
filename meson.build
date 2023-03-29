@@ -45,6 +45,10 @@ config_h.set_quoted('PACKAGE_VERSION', meson.project_version())
 config_h.set_quoted('GETTEXT_PACKAGE', 'libpanel')
 config_h.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
 
+if get_option('development')
+  config_h.set10('DEVELOPMENT_BUILD', true)
+endif
+
 # Specify minimum library versions
 glib_major = glib_req_version.split('.')[0].to_int()
 glib_minor = glib_req_version.split('.')[1].to_int()
