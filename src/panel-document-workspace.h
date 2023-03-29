@@ -21,6 +21,7 @@
 #pragma once
 
 #include "panel-dock.h"
+#include "panel-frame.h"
 #include "panel-grid.h"
 #include "panel-position.h"
 #include "panel-statusbar.h"
@@ -38,8 +39,14 @@ struct _PanelDocumentWorkspaceClass
 {
   PanelWorkspaceClass parent_class;
 
+  PanelFrame *(*create_frame) (PanelDocumentWorkspace *self,
+                               PanelPosition          *position);
+  gboolean    (*add_widget)   (PanelDocumentWorkspace *self,
+                               PanelWidget            *widget,
+                               PanelPosition          *position);
+
   /*< private >*/
-  gpointer _reserved[8];
+  gpointer _reserved[16];
 };
 
 PANEL_AVAILABLE_IN_1_4
@@ -50,6 +57,11 @@ PANEL_AVAILABLE_IN_1_4
 PanelGrid      *panel_document_workspace_get_grid      (PanelDocumentWorkspace *self);
 PANEL_AVAILABLE_IN_1_4
 PanelStatusbar *panel_document_workspace_get_statusbar (PanelDocumentWorkspace *self);
+PANEL_AVAILABLE_IN_1_4
+GtkWidget      *panel_document_workspace_get_titlebar  (PanelDocumentWorkspace *self);
+PANEL_AVAILABLE_IN_1_4
+void            panel_document_workspace_set_titlebar  (PanelDocumentWorkspace *self,
+                                                        GtkWidget              *titlebar);
 PANEL_AVAILABLE_IN_1_4
 void            panel_document_workspace_add_widget    (PanelDocumentWorkspace *self,
                                                         PanelWidget            *widget,

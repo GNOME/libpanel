@@ -157,6 +157,12 @@ panel_workbench_init (PanelWorkbench *self)
 {
 }
 
+PanelWorkbench *
+panel_workbench_new (void)
+{
+  return g_object_new (PANEL_TYPE_WORKBENCH, NULL);
+}
+
 const char *
 panel_workbench_get_id (PanelWorkbench *self)
 {
@@ -371,6 +377,9 @@ panel_workbench_add_workspace (PanelWorkbench *self,
   g_return_if_fail (PANEL_IS_WORKBENCH (self));
   g_return_if_fail (PANEL_IS_WORKSPACE (workspace));
 
+  gtk_application_add_window (GTK_APPLICATION (g_application_get_default ()),
+                              GTK_WINDOW (workspace));
+
   action_muxer = _panel_workbench_get_action_muxer (self);
   gtk_widget_insert_action_group (GTK_WIDGET (workspace),
                                   "workbench",
@@ -387,6 +396,9 @@ panel_workbench_remove_workspace (PanelWorkbench *self,
 
   g_return_if_fail (PANEL_IS_WORKBENCH (self));
   g_return_if_fail (PANEL_IS_WORKSPACE (workspace));
+
+  gtk_application_remove_window (GTK_APPLICATION (g_application_get_default ()),
+                                 GTK_WINDOW (workspace));
 
   gtk_widget_insert_action_group (GTK_WIDGET (workspace), "workbench", NULL);
   gtk_window_group_remove_window (GTK_WINDOW_GROUP (self), GTK_WINDOW (workspace));
