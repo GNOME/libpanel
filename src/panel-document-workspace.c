@@ -60,10 +60,15 @@ enum {
   N_SIGNALS
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (PanelDocumentWorkspace, panel_document_workspace, PANEL_TYPE_WORKSPACE)
+static void buildable_iface_init (GtkBuildableIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (PanelDocumentWorkspace, panel_document_workspace, PANEL_TYPE_WORKSPACE,
+                         G_ADD_PRIVATE (PanelDocumentWorkspace)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, buildable_iface_init))
 
 static GParamSpec *properties[N_PROPS];
 static guint signals[N_SIGNALS];
+static GtkBuildableIface *parent_buildable;
 
 static gboolean
 get_column (PanelPosition *self,
@@ -642,4 +647,66 @@ panel_document_workspace_add_widget (PanelDocumentWorkspace *self,
     }
 
   g_clear_object (&local_position);
+}
+
+static GObject *
+panel_document_workspace_get_internal_child (GtkBuildable *buildable,
+                                             GtkBuilder   *builder,
+                                             const char   *child_name)
+{
+  PanelDocumentWorkspace *self = PANEL_DOCUMENT_WORKSPACE (buildable);
+  PanelDocumentWorkspacePrivate *priv = panel_document_workspace_get_instance_private (self);
+
+  g_assert (PANEL_IS_DOCUMENT_WORKSPACE (self));
+  g_assert (GTK_IS_BUILDER (builder));
+  g_assert (child_name != NULL);
+
+  if (g_strcmp0 (child_name, "start_area") == 0)
+    return G_OBJECT (priv->start_area);
+
+  if (g_strcmp0 (child_name, "bottom_area") == 0)
+    return G_OBJECT (priv->bottom_area);
+
+  if (g_strcmp0 (child_name, "end_area") == 0)
+    return G_OBJECT (priv->end_area);
+
+  if (g_strcmp0 (child_name, "top_area") == 0)
+    return G_OBJECT (priv->top_area);
+
+  if (g_strcmp0 (child_name, "grid") == 0)
+    return G_OBJECT (priv->grid);
+
+  if (g_strcmp0 (child_name, "statusbar") == 0)
+    return G_OBJECT (priv->statusbar);
+
+  if (g_strcmp0 (child_name, "dock") == 0)
+    return G_OBJECT (priv->dock);
+
+  return parent_buildable->get_internal_child (buildable, builder, child_name);
+}
+
+static void
+panel_document_workspace_add_child (GtkBuildable *buildable,
+                                    GtkBuilder   *builder,
+                                    GObject      *child,
+                                    const char   *type)
+{
+  PanelDocumentWorkspace *self = PANEL_DOCUMENT_WORKSPACE (buildable);
+
+  g_assert (PANEL_IS_DOCUMENT_WORKSPACE (self));
+  g_assert (GTK_IS_BUILDER (builder));
+
+  if (g_strcmp0 (type, "titlebar") == 0 && GTK_IS_WIDGET (child))
+    panel_document_workspace_set_titlebar (self, GTK_WIDGET (child));
+  else
+    parent_buildable->add_child (buildable, builder, child, type);
+}
+
+static void
+buildable_iface_init (GtkBuildableIface *iface)
+{
+  parent_buildable = g_type_interface_peek_parent (iface);
+
+  iface->get_internal_child = panel_document_workspace_get_internal_child;
+  iface->add_child = panel_document_workspace_add_child;
 }
