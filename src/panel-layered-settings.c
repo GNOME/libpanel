@@ -123,7 +123,7 @@ panel_layered_settings_update_cache (PanelLayeredSettings *self)
           panel_layered_settings_cache_key (self, keys [i]);
           g_free (keys[i]);
         }
-      g_free (keys);
+      g_strfreev (keys);
     }
 }
 
@@ -404,7 +404,7 @@ void
 panel_layered_settings_append (PanelLayeredSettings *self,
                                GSettings            *settings)
 {
-  GStrv *keys = NULL;
+  GStrv keys = NULL;
 
   g_return_if_fail (PANEL_IS_LAYERED_SETTINGS (self));
   g_return_if_fail (G_IS_SETTINGS (settings));
@@ -427,7 +427,7 @@ panel_layered_settings_append (PanelLayeredSettings *self,
 
   panel_layered_settings_update_cache (self);
 
-  g_free (keys);
+  g_strfreev (keys);
 }
 
 static gboolean

@@ -705,10 +705,10 @@ panel_settings_has_action (GActionGroup *group,
                            const char   *action_name)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  GStrv *keys = panel_layered_settings_list_keys (self->layered_settings);
+  GStrv keys = panel_layered_settings_list_keys (self->layered_settings);
   gboolean result = g_strv_contains ((const char * const *)keys, action_name);
 
-  g_free (keys);
+  g_strfreev (keys);
   return result;
 }
 
