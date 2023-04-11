@@ -450,14 +450,14 @@ panel_menu_manager_merge_model (PanelMenuManager *self,
        */
       if (panel_menu_manager_menu_contains (self, menu, item))
         {
-          g_object_unref(item);
+          g_object_unref (item);
           continue;
         }
 
       panel_menu_manager_add_to_menu (self, menu, item);
 
-      g_object_unref(item);
-      g_object_unref(link_iter);
+      g_object_unref (item);
+      g_object_unref (link_iter);
     }
 }
 

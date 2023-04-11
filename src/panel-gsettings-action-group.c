@@ -233,7 +233,7 @@ panel_gsettings_action_group_activate_action (GActionGroup *group,
                                               GVariant     *parameter)
 {
   PanelGSettingsActionGroup *self = (PanelGSettingsActionGroup *)group;
-  GSettingsSchemaKey* key = g_settings_schema_get_key (self->schema, action_name);
+  GSettingsSchemaKey *key = g_settings_schema_get_key (self->schema, action_name);
   GVariant* default_value = g_settings_schema_key_get_default_value (key);
 
   if (g_variant_is_of_type (default_value, G_VARIANT_TYPE_BOOLEAN))

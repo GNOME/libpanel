@@ -112,7 +112,7 @@ panel_settings_layered_settings_changed_cb (PanelSettings        *self,
                                             const char           *key,
                                             PanelLayeredSettings *layered_settings)
 {
-  GVariant* value = NULL;
+  GVariant *value = NULL;
 
   g_assert (key != NULL);
   g_assert (PANEL_IS_LAYERED_SETTINGS (layered_settings));
@@ -158,8 +158,8 @@ panel_settings_resolve_schema_path (const char *schema_id_prefix,
     {
       g_critical ("Failed to locate schema %s", schema_id);
       g_object_unref (schema);
-      g_free(real_path_suffix);
-      g_free(escaped);
+      g_free (real_path_suffix);
+      g_free (escaped);
       return NULL;
     }
 
@@ -740,7 +740,7 @@ panel_settings_get_action_state_hint (GActionGroup *group,
                                       const char   *action_name)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  GSettingsSchemaKey* key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
   GVariant *range = g_settings_schema_key_get_range (key);
 
   g_clear_object (&key);
@@ -753,7 +753,7 @@ panel_settings_change_action_state (GActionGroup *group,
                                     GVariant     *value)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  GSettingsSchemaKey* key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
 
   if (g_variant_is_of_type (value, g_settings_schema_key_get_value_type (key)) &&
       g_settings_schema_key_range_check (key, value))
@@ -773,7 +773,7 @@ panel_settings_get_action_state_type (GActionGroup *group,
                                       const char   *action_name)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  GSettingsSchemaKey* key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
   const GVariantType *type = g_settings_schema_key_get_value_type (key);
 
   g_clear_pointer (&key, g_settings_schema_key_unref);
