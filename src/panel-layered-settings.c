@@ -72,7 +72,7 @@ static void
 panel_layered_settings_cache_key (PanelLayeredSettings *self,
                                   const char           *key)
 {
-  g_autoptr(GVariant) value = NULL;
+  GVariant *value = NULL;
   GSettings *settings;
 
   g_assert (PANEL_IS_LAYERED_SETTINGS (self));
@@ -87,6 +87,7 @@ panel_layered_settings_cache_key (PanelLayeredSettings *self,
       if (value != NULL)
         {
           g_settings_set_value (self->memory_settings, key, value);
+          g_variant_unref (value);
           goto emit_changed;
         }
     }
@@ -94,6 +95,7 @@ panel_layered_settings_cache_key (PanelLayeredSettings *self,
   settings = g_ptr_array_index (self->settings, 0);
   value = g_settings_get_value (settings, key);
   g_settings_set_value (self->memory_settings, key, value);
+  g_variant_unref (value);
 
 emit_changed:
   g_signal_emit (self, signals[CHANGED], g_quark_from_string (key), key);
@@ -103,8 +105,8 @@ static void
 panel_layered_settings_update_cache (PanelLayeredSettings *self)
 {
   GSettingsSchemaSource *source;
-  g_autoptr(GSettingsSchema) schema = NULL;
-  g_auto(GStrv) keys = NULL;
+  GSettingsSchema *schema = NULL;
+  GStrv keys = NULL;
 
   g_assert (PANEL_IS_LAYERED_SETTINGS (self));
 
@@ -117,7 +119,11 @@ panel_layered_settings_update_cache (PanelLayeredSettings *self)
   if ((keys = g_settings_schema_list_keys (schema)))
     {
       for (guint i = 0; keys[i]; i++)
-        panel_layered_settings_cache_key (self, keys [i]);
+        {
+          panel_layered_settings_cache_key (self, keys [i]);
+          g_free (keys[i]);
+        }
+      g_free (keys);
     }
 }
 
@@ -300,10 +306,10 @@ panel_layered_settings_get_user_value (PanelLayeredSettings *self,
   for (guint i = 0; i < self->settings->len; i++)
     {
       GSettings *settings = g_ptr_array_index (self->settings, i);
-      g_autoptr(GVariant) value = g_settings_get_user_value (settings, key);
+      GVariant  *value = g_settings_get_user_value (settings, key);
 
       if (value != NULL)
-        return g_steal_pointer (&value);
+        return value;
     }
 
   return NULL;
@@ -327,10 +333,10 @@ panel_layered_settings_get_value (PanelLayeredSettings *self,
   for (guint i = 0; i < self->settings->len; i++)
     {
       GSettings *settings = g_ptr_array_index (self->settings, i);
-      g_autoptr(GVariant) value = g_settings_get_user_value (settings, key);
+      GVariant* value = g_settings_get_user_value (settings, key);
 
       if (value != NULL)
-        return g_steal_pointer (&value);
+        return value;
     }
 
   return g_settings_get_value (panel_layered_settings_get_primary_settings (self), key);
@@ -398,7 +404,7 @@ void
 panel_layered_settings_append (PanelLayeredSettings *self,
                                GSettings            *settings)
 {
-  g_auto(GStrv) keys = NULL;
+  GStrv *keys = NULL;
 
   g_return_if_fail (PANEL_IS_LAYERED_SETTINGS (self));
   g_return_if_fail (G_IS_SETTINGS (settings));
@@ -420,6 +426,8 @@ panel_layered_settings_append (PanelLayeredSettings *self,
                            G_CONNECT_SWAPPED);
 
   panel_layered_settings_update_cache (self);
+
+  g_free (keys);
 }
 
 static gboolean
@@ -564,7 +572,7 @@ GSettingsSchemaKey *
 panel_layered_settings_get_key (PanelLayeredSettings *self,
                                 const char           *key)
 {
-  g_autoptr(GSettingsSchema) schema = NULL;
+  GSettingsSchema* schema = NULL;
   GSettingsSchemaKey *ret;
 
   g_return_val_if_fail (PANEL_IS_LAYERED_SETTINGS (self), NULL);
@@ -577,6 +585,8 @@ panel_layered_settings_get_key (PanelLayeredSettings *self,
 
   ret = g_settings_schema_get_key (schema, key);
   g_assert (ret != NULL);
+
+  g_clear_object (&schema);
 
   return ret;
 }
@@ -593,13 +603,15 @@ panel_layered_settings_get_key (PanelLayeredSettings *self,
 char **
 panel_layered_settings_list_keys (PanelLayeredSettings *self)
 {
-  g_autoptr(GSettingsSchema) schema = NULL;
+  GSettingsSchema *schema = NULL;
 
   g_return_val_if_fail (PANEL_IS_LAYERED_SETTINGS (self), NULL);
 
   g_object_get (self->memory_settings,
                 "settings-schema", &schema,
                 NULL);
+  char **keys = g_settings_schema_list_keys (schema);
+  g_clear_pointer (&schema, g_settings_schema_unref);
 
-  return g_settings_schema_list_keys (schema);
+  return keys;
 }

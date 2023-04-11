@@ -100,7 +100,7 @@ static Type##ActionInfo *                                                       
 _##prefix##_get_action_info (GActionGroup *group,                                 \
                              const gchar *name)                                   \
 {                                                                                 \
-  g_autofree gchar *fullname = g_strdup_printf ("ACTION-INFO:%s", name);          \
+  gchar *fullname = g_strdup_printf ("ACTION-INFO:%s", name);                     \
   Type##ActionInfo *info = g_object_get_data (G_OBJECT (group), fullname);        \
   if (info == NULL)                                                               \
     {                                                                             \
@@ -119,6 +119,7 @@ _##prefix##_get_action_info (GActionGroup *group,                               
       g_object_set_data_full (G_OBJECT (group), fullname, info,                   \
                               _##prefix##_action_info_free);                      \
     }                                                                             \
+  g_free (fullname);                                                              \
   return info;                                                                    \
 }                                                                                 \
                                                                                   \
