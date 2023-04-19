@@ -54,7 +54,7 @@ struct _PanelDropControls
   PanelDock         *dock;
   AdwTabPage        *drop_before_page;
 
-  PanelArea          area : 3;
+  PanelArea          area : 4;
 
   guint              in_drop : 1;
 };

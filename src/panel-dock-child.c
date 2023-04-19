@@ -36,7 +36,7 @@ struct _PanelDockChild
   GtkWidget     parent_instance;
   GtkRevealer  *revealer;
   PanelResizer *resizer;
-  PanelArea     area : 3;
+  PanelArea     area : 4;
   guint         dragging : 1;
 };
 
