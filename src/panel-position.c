@@ -38,7 +38,7 @@ struct _PanelPosition
   guint depth;
   guint row;
 
-  PanelArea area : 3;
+  PanelArea area : 4;
   guint area_set : 1;
   guint column_set : 1;
   guint depth_set : 1;

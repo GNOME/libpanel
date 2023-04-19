@@ -30,7 +30,7 @@ struct _PanelHandle
 {
   GtkWidget parent_instance;
   GtkWidget *separator;
-  PanelArea  area : 3;
+  PanelArea  area : 4;
 };
 
 G_DEFINE_TYPE (PanelHandle, panel_handle, GTK_TYPE_WIDGET)

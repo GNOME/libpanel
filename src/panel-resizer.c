@@ -38,7 +38,7 @@ struct _PanelResizer
   double       drag_position;
   guint        drag_position_set : 1;
 
-  PanelArea    area : 3;
+  PanelArea    area : 4;
 };
 
 G_DEFINE_TYPE (PanelResizer, panel_resizer, GTK_TYPE_WIDGET)
