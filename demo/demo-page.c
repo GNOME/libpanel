@@ -29,60 +29,12 @@ struct _DemoPage
   GtkTextView *text_view;
 };
 
-enum {
-  PROP_0,
-  N_PROPS
-};
-
 G_DEFINE_FINAL_TYPE (DemoPage, demo_page, PANEL_TYPE_WIDGET)
-
-static GParamSpec *properties [N_PROPS];
-
-static void
-demo_page_dispose (GObject *object)
-{
-  G_OBJECT_CLASS (demo_page_parent_class)->dispose (object);
-}
-
-static void
-demo_page_get_property (GObject    *object,
-                        guint       prop_id,
-                        GValue     *value,
-                        GParamSpec *pspec)
-{
-  DemoPage *self = DEMO_PAGE (object);
-
-  switch (prop_id)
-    {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-demo_page_set_property (GObject      *object,
-                        guint         prop_id,
-                        const GValue *value,
-                        GParamSpec   *pspec)
-{
-  DemoPage *self = DEMO_PAGE (object);
-
-  switch (prop_id)
-    {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
 
 static void
 demo_page_class_init (DemoPageClass *klass)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-
-  object_class->dispose = demo_page_dispose;
-  object_class->get_property = demo_page_get_property;
-  object_class->set_property = demo_page_set_property;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/demo/demo-page.ui");
 }
