@@ -498,7 +498,6 @@ panel_document_workspace_init (PanelDocumentWorkspace *self)
 
 /**
  * panel_document_workspace_new:
- * @self: a #PanelDocumentWorkspace
  *
  * Creates a new #PanelDocumentWorkspace.
  *
