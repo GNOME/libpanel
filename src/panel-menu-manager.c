@@ -753,7 +753,7 @@ panel_menu_manager_get_menu_ids (PanelMenuManager *self)
     {
       gpointer *keys = g_hash_table_get_keys_as_array (self->models, NULL);
       self->cached_keys = g_strdupv ((char **)keys);
-      g_clear_pointer (&keys, g_strfreev);
+      g_free (keys);
     }
 
   return (const char * const *)self->cached_keys;
@@ -844,7 +844,7 @@ panel_menu_manager_find_item_by_id (PanelMenuManager *self,
             {
               if (position != NULL)
                 *position = i;
-              
+
               g_clear_pointer (&item_id, g_free);
               return menu;
             }
