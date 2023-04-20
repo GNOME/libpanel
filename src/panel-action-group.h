@@ -119,7 +119,7 @@ _##prefix##_get_action_info (GActionGroup *group,                               
       g_object_set_data_full (G_OBJECT (group), fullname, info,                   \
                               _##prefix##_action_info_free);                      \
     }                                                                             \
-  g_free (fullname);                                                              \
+  g_clear_pointer (&fullname, g_free);                                            \
   return info;                                                                    \
 }                                                                                 \
                                                                                   \

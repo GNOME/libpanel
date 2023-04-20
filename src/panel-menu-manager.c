@@ -117,10 +117,10 @@ find_with_attribute_string (GMenuModel  *model,
       if (g_menu_model_get_item_attribute (model, i, attribute, "s", &item_value) &&
           (g_strcmp0 (value, item_value) == 0))
         {
-          g_free(item_value);
+          g_clear_pointer (&item_value, g_free);
           return i;
         }
-      g_free(item_value);
+      g_clear_pointer (&item_value, g_free);
     }
 
   return -1;
@@ -281,10 +281,10 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
               i--;
               break;
             }
-          g_free(j_id);
-          g_free(j_label);
+          g_clear_pointer (&j_id, g_free);
+          g_clear_pointer (&j_label, g_free);
         }
-      g_free(i_after);
+      g_clear_pointer (&i_after, g_free);
     }
 
   /*
@@ -325,10 +325,10 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
               i++;
               break;
             }
-          g_free (j_id);
-          g_free (j_label);
+          g_clear_pointer (&j_id, g_free);
+          g_clear_pointer (&j_label, g_free);
         }
-      g_free (i_before);
+      g_clear_pointer (&i_before, g_free);
     }
 }
 
@@ -753,7 +753,7 @@ panel_menu_manager_get_menu_ids (PanelMenuManager *self)
     {
       gpointer *keys = g_hash_table_get_keys_as_array (self->models, NULL);
       self->cached_keys = g_strdupv ((char **)keys);
-      g_free (keys);
+      g_clear_pointer (&keys, g_strfreev);
     }
 
   return (const char * const *)self->cached_keys;
@@ -844,9 +844,11 @@ panel_menu_manager_find_item_by_id (PanelMenuManager *self,
             {
               if (position != NULL)
                 *position = i;
+              
+              g_clear_pointer (&item_id, g_free);
               return menu;
             }
-          g_free(item_id);
+          g_clear_pointer (&item_id, g_free);
         }
     }
 

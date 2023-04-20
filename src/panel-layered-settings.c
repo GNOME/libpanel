@@ -87,7 +87,6 @@ panel_layered_settings_cache_key (PanelLayeredSettings *self,
       if (value != NULL)
         {
           g_settings_set_value (self->memory_settings, key, value);
-          g_variant_unref (value);
           goto emit_changed;
         }
     }
@@ -95,9 +94,9 @@ panel_layered_settings_cache_key (PanelLayeredSettings *self,
   settings = g_ptr_array_index (self->settings, 0);
   value = g_settings_get_value (settings, key);
   g_settings_set_value (self->memory_settings, key, value);
-  g_variant_unref (value);
 
-emit_changed:
+ret:
+  g_clear_pointer (&value, g_variant_unref);
   g_signal_emit (self, signals[CHANGED], g_quark_from_string (key), key);
 }
 
@@ -123,8 +122,10 @@ panel_layered_settings_update_cache (PanelLayeredSettings *self)
           panel_layered_settings_cache_key (self, keys [i]);
           g_free (keys[i]);
         }
-      g_strfreev (keys);
+      g_clear_pointer (&keys, g_strfreev);
     }
+
+  g_clear_pointer (&schema, g_settings_schema_unref);
 }
 
 static void
@@ -426,8 +427,8 @@ panel_layered_settings_append (PanelLayeredSettings *self,
                            G_CONNECT_SWAPPED);
 
   panel_layered_settings_update_cache (self);
-
-  g_strfreev (keys);
+  
+  g_clear_pointer (&keys, g_strfreev);
 }
 
 static gboolean
@@ -586,7 +587,7 @@ panel_layered_settings_get_key (PanelLayeredSettings *self,
   ret = g_settings_schema_get_key (schema, key);
   g_assert (ret != NULL);
 
-  g_clear_object (&schema);
+  g_clear_pointer (&schema, g_settings_schema_unref);
 
   return ret;
 }

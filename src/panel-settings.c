@@ -91,8 +91,11 @@ _g_variant_type_intern (const GVariantType *type)
     return NULL;
 
   str = g_variant_type_dup_string (type);
+  
   const GVariantType *interned_type = G_VARIANT_TYPE (g_intern_string (str));
-  g_free(str);
+  
+  g_clear_pointer (&str, g_free);
+
   return interned_type;
 }
 
@@ -122,7 +125,7 @@ panel_settings_layered_settings_changed_cb (PanelSettings        *self,
   value = panel_layered_settings_get_value (self->layered_settings, key);
   g_action_group_action_state_changed (G_ACTION_GROUP (self), key, value);
 
-  g_variant_unref (value);
+  g_clear_pointer (&value, g_variant_unref);
 }
 
 char *
@@ -157,9 +160,9 @@ panel_settings_resolve_schema_path (const char *schema_id_prefix,
   if (!(schema = g_settings_schema_source_lookup (source, schema_id, TRUE)))
     {
       g_critical ("Failed to locate schema %s", schema_id);
-      g_object_unref (schema);
-      g_free (real_path_suffix);
-      g_free (escaped);
+      g_clear_pointer (&escaped, g_free);
+      g_clear_pointer (&real_path_suffix, g_free);
+      g_clear_pointer (&schema, g_settings_schema_unref);
       return NULL;
     }
 
@@ -168,9 +171,9 @@ panel_settings_resolve_schema_path (const char *schema_id_prefix,
       if (identifier != NULL)
         g_critical ("Attempt to resolve non-relocatable schema %s with identifier %s",
                     schema_id, identifier);
-      g_object_unref (schema);
-      g_free (escaped);
-      g_free (real_path_suffix);
+      g_clear_pointer (&escaped, g_free);
+      g_clear_pointer (&real_path_suffix, g_free);
+      g_clear_pointer (&schema, g_settings_schema_unref);
       return g_strdup (schema_path);
     }
 
@@ -188,9 +191,11 @@ panel_settings_resolve_schema_path (const char *schema_id_prefix,
       result = g_strconcat (path_prefix, escaped, "/", path_suffix, NULL);
     }
 
-  g_free (escaped);
-  g_free (real_path_suffix);
-  g_object_unref (schema);
+
+  g_clear_pointer (&escaped, g_free);
+  g_clear_pointer (&real_path_suffix, g_free);
+  g_clear_pointer (&schema, g_settings_schema_unref);
+  
   return result;
 }
 
@@ -262,7 +267,7 @@ panel_settings_constructed (GObject *object)
 
           panel_layered_settings_append (self->layered_settings, project_settings);
 
-          g_free (project_path);
+          g_clear_pointer (&project_path, g_free);
           g_clear_object (&project_settings);
        }
     }
@@ -271,7 +276,7 @@ panel_settings_constructed (GObject *object)
   panel_layered_settings_append (self->layered_settings, app_settings);
 
   g_clear_object (&app_settings);
-  g_clear_object (&schema);
+  g_clear_pointer (&schema, g_settings_schema_unref);
 }
 
 static void
@@ -708,7 +713,7 @@ panel_settings_has_action (GActionGroup *group,
   GStrv keys = panel_layered_settings_list_keys (self->layered_settings);
   gboolean result = g_strv_contains ((const char * const *)keys, action_name);
 
-  g_strfreev (keys);
+  g_clear_pointer (&keys, g_strfreev);
   return result;
 }
 
@@ -743,7 +748,7 @@ panel_settings_get_action_state_hint (GActionGroup *group,
   GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
   GVariant *range = g_settings_schema_key_get_range (key);
 
-  g_clear_object (&key);
+  g_clear_pointer (&key, g_settings_schema_key_unref);
   return range;
 }
 
@@ -763,9 +768,9 @@ panel_settings_change_action_state (GActionGroup *group,
       panel_layered_settings_set_value (self->layered_settings, action_name, hold);
       g_action_group_action_state_changed (group, action_name, hold);
 
-      g_variant_unref (hold);
-      g_clear_pointer (&key, g_settings_schema_key_unref);
+      g_clear_pointer (&hold, g_variant_unref);
     }
+  g_clear_pointer (&key, g_settings_schema_key_unref);
 }
 
 static const GVariantType *
@@ -798,14 +803,14 @@ panel_settings_activate_action (GActionGroup *group,
 
       old = panel_settings_get_action_state (group, action_name);
       parameter = g_variant_new_boolean (!g_variant_get_boolean (old));
-      g_variant_unref (old);
+      g_clear_pointer (&old, g_variant_unref);
     }
 
   g_action_group_change_action_state (group, action_name, parameter);
 
 ret:
-  g_clear_object (&key);
-  g_variant_unref (default_value);
+  g_clear_pointer (&key, g_settings_schema_key_unref);
+  g_clear_pointer (&default_value, g_variant_unref);
 }
 
 static const GVariantType *
