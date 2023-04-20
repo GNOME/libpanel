@@ -112,11 +112,15 @@ find_with_attribute_string (GMenuModel  *model,
 
   for (guint i = 0; i < n_items; i++)
     {
-      g_autofree gchar *item_value = NULL;
+      gchar *item_value = NULL;
 
       if (g_menu_model_get_item_attribute (model, i, attribute, "s", &item_value) &&
           (g_strcmp0 (value, item_value) == 0))
-        return i;
+        {
+          g_clear_pointer (&item_value, g_free);
+          return i;
+        }
+      g_clear_pointer (&item_value, g_free);
     }
 
   return -1;
@@ -162,7 +166,7 @@ model_copy_attributes_to_item (GMenuModel *model,
                                gint        item_index,
                                GMenuItem  *item)
 {
-  g_autoptr(GMenuAttributeIter) iter = NULL;
+  GMenuAttributeIter *iter = NULL;
   const gchar *attr_name;
   GVariant *attr_value;
 
@@ -178,6 +182,8 @@ model_copy_attributes_to_item (GMenuModel *model,
       g_menu_item_set_attribute_value (item, attr_name, attr_value);
       g_variant_unref (attr_value);
     }
+
+  g_clear_object (&iter);
 }
 
 static void
@@ -185,7 +191,7 @@ model_copy_links_to_item (GMenuModel *model,
                           guint       position,
                           GMenuItem  *item)
 {
-  g_autoptr(GMenuLinkIter) link_iter = NULL;
+  GMenuLinkIter *link_iter = NULL;
 
   g_assert (G_IS_MENU_MODEL (model));
   g_assert (G_IS_MENU_ITEM (item));
@@ -194,14 +200,18 @@ model_copy_links_to_item (GMenuModel *model,
 
   while (g_menu_link_iter_next (link_iter))
     {
-      g_autoptr(GMenuModel) link_model = NULL;
+      GMenuModel *link_model = NULL;
       const gchar *link_name;
 
       link_name = g_menu_link_iter_get_name (link_iter);
       link_model = g_menu_link_iter_get_value (link_iter);
 
       g_menu_item_set_link (item, link_name, link_model);
+
+      g_object_unref (link_model);
     }
+
+  g_object_unref (link_iter);
 }
 
 static void
@@ -209,16 +219,19 @@ menu_move_item_to (GMenu *menu,
                    guint  position,
                    guint  new_position)
 {
-  g_autoptr(GMenuItem) item = NULL;
+  GMenuItem *item = NULL;
 
   g_assert (G_IS_MENU (menu));
 
   item = g_menu_item_new (NULL, NULL);
+
   model_copy_attributes_to_item (G_MENU_MODEL (menu), position, item);
   model_copy_links_to_item (G_MENU_MODEL (menu), position, item);
 
   g_menu_remove (menu, position);
   g_menu_insert_item (menu, new_position, item);
+
+  g_object_unref (item);
 }
 
 static void
@@ -241,7 +254,7 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
 
   for (gint i = 0; i < n_items; i++)
     {
-      g_autofree gchar *i_after = NULL;
+      gchar *i_after = NULL;
 
       g_menu_model_get_item_attribute (model, i, PANEL_MENU_ATTRIBUTE_AFTER, "s", &i_after);
       if (i_after == NULL)
@@ -252,8 +265,8 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
        */
       for (gint j = n_items - 1; j > i; j--)
         {
-          g_autofree gchar *j_id = NULL;
-          g_autofree gchar *j_label = NULL;
+          gchar *j_id = NULL;
+          gchar *j_label = NULL;
 
           g_menu_model_get_item_attribute (model, j, "id", "s", &j_id);
           g_menu_model_get_item_attribute (model, j, "label", "s", &j_label);
@@ -268,7 +281,10 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
               i--;
               break;
             }
+          g_clear_pointer (&j_id, g_free);
+          g_clear_pointer (&j_label, g_free);
         }
+      g_clear_pointer (&i_after, g_free);
     }
 
   /*
@@ -281,7 +297,7 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
 
   for (gint i = n_items - 1; i >= 0; i--)
     {
-      g_autofree gchar *i_before = NULL;
+      gchar *i_before = NULL;
 
       g_menu_model_get_item_attribute (model, i, PANEL_MENU_ATTRIBUTE_BEFORE, "s", &i_before);
       if (i_before == NULL)
@@ -292,8 +308,8 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
        */
       for (gint j = 0; j < i; j++)
         {
-          g_autofree gchar *j_id = NULL;
-          g_autofree gchar *j_label = NULL;
+          gchar *j_id = NULL;
+          gchar *j_label = NULL;
 
           g_menu_model_get_item_attribute (model, j, "id", "s", &j_id);
           g_menu_model_get_item_attribute (model, j, "label", "s", &j_label);
@@ -309,7 +325,10 @@ panel_menu_manager_resolve_constraints (GMenu *menu)
               i++;
               break;
             }
+          g_clear_pointer (&j_id, g_free);
+          g_clear_pointer (&j_label, g_free);
         }
+      g_clear_pointer (&i_before, g_free);
     }
 }
 
@@ -363,8 +382,8 @@ panel_menu_manager_merge_model (PanelMenuManager *self,
 
   for (guint i = 0; i < n_items; i++)
     {
-      g_autoptr(GMenuItem) item = NULL;
-      g_autoptr(GMenuLinkIter) link_iter = NULL;
+      GMenuItem *item = NULL;
+      GMenuLinkIter *link_iter = NULL;
 
       item = g_menu_item_new (NULL, NULL);
 
@@ -384,7 +403,7 @@ panel_menu_manager_merge_model (PanelMenuManager *self,
       link_iter = g_menu_model_iterate_item_links (model, i);
       while (g_menu_link_iter_next (link_iter))
         {
-          g_autoptr(GMenuModel) link_model = NULL;
+          GMenuModel *link_model = NULL;
           const gchar *link_name;
           const gchar *link_id;
           GMenuModel *internal_menu;
@@ -421,6 +440,8 @@ panel_menu_manager_merge_model (PanelMenuManager *self,
           g_menu_item_set_attribute (item, "ide-link-id", "s", link_id);
 
           g_menu_item_set_link (item, link_name, internal_menu);
+
+          g_object_unref (link_model);
         }
 
       /*
@@ -428,9 +449,15 @@ panel_menu_manager_merge_model (PanelMenuManager *self,
        * the submenu/section links in followup merges of their GMenuModel.
        */
       if (panel_menu_manager_menu_contains (self, menu, item))
-        continue;
+        {
+          g_object_unref (item);
+          continue;
+        }
 
       panel_menu_manager_add_to_menu (self, menu, item);
+
+      g_object_unref (item);
+      g_object_unref (link_iter);
     }
 }
 
@@ -724,8 +751,9 @@ panel_menu_manager_get_menu_ids (PanelMenuManager *self)
 
   if (self->cached_keys == NULL)
     {
-      g_autofree gpointer *keys = g_hash_table_get_keys_as_array (self->models, NULL);
+      gpointer *keys = g_hash_table_get_keys_as_array (self->models, NULL);
       self->cached_keys = g_strdupv ((char **)keys);
+      g_clear_pointer (&keys, g_strfreev);
     }
 
   return (const char * const *)self->cached_keys;
@@ -754,7 +782,7 @@ panel_menu_manager_set_attribute_string (PanelMenuManager *self,
                                          const char       *attribute,
                                          const char       *value)
 {
-  g_autoptr(GMenuItem) item = NULL;
+  GMenuItem *item = NULL;
 
   g_return_if_fail (PANEL_IS_MENU_MANAGER (self));
   g_return_if_fail (G_IS_MENU (menu));
@@ -768,6 +796,8 @@ panel_menu_manager_set_attribute_string (PanelMenuManager *self,
 
   g_menu_remove (menu, position);
   g_menu_insert_item (menu, position, item);
+
+  g_object_unref (item);
 }
 
 /**
@@ -807,15 +837,18 @@ panel_menu_manager_find_item_by_id (PanelMenuManager *self,
 
       for (guint i = 0; i < n_items; i++)
         {
-          g_autofree char *item_id = NULL;
+          char *item_id = NULL;
 
           if (g_menu_model_get_item_attribute (G_MENU_MODEL (menu), i, "id", "s", &item_id) &&
               panel_str_equal0 (id, item_id))
             {
               if (position != NULL)
                 *position = i;
+              
+              g_clear_pointer (&item_id, g_free);
               return menu;
             }
+          g_clear_pointer (&item_id, g_free);
         }
     }
 

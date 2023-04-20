@@ -85,13 +85,18 @@ static guint signals [N_SIGNALS];
 static const GVariantType *
 _g_variant_type_intern (const GVariantType *type)
 {
-  g_autofree char *str = NULL;
+  char *str = NULL;
 
   if (type == NULL)
     return NULL;
 
   str = g_variant_type_dup_string (type);
-  return G_VARIANT_TYPE (g_intern_string (str));
+  
+  const GVariantType *interned_type = G_VARIANT_TYPE (g_intern_string (str));
+  
+  g_clear_pointer (&str, g_free);
+
+  return interned_type;
 }
 
 static void
@@ -110,7 +115,7 @@ panel_settings_layered_settings_changed_cb (PanelSettings        *self,
                                             const char           *key,
                                             PanelLayeredSettings *layered_settings)
 {
-  g_autoptr(GVariant) value = NULL;
+  GVariant *value = NULL;
 
   g_assert (key != NULL);
   g_assert (PANEL_IS_LAYERED_SETTINGS (layered_settings));
@@ -119,6 +124,8 @@ panel_settings_layered_settings_changed_cb (PanelSettings        *self,
 
   value = panel_layered_settings_get_value (self->layered_settings, key);
   g_action_group_action_state_changed (G_ACTION_GROUP (self), key, value);
+
+  g_clear_pointer (&value, g_variant_unref);
 }
 
 char *
@@ -128,10 +135,10 @@ panel_settings_resolve_schema_path (const char *schema_id_prefix,
                                     const char *path_prefix,
                                     const char *path_suffix)
 {
-  g_autoptr(GSettingsSchema) schema = NULL;
+  GSettingsSchema *schema = NULL;
   GSettingsSchemaSource *source;
-  g_autofree char *real_path_suffix = NULL;
-  g_autofree char *escaped = NULL;
+  char *real_path_suffix = NULL;
+  char *escaped = NULL;
   const char *schema_path;
   const char *suffix;
 
@@ -153,6 +160,9 @@ panel_settings_resolve_schema_path (const char *schema_id_prefix,
   if (!(schema = g_settings_schema_source_lookup (source, schema_id, TRUE)))
     {
       g_critical ("Failed to locate schema %s", schema_id);
+      g_clear_pointer (&escaped, g_free);
+      g_clear_pointer (&real_path_suffix, g_free);
+      g_clear_pointer (&schema, g_settings_schema_unref);
       return NULL;
     }
 
@@ -161,24 +171,40 @@ panel_settings_resolve_schema_path (const char *schema_id_prefix,
       if (identifier != NULL)
         g_critical ("Attempt to resolve non-relocatable schema %s with identifier %s",
                     schema_id, identifier);
+      g_clear_pointer (&escaped, g_free);
+      g_clear_pointer (&real_path_suffix, g_free);
+      g_clear_pointer (&schema, g_settings_schema_unref);
       return g_strdup (schema_path);
     }
 
   suffix = schema_id + strlen (schema_id_prefix);
   escaped = g_strdelimit (g_strdup (suffix), ".", '/');
 
+  char *result;
+
   if (identifier != NULL)
-    return g_strconcat (path_prefix, identifier, "/", escaped, "/", path_suffix, NULL);
+    {
+      result = g_strconcat (path_prefix, identifier, "/", escaped, "/", path_suffix, NULL);
+    }
   else
-    return g_strconcat (path_prefix, escaped, "/", path_suffix, NULL);
+    {
+      result = g_strconcat (path_prefix, escaped, "/", path_suffix, NULL);
+    }
+
+
+  g_clear_pointer (&escaped, g_free);
+  g_clear_pointer (&real_path_suffix, g_free);
+  g_clear_pointer (&schema, g_settings_schema_unref);
+  
+  return result;
 }
 
 static void
 panel_settings_constructed (GObject *object)
 {
   PanelSettings *self = (PanelSettings *)object;
-  g_autoptr(GSettingsSchema) schema = NULL;
-  g_autoptr(GSettings) app_settings = NULL;
+  GSettingsSchema *schema = NULL;
+  GSettings *app_settings = NULL;
   gboolean relocatable;
 
   G_OBJECT_CLASS (panel_settings_parent_class)->constructed (object);
@@ -229,18 +255,28 @@ panel_settings_constructed (GObject *object)
   /* Add project layer if we need one */
   if (relocatable && self->identifier != NULL)
     {
-      g_autofree char *project_path = panel_settings_resolve_schema_path (self->schema_id_prefix,
-                                                                          self->schema_id,
-                                                                          self->identifier,
-                                                                          self->path_prefix,
-                                                                          self->path_suffix);
-      g_autoptr(GSettings) project_settings = g_settings_new_with_path (self->schema_id, project_path);
+      char *project_path = panel_settings_resolve_schema_path (self->schema_id_prefix,
+                                                               self->schema_id,
+                                                               self->identifier,
+                                                               self->path_prefix,
+                                                               self->path_suffix);
 
-      panel_layered_settings_append (self->layered_settings, project_settings);
+      if (project_path)
+       {
+          GSettings *project_settings = g_settings_new_with_path (self->schema_id, project_path);
+
+          panel_layered_settings_append (self->layered_settings, project_settings);
+
+          g_clear_pointer (&project_path, g_free);
+          g_clear_object (&project_settings);
+       }
     }
 
   /* Add our application global (user defaults) settings as fallbacks */
   panel_layered_settings_append (self->layered_settings, app_settings);
+
+  g_clear_object (&app_settings);
+  g_clear_pointer (&schema, g_settings_schema_unref);
 }
 
 static void
@@ -674,9 +710,11 @@ panel_settings_has_action (GActionGroup *group,
                            const char   *action_name)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  g_auto(GStrv) keys = panel_layered_settings_list_keys (self->layered_settings);
+  GStrv keys = panel_layered_settings_list_keys (self->layered_settings);
+  gboolean result = g_strv_contains ((const char * const *)keys, action_name);
 
-  return g_strv_contains ((const char * const *)keys, action_name);
+  g_clear_pointer (&keys, g_strfreev);
+  return result;
 }
 
 static char **
@@ -707,8 +745,11 @@ panel_settings_get_action_state_hint (GActionGroup *group,
                                       const char   *action_name)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  g_autoptr(GSettingsSchemaKey) key = panel_layered_settings_get_key (self->layered_settings, action_name);
-  return g_settings_schema_key_get_range (key);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GVariant *range = g_settings_schema_key_get_range (key);
+
+  g_clear_pointer (&key, g_settings_schema_key_unref);
+  return range;
 }
 
 static void
@@ -717,16 +758,19 @@ panel_settings_change_action_state (GActionGroup *group,
                                     GVariant     *value)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  g_autoptr(GSettingsSchemaKey) key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
 
   if (g_variant_is_of_type (value, g_settings_schema_key_get_value_type (key)) &&
       g_settings_schema_key_range_check (key, value))
     {
-      g_autoptr(GVariant) hold = g_variant_ref_sink (value);
+      GVariant* hold = g_variant_ref_sink (value);
 
       panel_layered_settings_set_value (self->layered_settings, action_name, hold);
       g_action_group_action_state_changed (group, action_name, hold);
+
+      g_clear_pointer (&hold, g_variant_unref);
     }
+  g_clear_pointer (&key, g_settings_schema_key_unref);
 }
 
 static const GVariantType *
@@ -734,9 +778,10 @@ panel_settings_get_action_state_type (GActionGroup *group,
                                       const char   *action_name)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  g_autoptr(GSettingsSchemaKey) key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
   const GVariantType *type = g_settings_schema_key_get_value_type (key);
 
+  g_clear_pointer (&key, g_settings_schema_key_unref);
   return _g_variant_type_intern (type);
 }
 
@@ -746,22 +791,26 @@ panel_settings_activate_action (GActionGroup *group,
                                 GVariant     *parameter)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  g_autoptr(GSettingsSchemaKey) key = panel_layered_settings_get_key (self->layered_settings, action_name);
-  g_autoptr(GVariant) default_value = g_settings_schema_key_get_default_value (key);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GVariant *default_value = g_settings_schema_key_get_default_value (key);
 
   if (g_variant_is_of_type (default_value, G_VARIANT_TYPE_BOOLEAN))
     {
       GVariant *old;
 
       if (parameter != NULL)
-        return;
+        goto ret;
 
       old = panel_settings_get_action_state (group, action_name);
       parameter = g_variant_new_boolean (!g_variant_get_boolean (old));
-      g_variant_unref (old);
+      g_clear_pointer (&old, g_variant_unref);
     }
 
   g_action_group_change_action_state (group, action_name, parameter);
+
+ret:
+  g_clear_pointer (&key, g_settings_schema_key_unref);
+  g_clear_pointer (&default_value, g_variant_unref);
 }
 
 static const GVariantType *
@@ -769,12 +818,13 @@ panel_settings_get_action_parameter_type (GActionGroup *group,
                                           const char   *action_name)
 {
   PanelSettings *self = PANEL_SETTINGS (group);
-  g_autoptr(GSettingsSchemaKey) key = panel_layered_settings_get_key (self->layered_settings, action_name);
+  GSettingsSchemaKey *key = panel_layered_settings_get_key (self->layered_settings, action_name);
   const GVariantType *type = g_settings_schema_key_get_value_type (key);
 
   if (g_variant_type_equal (type, G_VARIANT_TYPE_BOOLEAN))
     return NULL;
 
+  g_clear_pointer (&key, g_settings_schema_key_unref);
   return _g_variant_type_intern (type);
 }
 

@@ -184,9 +184,10 @@ panel_gsettings_action_group_get_action_state_hint (GActionGroup *group,
                                                     const char   *action_name)
 {
   PanelGSettingsActionGroup *self = (PanelGSettingsActionGroup *)group;
-  g_autoptr(GSettingsSchemaKey) key = g_settings_schema_get_key (self->schema, action_name);
-
-  return g_settings_schema_key_get_range (key);
+  GSettingsSchemaKey *key = g_settings_schema_get_key (self->schema, action_name);
+  GVariant *range = g_settings_schema_key_get_range (key);
+  g_clear_pointer (&key, g_settings_schema_key_unref);
+  return range;
 }
 
 static void
@@ -195,16 +196,20 @@ panel_gsettings_action_group_change_action_state (GActionGroup *group,
                                                   GVariant     *value)
 {
   PanelGSettingsActionGroup *self = (PanelGSettingsActionGroup *)group;
-  g_autoptr(GSettingsSchemaKey) key = g_settings_schema_get_key (self->schema, action_name);
+  GSettingsSchemaKey *key = g_settings_schema_get_key (self->schema, action_name);
 
   if (g_variant_is_of_type (value, g_settings_schema_key_get_value_type (key)) &&
       g_settings_schema_key_range_check (key, value))
     {
-      g_autoptr(GVariant) hold = g_variant_ref_sink (value);
+      GVariant *hold = g_variant_ref_sink (value);
 
       g_settings_set_value (self->settings, action_name, hold);
       g_action_group_action_state_changed (group, action_name, hold);
+
+      g_clear_pointer (&hold, g_variant_unref);
     }
+
+  g_clear_pointer (&key, g_settings_schema_key_unref);
 }
 
 static const GVariantType *
@@ -212,10 +217,15 @@ panel_gsettings_action_group_get_action_state_type (GActionGroup *group,
                                                     const char   *action_name)
 {
   PanelGSettingsActionGroup *self = (PanelGSettingsActionGroup *)group;
-  g_autoptr(GSettingsSchemaKey) key = g_settings_schema_get_key (self->schema, action_name);
-  g_autoptr(GVariant) default_value = g_settings_schema_key_get_default_value (key);
+  GSettingsSchemaKey *key = g_settings_schema_get_key (self->schema, action_name);
+  GVariant *default_value = g_settings_schema_key_get_default_value (key);
 
-  return g_variant_get_type (default_value);
+  const GVariantType *type = g_variant_get_type (default_value);
+
+  g_clear_pointer (&key, g_settings_schema_key_unref);
+  g_clear_pointer (&default_value, g_variant_unref);
+
+  return type;
 }
 
 static void
@@ -224,15 +234,15 @@ panel_gsettings_action_group_activate_action (GActionGroup *group,
                                               GVariant     *parameter)
 {
   PanelGSettingsActionGroup *self = (PanelGSettingsActionGroup *)group;
-  g_autoptr(GSettingsSchemaKey) key = g_settings_schema_get_key (self->schema, action_name);
-  g_autoptr(GVariant) default_value = g_settings_schema_key_get_default_value (key);
+  GSettingsSchemaKey *key = g_settings_schema_get_key (self->schema, action_name);
+  GVariant* default_value = g_settings_schema_key_get_default_value (key);
 
   if (g_variant_is_of_type (default_value, G_VARIANT_TYPE_BOOLEAN))
     {
       GVariant *old;
 
       if (parameter != NULL)
-        return;
+        goto ret;
 
       old = panel_gsettings_action_group_get_action_state (group, action_name);
       parameter = g_variant_new_boolean (!g_variant_get_boolean (old));
@@ -240,6 +250,10 @@ panel_gsettings_action_group_activate_action (GActionGroup *group,
     }
 
   g_action_group_change_action_state (group, action_name, parameter);
+
+ret:
+  g_clear_pointer (&key, g_settings_schema_key_unref);
+  g_clear_pointer (&default_value, g_variant_unref);
 }
 
 static const GVariantType *
@@ -247,12 +261,15 @@ panel_gsettings_action_group_get_action_parameter_type (GActionGroup *group,
                                                         const char   *action_name)
 {
   PanelGSettingsActionGroup *self = (PanelGSettingsActionGroup *)group;
-  g_autoptr(GSettingsSchemaKey) key = g_settings_schema_get_key (self->schema, action_name);
-  g_autoptr(GVariant) default_value = g_settings_schema_key_get_default_value (key);
+  GSettingsSchemaKey *key = g_settings_schema_get_key (self->schema, action_name);
+  GVariant *default_value = g_settings_schema_key_get_default_value (key);
   const GVariantType *type = g_variant_get_type (default_value);
 
   if (g_variant_type_equal (type, G_VARIANT_TYPE_BOOLEAN))
     type = NULL;
+
+  g_clear_pointer (&default_value, g_variant_unref);
+  g_clear_pointer (&key, g_settings_schema_key_unref);
 
   return type;
 }
