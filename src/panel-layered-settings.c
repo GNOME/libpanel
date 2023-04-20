@@ -95,7 +95,7 @@ panel_layered_settings_cache_key (PanelLayeredSettings *self,
   value = g_settings_get_value (settings, key);
   g_settings_set_value (self->memory_settings, key, value);
 
-ret:
+emit_changed:
   g_clear_pointer (&value, g_variant_unref);
   g_signal_emit (self, signals[CHANGED], g_quark_from_string (key), key);
 }
