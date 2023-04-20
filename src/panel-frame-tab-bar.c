@@ -329,6 +329,7 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
   self->menu_button = g_object_new (GTK_TYPE_MENU_BUTTON,
                                     "css-classes", (const char * const[]) { "flat", NULL },
                                     "icon-name", "pan-down-symbolic",
+                                    "valign", GTK_ALIGN_CENTER,
                                     NULL);
   gtk_box_append (self->end_area, GTK_WIDGET (self->menu_button));
 
