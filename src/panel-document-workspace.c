@@ -449,6 +449,20 @@ panel_document_workspace_class_init (PanelDocumentWorkspaceClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
   g_object_class_override_property (object_class, OVERRIDE_PROP_TITLEBAR, "titlebar");
 
+  /**
+   * PanelDocumentWorkspace::add-widget:
+   * @self: a #PanelDocumentWorkspace
+   * @widget: a #PanelWidget
+   * @position: a #PanelPosition
+   *
+   * This signal is used to add a #PanelWidget to the document workspace,
+   * generally in the document grid.
+   *
+   * Returns: %TRUE if the widget was added and no more signal handlers
+   *    will be notified.
+   *
+   * Since: 1.4
+   */
   signals[ADD_WIDGET] =
     g_signal_new ("add-widget",
                   G_TYPE_FROM_CLASS (klass),
@@ -464,6 +478,17 @@ panel_document_workspace_class_init (PanelDocumentWorkspaceClass *klass)
                               G_TYPE_FROM_CLASS (klass),
                               panel_marshal_BOOLEAN__OBJECT_OBJECTv);
 
+  /**
+   * PanelDocumentWorkspace::create-frame:
+   * @self: a #PanelDocumentWorkspace
+   * @position: the position of the frame
+   *
+   * Creates a new #PanelFrame to be added to the document grid.
+   *
+   * Returns: (transfer full): a #PanelFrame
+   *
+   * Since: 1.4
+   */
   signals[CREATE_FRAME] =
     g_signal_new ("create-frame",
                   G_TYPE_FROM_CLASS (klass),
@@ -615,9 +640,13 @@ panel_document_workspace_set_titlebar (PanelDocumentWorkspace *self,
  *
  * Requests the workspace add @widget to the dock at @position.
  *
+ * Returns: %TRUE if @widget was added; otherwise %FALSE and @widget
+ *   will have g_object_ref_sink() called and unref'd from an idle
+ *   callback.
+ *
  * Since: 1.4
  */
-void
+gboolean
 panel_document_workspace_add_widget (PanelDocumentWorkspace *self,
                                      PanelWidget            *widget,
                                      PanelPosition          *position)
@@ -625,9 +654,9 @@ panel_document_workspace_add_widget (PanelDocumentWorkspace *self,
   PanelPosition *local_position = NULL;
   gboolean ret = FALSE;
 
-  g_return_if_fail (PANEL_IS_DOCUMENT_WORKSPACE (self));
-  g_return_if_fail (PANEL_IS_WIDGET (widget));
-  g_return_if_fail (!position || PANEL_IS_POSITION (position));
+  g_return_val_if_fail (PANEL_IS_DOCUMENT_WORKSPACE (self), FALSE);
+  g_return_val_if_fail (PANEL_IS_WIDGET (widget), FALSE);
+  g_return_val_if_fail (!position || PANEL_IS_POSITION (position), FALSE);
 
   if (position == NULL)
     position = local_position = panel_position_new ();
@@ -646,6 +675,8 @@ panel_document_workspace_add_widget (PanelDocumentWorkspace *self,
     }
 
   g_clear_object (&local_position);
+
+  return ret;
 }
 
 static GObject *

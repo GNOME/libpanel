@@ -63,7 +63,7 @@ PANEL_AVAILABLE_IN_1_4
 void            panel_document_workspace_set_titlebar  (PanelDocumentWorkspace *self,
                                                         GtkWidget              *titlebar);
 PANEL_AVAILABLE_IN_1_4
-void            panel_document_workspace_add_widget    (PanelDocumentWorkspace *self,
+gboolean        panel_document_workspace_add_widget    (PanelDocumentWorkspace *self,
                                                         PanelWidget            *widget,
                                                         PanelPosition          *position);
 
