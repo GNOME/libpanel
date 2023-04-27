@@ -1,9 +1,4 @@
-if get_option('docs').allowed() and get_option('introspection').allowed() 
-  dependency('gi-docgen', version: '>= 2021.1',
-           fallback: ['gi-docgen', 'dummy_dep'],
-           native: true,
-           required: get_option('docs'))
-
+if get_option('docs').allowed() and get_option('introspection').allowed()
   gidocgen = find_program('gi-docgen')
 
   docdir = datadir / 'doc'
@@ -40,6 +35,6 @@ if get_option('docs').allowed() and get_option('introspection').allowed()
     install: true,
     install_dir: docdir,
   )
-elif get_option('docs').allowed() and get_option('introspection').disabled() 
+elif get_option('docs').allowed() and get_option('introspection').disabled()
   error('docs require introspection')
 endif

@@ -1,3 +1,4 @@
-build
 *.swp
 *~
+/subprojects/*
+!/subprojects/gi-docgen.wrap

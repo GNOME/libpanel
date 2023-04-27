@@ -1,3 +1,3 @@
-icondir = join_paths(get_option('datadir'), 'icons/hicolor')
+icondir = join_paths(datadir, 'icons/hicolor')
 
 install_subdir('scalable', install_dir: icondir)

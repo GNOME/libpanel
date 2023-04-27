@@ -1,5 +1,6 @@
 project('libpanel', 'c',
           version: '1.3.0',
+          license: 'LGPL-3.0-only',
     meson_version: '>= 0.63',
   default_options: [ 'warning_level=2', 'c_std=gnu18' ],
 )
@@ -20,9 +21,8 @@ endif
 
 # Setup commonly used options
 prefix = get_option('prefix')
-libdir = join_paths(prefix, get_option('libdir'))
-pkgconfigdir = join_paths(libdir, 'pkgconfig')
-datadir = join_paths(prefix, get_option('datadir'))
+libdir = get_option('libdir')
+datadir = get_option('datadir')
 vapidir = join_paths(datadir, 'vala', 'vapi')
 
 # Check dependencies
@@ -180,10 +180,10 @@ test_link_args = [
   '-Wl,-z,relro',  # Read-only segments after relocation
 ]
 if not buildtype.startswith('debug')
-  add_global_arguments([
+  add_global_arguments(
     '-DG_DISABLE_ASSERT',
     '-DG_DISABLE_CAST_CHECKS',
-  ], language: 'c')
+    language: 'c')
   test_link_args += ['-Wl,-Bsymbolic', '-fno-plt']
 endif
 foreach link_arg: test_link_args
