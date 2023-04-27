@@ -145,16 +145,38 @@ libpanel_deps = [
   libadwaita_dep,
 ]
 
-libpanel_static = static_library('panel',
-                                 libpanel_generated_headers +
-                                 libpanel_generated_sources +
-                                 libpanel_private_sources +
-                                 libpanel_sources,
+libpanel = library('panel',
+                    libpanel_generated_headers +
+                    libpanel_generated_sources +
+                    libpanel_private_sources +
+                    libpanel_sources,
     include_directories: libpanel_include_directories,
            dependencies: libpanel_deps,
+                install: true,
+                version: '@0@.0.0'.format(ABI_MAJOR),
+        darwin_versions: '1.0',
   gnu_symbol_visibility: 'hidden',
               link_args: release_link_args,
                  c_args: deprecation_args,
+)
+
+if get_option('default_library') == 'shared'
+  libpanel_static = static_library('panel-static',
+                  objects: libpanel.extract_all_objects(recursive: true),
+    gnu_symbol_visibility: 'hidden',
+                link_args: release_link_args,
+  )
+elif get_option('default_library') == 'static'
+  libpanel_static = libpanel
+elif get_option('default_library') == 'both'
+  libpanel_static = libpanel.get_static_lib()
+endif
+
+libpanel_dep = declare_dependency(
+              sources: libpanel_generated_headers,
+         dependencies: libpanel_deps,
+  include_directories: libpanel_include_directories,
+            link_with: libpanel,
 )
 
 libpanel_static_dep = declare_dependency(
@@ -162,23 +184,6 @@ libpanel_static_dep = declare_dependency(
          dependencies: libpanel_deps,
            link_whole: libpanel_static,
   include_directories: libpanel_include_directories,
-)
-
-libpanel = shared_library('panel-@0@'.format(ABI_MAJOR),
-           dependencies: libpanel_deps + [libpanel_static_dep],
-                install: true,
-  gnu_symbol_visibility: 'hidden',
-                version: '@0@.0.0'.format(ABI_MAJOR),
-        darwin_versions: '1.0',
-              link_args: release_link_args,
-                 c_args: deprecation_args,
-)
-
-libpanel_dep = declare_dependency(
-              sources: libpanel_generated_headers,
-         dependencies: libpanel_deps,
-  include_directories: libpanel_include_directories,
-            link_with: libpanel,
 )
 
 libpanel_pkg_reqs = [
@@ -194,11 +199,12 @@ libpanel_pc = pkgconfig.generate(libpanel,
      requires: libpanel_pkg_reqs,
       version: meson.project_version(),
       subdirs: 'libpanel-@0@'.format(ABI_MAJOR),
-  install_dir: pkgconfigdir,
 )
 
 install_headers(libpanel_headers,
                 subdir: 'libpanel-@0@'.format(ABI_MAJOR))
+
+meson.override_dependency('libpanel-@0@'.format(ABI_MAJOR), libpanel_dep)
 
 if generate_gir
   libpanel_gir = gnome.generate_gir(libpanel,
@@ -217,7 +223,7 @@ if generate_gir
                includes: ['Gtk-4.0', 'Adw-1'],
                 install: true,
   )
-  
+
   if generate_vapi
     gtksource_vapi = gnome.generate_vapi('libpanel-@0@'.format(ABI_MAJOR),
           sources: libpanel_gir.get(0),
