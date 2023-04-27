@@ -1,6 +1,6 @@
 project('libpanel', 'c',
           version: '1.3.0',
-          license: 'LGPL-3.0-only',
+          license: 'LGPL-3.0-or-later',
     meson_version: '>= 0.63',
   default_options: [ 'warning_level=2', 'c_std=gnu18' ],
 )
