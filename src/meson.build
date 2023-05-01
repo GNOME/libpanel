@@ -145,7 +145,7 @@ libpanel_deps = [
   libadwaita_dep,
 ]
 
-libpanel = library('panel',
+libpanel = library('panel-@0@'.format(ABI_MAJOR),
                     libpanel_generated_headers +
                     libpanel_generated_sources +
                     libpanel_private_sources +
