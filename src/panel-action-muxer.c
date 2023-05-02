@@ -128,6 +128,7 @@ panel_action_muxer_finalize (GObject *object)
   PanelActionMuxer *self = (PanelActionMuxer *)object;
 
   g_clear_pointer (&self->action_groups, g_ptr_array_unref);
+  g_clear_pointer (&self->pspec_name_to_action, g_hash_table_unref);
 
   G_OBJECT_CLASS (panel_action_muxer_parent_class)->finalize (object);
 }
