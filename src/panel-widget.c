@@ -1409,6 +1409,17 @@ panel_widget_get_save_delegate (PanelWidget *self)
   return priv->save_delegate;
 }
 
+static void
+panel_widget_save_delegate_notify_is_draft_cb (PanelWidget       *self,
+                                               GParamSpec        *pspec,
+                                               PanelSaveDelegate *save_delegate)
+{
+  g_assert (PANEL_IS_WIDGET (self));
+  g_assert (PANEL_IS_SAVE_DELEGATE (save_delegate));
+
+  panel_widget_update_actions (self);
+}
+
 /**
  * panel_widget_set_save_delegate:
  * @self: a #PanelWidget
@@ -1431,7 +1442,16 @@ panel_widget_set_save_delegate (PanelWidget       *self,
   g_return_if_fail (!save_delegate || PANEL_IS_SAVE_DELEGATE (save_delegate));
 
   if (g_set_object (&priv->save_delegate, save_delegate))
-    g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SAVE_DELEGATE]);
+    {
+      g_signal_connect_object (save_delegate,
+                               "notify::is-draft",
+                               G_CALLBACK (panel_widget_save_delegate_notify_is_draft_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
+      g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SAVE_DELEGATE]);
+      panel_widget_update_actions (self);
+    }
+}
 
 gboolean
 _panel_widget_can_discard (PanelWidget *self)
