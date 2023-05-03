@@ -155,7 +155,8 @@ panel_frame_close_page_cb (PanelFrame *self,
   if (widget != panel_frame_get_visible_child (self))
     adw_tab_view_set_selected_page (tab_view, tab_page);
 
-  if (!_panel_widget_can_save (widget))
+  if (!_panel_widget_can_save (widget) ||
+      _panel_widget_can_discard (widget))
     {
       g_signal_emit (self, signals [PAGE_CLOSED], 0, widget);
       return FALSE;

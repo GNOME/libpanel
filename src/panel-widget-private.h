@@ -25,6 +25,7 @@
 
 G_BEGIN_DECLS
 
+gboolean          _panel_widget_can_discard      (PanelWidget *self);
 gboolean          _panel_widget_can_save         (PanelWidget *self);
 void              _panel_widget_emit_presented   (PanelWidget *self);
 PanelActionMuxer *_panel_widget_get_action_muxer (PanelWidget *self);

@@ -1432,6 +1432,20 @@ panel_widget_set_save_delegate (PanelWidget       *self,
 
   if (g_set_object (&priv->save_delegate, save_delegate))
     g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_SAVE_DELEGATE]);
+
+gboolean
+_panel_widget_can_discard (PanelWidget *self)
+{
+  PanelWidgetPrivate *priv = panel_widget_get_instance_private (self);
+
+  g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
+
+  if (priv->save_delegate != NULL &&
+      !panel_widget_get_modified (self) &&
+      panel_save_delegate_get_is_draft (priv->save_delegate))
+    return TRUE;
+
+  return FALSE;
 }
 
 gboolean
@@ -1441,7 +1455,23 @@ _panel_widget_can_save (PanelWidget *self)
 
   g_return_val_if_fail (PANEL_IS_WIDGET (self), FALSE);
 
-  return !priv->saving && priv->modified && priv->save_delegate && !priv->force_close;
+  if (priv->saving)
+    return FALSE;
+
+  if (priv->force_close)
+    return FALSE;
+
+  if (priv->save_delegate == NULL)
+    return FALSE;
+
+  if (!priv->modified)
+    {
+      /* We want to allow saving drafts, even if they're empty */
+      if (!panel_save_delegate_get_is_draft (priv->save_delegate))
+        return FALSE;
+    }
+
+  return TRUE;
 }
 
 void
