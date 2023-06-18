@@ -1,13 +1,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Sveinn í Felli <sv1@fellsnet.is>, 2022.
+# Sveinn í Felli <sv1@fellsnet.is>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2022-10-31 20:22+0000\n"
-"PO-Revision-Date: 2022-11-30 19:47+0000\n"
+"POT-Creation-Date: 2023-05-05 13:22+0000\n"
+"PO-Revision-Date: 2023-06-18 09:05+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -42,6 +42,11 @@ msgid "Move Page _Down"
 msgstr "Færa síðu n_iður"
 
 #: src/panel-frame.ui:82
+#| msgid "Close Frame"
+msgid "Close All Pages"
+msgstr "Loka öllum síðum"
+
+#: src/panel-frame.ui:86
 msgid "Close Frame"
 msgstr "Loka ramma"
 
@@ -54,57 +59,57 @@ msgid "(new)"
 msgstr "(nýtt)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:400
+#: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr ""
 "Drögin “%s” hafa ekki verið vistuð. Hægt er að vista þau eða henda þeim."
 
-#: src/panel-save-dialog.c:403
+#: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
 msgstr "Vista e'a henda drögum?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Henda"
 
-#: src/panel-save-dialog.c:411
+#: src/panel-save-dialog.c:413
 msgid "_Save As…"
 msgstr "Vista _sem…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:422
+#: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"“%s” inniheldur óvistaðar breytingar. Hægt er að vista breytingarnar eða"
-" henda þeim."
+"“%s” inniheldur óvistaðar breytingar. Hægt er að vista breytingarnar eða "
+"henda þeim."
 
-#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
 msgstr "Vista eða henda breytingum?"
 
-#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "Vi_sta"
 
-#: src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"Opin skjöl innihalda óvistaðar breytingar. Hægt er að vista breytingarnar eða"
-" henda þeim."
+"Opin skjöl innihalda óvistaðar breytingar. Hægt er að vista breytingarnar "
+"eða henda þeim."
 
-#: src/panel-save-dialog.c:465
+#: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
 msgstr "Einungis vi_sta valið"
 
-#: src/panel-save-dialog.c:473
+#: src/panel-save-dialog.c:475
 msgid "Save All"
 msgstr "Vista allt"
 
-#: src/panel-save-dialog.c:482
+#: src/panel-save-dialog.c:484
 msgid "Discard All"
 msgstr "Henda öllu"
 
