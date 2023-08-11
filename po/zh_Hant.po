@@ -19,7 +19,7 @@ msgstr ""
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
-msgstr "打开页面"
+msgstr "打開頁面"
 
 #: src/panel-frame.ui:60
 msgid "Frame"
@@ -27,31 +27,31 @@ msgstr "框架"
 
 #: src/panel-frame.ui:62
 msgid "Move Page _Left"
-msgstr "左移页面(_L)"
+msgstr "左移頁面(_L)"
 
 #: src/panel-frame.ui:67
 msgid "Move Page _Right"
-msgstr "右移页面(_R)"
+msgstr "右移頁面(_R)"
 
 #: src/panel-frame.ui:72
 msgid "Move Page _Up"
-msgstr "上移页面(_U)"
+msgstr "上移頁面(_U)"
 
 #: src/panel-frame.ui:76
 msgid "Move Page _Down"
-msgstr "下移页面(_D)"
+msgstr "下移頁面(_D)"
 
 #: src/panel-frame.ui:82
 msgid "Close All Pages"
-msgstr "关闭所有页面"
+msgstr "關閉所有頁面"
 
 #: src/panel-frame.ui:86
 msgid "Close Frame"
-msgstr "关闭框架"
+msgstr "關閉框架"
 
 #: src/panel-maximized-controls.c:73
 msgid "Restore panel to previous location"
-msgstr "将面板恢复到先前的位置"
+msgstr "將面板恢復到先前的位置"
 
 #: src/panel-save-dialog-row.c:78
 msgid "(new)"
@@ -61,30 +61,30 @@ msgstr "（新建）"
 #: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
-msgstr "草稿“%s”尚未保存。请将其保存或丢弃。"
+msgstr "草稿“%s”尚未保存。請將其保存或丟棄。"
 
 #: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
-msgstr "保存草稿还是将其丢弃？"
+msgstr "保存草稿還是將其丟棄？"
 
 #: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
-msgstr "丢弃(_D)"
+msgstr "丟棄(_D)"
 
 #: src/panel-save-dialog.c:413
 msgid "_Save As…"
-msgstr "另存为(_S)…"
+msgstr "另存為(_S)…"
 
 #. translators: %s is replaced with the document title
 #: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr "“%s”包含未保存的修改。请将其保存或丢弃。"
+msgstr "“%s”包含未保存的修改。請將其保存或丟棄。"
 
 #: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
-msgstr "保存修改还是将其丢弃？"
+msgstr "保存修改還是將其丟棄？"
 
 #: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
@@ -93,11 +93,11 @@ msgstr "保存(S)"
 #: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
-msgstr "打开的文档包含未保存的修改。请将修改保存或丢弃。"
+msgstr "打開的文檔包含未保存的修改。請將修改保存或丟棄。"
 
 #: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
-msgstr "仅保存选中项(_S)"
+msgstr "僅保存選中項(_S)"
 
 #: src/panel-save-dialog.c:475
 msgid "Save All"
@@ -105,7 +105,7 @@ msgstr "全部保存"
 
 #: src/panel-save-dialog.c:484
 msgid "Discard All"
-msgstr "全部丢弃"
+msgstr "全部丟棄"
 
 #: src/panel-save-dialog.ui:10
 msgid "_Cancel"
@@ -113,12 +113,12 @@ msgstr "取消(_C)"
 
 #: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
 msgid "Follow system style"
-msgstr "跟随系统样式"
+msgstr "跟隨系統樣式"
 
 #: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
 msgid "Light style"
-msgstr "浅色样式"
+msgstr "淺色樣式"
 
 #: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
 msgid "Dark style"
-msgstr "深色样式"
+msgstr "深色樣式"
