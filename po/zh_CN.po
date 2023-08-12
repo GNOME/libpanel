@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-11 11:22+0800\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2023-01-25 21:04+0000\n"
 "PO-Revision-Date: 2022-09-13 15:43-0400\n"
 "Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
@@ -58,52 +58,52 @@ msgid "(new)"
 msgstr "（新建）"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:402
+#: src/panel-save-dialog.c:400
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "草稿“%s”尚未保存。请将其保存或丢弃。"
 
-#: src/panel-save-dialog.c:405
+#: src/panel-save-dialog.c:403
 msgid "Save or Discard Draft?"
 msgstr "保存草稿还是将其丢弃？"
 
-#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
+#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "丢弃(_D)"
 
-#: src/panel-save-dialog.c:413
+#: src/panel-save-dialog.c:411
 msgid "_Save As…"
 msgstr "另存为(_S)…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:424
+#: src/panel-save-dialog.c:422
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr "“%s”包含未保存的修改。请将其保存或丢弃。"
 
-#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
 msgid "Save or Discard Changes?"
 msgstr "保存修改还是将其丢弃？"
 
-#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "保存(S)"
 
-#: src/panel-save-dialog.c:462
+#: src/panel-save-dialog.c:460
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr "打开的文档包含未保存的修改。请将修改保存或丢弃。"
 
-#: src/panel-save-dialog.c:467
+#: src/panel-save-dialog.c:465
 msgid "Only _Save Selected"
 msgstr "仅保存选中项(_S)"
 
-#: src/panel-save-dialog.c:475
+#: src/panel-save-dialog.c:473
 msgid "Save All"
 msgstr "全部保存"
 
-#: src/panel-save-dialog.c:484
+#: src/panel-save-dialog.c:482
 msgid "Discard All"
 msgstr "全部丢弃"
 
