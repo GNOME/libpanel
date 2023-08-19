@@ -1,4 +1,6 @@
 
+subdir_done()
+
 demo_dependencies = [
   libpanel_dep,
 ]
