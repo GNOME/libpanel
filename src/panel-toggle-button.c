@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include <glib/gi18n.h>
+
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-enums.h"
@@ -297,6 +299,7 @@ static void
 panel_toggle_button_constructed (GObject *object)
 {
   PanelToggleButton *self = (PanelToggleButton *)object;
+  const char *label = NULL;
 
   g_assert (PANEL_IS_TOGGLE_BUTTON (self));
 
@@ -306,24 +309,32 @@ panel_toggle_button_constructed (GObject *object)
     {
     case PANEL_AREA_START:
       g_object_set (self->button, "icon-name", "panel-left-symbolic", NULL);
+      label = _("Toggle visibility of left panel");
       break;
 
     case PANEL_AREA_END:
       g_object_set (self->button, "icon-name", "panel-right-symbolic", NULL);
+      label = _("Toggle visibility of right panel");
       break;
 
     case PANEL_AREA_TOP:
       g_object_set (self->button, "icon-name", "panel-top-symbolic", NULL);
+      label = _("Toggle visibility of top panel");
       break;
 
     case PANEL_AREA_BOTTOM:
       g_object_set (self->button, "icon-name", "panel-bottom-symbolic", NULL);
+      label = _("Toggle visibility of bottom panel");
       break;
 
     case PANEL_AREA_CENTER:
     default:
       break;
     }
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self->button),
+                                  GTK_ACCESSIBLE_PROPERTY_LABEL, label,
+                                  -1);
 }
 
 static void

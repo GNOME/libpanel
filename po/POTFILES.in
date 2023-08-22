@@ -7,3 +7,4 @@ src/panel-save-dialog-row.c
 src/panel-save-dialog.c
 src/panel-save-dialog.ui
 src/panel-theme-selector.ui
+src/panel-toggle-button.c
