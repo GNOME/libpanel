@@ -18,7 +18,7 @@
           <object class="GtkButton">
             <property name="icon-name">list-add-symbolic</property>
             <property name="action-name">workspace.add-page</property>
-            <property name="tooltip-text" translatable="yes">Add Page</property>
+            <property name="tooltip-text">Add Page</property>
           </object>
         </child>
         <child type="end">
@@ -31,7 +31,7 @@
           <object class="GtkMenuButton">
             <property name="icon-name">open-menu-symbolic</property>
             <property name="menu-model">primary_menu</property>
-            <property name="tooltip-text" translatable="yes">Primary Menu</property>
+            <property name="tooltip-text">Primary Menu</property>
           </object>
         </child>
       </object>
