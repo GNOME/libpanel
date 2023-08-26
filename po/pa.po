@@ -1,0 +1,147 @@
+# Punjabi translation for libpanel.
+# Copyright (C) 2023 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+#
+# Amn Alam <amanpreet.alam@gmail.com>, 2023.
+# A S Alam <aalam@satluj.org>, 2023.
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2023-08-24 22:28+0000\n"
+"PO-Revision-Date: 2023-08-26 06:50-0700\n"
+"Last-Translator: A S Alam <aalam@satluj.org>\n"
+"Language-Team: Punjabi <punjab-translation@googlegroups.com>\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 23.04.3\n"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "ਸਫ਼ੇ ਖੋਲ੍ਹੋ"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "ਫਰੇਮ"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "ਸਫ਼ਾ ਖੱਬੇ ਭੇਜੋ(_L)"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "ਸਫ਼ਾ ਸੱਜੇ ਭੇਜੋ(_R)"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "ਸਫ਼ਾ ਉੱਤੇ ਭੇਜੋ(_U)"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "ਸਫ਼ਾ ਹੇਠਾਂ ਭੇਜੋ(_D)"
+
+#: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "ਸਭ ਸਫ਼ੇ ਬੰਦ ਕਰੋ"
+
+#: src/panel-frame.ui:86
+msgid "Close Frame"
+msgstr "ਫਰੇਮ ਬੰਦ ਕਰੋ"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "ਪੈਨਲ ਨੂੰ ਪਿਛਲੇ ਟਿਕਾਣੇ ਲਈ ਬਹਾਲ ਕਰੋ"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(ਨਵਾਂ)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:402
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr ""
+"ਡਰਾਫ਼ਟ “%s” ਨੂੰ ਸੰਭਾਲਿਆ ਨਹੀਂ ਗਿਆ। ਇਸ ਨੂੰ ਸੰਭਾਲਿਆ ਜਾਂ ਖਾਰਜ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।"
+
+#: src/panel-save-dialog.c:405
+msgid "Save or Discard Draft?"
+msgstr "ਡਰਾਫ਼ਟ ਸੰਭਾਲਿਆ ਜਾਂ ਅਣਡਿੱਠਾ ਕਰਨਾ ਹੈ?"
+
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
+#: src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "ਅਣਡਿੱਠਾ ਕਰੋ(_D)"
+
+#: src/panel-save-dialog.c:413
+msgid "_Save As…"
+msgstr "…ਵਜੋਂ ਸੰਭਾਲੋ(_S)"
+
+#. translators: %s is replaced with the document title
+#: src/panel-save-dialog.c:424
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"“%s” ਵਿੱਚ ਨਾ-ਸੰਭਾਲੀਆਂ ਤਬਦੀਲੀਆਂ ਹਨ। ਤਬਦੀਲੀਆਂ ਨੂੰ ਸੰਭਾਲਿਆ ਜਾਂ ਅਣਡਿੱਠਾ ਕੀਤਾ ਜਾ"
+" ਸਕਦਾ ਹੈ।"
+
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
+msgid "Save or Discard Changes?"
+msgstr "ਤਬਦੀਲੀਆਂ ਨੂੰ ਸੰਭਾਲਣਾ ਜਾਂ ਅਣਡਿੱਠਾ ਕਰਨਾ ਹੈ?"
+
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "ਸੰਭਾਲੋ(_S)"
+
+#: src/panel-save-dialog.c:462
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"ਖੁੱਲ੍ਹੇ ਦਸਤਾਵੇਜ਼ਾਂ ਵਿੱਚ ਨਾ-ਸੰਭਾਲੀਆਂ ਤਬਦੀਲੀਆਂ ਹਨ। ਤਬਦੀਲੀਆਂ ਨੂੰ ਸੰਭਾਲਣਾ ਜਾਂ"
+" ਅਣਡਿੱਠਾ ਕਰਨਾ ਹੈ?"
+
+#: src/panel-save-dialog.c:467
+msgid "Only _Save Selected"
+msgstr "ਸਿਰਫ਼ ਚੁਣੇ ਹੋਏ ਸੰਭਾਲੋ(_S)"
+
+#: src/panel-save-dialog.c:475
+msgid "Save All"
+msgstr "ਸਾਰਿਆਂ ਨੂੰ ਸੰਭਾਲੋ"
+
+#: src/panel-save-dialog.c:484
+msgid "Discard All"
+msgstr "ਸਭ ਅਣਡਿੱਠੇ ਕਰੋ"
+
+#: src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "ਰੱਦ ਕਰੋ(_C)"
+
+#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+msgid "Follow system style"
+msgstr "ਸਿਸਟਮ ਸਟਾਈਲ ਦੇ ਮੁਤਾਬਕ"
+
+#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+msgid "Light style"
+msgstr "ਹਲਕਾ ਸਟਾਈਲ"
+
+#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+msgid "Dark style"
+msgstr "ਗੂੜ੍ਹਾ ਸਟਾਈਲ"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "ਖੱਬੇ ਪੈਨਲ ਦੀ ਦਿੱਖ ਬਦਲੋ"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "ਸੱਜੇ ਪੈਨਲ ਦੀ ਦਿੱਖ ਬਦਲੋ"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "ਉੱਪਰਲੇ ਪੈਨਲ ਦੀ ਦਿੱਖ ਬਦਲੋ"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "ਹੇਠਲੇ ਪੈਨਲ ਦੀ ਦਿੱਖ ਬਦਲੋ"
