@@ -2,20 +2,22 @@
 # Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libpanel package.
 # Boyuan Yang <073plan@gmail.com>, 2022.
+# lumingzh <lumingzh@qq.com>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-01-25 21:04+0000\n"
-"PO-Revision-Date: 2022-09-13 15:43-0400\n"
-"Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
-"Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
+"POT-Creation-Date: 2023-08-22 18:32+0000\n"
+"PO-Revision-Date: 2023-08-27 19:23+0800\n"
+"Last-Translator: lumingzh <lumingzh@qq.com>\n"
+"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Gtranslator 42.0\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -58,52 +60,52 @@ msgid "(new)"
 msgstr "（新建）"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:400
+#: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "草稿“%s”尚未保存。请将其保存或丢弃。"
 
-#: src/panel-save-dialog.c:403
+#: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
 msgstr "保存草稿还是将其丢弃？"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "丢弃(_D)"
 
-#: src/panel-save-dialog.c:411
+#: src/panel-save-dialog.c:413
 msgid "_Save As…"
 msgstr "另存为(_S)…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:422
+#: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr "“%s”包含未保存的修改。请将其保存或丢弃。"
 
-#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
 msgstr "保存修改还是将其丢弃？"
 
-#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "保存(S)"
 
-#: src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr "打开的文档包含未保存的修改。请将修改保存或丢弃。"
 
-#: src/panel-save-dialog.c:465
+#: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
 msgstr "仅保存选中项(_S)"
 
-#: src/panel-save-dialog.c:473
+#: src/panel-save-dialog.c:475
 msgid "Save All"
 msgstr "全部保存"
 
-#: src/panel-save-dialog.c:482
+#: src/panel-save-dialog.c:484
 msgid "Discard All"
 msgstr "全部丢弃"
 
@@ -122,3 +124,19 @@ msgstr "浅色样式"
 #: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
 msgid "Dark style"
 msgstr "深色样式"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "切换左面板的可见性"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "切换右面板的可见性"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "切换顶面板的可见性"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "切换底面板的可见性"
