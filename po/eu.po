@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-01-25 21:04+0000\n"
-"PO-Revision-Date: 2023-02-12 22:47+0000\n"
+"POT-Creation-Date: 2023-08-22 18:32+0000\n"
+"PO-Revision-Date: 2023-08-27 22:47+0000\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
@@ -56,52 +56,52 @@ msgid "(new)"
 msgstr "(berria)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:400
+#: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "“%s” zirriborroa ez da gorde. Gorde edo baztertu egin daiteke."
 
-#: src/panel-save-dialog.c:403
+#: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
 msgstr "Gorde ala baztertu zirriborroa?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Baztertu"
 
-#: src/panel-save-dialog.c:411
+#: src/panel-save-dialog.c:413
 msgid "_Save As…"
 msgstr "Gorde _honela…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:422
+#: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr "“%s” dokumentuak gorde gabeko aldaketak ditu. Aldaketak gorde edo baztertu egin daitezke."
 
-#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
 msgstr "Gorde ala baztertu aldaketak?"
 
-#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Gorde"
 
-#: src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr "Dokumentu irekiek gorde gabeko aldaketak dituzte. Aldaketak gorde edo baztertu egin daitezke."
 
-#: src/panel-save-dialog.c:465
+#: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
 msgstr "_Gorde hautatutakoak soilik"
 
-#: src/panel-save-dialog.c:473
+#: src/panel-save-dialog.c:475
 msgid "Save All"
 msgstr "Gorde dena"
 
-#: src/panel-save-dialog.c:482
+#: src/panel-save-dialog.c:484
 msgid "Discard All"
 msgstr "Baztertu dena"
 
@@ -120,3 +120,19 @@ msgstr "Estilo argia"
 #: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
 msgid "Dark style"
 msgstr "Estilo iluna"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Txandakatu ezkerreko panelaren ikusgaitasuna"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Txandakatu eskuineko panelaren ikusgaitasuna"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Txandakatu goiko panelaren ikusgaitasuna"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Txandakatu beheko panelaren ikusgaitasuna"
