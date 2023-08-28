@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-01-25 21:04+0000\n"
-"PO-Revision-Date: 2023-02-21 11:08+0100\n"
+"POT-Creation-Date: 2023-08-22 18:32+0000\n"
+"PO-Revision-Date: 2023-08-28 09:13+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Gtranslator 42.0\n"
+"X-Generator: Gtranslator 45.alpha0\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -60,55 +60,55 @@ msgid "(new)"
 msgstr "(nuevo)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:400
+#: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "El borrador «%s» no se ha guardado. Se puede guardar o descartar."
 
-#: src/panel-save-dialog.c:403
+#: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
 msgstr "¿Quiere guardar el borrador o descartarlo?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Descartar"
 
-#: src/panel-save-dialog.c:411
+#: src/panel-save-dialog.c:413
 msgid "_Save As…"
 msgstr "Guardar _como…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:422
+#: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "«%s» contiene cambios sin guardar. Los cambios se pueden guardar o descartar."
 
-#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
 msgstr "¿Quiere guardar los cambios o descartarlos?"
 
-#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Guardar"
 
-#: src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "Los documentos abiertos contienen cambios sin guardar. Los cambios se pueden "
 "guardar o descartar."
 
-#: src/panel-save-dialog.c:465
+#: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
 msgstr "_Guardar sĺo lo seleccionado"
 
-#: src/panel-save-dialog.c:473
+#: src/panel-save-dialog.c:475
 msgid "Save All"
 msgstr "Guardar todo"
 
-#: src/panel-save-dialog.c:482
+#: src/panel-save-dialog.c:484
 msgid "Discard All"
 msgstr "_Descartar todo"
 
@@ -127,3 +127,19 @@ msgstr "Estilo claro"
 #: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
 msgid "Dark style"
 msgstr "Estilo oscuro"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Conmutar la visibilidad del panel izquierdo"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Conmutar la visibilidad del panel derecho"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Conmutar la visibilidad del panel superior"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Conmutar la visibilidad del panel inferior"
