@@ -1,5 +1,8 @@
 
-subdir_done()
+# subproject build breaks if demos are included
+if meson.is_subproject()
+  subdir_done()
+endif
 
 demo_dependencies = [
   libpanel_dep,
