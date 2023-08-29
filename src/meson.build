@@ -145,7 +145,7 @@ libpanel_deps = [
   libadwaita_dep,
 ]
 
-libpanel_static = static_library('panel-@0@'.format(ABI_MAJOR),
+libpanel_static = static_library('panel-static-@0@'.format(ABI_MAJOR),
                     libpanel_generated_headers +
                     libpanel_generated_sources +
                     libpanel_private_sources +
@@ -160,12 +160,13 @@ libpanel_static = static_library('panel-@0@'.format(ABI_MAJOR),
 libpanel_static_dep = declare_dependency(
               sources: libpanel_generated_headers,
          dependencies: libpanel_deps,
-           link_whole: libpanel_static,
+            link_with: libpanel_static,
   include_directories: libpanel_include_directories,
 )
 
-libpanel = shared_library('panel-@0@'.format(ABI_MAJOR),
-           dependencies: libpanel_deps + [libpanel_static_dep],
+libpanel = library('panel-@0@'.format(ABI_MAJOR),
+           dependencies: libpanel_deps,
+             link_whole: libpanel_static,
                 install: true,
   gnu_symbol_visibility: 'hidden',
                 version: '@0@.0.0'.format(ABI_MAJOR),
