@@ -35,7 +35,7 @@ glib_req = '>= @0@'.format(glib_req_version)
 gtk_req = '>= @0@'.format(gtk_req_version)
 adwaita_req = '>= @0@'.format(adwaita_req_version)
 
-libglib_dep = dependency('glib-2.0', version: glib_req)
+libglib_dep = dependency('gio-2.0', version: glib_req)
 libgtk_dep = dependency('gtk4', version: gtk_req)
 libadwaita_dep = dependency('libadwaita-1', version: adwaita_req)
 
