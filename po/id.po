@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-01-25 21:04+0000\n"
-"PO-Revision-Date: 2023-02-01 10:03+0700\n"
+"POT-Creation-Date: 2023-08-22 18:32+0000\n"
+"PO-Revision-Date: 2023-08-30 13:43+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -58,56 +58,56 @@ msgid "(new)"
 msgstr "(baru)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:400
+#: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "Draf \"%s\" belum disimpan. Itu bisa disimpan atau dibuang."
 
-#: src/panel-save-dialog.c:403
+#: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
 msgstr "Simpan atau Buang Draf?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Buang"
 
-#: src/panel-save-dialog.c:411
+#: src/panel-save-dialog.c:413
 msgid "_Save As…"
 msgstr "_Simpan Sebagai…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:422
+#: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "\"%s\" berisi perubahan yang belum disimpan. Perubahan dapat disimpan atau "
 "dibuang."
 
-#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
 msgstr "Simpan atau Buang Perubahan?"
 
-#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Simpan"
 
-#: src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "Dokumen yang terbuka berisi perubahan yang belum disimpan. Perubahan dapat "
 "disimpan atau dibuang."
 
-#: src/panel-save-dialog.c:465
+#: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
 msgstr "Hanya _Simpan Yang Dipilih"
 
-#: src/panel-save-dialog.c:473
+#: src/panel-save-dialog.c:475
 msgid "Save All"
 msgstr "Simpan Semua"
 
-#: src/panel-save-dialog.c:482
+#: src/panel-save-dialog.c:484
 msgid "Discard All"
 msgstr "Buang Semua"
 
@@ -126,3 +126,19 @@ msgstr "Gaya terang"
 #: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
 msgid "Dark style"
 msgstr "Gaya gelap"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Jungkitkan kenampakan panel kiri"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Jungkitkan kenampakan panel kanan"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Jungkitkan kenampakan panel atas"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Jungkitkan kenampakan panel bawah"
