@@ -3,21 +3,22 @@
 # This file is distributed under the same license as the libpanel package.
 # Christian Kirbach <christian.kirbach@gmail.com>, 2022.
 # Jürgen Benvenuti  <gastornis@posteo.org>, 2023.
+# Philipp Kiemle <philipp.kiemle@gmail.com>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-01-25 21:04+0000\n"
-"PO-Revision-Date: 2023-01-26 11:30+0100\n"
-"Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
+"POT-Creation-Date: 2023-08-22 18:32+0000\n"
+"PO-Revision-Date: 2023-09-01 01:57+0200\n"
+"Last-Translator: Philipp Kiemle <philipp.kiemle@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -60,58 +61,58 @@ msgid "(new)"
 msgstr "(neu)"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:400
+#: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr ""
 "Der Entwurf »%s« wurde noch nicht gespeichert. Er kann entweder gespeichert "
 "oder verworfen werden."
 
-#: src/panel-save-dialog.c:403
+#: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
 msgstr "Den Entwurf speichern oder verwerfen?"
 
-#: src/panel-save-dialog.c:407 src/panel-save-dialog.c:429
+#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Verwerfen"
 
-#: src/panel-save-dialog.c:411
+#: src/panel-save-dialog.c:413
 msgid "_Save As…"
 msgstr "Speichern _unter …"
 
 #. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:422
+#: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "»%s« enthält ungesicherte Änderungen. Änderungen werden entweder gespeichert "
 "oder verworfen."
 
-#: src/panel-save-dialog.c:425 src/panel-save-dialog.c:458
+#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
 msgstr "Änderungen speichern oder verwerfen?"
 
-#: src/panel-save-dialog.c:433 src/panel-save-dialog.ui:12
+#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Speichern"
 
-#: src/panel-save-dialog.c:460
+#: src/panel-save-dialog.c:462
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "Offene Dokumente enthalten ungesicherte Änderungen. Änderungen werden "
 "entweder gespeichert oder verworfen."
 
-#: src/panel-save-dialog.c:465
+#: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
 msgstr "Nur ausgewählte _speichern"
 
-#: src/panel-save-dialog.c:473
+#: src/panel-save-dialog.c:475
 msgid "Save All"
 msgstr "Alle speicherm"
 
-#: src/panel-save-dialog.c:482
+#: src/panel-save-dialog.c:484
 msgid "Discard All"
 msgstr "Alle verwerfen"
 
@@ -130,3 +131,19 @@ msgstr "Heller Stil"
 #: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
 msgid "Dark style"
 msgstr "Dunkler Stil"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Sichtbarkeit des linken Panels umschalten"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Sichtbarkeit des rechten Panels umschalten"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Sichtbarkeit des oberen Panels umschalten"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Sichtbarkeit des unteren Panels umschalten"
