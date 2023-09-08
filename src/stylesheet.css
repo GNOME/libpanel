@@ -239,6 +239,25 @@ panelstatusbar > button label {
   font-weight: normal;
 }
 
+/* Style statusbar correctly within a toolbar view */
+.top-bar panelstatusbar,
+.bottom-bar panelstatusbar {
+  padding-top: 0px;
+  box-shadow: none;
+  background: none;
+  color: inherit;
+}
+.top-bar panelstatusbar:backdrop,
+.bottom-bar panelstatusbar:backdrop {
+  background: none;
+  transition: none;
+}
+.top-bar panelstatusbar:backdrop > *,
+.bottom-bar panelstatusbar:backdrop > * {
+  filter: none;
+  transition: none;
+}
+
 panelframe panelframetabbar {
   border-bottom: 1px solid alpha(@borders,.6);
   min-height: 44px;
