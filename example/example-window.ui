@@ -11,9 +11,10 @@
       <class name="devel"/>
     </style>
     <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <child>
+      <object class="AdwToolbarView">
+        <property name="top-bar-style">raised</property>
+        <property name="bottom-bar-style">raised</property>
+        <child type="top">
           <object class="GtkHeaderBar" id="headerbar">
             <child type="start">
               <object class="GtkMenuButton">
@@ -358,7 +359,6 @@
             <property name="reveal-bottom">true</property>
             <property name="reveal-end">false</property>
             <property name="start-width">250</property>
-            <property name="vexpand">true</property>
             <child>
               <object class="PanelGrid" id="grid">
                 <signal name="create-frame" handler="create_frame_cb"/>
@@ -728,7 +728,7 @@
             </child>
           </object>
         </child>
-        <child>
+        <child type="bottom">
           <object class="PanelStatusbar">
             <child>
               <object class="GtkMenuButton">
