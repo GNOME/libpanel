@@ -1,16 +1,5 @@
-@define-color panel_bg_color @window_bg_color;
-@define-color panel_fg_color @window_fg_color;
-
 paneltogglebutton.drag-active button:not(:checked) {
   background: alpha(@accent_bg_color, .25);
-}
-
-paneldockchild.bottom,
-paneldockchild.end,
-paneldockchild.start,
-paneldockchild.top {
-  background: @panel_bg_color;
-  color: @panel_fg_color;
 }
 
 panelframeheaderbar {
@@ -61,10 +50,6 @@ paneldockchild.end panelpaned.vertical panelresizer:first-child panelframe panel
 paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher {
   border-bottom: 1px solid alpha(@borders,.6);
 }
-panelpaned panelframe panelframeswitcher {
-  background: @panel_bg_color;
-  color: @panel_fg_color;
-}
 panelpaned panelframe panelframeswitcher:backdrop {
   filter: opacity(.5);
   transition: 200ms ease-in-out;
@@ -89,7 +74,8 @@ panelframe panelframeswitcher button {
    * when dragging across buttons. This helps things feel a
    * bit more solid when doing DnD.
    */
-  border: 3px solid @panel_bg_color;
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 panelframe panelframeswitcher button:not(:hover):not(:checked):not(:active) {
   background: transparent;
@@ -302,7 +288,7 @@ splitbutton.omnibar > button {
 
 /* frame switcher buttons */
 panelframeheaderbar button {
-  background-color: none;
+  background-color: transparent;
 }
 panelframeheaderbar button:checked,
 panelframeswitcher button:checked {
