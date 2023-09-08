@@ -302,23 +302,23 @@ splitbutton.omnibar > button {
 
 /* frame switcher buttons */
 panelframeheaderbar button {
-  background: none;
+  background-color: none;
 }
 panelframeheaderbar button:checked,
 panelframeswitcher button:checked {
- background: alpha(currentColor, .125);
+ background-color: alpha(currentColor, .125);
 }
 panelframeheaderbar button:hover,
 panelframeswitcher button:hover {
- background: alpha(currentColor, .1);
+ background-color: alpha(currentColor, .1);
 }
 panelframeheaderbar button:hover:checked,
 panelframeswitcher button:hover:checked {
- background: alpha(currentColor, .15);
+ background-color: alpha(currentColor, .15);
 }
 panelframeheaderbar button:active:hover,
 panelframeswitcher button:active:hover {
- background: alpha(currentColor, .25);
+ background-color: alpha(currentColor, .25);
 }
 
 
