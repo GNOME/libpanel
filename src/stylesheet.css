@@ -308,13 +308,6 @@ panelframeswitcher button:active:hover {
 }
 
 
-panelframeheaderbar image,
-panelframeheaderbar label {
-  -gtk-icon-shadow: none;
-  text-shadow: 0 -1px alpha(currentColor,0.05);
-}
-
-
 
 panelthemeselector {
   margin: 9px;
