@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="libpanel">
   <template class="PanelSaveDialog" parent="AdwMessageDialog">
     <property name="default-response">save</property>
     <property name="close-response">cancel</property>
