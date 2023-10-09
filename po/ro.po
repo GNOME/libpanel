@@ -7,16 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-04-11 20:55+0000\n"
-"PO-Revision-Date: 2023-04-18 13:52+0300\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2023-09-07 17:00+0000\n"
+"PO-Revision-Date: 2023-10-09 17:44+0300\n"
+"Last-Translator: Florentina Mușat <florentina [dot] musat [dot] 28 [at] "
+"gmail [dot] com>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);;\n"
-"X-Generator: Poedit 3.2.2\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2);;\n"
+"X-Generator: Poedit 3.4\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -81,7 +83,8 @@ msgstr "_Salvează ca…"
 #: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr "„%s” conține modificări nesalvate. Modificările pot fi salvate sau anulate."
+msgstr ""
+"„%s” conține modificări nesalvate. Modificările pot fi salvate sau anulate."
 
 #: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
@@ -92,8 +95,11 @@ msgid "_Save"
 msgstr "_Salvează"
 
 #: src/panel-save-dialog.c:462
-msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
-msgstr "Documentele deschise conțin modificări nesalvate. Modificările pot fi salvate sau anulate."
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Documentele deschise conțin modificări nesalvate. Modificările pot fi "
+"salvate sau anulate."
 
 #: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
@@ -122,3 +128,19 @@ msgstr "Stil luminos"
 #: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
 msgid "Dark style"
 msgstr "Stil întunecat"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Comută vizibilitatea panoului din stânga"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Comută vizibilitatea panoului din dreapta"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Comută vizibilitatea panoului de sus"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Comută vizibilitatea panoului de jos"
