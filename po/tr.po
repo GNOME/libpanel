@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-08-22 18:32+0000\n"
-"PO-Revision-Date: 2023-08-22 22:16+0300\n"
+"POT-Creation-Date: 2023-09-07 17:00+0000\n"
+"PO-Revision-Date: 2023-10-17 18:13+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -64,16 +64,16 @@ msgstr "(yeni)"
 #: src/panel-save-dialog.c:402
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
-msgstr "“%s” taslağı kaydedilmedi. Kaydedilebilir veya vazgeçilebilir."
+msgstr "“%s” taslağı kaydedilmedi. Kaydedilebilir veya gözden çıkarılabilir."
 
 #: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
-msgstr "Taslağı Kaydet ya da Vazgeç?"
+msgstr "Taslağı Kaydet ya da Gözden Çıkar?"
 
 #: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
-msgstr "_Vazgeç"
+msgstr "_Gözden Çıkar"
 
 #: src/panel-save-dialog.c:413
 msgid "_Save As…"
@@ -85,11 +85,11 @@ msgstr "Farklı _Kaydet…"
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "“%s” kaydedilmemiş değişiklikler içeriyor. Değişiklikler kaydedilebilir ya "
-"da vazgeçilebilir."
+"da gözden çıkarılabilir."
 
 #: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
-msgstr "Değişiklikleri Kaydet ya da Vazgeç?"
+msgstr "Değişiklikleri Kaydet ya da Gözden Çıkar?"
 
 #: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
@@ -100,7 +100,7 @@ msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "Açık belgelerde kaydedilmemiş değişiklikler var. Değişiklikler "
-"kaydedilebilir ya da vazgeçilebilir."
+"kaydedilebilir ya da gözden çıkarılabilir."
 
 #: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
@@ -112,7 +112,7 @@ msgstr "Tümünü Kaydet"
 
 #: src/panel-save-dialog.c:484
 msgid "Discard All"
-msgstr "Tümünden Vazgeç"
+msgstr "Tümünü Gözden Çıkar"
 
 #: src/panel-save-dialog.ui:10
 msgid "_Cancel"
