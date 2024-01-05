@@ -1,6 +1,6 @@
 option('development',
        type: 'boolean',
-       value: 'false',
+       value: false,
        description: 'This is a development build')
 
 option('install-examples', 
