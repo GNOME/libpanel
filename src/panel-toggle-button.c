@@ -32,15 +32,15 @@
  * PanelToggleButton:
  *
  * The `PanelToggleButton` is a button used to toggle the visibility
- * of a [class@PanelDock] area.
+ * of a [class@Panel.Dock] area.
  *
  * <picture>
  *   <source srcset="toggle-button-dark.png" media="(prefers-color-scheme: dark)">
  *   <img src="toggle-button.png" alt="toggle-button">
  * </picture>
  *
- * It will automatically reveal or unreveal the specified area from
- * #PanelToggleButton:dock.
+ * It will automatically reveal or hide the specified area from
+ * [property@Panel.ToggleButton:dock].
  */
 
 #define TIMEOUT_EXPAND 500
@@ -71,13 +71,13 @@ static GParamSpec *properties [N_PROPS];
 
 /**
  * panel_toggle_button_new:
- * @dock: (not nullable): #PanelDock the panel to control
- * @area: #PanelArea the panel area. A value of
- *   [enum@Panel.Area.CENTER] invalid.
+ * @dock: (not nullable): [class@Panel.Dock] the panel to control
+ * @area: [enum@Panel.Area] the panel area. A value of
+ *   [enum@Panel.Area.CENTER] is invalid.
  *
- * Creates a new #PanelToggleButton to hide the @dock in the @area.
+ * Creates a new [class@Panel.ToggleButton] to hide the @dock in the @area.
  *
- * Returns: a newly created #PanelToggleButton
+ * Returns: a newly created [class@Panel.ToggleButton]
  */
 GtkWidget *
 panel_toggle_button_new (PanelDock *dock,
@@ -408,7 +408,7 @@ panel_toggle_button_class_init (PanelToggleButtonClass *klass)
   /**
    * PanelToggleButton:dock:
    *
-   * The associated #PanelDock
+   * The associated [class@Panel.Dock]
    */
   properties [PROP_DOCK] =
     g_param_spec_object ("dock", NULL, NULL,
