@@ -73,7 +73,7 @@ static GParamSpec *properties [N_PROPS];
  * panel_toggle_button_new:
  * @dock: (not nullable): #PanelDock the panel to control
  * @area: #PanelArea the panel area. A value of
- *   [const@PanelArea.PANEL_AREA_CENTER] invalid.
+ *   [enum@Panel.Area.CENTER] invalid.
  *
  * Creates a new #PanelToggleButton to hide the @dock in the @area.
  *
