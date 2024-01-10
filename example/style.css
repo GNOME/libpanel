@@ -14,3 +14,14 @@ paneldockchild.start revealer.top-bar {
 panelresizer > widget > separator.vertical {
  background: mix(@headerbar_border_color, @theme_bg_color, .82);
 }
+
+paneldockchild.start entry {
+ min-height: 28px;
+ font-size: 0.83333em;
+ border-top: 1px solid mix(@headerbar_border_color, @theme_bg_color, .82);
+ border-radius: 0 0 0 12px;
+}
+
+panelstatusbar {
+ min-height: 28px;
+}

@@ -910,10 +910,6 @@
                                 <child>
                                   <object class="GtkSearchEntry">
                                     <property name="placeholder-text">Filter…</property>
-                                    <property name="margin-top">3</property>
-                                    <property name="margin-bottom">3</property>
-                                    <property name="margin-start">3</property>
-                                    <property name="margin-end">3</property>
                                   </object>
                                 </child>
                               </object>
