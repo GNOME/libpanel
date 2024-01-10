@@ -1,0 +1,16 @@
+.view, viewport, list {
+ background: transparent;
+}
+
+paneldockchild.start {
+ background: alpha(@borders, .5);
+}
+
+paneldockchild.start revealer.top-bar {
+ /* background: transparent; */
+ border-bottom: 1px solid @borders;
+}
+
+panelresizer > widget > separator.vertical {
+ background: mix(@headerbar_border_color, @theme_bg_color, .82);
+}

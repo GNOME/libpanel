@@ -46,6 +46,7 @@ main (int argc,
 
   app = g_object_new (ADW_TYPE_APPLICATION,
                       "application-id", "org.gnome.libpanel.demo",
+                      "resource-base-path", "/example",
                       NULL);
   g_signal_connect (app,
                     "startup",

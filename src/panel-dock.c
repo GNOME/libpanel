@@ -69,6 +69,8 @@ typedef struct
 } PanelDockPrivate;
 
 static void buildable_iface_init (GtkBuildableIface *iface);
+static GtkWidget *panel_dock_get_child_for_area (PanelDock *self,
+                                                 PanelArea  area);
 
 G_DEFINE_TYPE_WITH_CODE (PanelDock, panel_dock, GTK_TYPE_WIDGET,
                          G_ADD_PRIVATE (PanelDock)
@@ -766,7 +768,7 @@ get_or_create_dock_child (PanelDock *self,
     }
 
   child = panel_dock_child_new (area);
-  panel_dock_child_set_reveal_child (PANEL_DOCK_CHILD (child), FALSE);
+  panel_dock_child_set_reveal_child (PANEL_DOCK_CHILD (child), area == PANEL_AREA_CENTER);
   g_signal_connect_object (child,
                            "notify::empty",
                            G_CALLBACK (panel_dock_notify_empty_cb),
@@ -905,10 +907,39 @@ panel_dock_add_child (GtkBuildable *buildable,
   set_reveal (self, area, reveal);
 }
 
+static GObject *
+panel_dock_get_internal_child (GtkBuildable *buildable,
+                               GtkBuilder   *builder,
+                               const char   *name)
+{
+  PanelDock *self = PANEL_DOCK (buildable);
+  PanelArea area = 0;
+  GtkOrientation orientation;
+  int left, top, width, height;
+
+  if (g_strcmp0 (name, "start") == 0)
+    area = PANEL_AREA_START;
+  else if (g_strcmp0 (name, "end") == 0)
+    area = PANEL_AREA_END;
+  else if (g_strcmp0 (name, "top") == 0)
+    area = PANEL_AREA_TOP;
+  else if (g_strcmp0 (name, "bottom") == 0)
+    area = PANEL_AREA_BOTTOM;
+  else if (g_strcmp0 (name, "center") == 0)
+    area = PANEL_AREA_CENTER;
+  else
+    return NULL;
+
+  get_grid_positions (area, &left, &top, &width, &height, &orientation);
+
+  return G_OBJECT (get_or_create_dock_child (self, area, left, top, width, height));
+}
+
 static void
 buildable_iface_init (GtkBuildableIface *iface)
 {
   iface->add_child = panel_dock_add_child;
+  iface->get_internal_child = panel_dock_get_internal_child;
 }
 
 /**

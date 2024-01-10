@@ -36,6 +36,10 @@ struct _PanelDockChild
   GtkWidget     parent_instance;
   GtkRevealer  *revealer;
   PanelResizer *resizer;
+  GtkWidget    *left_edge;
+  GtkWidget    *right_edge;
+  GtkWidget    *top_edge;
+  GtkWidget    *bottom_edge;
   PanelArea     area : 4;
   guint         dragging : 1;
 };
@@ -48,10 +52,184 @@ enum {
   PROP_EMPTY,
   PROP_AREA,
   PROP_REVEAL_CHILD,
+  PROP_BOTTOM_EDGE,
+  PROP_LEFT_EDGE,
+  PROP_RIGHT_EDGE,
+  PROP_TOP_EDGE,
   N_PROPS
 };
 
-static GParamSpec *properties [N_PROPS];
+static GParamSpec *properties[N_PROPS];
+
+static void
+panel_dock_child_set_edge (PanelDockChild  *self,
+                           GtkWidget       *child,
+                           GtkWidget      **childptr,
+                           guint            prop_id)
+{
+  g_return_if_fail (PANEL_IS_DOCK_CHILD (self));
+  g_return_if_fail (!child || GTK_IS_WIDGET (child));
+  g_return_if_fail (gtk_widget_get_parent (child) == NULL);
+  g_return_if_fail (prop_id > 0);
+  g_return_if_fail (prop_id < N_PROPS);
+
+  if (child == *childptr)
+    return;
+
+  g_clear_pointer (childptr, gtk_widget_unparent);
+  *childptr = child;
+  if (child)
+    gtk_widget_set_parent (child, GTK_WIDGET (self));
+  g_object_notify_by_pspec (G_OBJECT (self), properties[prop_id]);
+  gtk_widget_queue_resize (GTK_WIDGET (self));
+}
+
+static void
+panel_dock_child_measure (GtkWidget      *widget,
+                          GtkOrientation  orientation,
+                          int             for_size,
+                          int            *minimum,
+                          int            *natural,
+                          int            *minimum_baseline,
+                          int            *natural_baseline)
+{
+  PanelDockChild *self = PANEL_DOCK_CHILD (widget);
+  int min = 0, nat = 0;
+
+  *minimum = 0;
+  *natural = 0;
+  *minimum_baseline = -1;
+  *natural_baseline = -1;
+
+  if (orientation == GTK_ORIENTATION_VERTICAL)
+    {
+      if (self->revealer != NULL)
+        {
+          gtk_widget_measure (GTK_WIDGET (self->revealer), orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum += min;
+          *natural += nat;
+        }
+
+      if (self->left_edge != NULL)
+        {
+          gtk_widget_measure (self->left_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum = MAX (*minimum, min);
+          *natural = MAX (*natural, nat);
+        }
+
+      if (self->right_edge != NULL)
+        {
+          gtk_widget_measure (self->right_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum = MAX (*minimum, min);
+          *natural = MAX (*natural, nat);
+        }
+
+      if (self->top_edge != NULL)
+        {
+          gtk_widget_measure (self->top_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum += min;
+          *natural += nat;
+        }
+
+      if (self->bottom_edge != NULL)
+        {
+          gtk_widget_measure (self->bottom_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum += min;
+          *natural += nat;
+        }
+    }
+  else
+    {
+      if (self->revealer != NULL)
+        {
+          gtk_widget_measure (GTK_WIDGET (self->revealer), orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum += min;
+          *natural += nat;
+        }
+
+      if (self->left_edge != NULL)
+        {
+          gtk_widget_measure (self->left_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum += min;
+          *natural += nat;
+        }
+
+      if (self->right_edge != NULL)
+        {
+          gtk_widget_measure (self->right_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum += min;
+          *natural += nat;
+        }
+
+      if (self->top_edge != NULL)
+        {
+          gtk_widget_measure (self->top_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum = MAX (*minimum, min);
+          *natural = MAX (*natural, nat);
+        }
+
+      if (self->bottom_edge != NULL)
+        {
+          gtk_widget_measure (self->bottom_edge, orientation, for_size, &min, &nat, NULL, NULL);
+          *minimum = MAX (*minimum, min);
+          *natural = MAX (*natural, nat);
+        }
+    }
+}
+
+static void
+panel_dock_child_size_allocate (GtkWidget *widget,
+                                int        width,
+                                int        height,
+                                int        baseline)
+{
+  PanelDockChild *self = PANEL_DOCK_CHILD (widget);
+  GtkRequisition min, nat;
+  int y = 0;
+  int x = 0;
+
+  if (self->top_edge)
+    {
+      gtk_widget_get_preferred_size (self->top_edge, &min, &nat);
+      gtk_widget_size_allocate (self->top_edge,
+                                &(GtkAllocation) { 0, 0, width, min.height },
+                                -1);
+      y += min.height;
+      height -= min.height;
+    }
+
+  if (self->bottom_edge)
+    {
+      gtk_widget_get_preferred_size (self->bottom_edge, &min, &nat);
+      gtk_widget_size_allocate (self->bottom_edge,
+                                &(GtkAllocation) { 0, y+height-min.height, width, min.height },
+                                -1);
+      height -= min.height;
+    }
+
+  if (self->left_edge)
+    {
+      gtk_widget_get_preferred_size (self->left_edge, &min, &nat);
+      gtk_widget_size_allocate (self->left_edge,
+                                &(GtkAllocation) { 0, y, min.width, height },
+                                -1);
+      x += min.width;
+      width -= min.width;
+    }
+
+  if (self->right_edge)
+    {
+      gtk_widget_get_preferred_size (self->right_edge, &min, &nat);
+      gtk_widget_size_allocate (self->right_edge,
+                                &(GtkAllocation) { x+width-min.width, y, min.width, height },
+                                -1);
+      width -= min.width;
+    }
+
+  gtk_widget_size_allocate (GTK_WIDGET (self->revealer),
+                            &(GtkAllocation) { x, y, width, height },
+                            -1);
+}
 
 static gboolean
 panel_dock_child_grab_focus (GtkWidget *widget)
@@ -65,6 +243,10 @@ panel_dock_child_dispose (GObject *object)
   PanelDockChild *self = (PanelDockChild *)object;
 
   g_clear_pointer ((GtkWidget **)&self->revealer, gtk_widget_unparent);
+  g_clear_pointer ((GtkWidget **)&self->top_edge, gtk_widget_unparent);
+  g_clear_pointer ((GtkWidget **)&self->bottom_edge, gtk_widget_unparent);
+  g_clear_pointer ((GtkWidget **)&self->left_edge, gtk_widget_unparent);
+  g_clear_pointer ((GtkWidget **)&self->right_edge, gtk_widget_unparent);
 
   G_OBJECT_CLASS (panel_dock_child_parent_class)->dispose (object);
 }
@@ -95,6 +277,22 @@ panel_dock_child_get_property (GObject    *object,
       g_value_set_enum (value, panel_dock_child_get_area (self));
       break;
 
+    case PROP_TOP_EDGE:
+      g_value_set_object (value, self->top_edge);
+      break;
+
+    case PROP_BOTTOM_EDGE:
+      g_value_set_object (value, self->bottom_edge);
+      break;
+
+    case PROP_LEFT_EDGE:
+      g_value_set_object (value, self->left_edge);
+      break;
+
+    case PROP_RIGHT_EDGE:
+      g_value_set_object (value, self->right_edge);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -118,6 +316,22 @@ panel_dock_child_set_property (GObject      *object,
       panel_dock_child_set_reveal_child (self, g_value_get_boolean (value));
       break;
 
+    case PROP_TOP_EDGE:
+      panel_dock_child_set_edge (self, g_value_get_object (value), &self->top_edge, prop_id);
+      break;
+
+    case PROP_BOTTOM_EDGE:
+      panel_dock_child_set_edge (self, g_value_get_object (value), &self->bottom_edge, prop_id);
+      break;
+
+    case PROP_LEFT_EDGE:
+      panel_dock_child_set_edge (self, g_value_get_object (value), &self->left_edge, prop_id);
+      break;
+
+    case PROP_RIGHT_EDGE:
+      panel_dock_child_set_edge (self, g_value_get_object (value), &self->right_edge, prop_id);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -134,6 +348,8 @@ panel_dock_child_class_init (PanelDockChildClass *klass)
   object_class->set_property = panel_dock_child_set_property;
 
   widget_class->grab_focus = panel_dock_child_grab_focus;
+  widget_class->measure = panel_dock_child_measure;
+  widget_class->size_allocate = panel_dock_child_size_allocate;
 
   properties [PROP_REVEAL_CHILD] =
     g_param_spec_boolean ("reveal-child",
@@ -146,6 +362,26 @@ panel_dock_child_class_init (PanelDockChildClass *klass)
     g_param_spec_object ("child",
                          "Child",
                          "Child",
+                         GTK_TYPE_WIDGET,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_TOP_EDGE] =
+    g_param_spec_object ("top-edge", NULL, NULL,
+                         GTK_TYPE_WIDGET,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_BOTTOM_EDGE] =
+    g_param_spec_object ("bottom-edge", NULL, NULL,
+                         GTK_TYPE_WIDGET,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_LEFT_EDGE] =
+    g_param_spec_object ("left-edge", NULL, NULL,
+                         GTK_TYPE_WIDGET,
+                         (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  properties [PROP_RIGHT_EDGE] =
+    g_param_spec_object ("right-edge", NULL, NULL,
                          GTK_TYPE_WIDGET,
                          (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
@@ -165,7 +401,6 @@ panel_dock_child_class_init (PanelDockChildClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_css_name (widget_class, "paneldockchild");
-  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
 }
 
 static void
