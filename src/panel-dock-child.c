@@ -559,6 +559,9 @@ panel_dock_child_get_empty (PanelDockChild *self)
   if (!(child = panel_dock_child_get_child (self)))
     return TRUE;
 
+  if (ADW_IS_TOOLBAR_VIEW (child))
+    child = adw_toolbar_view_get_content (ADW_TOOLBAR_VIEW (child));
+
   if (PANEL_IS_PANED (child))
     {
       guint n_children = panel_paned_get_n_children (PANEL_PANED (child));
