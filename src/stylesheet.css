@@ -1,3 +1,5 @@
+@define-color panel_border_color mix(alpha(@headerbar_shade_color,1), @theme_bg_color, .82);
+
 paneltogglebutton.drag-active button:not(:checked) {
   background: alpha(@accent_bg_color, .25);
 }
