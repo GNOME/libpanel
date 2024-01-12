@@ -1374,6 +1374,11 @@ _panel_dock_end_drag (PanelDock   *self,
   unprepare_from_drag (self, PANEL_AREA_END);
   unprepare_from_drag (self, PANEL_AREA_TOP);
   unprepare_from_drag (self, PANEL_AREA_BOTTOM);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_REVEAL_TOP]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_REVEAL_BOTTOM]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_REVEAL_START]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_REVEAL_END]);
 }
 
 void
