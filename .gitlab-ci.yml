@@ -32,7 +32,7 @@ nightly@aarch64:
 
 fedora:
   stage: build
-  image: fedora:37
+  image: 'registry.fedoraproject.org/fedora:39'
   interruptible: true
   needs: []
   script:
