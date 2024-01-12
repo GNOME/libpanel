@@ -900,6 +900,11 @@ panel_dock_add_child (GtkBuildable *buildable,
     {
       if (drag_position != -1)
         panel_dock_child_set_drag_position (PANEL_DOCK_CHILD (object), drag_position);
+      g_signal_connect_object (object,
+                               "notify::empty",
+                               G_CALLBACK (panel_dock_notify_empty_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
       gtk_grid_attach (priv->grid, GTK_WIDGET (object), left, top, width, height);
     }
 
