@@ -178,6 +178,18 @@ panelstatusbar.rounded > menubutton:last-child > button,
 panelstatusbar.rounded > paneltogglebutton:last-child button {
   border-bottom-right-radius: 12px;
 }
+paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > button:first-child,
+paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > dropdown:first-child > button,
+paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > menubutton:first-child > button,
+paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > paneltogglebutton:first-child button {
+  border-bottom-left-radius: 0;
+}
+paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > button:last-child,
+paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > dropdown:last-child > button,
+paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > menubutton:last-child > button,
+paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > paneltogglebutton:last-child button {
+  border-bottom-right-radius: 0;
+}
 panelstatusbar paneltogglebutton button,
 panelstatusbar > dropdown > button,
 panelstatusbar > menubutton > button,
