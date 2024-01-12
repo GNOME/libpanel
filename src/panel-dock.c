@@ -743,6 +743,50 @@ panel_dock_notify_empty_cb (PanelDock      *self,
     }
 }
 
+static void
+panel_dock_notify_reveal_child_cb (PanelDock      *self,
+                                   GParamSpec     *pspec,
+                                   PanelDockChild *child)
+{
+  PanelArea area;
+  gboolean reveal_child;
+  const char *css_name;
+
+  g_assert (PANEL_IS_DOCK (self));
+  g_assert (PANEL_IS_DOCK_CHILD (child));
+
+  area = panel_dock_child_get_area (child);
+  reveal_child = panel_dock_child_get_reveal_child (child);
+
+  switch (area)
+    {
+    case PANEL_AREA_START:
+      css_name = "start-revealed";
+      break;
+
+    case PANEL_AREA_END:
+      css_name = "end-revealed";
+      break;
+
+    case PANEL_AREA_TOP:
+      css_name = "top-revealed";
+      break;
+
+    case PANEL_AREA_BOTTOM:
+      css_name = "bottom-revealed";
+      break;
+
+    case PANEL_AREA_CENTER:
+    default:
+      return;
+    }
+
+  if (reveal_child)
+    gtk_widget_add_css_class (GTK_WIDGET (self), css_name);
+  else
+    gtk_widget_remove_css_class (GTK_WIDGET (self), css_name);
+}
+
 static GtkWidget *
 get_or_create_dock_child (PanelDock *self,
                           PanelArea  area,
@@ -769,6 +813,11 @@ get_or_create_dock_child (PanelDock *self,
 
   child = panel_dock_child_new (area);
   panel_dock_child_set_reveal_child (PANEL_DOCK_CHILD (child), area == PANEL_AREA_CENTER);
+  g_signal_connect_object (child,
+                           "notify::reveal-child",
+                           G_CALLBACK (panel_dock_notify_reveal_child_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
   g_signal_connect_object (child,
                            "notify::empty",
                            G_CALLBACK (panel_dock_notify_empty_cb),
@@ -905,7 +954,14 @@ panel_dock_add_child (GtkBuildable *buildable,
                                G_CALLBACK (panel_dock_notify_empty_cb),
                                self,
                                G_CONNECT_SWAPPED);
+      g_signal_connect_object (object,
+                               "notify::reveal-child",
+                               G_CALLBACK (panel_dock_notify_reveal_child_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
       gtk_grid_attach (priv->grid, GTK_WIDGET (object), left, top, width, height);
+      panel_dock_notify_empty_cb (self, NULL, PANEL_DOCK_CHILD (object));
+      panel_dock_notify_reveal_child_cb (self, NULL, PANEL_DOCK_CHILD (object));
     }
 
   notify_can_reveal (self, area);
