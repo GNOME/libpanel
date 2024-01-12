@@ -824,6 +824,8 @@ get_or_create_dock_child (PanelDock *self,
                            self,
                            G_CONNECT_SWAPPED);
   gtk_grid_attach (priv->grid, child, left, top, width, height);
+  panel_dock_notify_empty_cb (self, NULL, PANEL_DOCK_CHILD (child));
+  panel_dock_notify_reveal_child_cb (self, NULL, PANEL_DOCK_CHILD (child));
 
   return child;
 }
