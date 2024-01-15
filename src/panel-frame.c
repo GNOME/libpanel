@@ -1201,6 +1201,8 @@ panel_frame_remove (PanelFrame  *self,
   g_return_if_fail (PANEL_IS_FRAME (self));
   g_return_if_fail (PANEL_IS_WIDGET (panel));
 
+  g_object_ref (self);
+
   old_visible_child = panel_frame_get_visible_child (self);
 
   if (old_visible_child == panel)
@@ -1227,6 +1229,8 @@ panel_frame_remove (PanelFrame  *self,
     _panel_grid_update_closeable (PANEL_GRID (grid));
 
   panel_frame_update_actions (self);
+
+  g_object_unref (self);
 }
 
 /**
