@@ -320,9 +320,6 @@ panel_frame_tab_bar_init (PanelFrameTabBar *self)
                            G_CONNECT_SWAPPED);
   gtk_overlay_set_child (self->overlay, GTK_WIDGET (self->tab_bar));
 
-  self->start_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-  adw_tab_bar_set_start_action_widget (self->tab_bar, GTK_WIDGET (self->start_area));
-
   self->end_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
   adw_tab_bar_set_end_action_widget (self->tab_bar, GTK_WIDGET (self->end_area));
 
@@ -373,6 +370,12 @@ panel_frame_tab_bar_add_prefix (PanelFrameHeader *header,
   GtkWidget *sibling = NULL;
 
   g_assert (PANEL_IS_FRAME_TAB_BAR (self));
+
+  if (self->start_area == NULL)
+    {
+      self->start_area = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
+      adw_tab_bar_set_start_action_widget (self->tab_bar, GTK_WIDGET (self->start_area));
+    }
 
   SET_PRIORITY (widget, priority);
 
