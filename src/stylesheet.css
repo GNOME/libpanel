@@ -66,9 +66,11 @@ panelpaned.vertical panelframe panelframeswitcher {
 }
 panelpaned.vertical panelframe panelframeswitcher button {
   padding: 2px 6px;
+  background-clip: padding-box;
 }
 panelpaned.horizontal panelframe panelframeswitcher button {
   padding: 6px 2px;
+  background-clip: padding-box;
 }
 panelframe panelframeswitcher button {
   border-radius: 10px;
@@ -81,6 +83,7 @@ panelframe panelframeswitcher button {
 }
 panelframe panelframeswitcher button:not(:hover):not(:checked):not(:active) {
   background: transparent;
+  background-clip: padding-box;
   color: alpha(currentColor, 0.75);
 }
 panelframeswitcher.drop-indicator {
@@ -404,4 +407,8 @@ paneldropcontrols button:drop(active) {
 
 panelprogressicon {
   color: @accent_bg_color;
+}
+
+panelframeswitcher button {
+  background-clip: padding-box;
 }
