@@ -1,28 +1,21 @@
 # Kabyle translation for libpanel.
 # Copyright (C) 2024 libpanel's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libpanel package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# ButterflyOfFire <ButterflyOfFire@protonmail.com>, 2024.
+# Rachida SACI <rgebbid@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
 "POT-Creation-Date: 2024-03-15 22:25+0000\n"
-"PO-Revision-Date: 2024-03-26 12:52+0100\n"
-"Last-Translator: ButterflyOfFire <ButterflyOfFire@protonmail.com>\n"
-"Language-Team: Kabyle <>\n"
+"PO-Revision-Date: 2024-03-30 22:24+0100\n"
+"Last-Translator: sa\n"
+"Language-Team: Kabyle <kab@li.org>\n"
 "Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-DL-Team: kab\n"
-"X-DL-Module: libpanel\n"
-"X-DL-Branch: main\n"
-"X-DL-Domain: po\n"
-"X-DL-State: Translating\n"
-"Plural-Forms: nplurals=2; plural=n>1\n"
-"X-Generator: Gtranslator 41.0\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -34,19 +27,19 @@ msgstr "Akatar"
 
 #: src/panel-frame.ui:62
 msgid "Move Page _Left"
-msgstr "Smutti asebter ɣer tama tazelmaḍt"
+msgstr "Senkez asebter ɣer uzelmeḍ (_L)"
 
 #: src/panel-frame.ui:67
 msgid "Move Page _Right"
-msgstr "Smutti asebter ɣer tama tayeffust"
+msgstr "Senkez asebter ɣer yeffus (_R)"
 
 #: src/panel-frame.ui:72
 msgid "Move Page _Up"
-msgstr "Smutti asebter d asawen"
+msgstr "Senkez asebter d asawen (_U)"
 
 #: src/panel-frame.ui:76
 msgid "Move Page _Down"
-msgstr "Smutti asebter ɣer tama wadda"
+msgstr "Senkez asebter d akessar (_D)"
 
 #: src/panel-frame.ui:82
 msgid "Close All Pages"
@@ -58,7 +51,7 @@ msgstr "Mdel akatar"
 
 #: src/panel-maximized-controls.c:73
 msgid "Restore panel to previous location"
-msgstr ""
+msgstr "Err agalis ɣer wadig yezrin"
 
 #: src/panel-save-dialog-row.c:78
 msgid "(new)"
@@ -72,12 +65,12 @@ msgstr ""
 
 #: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
-msgstr ""
+msgstr "Sekles neɣ Sefsex arewway?"
 
 #: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
 #: src/panel-save-dialog.ui:11
 msgid "_Discard"
-msgstr "Eǧǧ (-D)"
+msgstr "Sefsex (_D)"
 
 #: src/panel-save-dialog.c:413
 msgid "_Save As…"
@@ -87,36 +80,35 @@ msgstr "_Sekles am…"
 #: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr ""
+msgstr "\"%s\" deg-s isenfal i yettwaseklasen. Isenfal zemren ad ttwaskelsen neɣ ad ttwasefsaxen."
 
 #: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
-msgstr ""
+msgstr "Sekles neɣ Sefsex isenfal?"
 
 #: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Sekles"
 
 #: src/panel-save-dialog.c:462
-msgid ""
-"Open documents contain unsaved changes. Changes can be saved or discarded."
-msgstr ""
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "Isemliyen yeldin deg-sen isenfal ur yetwaseklasen ara. Isenfal zemren ad ttwaskelsen neɣ ad ttwasfesxen."
 
 #: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
-msgstr ""
+msgstr "Sekles tafrayt kan (_S)"
 
 #: src/panel-save-dialog.c:475
 msgid "Save All"
-msgstr "Sekles-iten akk"
+msgstr "Sekles kkullec"
 
 #: src/panel-save-dialog.c:484
 msgid "Discard All"
-msgstr "Eǧǧ-iten kullec"
+msgstr "Sefsex kullec"
 
 #: src/panel-save-dialog.ui:10
 msgid "_Cancel"
-msgstr "Semmet (_C)"
+msgstr "Sefsex (_C)"
 
 #: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
 msgid "Follow system style"
@@ -132,16 +124,16 @@ msgstr "Aɣanib aberkan"
 
 #: src/panel-toggle-button.c:312
 msgid "Toggle visibility of left panel"
-msgstr ""
+msgstr "Ldi/Mdel abani n ugalis ɣer uzelmaḍ"
 
 #: src/panel-toggle-button.c:317
 msgid "Toggle visibility of right panel"
-msgstr ""
+msgstr "Ldi/Mdel abani n ugalis ɣer uyeffus"
 
 #: src/panel-toggle-button.c:322
 msgid "Toggle visibility of top panel"
-msgstr ""
+msgstr "Ldi/Mdel abani n ugalis d asawen"
 
 #: src/panel-toggle-button.c:327
 msgid "Toggle visibility of bottom panel"
-msgstr ""
+msgstr "Ldi/Mdel abani n ugalis d akessar"
