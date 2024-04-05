@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2024-03-15 22:25+0000\n"
-"PO-Revision-Date: 2024-03-30 22:24+0100\n"
+"POT-Creation-Date: 2024-03-30 21:29+0000\n"
+"PO-Revision-Date: 2024-04-05 09:54+0200\n"
 "Last-Translator: sa\n"
 "Language-Team: Kabyle <kab@li.org>\n"
 "Language: kab\n"
@@ -62,6 +62,8 @@ msgstr "(amaynut)"
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr ""
+"Arewway \"%s\" ur yettwasekles ara. Yezmer ad yettwasekles neɣ ad "
+"yettwakkes."
 
 #: src/panel-save-dialog.c:405
 msgid "Save or Discard Draft?"
@@ -80,7 +82,9 @@ msgstr "_Sekles am…"
 #: src/panel-save-dialog.c:424
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr "\"%s\" deg-s isenfal i yettwaseklasen. Isenfal zemren ad ttwaskelsen neɣ ad ttwasefsaxen."
+msgstr ""
+"\"%s\" deg-s isenfal i yettwaseklasen. Isenfal zemren ad ttwaskelsen neɣ ad "
+"ttwasefsaxen."
 
 #: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
 msgid "Save or Discard Changes?"
@@ -91,8 +95,11 @@ msgid "_Save"
 msgstr "_Sekles"
 
 #: src/panel-save-dialog.c:462
-msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
-msgstr "Isemliyen yeldin deg-sen isenfal ur yetwaseklasen ara. Isenfal zemren ad ttwaskelsen neɣ ad ttwasfesxen."
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Isemliyen yeldin deg-sen isenfal ur yetwaseklasen ara. Isenfal zemren ad "
+"ttwaskelsen neɣ ad ttwasfesxen."
 
 #: src/panel-save-dialog.c:467
 msgid "Only _Save Selected"
