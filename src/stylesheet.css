@@ -1,7 +1,5 @@
-@define-color panel_border_color mix(alpha(@headerbar_shade_color,1), @theme_bg_color, .82);
-
 paneltogglebutton.drag-active button:not(:checked) {
-  background: alpha(@accent_bg_color, .25);
+  background: color-mix(in srgb, var(--accent-bg-color) 25%, transparent);
 }
 
 panelframeheaderbar {
@@ -11,10 +9,10 @@ panelframeheaderbar {
 panelframe panelframeheaderbar,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframeheaderbar {
   border-top: 2px solid transparent;
-  border-bottom: 1px solid alpha(@borders,.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
 }
 panelframe.has-focus panelframeheaderbar {
-  border-top: 2px solid @accent_bg_color;
+  border-top: 2px solid var(--accent-bg-color);
 }
 panelframeheaderbar > box {
   margin-left: 2px;
@@ -50,7 +48,7 @@ panelframeheaderbar .controls button.circular image {
 
 paneldockchild.end panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher,
 paneldockchild.start panelpaned.vertical panelresizer:first-child panelframe panelframeswitcher {
-  border-bottom: 1px solid alpha(@borders,.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
 }
 panelpaned panelframe panelframeswitcher:backdrop {
   filter: opacity(.5);
@@ -84,10 +82,10 @@ panelframe panelframeswitcher button {
 panelframe panelframeswitcher button:not(:hover):not(:checked):not(:active) {
   background: transparent;
   background-clip: padding-box;
-  color: alpha(currentColor, 0.75);
+  color: color-mix(in srgb, currentColor 75%, transparent);
 }
 panelframeswitcher.drop-indicator {
-  color: shade(@theme_selected_bg_color,0.8);
+  color: color-mix(in srgb, var(--accent-bg-color) 80%, transparent);
 }
 
 panelframe .frameheader .action-bar popover.menu.pages-popover row {
@@ -117,13 +115,13 @@ panelframe .frameheader .action-bar popover.menu.pages-popover row .close-button
   color: transparent;
 }
 panelframe .frameheader .action-bar popover.menu.pages-popover row:hover .close-button {
-  color: @theme_fg_color;
+  color: var(--window-fg-color);
 }
 panelframe .frameheader .action-bar popover.menu.pages-popover row .close-button:hover {
-  background: alpha(black, .08);
+  background: rgb(0 0 0 / 8%);
 }
 panelframe .frameheader .action-bar popover.menu.pages-popover row .close-button:active {
-  background: alpha(black, .15);
+  background: rgb(0 0 0 / 15%);
 }
 panelframe .frameheader tab > button.tab-close-button {
   min-width: 24px;
@@ -135,16 +133,16 @@ panelstatusbar {
   min-height: 24px;
   font-size: 0.9em;
   padding-top: 1px;
-  box-shadow: inset 0 1px @headerbar_shade_color;
-  background: @headerbar_bg_color;
-  color: @headerbar_fg_color;
+  box-shadow: inset 0 1px var(--headerbar-shade-color);
+  background: var(--headerbar-bg-color);
+  color: var(--headerbar-fg-color);
 }
 panelstatusbar:backdrop {
-  background: @headerbar_backdrop_color;
+  background: var(--headerbar-backdrop-color);
   transition: 200ms ease-in-out;
 }
 panelstatusbar > * {
-  border-right: 1px solid @borders;
+  border-right: 1px solid var(--border-color);
   padding-left: 9px;
   padding-right: 9px;
 }
@@ -222,7 +220,7 @@ panelstatusbar paneltogglebutton button:hover,
 panelstatusbar > dropdown > button:hover,
 panelstatusbar > menubutton > button:hover,
 panelstatusbar > button:hover {
-  background: alpha(currentColor, .07);
+  background: color-mix(in srgb, currentColor 7%, transparent);
 }
 panelstatusbar paneltogglebutton button:active,
 panelstatusbar paneltogglebutton button.keyboard-activating,
@@ -232,19 +230,19 @@ panelstatusbar > menubutton > button:hover,
 panelstatusbar > menubutton > button.keyboard-activating,
 panelstatusbar > button:hover,
 panelstatusbar > button.keyboard-activating {
-  background: alpha(currentColor, .16);
+  background: color-mix(in srgb, currentColor 16%, transparent);
 }
 panelstatusbar paneltogglebutton button:checked,
 panelstatusbar > dropdown > button:checked,
 panelstatusbar > menubutton > button:checked,
 panelstatusbar > button:checked {
-  background: alpha(currentColor, .1);
+  background: color-mix(in srgb, currentColor 10%, transparent);
 }
 panelstatusbar paneltogglebutton button:checked:hover,
 panelstatusbar > dropdown > button:checked:hover,
 panelstatusbar > menubutton > button:checked:hover,
 panelstatusbar > button:hover {
-  background: alpha(currentColor, .13);
+  background: color-mix(in srgb, currentColor 13%, transparent);
 }
 panelstatusbar paneltogglebutton button:checked:active,
 panelstatusbar paneltogglebutton button:checked.keyboard-activating,
@@ -254,7 +252,7 @@ panelstatusbar > menubutton > button:checked:hover,
 panelstatusbar > menubutton > button:checked.keyboard-activating,
 panelstatusbar > button:hover,
 panelstatusbar > button.keyboard-activating {
-  background: alpha(currentColor, .19);
+  background: color-mix(in srgb, currentColor 19%, transparent);
 }
 panelstatusbar > dropdown > button label,
 panelstatusbar > menubutton > button label,
@@ -282,11 +280,11 @@ panelstatusbar > button label {
 }
 
 panelframe panelframetabbar {
-  border-bottom: 1px solid alpha(@borders,.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
   min-height: 44px;
 }
 panelframe panelframetabbar:backdrop {
-  color: alpha(currentColor, .5);
+  color: color-mix(in srgb, currentColor, transparent);
 }
 panelframe panelframetabbar > overlay > box.focus-handle,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframetabbar box.focus-handle {
@@ -294,7 +292,7 @@ paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-chi
   background: transparent;
 }
 panelframe.has-focus panelframetabbar > overlay > box.focus-handle {
-  background: @accent_bg_color;
+  background: var(--accent-bg-color);
 }
 panelframe panelframetabbar tabbox tab button {
   min-height: 0;
@@ -328,19 +326,19 @@ panelframeheaderbar button {
 }
 panelframeheaderbar button:checked,
 panelframeswitcher button:checked {
- background-color: alpha(currentColor, .125);
+ background-color: color-mix(in srgb, currentColor 12.5%, transparent);
 }
 panelframeheaderbar button:hover,
 panelframeswitcher button:hover {
- background-color: alpha(currentColor, .1);
+ background-color: color-mix(in srgb, currentColor 10%, transparent);
 }
 panelframeheaderbar button:hover:checked,
 panelframeswitcher button:hover:checked {
- background-color: alpha(currentColor, .15);
+ background-color: color-mix(in srgb, currentColor 15%, transparent);
 }
 panelframeheaderbar button:active:hover,
 panelframeswitcher button:active:hover {
- background-color: alpha(currentColor, .25);
+ background-color: color-mix(in srgb, currentColor 25%, transparent);
 }
 
 
@@ -355,21 +353,24 @@ panelthemeselector checkbutton {
   padding: 1px;
   background-clip: content-box;
   border-radius: 9999px;
-  box-shadow: inset 0 0 0 1px @borders;
+  box-shadow: inset 0 0 0 1px var(--border-color);
+
+  --light-bg: #fff;
+  --dark-bg: #202020;
 }
 panelthemeselector checkbutton.follow:checked,
 panelthemeselector checkbutton.light:checked,
 panelthemeselector checkbutton.dark:checked {
-  box-shadow: inset 0 0 0 2px @theme_selected_bg_color;
+  box-shadow: inset 0 0 0 2px var(--accent-bg-color);
 }
 panelthemeselector checkbutton.follow {
-  background-image: linear-gradient(to bottom right, #fff 49.99%, #202020 50.01%);
+  background-image: linear-gradient(to bottom right, var(--light-bg) 49.99%, var(--dark-bg) 50.01%);
 }
 panelthemeselector checkbutton.light {
-  background-color: #fff;
+  background-color: var(--light-bg);
 }
 panelthemeselector checkbutton.dark {
-  background-color: #202020;
+  background-color: var(--dark-bg);
 }
 panelthemeselector checkbutton radio {
   -gtk-icon-source: none;
@@ -383,13 +384,13 @@ panelthemeselector checkbutton radio {
 }
 panelthemeselector checkbutton radio:checked {
   -gtk-icon-source: -gtk-icontheme("object-select-symbolic");
-  background-color: @theme_selected_bg_color;
-  color: @theme_selected_fg_color;
+  background-color: var(--accent-bg-color);
+  color: var(--accent-fg-color);
 }
 
 
 splitbutton.omnibar {
-  background: alpha(currentColor, 0.075);
+  background: color-mix(in srgb, currentColor 7.5%, transparent);
 }
 
 
@@ -403,29 +404,29 @@ panelframe paneldropcontrols {
   margin: 1px;
 }
 panelframe paneldropcontrols {
-  background: alpha(@accent_bg_color, .1);
+  background: color-mix(in srgb, var(--accent-bg-color) 10%, transparent);
 }
 panelframe paneldropcontrols:drop(active) {
-  background: alpha(@accent_bg_color, .3);
-  box-shadow: inset 0 0 0 1px @accent_bg_color;
+  background: color-mix(in srgb, var(--accent-bg-color) 30%, transparent);
+  box-shadow: inset 0 0 0 1px var(--accent-bg-color);
 }
 paneldropcontrols button {
   border-radius: 11px;
-  color: alpha(@theme_selected_fg_color, .8);
-  background-color: @accent_bg_color;
-  box-shadow: 0 3px 5px rgba(0,0,0,.2);
+  color: color-mix(in srgb, var(--accent-fg-color) 80%, transparent);
+  background-color: var(--accent-bg-color);
+  box-shadow: 0 3px 5px rgba(0 0 0 / 20%);
   padding: 0;
 }
 paneldropcontrols button.circular {
   border-radius: 9999px;
 }
 paneldropcontrols button:drop(active) {
-  background-color: mix(@accent_bg_color, @accent_fg_color, .3);
-  color: @theme_selected_fg_color;
+  background-color: color-mix(in srgb, var(--accent-bg-color), var(--accent-fg-color) 30%);
+  color: var(--accent-fg-color);
 }
 
 panelprogressicon {
-  color: @accent_bg_color;
+  color: var(--accent-color);
 }
 
 panelframeswitcher button {

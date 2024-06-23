@@ -3,22 +3,23 @@
 }
 
 paneldockchild.start {
- background: alpha(@borders, .5);
+ background: color-mix(in srgb, var(--border-color), transparent);
 }
 
 paneldockchild.start revealer.top-bar {
  /* background: transparent; */
- border-bottom: 1px solid @borders;
+ border-bottom: 1px solid var(--border-color);
 }
 
 panelresizer > widget > separator.vertical {
- background: mix(@headerbar_border_color, @theme_bg_color, .82);
+ background-color: var(--sidebar-bg-color);
+ background-image: image(var(--sidebar-border-color));
 }
 
 paneldockchild.start entry {
- min-height: 28px;
+ min-height: 29px;
  font-size: 0.83333em;
- border-top: 1px solid mix(@headerbar_border_color, @theme_bg_color, .82);
+ box-shadow: inset 0 1px var(--sidebar-border-color);
  border-radius: 0;
 }
 
