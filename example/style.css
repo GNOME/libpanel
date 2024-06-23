@@ -19,7 +19,15 @@ paneldockchild.start entry {
  min-height: 28px;
  font-size: 0.83333em;
  border-top: 1px solid mix(@headerbar_border_color, @theme_bg_color, .82);
- border-radius: 0 0 0 12px;
+ border-radius: 0;
+}
+
+paneldockchild.start entry:dir(ltr) {
+ border-bottom-left-radius: var(--window-radius);
+}
+
+paneldockchild.start entry:dir(rtl) {
+ border-bottom-right-radius: var(--window-radius);
 }
 
 panelstatusbar {

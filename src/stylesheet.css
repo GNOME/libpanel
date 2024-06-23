@@ -168,31 +168,50 @@ panelstatusbar > button {
   border-radius: 0;
   padding: 0 9px;
 }
-panelstatusbar.rounded > button:first-child,
-panelstatusbar.rounded > dropdown:first-child > button,
-panelstatusbar.rounded > menubutton:first-child > button,
-panelstatusbar.rounded > paneltogglebutton:first-child button {
-  border-bottom-left-radius: 12px;
+
+panelstatusbar {
+  --start-left-radius: var(--window-radius);
+  --start-right-radius: var(--window-radius);
+  --end-left-radius: var(--window-radius);
+  --end-right-radius: var(--window-radius);
 }
 
-panelstatusbar.rounded > button:last-child,
-panelstatusbar.rounded > dropdown:last-child > button,
-panelstatusbar.rounded > menubutton:last-child > button,
-panelstatusbar.rounded > paneltogglebutton:last-child button {
-  border-bottom-right-radius: 12px;
+panelstatusbar:dir(ltr) {
+  --start-right-radius: 0;
+  --end-left-radius: 0;
 }
-paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > button:first-child,
-paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > dropdown:first-child > button,
-paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > menubutton:first-child > button,
-paneldock.start-revealed paneldockchild.bottom panelstatusbar.rounded > paneltogglebutton:first-child button {
-  border-bottom-left-radius: 0;
+
+panelstatusbar:dir(rtl) {
+  --start-left-radius: 0;
+  --end-right-radius: 0;
 }
-paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > button:last-child,
-paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > dropdown:last-child > button,
-paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > menubutton:last-child > button,
-paneldock.end-revealed paneldockchild.bottom panelstatusbar.rounded > paneltogglebutton:last-child button {
-  border-bottom-right-radius: 0;
+
+paneldock.start-revealed paneldockchild.bottom panelstatusbar:dir(ltr),
+paneldock.end-revealed paneldockchild.bottom panelstatusbar:dir(ltr) {
+  --start-left-radius: 0;
 }
+
+paneldock.start-revealed paneldockchild.bottom panelstatusbar:dir(rtl),
+paneldock.end-revealed paneldockchild.bottom panelstatusbar:dir(rtl) {
+  --start-right-radius: 0;
+}
+
+panelstatusbar > button:first-child,
+panelstatusbar > dropdown:first-child > button,
+panelstatusbar > menubutton:first-child > button,
+panelstatusbar > paneltogglebutton:first-child button {
+  border-bottom-left-radius: var(--start-left-radius);
+  border-bottom-right-radius: var(--start-right-radius);
+}
+
+panelstatusbar > button:last-child,
+panelstatusbar > dropdown:last-child > button,
+panelstatusbar > menubutton:last-child > button,
+panelstatusbar > paneltogglebutton:last-child button {
+  border-bottom-left-radius: var(--end-left-radius);
+  border-bottom-right-radius: var(--end-right-radius);
+}
+
 panelstatusbar paneltogglebutton button,
 panelstatusbar > dropdown > button,
 panelstatusbar > menubutton > button,
