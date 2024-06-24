@@ -57,60 +57,6 @@ panel_statusbar_new (void)
 }
 
 static void
-window_notify_css_classes_cb (GtkWidget      *window,
-                              GParamSpec     *pspec,
-                              PanelStatusbar *self)
-{
-  gboolean rounded =
-    !gtk_widget_has_css_class (window, "maximized") &&
-    !gtk_widget_has_css_class (window, "tiled") &&
-    !gtk_widget_has_css_class (window, "tiled-left") &&
-    !gtk_widget_has_css_class (window, "tiled-right") &&
-    !gtk_widget_has_css_class (window, "tiled-top") &&
-    !gtk_widget_has_css_class (window, "tiled-bottom") &&
-    !gtk_widget_has_css_class (window, "fullscreen") &&
-    !gtk_widget_has_css_class (window, "solid-csd");
-
-  if (rounded)
-    gtk_widget_add_css_class (GTK_WIDGET (self), "rounded");
-  else
-    gtk_widget_remove_css_class (GTK_WIDGET (self), "rounded");
-}
-
-static void
-panel_statusbar_root (GtkWidget *widget)
-{
-  GtkRoot *root;
-
-  GTK_WIDGET_CLASS (panel_statusbar_parent_class)->root (widget);
-
-  root = gtk_widget_get_root (widget);
-
-  if (GTK_IS_WINDOW (root))
-    g_signal_connect (root, "notify::css-classes",
-                      G_CALLBACK (window_notify_css_classes_cb), widget);
-
-  window_notify_css_classes_cb (GTK_WIDGET (root), NULL, PANEL_STATUSBAR (widget));
-}
-
-static void
-panel_statusbar_unroot (GtkWidget *widget)
-{
-  GtkRoot *root = gtk_widget_get_root (widget);
-
-  if (GTK_IS_WINDOW (root))
-    {
-      g_signal_handlers_disconnect_by_func (root,
-                                            G_CALLBACK (window_notify_css_classes_cb),
-                                            widget);
-
-      gtk_widget_remove_css_class (widget, "rounded");
-    }
-
-  GTK_WIDGET_CLASS (panel_statusbar_parent_class)->unroot (widget);
-}
-
-static void
 panel_statusbar_dispose (GObject *object)
 {
   PanelStatusbar *self = (PanelStatusbar *)object;
@@ -132,9 +78,6 @@ panel_statusbar_class_init (PanelStatusbarClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = panel_statusbar_dispose;
-
-  widget_class->root = panel_statusbar_root;
-  widget_class->unroot = panel_statusbar_unroot;
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BOX_LAYOUT);
   gtk_widget_class_set_css_name (widget_class, "panelstatusbar");
