@@ -207,51 +207,6 @@ panel_save_dialog_response_save_cb (PanelSaveDialog *self,
     g_task_return_boolean (self->task, TRUE);
 }
 
-static void
-find_button_and_set_visible (GtkWidget  *parent,
-                             const char *label,
-                             gboolean    visible)
-{
-  g_assert (!parent || GTK_IS_WIDGET (parent));
-
-  for (GtkWidget *child = gtk_widget_get_first_child (parent);
-       child != NULL;
-       child = gtk_widget_get_next_sibling (child))
-    {
-      if (GTK_IS_BUTTON (child) &&
-          g_strcmp0 (label, gtk_button_get_label (GTK_BUTTON (child))) == 0)
-        {
-          gtk_widget_set_visible (child, visible);
-          break;
-        }
-    }
-}
-
-static void
-set_response_visible (AdwMessageDialog *dialog,
-                      const char       *response,
-                      gboolean          visible)
-{
-  const char *label;
-  GObject *wide;
-  GObject *narrow;
-
-  g_assert (ADW_IS_MESSAGE_DIALOG (dialog));
-  g_assert (response != NULL);
-  g_assert (adw_message_dialog_has_response (dialog, response));
-
-  adw_message_dialog_set_response_enabled (dialog, response, visible);
-
-  if (!(label = adw_message_dialog_get_response_label (dialog, response)))
-    return;
-
-  if ((wide = gtk_widget_get_template_child (GTK_WIDGET (dialog), ADW_TYPE_MESSAGE_DIALOG, "wide_response_box")))
-    find_button_and_set_visible (GTK_WIDGET (wide), label, visible);
-
-  if ((narrow = gtk_widget_get_template_child (GTK_WIDGET (dialog), ADW_TYPE_MESSAGE_DIALOG, "narrow_response_box")))
-    find_button_and_set_visible (GTK_WIDGET (narrow), label, visible);
-}
-
 static gboolean
 panel_save_dialog_close_request_idle_cb (gpointer user_data)
 {
@@ -407,11 +362,11 @@ panel_save_dialog_update (PanelSaveDialog *self)
 
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "discard", _("_Discard"));
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
 
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("_Save As…"));
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "save", TRUE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", TRUE);
 
           g_free (body);
         }
@@ -429,11 +384,11 @@ panel_save_dialog_update (PanelSaveDialog *self)
 
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "discard", _("_Discard"));
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
 
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("_Save"));
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "save", TRUE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", TRUE);
 
           g_free (body);
         }
@@ -465,24 +420,24 @@ panel_save_dialog_update (PanelSaveDialog *self)
         {
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_DESTRUCTIVE);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("Only _Save Selected"));
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "save", TRUE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", TRUE);
 
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
         }
       else if (has_selected)
         {
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("Save All"));
 
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
         }
       else
         {
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "save", FALSE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", FALSE);
 
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
           adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "discard", _("Discard All"));
-          set_response_visible (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
+          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
         }
 
       gtk_widget_show (GTK_WIDGET (self->page));
