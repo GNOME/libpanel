@@ -174,8 +174,10 @@ panel_save_dialog_response_save_cb (PanelSaveDialog *self,
   g_assert (PANEL_IS_SAVE_DIALOG (self));
   g_assert (self->task != NULL);
 
-  adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", FALSE);
-  adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
+  if (adw_message_dialog_has_response (ADW_MESSAGE_DIALOG (self), "save"))
+    adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", FALSE);
+  if (adw_message_dialog_has_response (ADW_MESSAGE_DIALOG (self), "discard"))
+    adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
 
   self->saving = TRUE;
 
@@ -341,6 +343,11 @@ panel_save_dialog_update (PanelSaveDialog *self)
 {
   g_assert (PANEL_IS_SAVE_DIALOG (self));
 
+  if (adw_message_dialog_has_response (ADW_MESSAGE_DIALOG (self), "discard"))
+    adw_message_dialog_remove_response (ADW_MESSAGE_DIALOG (self), "discard");
+  if (adw_message_dialog_has_response (ADW_MESSAGE_DIALOG (self), "save"))
+    adw_message_dialog_remove_response (ADW_MESSAGE_DIALOG (self), "save");
+
   if (self->rows->len == 1)
     {
       PanelSaveDialogRow *row = g_ptr_array_index (self->rows, 0);
@@ -360,13 +367,11 @@ panel_save_dialog_update (PanelSaveDialog *self)
                                           _("Save or Discard Draft?"));
           adw_message_dialog_set_body (ADW_MESSAGE_DIALOG (self), body);
 
+          adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (self), "discard", _("_Discard"));
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
-          adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "discard", _("_Discard"));
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
 
+          adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (self), "save", _("_Save As…"));
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
-          adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("_Save As…"));
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", TRUE);
 
           g_free (body);
         }
@@ -382,13 +387,11 @@ panel_save_dialog_update (PanelSaveDialog *self)
                                           _("Save or Discard Changes?"));
           adw_message_dialog_set_body (ADW_MESSAGE_DIALOG (self), body);
 
+          adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (self), "discard", _("_Discard"));
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
-          adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "discard", _("_Discard"));
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
 
+          adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (self), "save", _("_Save"));
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
-          adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("_Save"));
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", TRUE);
 
           g_free (body);
         }
@@ -418,26 +421,18 @@ panel_save_dialog_update (PanelSaveDialog *self)
 
       if (has_selected && has_unselected)
         {
+          adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (self), "save", _("Only _Save Selected"));
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_DESTRUCTIVE);
-          adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("Only _Save Selected"));
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", TRUE);
-
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
         }
       else if (has_selected)
         {
+          adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (self), "save", _("Save All"));
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
-          adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "save", _("Save All"));
-
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", FALSE);
         }
       else
         {
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "save", FALSE);
-
+          adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (self), "discard", _("Discard All"));
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
-          adw_message_dialog_set_response_label (ADW_MESSAGE_DIALOG (self), "discard", _("Discard All"));
-          adw_message_dialog_set_response_enabled (ADW_MESSAGE_DIALOG (self), "discard", TRUE);
         }
 
       gtk_widget_show (GTK_WIDGET (self->page));
