@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-changes-dialog.h"
 #include "panel-dock-private.h"
 #include "panel-dock-child-private.h"
 #include "panel-drop-controls-private.h"
@@ -33,7 +34,6 @@
 #include "panel-position.h"
 #include "panel-resizer-private.h"
 #include "panel-save-delegate.h"
-#include "panel-save-dialog.h"
 #include "panel-scaler-private.h"
 #include "panel-widget-private.h"
 
@@ -118,15 +118,15 @@ panel_frame_close_page_save_cb (GObject      *object,
                                 GAsyncResult *result,
                                 gpointer      user_data)
 {
-  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  PanelChangesDialog *dialog = (PanelChangesDialog *)object;
   PanelFrame *self = user_data;
   GError *error = NULL;
 
-  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (PANEL_IS_CHANGES_DIALOG (dialog));
   g_assert (G_IS_ASYNC_RESULT (result));
   g_assert (PANEL_IS_FRAME (self));
 
-  if (!panel_save_dialog_run_finish (dialog, result, &error))
+  if (!panel_changes_dialog_run_finish (dialog, result, &error))
     {
       if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
         g_warning ("%s", error->message);
@@ -142,7 +142,7 @@ panel_frame_close_page_cb (PanelFrame *self,
                            AdwTabView *tab_view)
 {
   PanelSaveDelegate *delegate;
-  PanelSaveDialog *dialog;
+  PanelChangesDialog *dialog;
   PanelWidget *widget;
   GtkRoot *root;
 
@@ -164,17 +164,16 @@ panel_frame_close_page_cb (PanelFrame *self,
 
   root = gtk_widget_get_root (GTK_WIDGET (self));
   delegate = panel_widget_get_save_delegate (widget);
-  dialog = PANEL_SAVE_DIALOG (panel_save_dialog_new ());
+  dialog = PANEL_CHANGES_DIALOG (panel_changes_dialog_new ());
 
-  panel_save_dialog_set_close_after_save (dialog, TRUE);
-  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (root));
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  panel_save_dialog_add_delegate (dialog, delegate);
+  panel_changes_dialog_set_close_after_save (dialog, TRUE);
+  panel_changes_dialog_add_delegate (dialog, delegate);
 
-  panel_save_dialog_run_async (dialog,
-                               NULL,
-                               panel_frame_close_page_save_cb,
-                               g_object_ref (self));
+  panel_changes_dialog_run_async (dialog,
+                                  GTK_WIDGET (root),
+                                  NULL,
+                                  panel_frame_close_page_save_cb,
+                                  g_object_ref (self));
 
   adw_tab_view_close_page_finish (tab_view, tab_page, FALSE);
 
@@ -213,17 +212,17 @@ panel_frame_close_frame_save_cb (GObject      *object,
                                  GAsyncResult *result,
                                  gpointer      user_data)
 {
-  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  PanelChangesDialog *dialog = (PanelChangesDialog *)object;
   PanelFrame *self = user_data;
   GError *error = NULL;
   GtkWidget *dock;
   GtkWidget *grid;
 
-  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (PANEL_IS_CHANGES_DIALOG (dialog));
   g_assert (G_IS_ASYNC_RESULT (result));
   g_assert (PANEL_IS_FRAME (self));
 
-  if (!panel_save_dialog_run_finish (dialog, result, &error))
+  if (!panel_changes_dialog_run_finish (dialog, result, &error))
     {
       if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
         g_warning ("%s", error->message);
@@ -258,10 +257,8 @@ close_frame_action (GtkWidget  *widget,
 
   toplevel = gtk_widget_get_ancestor (widget, GTK_TYPE_WINDOW);
 
-  dialog = panel_save_dialog_new ();
-  panel_save_dialog_set_close_after_save (PANEL_SAVE_DIALOG (dialog), TRUE);
-  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (toplevel));
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  dialog = panel_changes_dialog_new ();
+  panel_changes_dialog_set_close_after_save (PANEL_CHANGES_DIALOG (dialog), TRUE);
 
   n_pages = panel_frame_get_n_pages (self);
 
@@ -270,14 +267,15 @@ close_frame_action (GtkWidget  *widget,
       PanelWidget *page = panel_frame_get_page (self, i);
 
       if (_panel_widget_can_save (page))
-        panel_save_dialog_add_delegate (PANEL_SAVE_DIALOG (dialog),
+        panel_changes_dialog_add_delegate (PANEL_CHANGES_DIALOG (dialog),
                                         panel_widget_get_save_delegate (page));
     }
 
-  panel_save_dialog_run_async (PANEL_SAVE_DIALOG (dialog),
-                               NULL,
-                               panel_frame_close_frame_save_cb,
-                               g_object_ref (self));
+  panel_changes_dialog_run_async (PANEL_CHANGES_DIALOG (dialog),
+                                  toplevel,
+                                  NULL,
+                                  panel_frame_close_frame_save_cb,
+                                  g_object_ref (self));
 }
 
 static void
@@ -285,15 +283,15 @@ panel_frame_close_all_cb (GObject      *object,
                           GAsyncResult *result,
                           gpointer      user_data)
 {
-  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  PanelChangesDialog *dialog = (PanelChangesDialog *)object;
   PanelFrame *self = user_data;
   GError *error = NULL;
 
-  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (PANEL_IS_CHANGES_DIALOG (dialog));
   g_assert (G_IS_ASYNC_RESULT (result));
   g_assert (PANEL_IS_FRAME (self));
 
-  if (!panel_save_dialog_run_finish (dialog, result, &error))
+  if (!panel_changes_dialog_run_finish (dialog, result, &error))
     {
       if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
         g_warning ("%s", error->message);
@@ -324,18 +322,16 @@ close_all_action (GtkWidget  *widget,
   toplevel = gtk_widget_get_ancestor (widget, GTK_TYPE_WINDOW);
   to_close = g_ptr_array_new_with_free_func (g_object_unref);
 
-  dialog = panel_save_dialog_new ();
-  panel_save_dialog_set_close_after_save (PANEL_SAVE_DIALOG (dialog), TRUE);
-  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (toplevel));
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  dialog = panel_changes_dialog_new ();
+  panel_changes_dialog_set_close_after_save (PANEL_CHANGES_DIALOG (dialog), TRUE);
 
   for (guint i = 0; i < n_pages; i++)
     {
       PanelWidget *page = panel_frame_get_page (self, i);
 
       if (_panel_widget_can_save (page))
-        panel_save_dialog_add_delegate (PANEL_SAVE_DIALOG (dialog),
-                                        panel_widget_get_save_delegate (page));
+        panel_changes_dialog_add_delegate (PANEL_CHANGES_DIALOG (dialog),
+                                           panel_widget_get_save_delegate (page));
       else
         g_ptr_array_add (to_close, g_object_ref (page));
     }
@@ -343,10 +339,11 @@ close_all_action (GtkWidget  *widget,
   for (guint i = 0; i < to_close->len; i++)
     panel_widget_close (g_ptr_array_index (to_close, i));
 
-  panel_save_dialog_run_async (PANEL_SAVE_DIALOG (dialog),
-                               NULL,
-                               panel_frame_close_all_cb,
-                               g_object_ref (self));
+  panel_changes_dialog_run_async (PANEL_CHANGES_DIALOG (dialog),
+                                  toplevel,
+                                  NULL,
+                                  panel_frame_close_all_cb,
+                                  g_object_ref (self));
 
   g_ptr_array_unref (to_close);
   g_object_unref (self);

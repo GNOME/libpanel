@@ -34,6 +34,7 @@ libpanel_private_sources = [
 libpanel_sources = [
   'panel-action-muxer.c',
   'panel-application.c',
+  'panel-changes-dialog.c',
   'panel-dock.c',
   'panel-document-workspace.c',
   'panel-frame.c',
@@ -69,6 +70,7 @@ libpanel_headers = [
   'panel-action-group.h',
   'panel-action-muxer.h',
   'panel-application.h',
+  'panel-changes-dialog.h',
   'panel-dock.h',
   'panel-document-workspace.h',
   'panel-frame.h',

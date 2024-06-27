@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "panel-changes-dialog.h"
 #include "panel-dock-private.h"
 #include "panel-frame.h"
 #include "panel-frame-header.h"
@@ -30,7 +31,6 @@
 #include "panel-paned.h"
 #include "panel-position.h"
 #include "panel-resizer-private.h"
-#include "panel-save-dialog.h"
 #include "panel-widget.h"
 
 /**
@@ -703,11 +703,11 @@ static void
 panel_grid_agree_to_close_frame_cb (PanelFrame *frame,
                                     gpointer    user_data)
 {
-  PanelSaveDialog *dialog = user_data;
+  PanelChangesDialog *dialog = user_data;
   guint n_pages;
 
   g_assert (PANEL_IS_FRAME (frame));
-  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (PANEL_IS_CHANGES_DIALOG (dialog));
 
   n_pages = panel_frame_get_n_pages (frame);
 
@@ -717,7 +717,7 @@ panel_grid_agree_to_close_frame_cb (PanelFrame *frame,
       PanelSaveDelegate *delegate = panel_widget_get_save_delegate (page);
 
       if (delegate != NULL)
-        panel_save_dialog_add_delegate (dialog, delegate);
+        panel_changes_dialog_add_delegate (dialog, delegate);
     }
 }
 
@@ -726,15 +726,15 @@ panel_grid_agree_to_close_cb (GObject      *object,
                               GAsyncResult *result,
                               gpointer      user_data)
 {
-  PanelSaveDialog *dialog = (PanelSaveDialog *)object;
+  PanelChangesDialog *dialog = (PanelChangesDialog *)object;
   GError *error = NULL;
   GTask *task = user_data;
 
-  g_assert (PANEL_IS_SAVE_DIALOG (dialog));
+  g_assert (PANEL_IS_CHANGES_DIALOG (dialog));
   g_assert (G_IS_ASYNC_RESULT (result));
   g_assert (G_IS_TASK (task));
 
-  if (panel_save_dialog_run_finish (dialog, result, &error))
+  if (panel_changes_dialog_run_finish (dialog, result, &error))
     g_task_return_boolean (task, TRUE);
   else
     g_task_return_error (task, error);
@@ -757,7 +757,7 @@ panel_grid_agree_to_close_async (PanelGrid           *self,
                                  GAsyncReadyCallback  callback,
                                  gpointer             user_data)
 {
-  PanelSaveDialog *dialog;
+  PanelChangesDialog *dialog;
   GTask *task = NULL;
 
   g_return_if_fail (PANEL_IS_GRID (self));
@@ -766,14 +766,15 @@ panel_grid_agree_to_close_async (PanelGrid           *self,
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, panel_grid_agree_to_close_async);
 
-  dialog = PANEL_SAVE_DIALOG (panel_save_dialog_new ());
+  dialog = PANEL_CHANGES_DIALOG (panel_changes_dialog_new ());
   _panel_grid_foreach_frame (self,
                              panel_grid_agree_to_close_frame_cb,
                              dialog);
-  panel_save_dialog_run_async (dialog,
-                               cancellable,
-                               panel_grid_agree_to_close_cb,
-                               g_steal_pointer (&task));
+  panel_changes_dialog_run_async (dialog,
+                                  GTK_WIDGET (self),
+                                  cancellable,
+                                  panel_grid_agree_to_close_cb,
+                                  g_steal_pointer (&task));
 }
 
 /**
