@@ -309,6 +309,8 @@ panel_save_dialog_class_init (PanelSaveDialogClass *klass)
    * PanelSaveDialog:close-after-save:
    *
    * This property requests that the widget close after saving.
+   *
+   * Deprecated: 1.8: Use [class@PanelChangesDialog]
    */
   properties [PROP_CLOSE_AFTER_SAVE] =
     g_param_spec_boolean ("close-after-save", NULL, NULL,

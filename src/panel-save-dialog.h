@@ -28,26 +28,26 @@ G_BEGIN_DECLS
 
 #define PANEL_TYPE_SAVE_DIALOG (panel_save_dialog_get_type())
 
-PANEL_AVAILABLE_IN_ALL
+PANEL_DEPRECATED_IN_1_8_FOR(PanelChangesDialog)
 G_DECLARE_FINAL_TYPE (PanelSaveDialog, panel_save_dialog, PANEL, SAVE_DIALOG, AdwMessageDialog)
 
-PANEL_AVAILABLE_IN_ALL
+PANEL_DEPRECATED_IN_1_8_FOR(panel_changes_dialog_new)
 GtkWidget *panel_save_dialog_new                  (void);
-PANEL_AVAILABLE_IN_ALL
+PANEL_DEPRECATED_IN_1_8_FOR(panel_changes_dialog_add_delegate)
 void       panel_save_dialog_add_delegate         (PanelSaveDialog      *self,
                                                    PanelSaveDelegate    *delegate);
-PANEL_AVAILABLE_IN_ALL
+PANEL_DEPRECATED_IN_1_8_FOR(panel_changes_dialog_run_async)
 void       panel_save_dialog_run_async            (PanelSaveDialog      *self,
                                                    GCancellable         *cancellable,
                                                    GAsyncReadyCallback   callback,
                                                    gpointer              user_data);
-PANEL_AVAILABLE_IN_ALL
+PANEL_DEPRECATED_IN_1_8_FOR(panel_changes_dialog_run_finish)
 gboolean   panel_save_dialog_run_finish           (PanelSaveDialog      *self,
                                                    GAsyncResult         *result,
                                                    GError              **error);
-PANEL_AVAILABLE_IN_ALL
+PANEL_DEPRECATED_IN_1_8_FOR(panel_changes_dialog_get_close_after_save)
 gboolean   panel_save_dialog_get_close_after_save (PanelSaveDialog      *self);
-PANEL_AVAILABLE_IN_ALL
+PANEL_DEPRECATED_IN_1_8_FOR(panel_changes_dialog_set_close_after_save)
 void       panel_save_dialog_set_close_after_save (PanelSaveDialog      *self,
                                                    gboolean              close_after_save);
 
