@@ -1,3 +1,16 @@
+libpanel 1.7.0
+==============
+
+First alpha release for GNOME 47.alpha
+
+ * Style fixes for libadwaita 1.6.alpha
+ * A new PanelChangesDialog which is an AdwDialog but is
+   otherwise like PanelSaveDialog. PanelSaveDialog is now
+   deprecated for what will become 1.8+.
+ * Translation updates
+
+Thanks to everyone who contributed!
+
 libpanel 1.6.0
 ==============
 
