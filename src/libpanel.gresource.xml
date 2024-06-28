@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/org/gnome/libpanel">
     <file compressed="true">stylesheet.css</file>
+    <file compressed="true" preprocess="xml-stripblanks">panel-changes-dialog.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-document-workspace.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-drop-controls.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">panel-frame-header-bar.ui</file>
