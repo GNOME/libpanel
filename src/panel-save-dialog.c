@@ -28,6 +28,8 @@
 #include "panel-save-dialog.h"
 #include "panel-save-dialog-row-private.h"
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 struct _PanelSaveDialog
 {
   AdwMessageDialog     parent_instance;
@@ -575,3 +577,5 @@ panel_save_dialog_set_close_after_save (PanelSaveDialog *self,
       g_object_notify_by_pspec (G_OBJECT (self), properties [PROP_CLOSE_AFTER_SAVE]);
     }
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS
