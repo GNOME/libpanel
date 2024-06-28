@@ -496,8 +496,6 @@ panel_changes_dialog_run_async (PanelChangesDialog  *self,
   g_return_if_fail (PANEL_IS_CHANGES_DIALOG (self));
   g_return_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable));
 
-  g_object_ref_sink (self);
-
   if (cancellable == NULL)
     self->cancellable = g_cancellable_new ();
   else
