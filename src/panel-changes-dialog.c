@@ -36,7 +36,6 @@ struct _PanelChangesDialog
   GCancellable        *cancellable;
   GTask               *task;
 
-  AdwPreferencesPage  *page;
   AdwPreferencesGroup *group;
 
   guint                close_after_save : 1;
@@ -317,7 +316,6 @@ panel_changes_dialog_class_init (PanelChangesDialogClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/libpanel/panel-changes-dialog.ui");
 
   gtk_widget_class_bind_template_child (widget_class, PanelChangesDialog, group);
-  gtk_widget_class_bind_template_child (widget_class, PanelChangesDialog, page);
 
   gtk_widget_class_bind_template_callback (widget_class, panel_changes_dialog_response_cancel_cb);
   gtk_widget_class_bind_template_callback (widget_class, panel_changes_dialog_response_discard_cb);
@@ -390,7 +388,8 @@ panel_changes_dialog_update (PanelChangesDialog *self)
           g_free (body);
         }
 
-      gtk_widget_hide (GTK_WIDGET (self->page));
+      gtk_widget_set_visible (GTK_WIDGET (self->group), FALSE);
+      adw_alert_dialog_set_prefer_wide_layout (ADW_ALERT_DIALOG (self), FALSE);
     }
   else
     {
@@ -429,7 +428,8 @@ panel_changes_dialog_update (PanelChangesDialog *self)
           adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
         }
 
-      gtk_widget_show (GTK_WIDGET (self->page));
+      gtk_widget_set_visible (GTK_WIDGET (self->group), TRUE);
+      adw_alert_dialog_set_prefer_wide_layout (ADW_ALERT_DIALOG (self), TRUE);
     }
 }
 
