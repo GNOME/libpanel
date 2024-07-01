@@ -36,10 +36,59 @@ fedora:
   interruptible: true
   needs: []
   script:
-    - sudo dnf install -y meson gi-docgen gettext gcc gcc-c++ git gtk4-devel libadwaita-devel
-    - meson build -Ddocs=enabled
-    - ninja -C build test
-    - mv build/docs/panel-1.0 docs
+      - sudo dnf -y install
+              ccache
+              desktop-file-utils
+              editorconfig-devel
+              enchant2-devel
+              expat-devel
+              gcc
+              gcc-c++
+              gettext
+              gi-docgen
+              git
+              glib2-devel
+              gobject-introspection-devel
+              gtk4-devel
+              itstool
+              libadwaita-devel
+              libicu-devel
+              libjpeg-turbo-devel
+              libpng-devel
+              meson
+              ninja-build
+              redhat-rpm-config
+              shared-mime-info
+              xorg-x11-server-Xvfb
+      - meson setup _build .
+              -Ddocs=enabled
+              -Dwerror=false
+              -Dglib:werror=false
+              -Dgtk:broadway-backend=false
+              -Dgtk:build-examples=false
+              -Dgtk:build-tests=false
+              -Dgtk:demos=false
+              -Dgtk:media-gstreamer=disabled
+              -Dgtk:werror=false
+              -Dicu:werror=false
+              -Dlibadwaita:examples=false
+              -Dlibadwaita:gtk_doc=false
+              -Dlibadwaita:introspection=disabled
+              -Dlibadwaita:tests=false
+              -Dlibadwaita:vapi=false
+              -Dlibadwaita:werror=false
+              -Dlibsass:werror=false
+              -Dpango:gtk_doc=false
+              -Dpango:introspection=disabled
+              -Dpango:werror=false
+              -Dsassc:werror=false
+              -Dwayland-protocols:tests=false
+              -Dwayland:documentation=false
+              -Dwayland:dtd_validation=false
+              -Dwayland:tests=false
+              _build
+    - ninja -C _build test
+    - mv _build/docs/panel-1.0 docs
   artifacts:
     paths:
     - docs
