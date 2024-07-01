@@ -36,7 +36,7 @@ fedora:
   interruptible: true
   needs: []
   script:
-    - sudo dnf install -y meson gi-docgen gettext gcc git gtk4-devel libadwaita-devel
+    - sudo dnf install -y meson gi-docgen gettext gcc gcc-c++ git gtk4-devel libadwaita-devel
     - meson build -Ddocs=enabled
     - ninja -C build test
     - mv build/docs/panel-1.0 docs
