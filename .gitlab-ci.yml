@@ -58,6 +58,7 @@ fedora:
             libxkbcommon-devel
             libXrandr-devel
             libXi-devel
+            libXcursor-devel
             meson
             ninja-build
             redhat-rpm-config
