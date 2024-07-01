@@ -55,6 +55,7 @@ fedora:
             libicu-devel
             libjpeg-turbo-devel
             libpng-devel
+            libxkbcommon-devel
             meson
             ninja-build
             redhat-rpm-config
