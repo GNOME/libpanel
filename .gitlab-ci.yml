@@ -86,7 +86,6 @@ fedora:
             -Dwayland:documentation=false
             -Dwayland:dtd_validation=false
             -Dwayland:tests=false
-            _build
     - ninja -C _build test
     - mv _build/docs/panel-1.0 docs
   artifacts:
