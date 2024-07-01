@@ -13,11 +13,8 @@
       <response id="save" translatable="yes" appearance="suggested">_Save</response>
     </responses>
     <property name="extra-child">
-      <object class="AdwPreferencesPage" id="page">
-        <child>
-          <object class="AdwPreferencesGroup" id="group">
-          </object>
-        </child>
+      <object class="AdwPreferencesGroup" id="group">
+        <property name="width-request">400</property>
       </object>
     </property>
   </template>

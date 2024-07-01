@@ -147,6 +147,10 @@ panel_save_dialog_row_get_property (GObject    *object,
       g_value_set_object (value, panel_save_dialog_row_get_delegate (self));
       break;
 
+    case PROP_SELECTED:
+      g_value_set_boolean (value, panel_save_dialog_row_get_selected (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -164,6 +168,10 @@ panel_save_dialog_row_set_property (GObject      *object,
     {
     case PROP_DELEGATE:
       panel_save_dialog_row_set_delegate (self, g_value_get_object (value));
+      break;
+
+    case PROP_SELECTED:
+      panel_save_dialog_row_set_selected (self, g_value_get_boolean (value));
       break;
 
     default:
