@@ -57,6 +57,7 @@ fedora:
             libpng-devel
             libxkbcommon-devel
             libXrandr-devel
+            libXi-devel
             meson
             ninja-build
             redhat-rpm-config
