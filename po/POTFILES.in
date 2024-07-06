@@ -1,5 +1,7 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
+src/panel-changes-dialog.c
+src/panel-changes-dialog.ui
 src/panel-frame-header-bar.ui
 src/panel-frame.ui
 src/panel-maximized-controls.c
