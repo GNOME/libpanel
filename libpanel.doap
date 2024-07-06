@@ -12,7 +12,7 @@
     libpanel is a collection of GTK widgets for IDE-like applications targeting
     GNOME using GTK and libadwaita.
   </description>
-  <homepage rdf:resource="https://gitlab.gnome.org/chergert/libpanel" />
+  <homepage rdf:resource="https://gitlab.gnome.org/GNOME/libpanel" />
   <license rdf:resource="https://spdx.org/licenses/LGPL-3.0-or-later.html" />
 
   <programming-language>C</programming-language>
