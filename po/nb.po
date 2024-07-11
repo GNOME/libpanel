@@ -1,0 +1,143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2024-07-07 22:34+0000\n"
+"PO-Revision-Date: 2024-07-11 21:18+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Utkastet «%s» har ikke blitt lagret. Det kan bli lagret eller forkastet."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "Lagre eller forkaste utkast?"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Forkast"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "_Lagre som…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "«%s» inneholder ulagrede endringer. Endringene kan lagres eller forkastes."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "Lagre eller forkaste endringer?"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Lagre"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "Åpne filer inneholder ulagrede endringer. Endringene kan lagres eller forkastes."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "Bare _lagre valgte"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "Lagre alt"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "Forkast alt"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Avbryt"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Åpne sider"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Ramme"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Flytt til _venstre"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Flytt til _høyre"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Flytt _opp"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Flytt _ned"
+
+#: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Lukk alle sider"
+
+#: src/panel-frame.ui:86
+msgid "Close Frame"
+msgstr "Lukk ramme"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Åpne panel på siste plassering"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(ny)"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "Følg system"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "Lys modus"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "Mørk modus"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Vis/skjul venstre panel"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Vis/skjul høyre panel"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Vis/skjul toppanel"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Vis/skjul bunnpanel"
