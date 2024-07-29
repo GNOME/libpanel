@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-02-01 03:04+0000\n"
-"PO-Revision-Date: 2023-02-04 18:40+0200\n"
+"POT-Creation-Date: 2024-07-11 19:21+0000\n"
+"PO-Revision-Date: 2024-07-30 02:17+0300\n"
 "Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>\n"
 "Language-Team: Greek <gnome-el-list@gnome.org>\n"
 "Language: el\n"
@@ -16,7 +16,70 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr ""
+"Το πρόχειρο «%s» δεν έχει αποθηκευτεί. Μπορεί να αποθηκευτεί ή να "
+"απορριφθεί."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "Αποθήκευση ή απόρριψη προχείρου;"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Απόρριψη"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "_Αποθήκευση ως…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Το \"%s\" περιέχει αλλαγές που δεν έχουν αποθηκευτεί. Οι αλλαγές μπορούν να "
+"αποθηκευτούν η να απορριφθούν."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "Αποθήκευση ή απόρριψη αλλαγών;"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Αποθήκευση"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Ανοιχτά έγγραφα περιέχουν μη αποθηκευμένες αλλαγές. Οι αλλαγές μπορούν να "
+"αποθηκευτούν η να απορριφθούν."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "Μόνο η _αποθήκευση είναι επιλεγμένη"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "Αποθήκευση όλων"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "Απόρριψη όλων"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Ακύρωση"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -58,74 +121,30 @@ msgstr "Επαναφορά πίνακα στη προηγούμενη τοποθ
 msgid "(new)"
 msgstr "(νέο)"
 
-#. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:402
-#, c-format
-msgid "The draft “%s” has not been saved. It can be saved or discarded."
-msgstr ""
-"Το πρόχειρο \"%s\" δεν έχει αποθηκευτεί. Μπορεί να αποθηκευτεί ή να "
-"απορριφθεί."
-
-#: src/panel-save-dialog.c:405
-msgid "Save or Discard Draft?"
-msgstr "Αποθήκευση ή απόρριψη προχείρου;"
-
-#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
-#: src/panel-save-dialog.ui:11
-msgid "_Discard"
-msgstr "_Απόρριψη"
-
-#: src/panel-save-dialog.c:413
-msgid "_Save As…"
-msgstr "_Αποθήκευση ως"
-
-#. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:424
-#, c-format
-msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr ""
-"Το \"%s\" περιέχει αλλαγές που δεν έχουν αποθηκευτεί. Οι αλλαγές μπορούν να "
-"αποθηκευτούν η να απορριφθούν."
-
-#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
-msgid "Save or Discard Changes?"
-msgstr "Αποθήκευση ή απόρριψη αλλαγών;"
-
-#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
-msgid "_Save"
-msgstr "_Αποθήκευση"
-
-#: src/panel-save-dialog.c:462
-msgid ""
-"Open documents contain unsaved changes. Changes can be saved or discarded."
-msgstr ""
-"Ανοιχτά έγγραφα περιέχουν μη αποθηκευμένες αλλαγές. Οι αλλαγές μπορούν να "
-"αποθηκευτούν η να απορριφθούν."
-
-#: src/panel-save-dialog.c:467
-msgid "Only _Save Selected"
-msgstr "Μόνο η _αποθήκευση είναι επιλεγμένη"
-
-#: src/panel-save-dialog.c:475
-msgid "Save All"
-msgstr "Αποθήκευση όλων"
-
-#: src/panel-save-dialog.c:484
-msgid "Discard All"
-msgstr "Απόρριψη όλων"
-
-#: src/panel-save-dialog.ui:10
-msgid "_Cancel"
-msgstr "_Ακύρωση"
-
-#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
 msgid "Follow system style"
 msgstr "Ακολουθήστε το στυλ του συστήματος"
 
-#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
 msgid "Light style"
 msgstr "Φωτεινό στυλ"
 
-#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
 msgid "Dark style"
 msgstr "Σκούρο στυλ"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Εναλλαγή ορατότητας του αριστερού πίνακα"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Εναλλαγή ορατότητας του δεξιού πίνακα"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Εναλλαγή ορατότητας του πάνω πίνακα"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Εναλλαγή ορατότητας του κάτω πίνακα"
