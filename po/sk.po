@@ -1,0 +1,144 @@
+# Slovak translation for libpanel.
+# Copyright (C) 2024 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Jose Riha <jose1711@gmail.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2024-09-01 11:10+0000\n"
+"PO-Revision-Date: 2024-09-13 22:04+0200\n"
+"Last-Translator: Jose Riha <jose1711@gmail.com>\n"
+"Language-Team: Slovak <Slovak>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Koncept „%s“ nie je uložený. Môžete ho uložiť alebo zahodiť."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "Uložiť alebo zahodiť koncept?"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "Zaho_diť"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "_Uložiť ako…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "„%s“ obsahuje neuložené zmeny. Môžete ich uložiť alebo zahodiť."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "Uložiť alebo zahodiť zmeny?"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Uložiť"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Otvorené dokumenty obsahujú neuložené zmeny. Môžete ich uložiť alebo zahodiť."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "_Uložiť iba vybrané"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "Uložiť všetko"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "Všetko zahodiť"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Zrušiť"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Otvoriť stránky"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr "Rám"
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "Posunúť stránku _doľava"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "Posunúť stránku do_prava"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "Posunúť stránku na_hor"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "Posunúť stránku nado_l"
+
+#: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "Zatvoriť všetky stránky"
+
+#: src/panel-frame.ui:86
+msgid "Close Frame"
+msgstr "Zatvoriť rám"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Obnoviť panel na predchádzajúce miesto"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(nový)"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "Podľa systémového štýlu"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "Svetlý štýl"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "Tmavý štýl"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Prepnúť viditeľnosť ľavého panela"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Prepnúť viditeľnosť pravého panela"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Prepnúť viditeľnosť horného panela"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Prepnúť viditeľnosť spodného panela"
