@@ -1,0 +1,142 @@
+# Chinese (Taiwan) translation for libpanel.
+# Copyright (C) 2024 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Cheng-Chia Tseng <pswo10680@gmail.com>,  2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2024-09-24 23:18+0000\n"
+"PO-Revision-Date: 2024-10-07 22:58+0800\n"
+"Last-Translator: Cheng-Chia Tseng <zerngjia@gmail.com>\n"
+"Language-Team: Chinese (Taiwan) <Chinese Traditional>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "草稿「%s」尚未儲存。您可以儲存，或是捨棄。"
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "您要儲存或捨棄草稿？"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "捨棄(_D)"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "另存新檔(_S)…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "「%s」還有未儲存的更動。您可以儲存變更，或是捨棄。"
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "您要儲存或捨棄變更？"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "儲存(_S)"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "開啟的文件還有未儲存的更動。您可以儲存變更，或是捨棄。"
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "僅儲存所選部分(_S)"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "全部儲存"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "全部捨棄"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "取消(_C)"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "開啟頁面"
+
+#: src/panel-frame.ui:60
+msgid "Frame"
+msgstr ""
+
+#: src/panel-frame.ui:62
+msgid "Move Page _Left"
+msgstr "左移一頁(_L)"
+
+#: src/panel-frame.ui:67
+msgid "Move Page _Right"
+msgstr "右移一頁(_R)"
+
+#: src/panel-frame.ui:72
+msgid "Move Page _Up"
+msgstr "上移一頁(_U)"
+
+#: src/panel-frame.ui:76
+msgid "Move Page _Down"
+msgstr "下移一頁(_D)"
+
+#: src/panel-frame.ui:82
+msgid "Close All Pages"
+msgstr "關閉所有頁面"
+
+#: src/panel-frame.ui:86
+msgid "Close Frame"
+msgstr ""
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "將面板還原到上一個位置"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "（新的）"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "跟隨系統風格設定"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "明亮風格"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "深暗風格"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "切換左面板的可見性"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "切換右面板的可見性"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "切換上面板的可見性"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "切換下面板的可見性"
