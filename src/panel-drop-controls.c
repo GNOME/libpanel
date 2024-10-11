@@ -190,7 +190,6 @@ on_drop_target_motion_cb (PanelDropControls *self,
   AdwTabPage *drop_before = NULL;
   GtkWidget *pick;
   GtkWidget *frame;
-  double header_x, header_y;
 
   g_assert (PANEL_IS_DROP_CONTROLS (self));
   g_assert (GTK_IS_DROP_TARGET (drop_target));
@@ -200,27 +199,36 @@ on_drop_target_motion_cb (PanelDropControls *self,
 
   if (PANEL_IS_FRAME_SWITCHER (header))
     {
+      graphene_point_t header_p;
+
       orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (header));
 
-      gtk_widget_translate_coordinates (GTK_WIDGET (self),
-                                        GTK_WIDGET (header),
-                                        x, y, &header_x, &header_y);
-      if (gtk_widget_contains (GTK_WIDGET (header), header_x, header_y))
+      if (!gtk_widget_compute_point (GTK_WIDGET (self),
+                                     GTK_WIDGET (header),
+                                     &GRAPHENE_POINT_INIT (x, y),
+                                     &header_p))
+        header_p = GRAPHENE_POINT_INIT (0, 0);
+
+      if (gtk_widget_contains (GTK_WIDGET (header), header_p.x, header_p.y))
         {
-          for (pick = gtk_widget_pick (GTK_WIDGET (header), header_x, header_y, GTK_PICK_DEFAULT);
+          for (pick = gtk_widget_pick (GTK_WIDGET (header), header_p.x, header_p.y, GTK_PICK_DEFAULT);
                pick != NULL && pick != GTK_WIDGET (header);
                pick = gtk_widget_get_parent (pick))
             {
               if (GTK_IS_TOGGLE_BUTTON (pick))
                 {
-                  GtkAllocation alloc;
-                  double pick_x, pick_y;
+                  graphene_point_t pick_p;
+                  int width = gtk_widget_get_width (pick);
+                  int height = gtk_widget_get_height (pick);
 
                   /* If the drop spot is >= ⅔ through the widget, assume they want it after this widget */
-                  gtk_widget_translate_coordinates (GTK_WIDGET (self), pick, x, y, &pick_x, &pick_y);
-                  gtk_widget_get_allocation (pick, &alloc);
-                  if ((orientation == GTK_ORIENTATION_HORIZONTAL && pick_x > (alloc.width * 2 / 3)) ||
-                      (orientation == GTK_ORIENTATION_VERTICAL && pick_y > (alloc.height * 2 / 3)))
+                  if (!gtk_widget_compute_point (GTK_WIDGET (self), pick,
+                                                 &GRAPHENE_POINT_INIT (x, y),
+                                                 &pick_p))
+                    pick_p = GRAPHENE_POINT_INIT (0, 0);
+
+                  if ((orientation == GTK_ORIENTATION_HORIZONTAL && pick_p.x > (width * 2 / 3)) ||
+                      (orientation == GTK_ORIENTATION_VERTICAL && pick_p.y > (height * 2 / 3)))
                     pick = gtk_widget_get_next_sibling (pick);
 
                   if (pick != NULL)
