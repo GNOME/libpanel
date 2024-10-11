@@ -87,6 +87,7 @@ panel_frame_switcher_grab_focus (GtkWidget *widget)
   return FALSE;
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 ensure_indicator (PanelFrameSwitcher *self)
 {
@@ -137,6 +138,7 @@ ensure_indicator (PanelFrameSwitcher *self)
 
   self->drop_indicator = gtk_snapshot_free_to_node (snapshot);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 panel_frame_switcher_init (PanelFrameSwitcher *switcher)
