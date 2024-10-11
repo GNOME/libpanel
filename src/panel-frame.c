@@ -635,7 +635,7 @@ on_panel_drag_begin_cb (PanelFrame  *self,
   if (panel_frame_can_adopt (self, widget) &&
       priv->header != NULL &&
       panel_frame_header_can_drop (priv->header, widget))
-    gtk_widget_show (GTK_WIDGET (priv->drop_controls));
+    gtk_widget_set_visible (GTK_WIDGET (priv->drop_controls), TRUE);
 }
 
 static void
@@ -649,7 +649,7 @@ on_panel_drag_end_cb (PanelFrame  *self,
   g_assert (PANEL_IS_WIDGET (widget));
   g_assert (PANEL_IS_DOCK (dock));
 
-  gtk_widget_hide (GTK_WIDGET (priv->drop_controls));
+  gtk_widget_set_visible (GTK_WIDGET (priv->drop_controls), FALSE);
 }
 
 static void

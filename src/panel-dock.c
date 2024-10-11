@@ -698,7 +698,7 @@ panel_dock_init (PanelDock *self)
   priv->controls = PANEL_MAXIMIZED_CONTROLS (panel_maximized_controls_new ());
   gtk_widget_set_halign (GTK_WIDGET (priv->controls), GTK_ALIGN_END);
   gtk_widget_set_valign (GTK_WIDGET (priv->controls), GTK_ALIGN_START);
-  gtk_widget_hide (GTK_WIDGET (priv->controls));
+  gtk_widget_set_visible (GTK_WIDGET (priv->controls), FALSE);
   gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->controls));
 }
 
@@ -1483,7 +1483,7 @@ _panel_dock_set_maximized (PanelDock   *self,
     {
       gtk_widget_remove_css_class (GTK_WIDGET (priv->maximized), "maximized");
       gtk_overlay_remove_overlay (priv->overlay, GTK_WIDGET (priv->maximized));
-      gtk_widget_hide (GTK_WIDGET (priv->controls));
+      gtk_widget_set_visible (GTK_WIDGET (priv->controls), FALSE);
       priv->maximized = NULL;
     }
 
@@ -1500,7 +1500,7 @@ _panel_dock_set_maximized (PanelDock   *self,
       g_object_ref (priv->controls);
       gtk_overlay_remove_overlay (priv->overlay, GTK_WIDGET (priv->controls));
       gtk_overlay_add_overlay (priv->overlay, GTK_WIDGET (priv->controls));
-      gtk_widget_show (GTK_WIDGET (priv->controls));
+      gtk_widget_set_visible (GTK_WIDGET (priv->controls), TRUE);
       panel_widget_focus_default (widget);
       g_object_unref (priv->controls);
     }

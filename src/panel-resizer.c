@@ -175,7 +175,7 @@ panel_resizer_new (PanelArea area)
   gtk_widget_set_parent (GTK_WIDGET (self->handle), GTK_WIDGET (self));
 
   if (area == PANEL_AREA_CENTER)
-    gtk_widget_hide (GTK_WIDGET (self->handle));
+    gtk_widget_set_visible (GTK_WIDGET (self->handle), FALSE);
 
   return GTK_WIDGET (self);
 }

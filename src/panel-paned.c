@@ -428,13 +428,13 @@ panel_paned_update_handles (PanelPaned *self)
       g_assert (PANEL_IS_RESIZER (child));
 
       if ((handle = panel_resizer_get_handle (PANEL_RESIZER (child))))
-        gtk_widget_show (handle);
+        gtk_widget_set_visible (handle, TRUE);
     }
 
   if ((child = gtk_widget_get_last_child (GTK_WIDGET (self))))
     {
       GtkWidget *handle = panel_resizer_get_handle (PANEL_RESIZER (child));
-      gtk_widget_hide (handle);
+      gtk_widget_set_visible (handle, FALSE);
     }
 }
 

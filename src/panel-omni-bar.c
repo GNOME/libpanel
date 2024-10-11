@@ -707,7 +707,7 @@ panel_omni_bar_start_pulsing (PanelOmniBar *self)
   g_return_if_fail (PANEL_IS_OMNI_BAR (self));
 
   progress_bar_start_pulsing (priv->progress_bar);
-  gtk_widget_show (GTK_WIDGET (priv->progress_bar));
+  gtk_widget_set_visible (GTK_WIDGET (priv->progress_bar), TRUE);
 }
 
 /**
@@ -725,5 +725,5 @@ panel_omni_bar_stop_pulsing (PanelOmniBar *self)
   g_return_if_fail (PANEL_IS_OMNI_BAR (self));
 
   progress_bar_stop_pulsing (priv->progress_bar);
-  gtk_widget_hide (GTK_WIDGET (priv->progress_bar));
+  gtk_widget_set_visible (GTK_WIDGET (priv->progress_bar), FALSE);
 }

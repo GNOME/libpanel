@@ -156,7 +156,7 @@ notify_child_revealed_cb (GtkRevealer            *revealer,
   g_assert (GTK_IS_REVEALER (revealer));
 
   if (!gtk_revealer_get_child_revealed (revealer))
-    gtk_widget_hide (GTK_WIDGET (revealer));
+    gtk_widget_set_visible (GTK_WIDGET (revealer), FALSE);
 }
 
 static void
@@ -173,7 +173,7 @@ panel_toggle_button_panel_drag_begin_cb (PanelToggleButton *self,
   if (!gtk_widget_get_visible (GTK_WIDGET (self->revealer)))
     {
       gtk_toggle_button_set_active (self->button, FALSE);
-      gtk_widget_show (GTK_WIDGET (self->revealer));
+      gtk_widget_set_visible (GTK_WIDGET (self->revealer), TRUE);
       gtk_revealer_set_reveal_child (self->revealer, TRUE);
     }
 }
@@ -212,7 +212,7 @@ panel_toggle_button_notify_can_reveal_cb (PanelDock   *dock,
 
   if (g_value_get_boolean (&value))
     {
-      gtk_widget_show (GTK_WIDGET (revealer));
+      gtk_widget_set_visible (GTK_WIDGET (revealer), TRUE);
       gtk_revealer_set_reveal_child (revealer, TRUE);
     }
   else

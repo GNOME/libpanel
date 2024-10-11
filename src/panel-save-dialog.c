@@ -400,7 +400,7 @@ panel_save_dialog_update (PanelSaveDialog *self)
           g_free (body);
         }
 
-      gtk_widget_hide (GTK_WIDGET (self->page));
+      gtk_widget_set_visible (GTK_WIDGET (self->page), FALSE);
     }
   else
     {
@@ -439,7 +439,7 @@ panel_save_dialog_update (PanelSaveDialog *self)
           adw_message_dialog_set_response_appearance (ADW_MESSAGE_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
         }
 
-      gtk_widget_show (GTK_WIDGET (self->page));
+      gtk_widget_set_visible (GTK_WIDGET (self->page), TRUE);
     }
 }
 

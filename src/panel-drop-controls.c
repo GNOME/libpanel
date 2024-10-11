@@ -103,28 +103,28 @@ panel_drop_controls_set_area (PanelDropControls *self,
     {
     case PANEL_AREA_START:
     case PANEL_AREA_END:
-      gtk_widget_show (GTK_WIDGET (self->top));
-      gtk_widget_show (GTK_WIDGET (self->bottom));
-      gtk_widget_show (GTK_WIDGET (self->center));
-      gtk_widget_hide (GTK_WIDGET (self->left));
-      gtk_widget_hide (GTK_WIDGET (self->right));
+      gtk_widget_set_visible (GTK_WIDGET (self->top), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->bottom), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->center), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->left), FALSE);
+      gtk_widget_set_visible (GTK_WIDGET (self->right), FALSE);
       break;
 
     case PANEL_AREA_TOP:
     case PANEL_AREA_BOTTOM:
-      gtk_widget_hide (GTK_WIDGET (self->top));
-      gtk_widget_hide (GTK_WIDGET (self->bottom));
-      gtk_widget_show (GTK_WIDGET (self->center));
-      gtk_widget_show (GTK_WIDGET (self->left));
-      gtk_widget_show (GTK_WIDGET (self->right));
+      gtk_widget_set_visible (GTK_WIDGET (self->top), FALSE);
+      gtk_widget_set_visible (GTK_WIDGET (self->bottom), FALSE);
+      gtk_widget_set_visible (GTK_WIDGET (self->center), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->left), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->right), TRUE);
       break;
 
     case PANEL_AREA_CENTER:
-      gtk_widget_show (GTK_WIDGET (self->center));
-      gtk_widget_show (GTK_WIDGET (self->top));
-      gtk_widget_show (GTK_WIDGET (self->bottom));
-      gtk_widget_show (GTK_WIDGET (self->left));
-      gtk_widget_show (GTK_WIDGET (self->right));
+      gtk_widget_set_visible (GTK_WIDGET (self->center), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->top), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->bottom), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->left), TRUE);
+      gtk_widget_set_visible (GTK_WIDGET (self->right), TRUE);
       break;
 
     default:
