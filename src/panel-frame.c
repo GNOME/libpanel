@@ -158,8 +158,26 @@ panel_frame_close_page_cb (PanelFrame *self,
   if (!_panel_widget_can_save (widget) ||
       _panel_widget_can_discard (widget))
     {
+      GtkWidget *parent;
+
+      g_object_ref (widget);
+
+      adw_tab_view_close_page_finish (tab_view, tab_page, TRUE);
       g_signal_emit (self, signals [PAGE_CLOSED], 0, widget);
-      return FALSE;
+
+      /* libadwaita as of writing will only detach @widget from
+       * its parent AdwBin when the AdwBin last reference is dropped.
+       * We want to force that sooner even though we're in a signal
+       * handler which might be keeping it alive.
+       */
+      if ((parent = gtk_widget_get_parent (GTK_WIDGET (widget))) && ADW_IS_BIN (parent))
+        adw_bin_set_child (ADW_BIN (parent), NULL);
+
+      g_assert (NULL == gtk_widget_get_parent (GTK_WIDGET (widget)));
+
+      g_object_unref (widget);
+
+      return GDK_EVENT_STOP;
     }
 
   root = gtk_widget_get_root (GTK_WIDGET (self));
@@ -177,7 +195,7 @@ panel_frame_close_page_cb (PanelFrame *self,
 
   adw_tab_view_close_page_finish (tab_view, tab_page, FALSE);
 
-  return TRUE;
+  return GDK_EVENT_STOP;
 }
 
 static void
