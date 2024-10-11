@@ -46,15 +46,18 @@ panel_progress_icon_draw (GtkDrawingArea *area,
                           gpointer        user_data)
 {
   PanelProgressIcon *self = (PanelProgressIcon *)area;
-  GtkStyleContext *style_context;
   GdkRGBA rgba;
   double alpha;
 
   g_assert (PANEL_IS_PROGRESS_ICON (self));
   g_assert (cr != NULL);
 
-  style_context = gtk_widget_get_style_context (GTK_WIDGET (area));
-  gtk_style_context_get_color (style_context, &rgba);
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS {
+    GtkStyleContext *style_context;
+
+    style_context = gtk_widget_get_style_context (GTK_WIDGET (area));
+    gtk_style_context_get_color (style_context, &rgba);
+  } G_GNUC_END_IGNORE_DEPRECATIONS
 
   alpha = rgba.alpha;
   rgba.alpha = 0.15;
