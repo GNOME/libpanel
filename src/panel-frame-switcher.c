@@ -725,23 +725,24 @@ panel_frame_switcher_snapshot (GtkWidget   *widget,
 
   if (self->drop_before_button != NULL)
     {
-      GtkAllocation alloc;
+      graphene_rect_t alloc;
       gboolean is_first = gtk_widget_get_prev_sibling (self->drop_before_button) == NULL;
 
-      gtk_widget_get_allocation (self->drop_before_button, &alloc);
+      if (!gtk_widget_compute_bounds (GTK_WIDGET (self), self->drop_before_button, &alloc))
+        g_assert_not_reached ();
 
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
         {
-          x = alloc.x - INDICATOR_SIZE/2;
-          y = alloc.y + alloc.height - INDICATOR_SIZE;
+          x = alloc.origin.x - INDICATOR_SIZE/2;
+          y = alloc.origin.y + alloc.size.height - INDICATOR_SIZE;
 
           if (is_first)
             x += 4;
         }
       else
         {
-          x = alloc.x + alloc.width - INDICATOR_SIZE;
-          y = alloc.y - INDICATOR_SIZE/2;
+          x = alloc.origin.x + alloc.size.width - INDICATOR_SIZE;
+          y = alloc.origin.y - INDICATOR_SIZE/2;
 
           if (is_first)
             y += 4;
@@ -753,19 +754,20 @@ panel_frame_switcher_snapshot (GtkWidget   *widget,
            (frame = panel_frame_header_get_frame (PANEL_FRAME_HEADER (self))) &&
            _panel_frame_in_drop (frame))
     {
-      GtkAllocation alloc;
+      graphene_rect_t alloc;
 
-      gtk_widget_get_allocation (last, &alloc);
+      if (gtk_widget_compute_bounds (GTK_WIDGET (self), last, &alloc))
+        g_assert_not_reached ();
 
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
         {
-          x = alloc.x + alloc.width - INDICATOR_SIZE/2 - 4;
-          y = alloc.y + alloc.height - INDICATOR_SIZE;
+          x = alloc.origin.x + alloc.size.width - INDICATOR_SIZE/2 - 4;
+          y = alloc.origin.y + alloc.size.height - INDICATOR_SIZE;
         }
       else
         {
-          x = alloc.x + alloc.width - INDICATOR_SIZE;
-          y = alloc.y + alloc.height - INDICATOR_SIZE/2 - 4;
+          x = alloc.origin.x + alloc.size.width - INDICATOR_SIZE;
+          y = alloc.origin.y + alloc.size.height - INDICATOR_SIZE/2 - 4;
         }
 
       draw_indicator = TRUE;
