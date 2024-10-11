@@ -236,9 +236,11 @@ panel_dock_get_child_position_cb (PanelDock     *self,
    * adjust the margin/padding/etc.
    */
   gtk_widget_get_preferred_size (child, &min, &nat);
-  gtk_widget_get_allocation (GTK_WIDGET (self), allocation);
+
   allocation->x = 0;
   allocation->y = 0;
+  allocation->width = gtk_widget_get_width (GTK_WIDGET (self));
+  allocation->height = gtk_widget_get_height (GTK_WIDGET (self));
 
   return TRUE;
 }
