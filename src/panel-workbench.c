@@ -413,13 +413,7 @@ panel_workbench_focus_workspace (PanelWorkbench *self,
   g_return_if_fail (PANEL_IS_WORKBENCH (self));
   g_return_if_fail (PANEL_IS_WORKSPACE (workspace));
 
-  /* TODO: We need the last event time to do this properly. Until then,
-   * we'll just fake some timing info to workaround wayland issues.
-   *
-   * NOTE: this may no longer be necessary, but keeping around for good
-   * measure as part of the move to libpanel.
-   */
-  gtk_window_present_with_time (GTK_WINDOW (workspace), g_get_monotonic_time () / 1000L);
+  gtk_window_present (GTK_WINDOW (workspace));
 }
 
 static const GVariantType *
