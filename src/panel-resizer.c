@@ -58,9 +58,11 @@ panel_resizer_drag_begin_cb (PanelResizer   *self,
                              double          start_y,
                              GtkGestureDrag *drag)
 {
-  GtkAllocation child_alloc;
-  GtkAllocation handle_alloc;
   GtkWidget *dock_child;
+  int child_height;
+  int child_width;
+  int handle_height;
+  int handle_width;
 
   g_assert (PANEL_IS_RESIZER (self));
   g_assert (GTK_IS_GESTURE_DRAG (drag));
@@ -110,18 +112,21 @@ deny_sequence:
 
 start_drag:
 
-  gtk_widget_get_allocation (self->child, &child_alloc);
-  gtk_widget_get_allocation (GTK_WIDGET (self->handle), &handle_alloc);
+  child_width = gtk_widget_get_width (self->child);
+  child_height = gtk_widget_get_height (self->child);
+
+  handle_width = gtk_widget_get_width (GTK_WIDGET (self->handle));
+  handle_height = gtk_widget_get_height (GTK_WIDGET (self->handle));
 
   if (self->area == PANEL_AREA_START ||
       self->area == PANEL_AREA_END)
     {
-      self->drag_orig_size = child_alloc.width + handle_alloc.width;
+      self->drag_orig_size = child_width + handle_width;
       gtk_widget_set_hexpand (self->child, FALSE);
     }
   else
     {
-      self->drag_orig_size = child_alloc.height + handle_alloc.height;
+      self->drag_orig_size = child_height + handle_height;
       gtk_widget_set_vexpand (self->child, FALSE);
     }
 
