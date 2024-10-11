@@ -756,7 +756,7 @@ panel_frame_switcher_snapshot (GtkWidget   *widget,
     {
       graphene_rect_t alloc;
 
-      if (gtk_widget_compute_bounds (GTK_WIDGET (self), last, &alloc))
+      if (!gtk_widget_compute_bounds (GTK_WIDGET (self), last, &alloc))
         g_assert_not_reached ();
 
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
