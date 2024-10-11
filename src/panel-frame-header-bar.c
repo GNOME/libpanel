@@ -438,17 +438,17 @@ panel_frame_header_bar_init (PanelFrameHeaderBar *self)
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   gtk_widget_set_halign (box, GTK_ALIGN_START);
   self->modified = g_object_new (GTK_TYPE_LABEL,
-                                 "valign", GTK_ALIGN_BASELINE,
+                                 "valign", GTK_ALIGN_BASELINE_FILL,
                                  "xalign", 0.0f,
                                  "single-line-mode", TRUE,
                                  "width-chars", 1,
                                  "max-width-chars", 1,
                                  NULL);
   self->image = GTK_IMAGE (gtk_image_new ());
-  gtk_widget_set_valign (GTK_WIDGET (self->image), GTK_ALIGN_BASELINE);
+  gtk_widget_set_valign (GTK_WIDGET (self->image), GTK_ALIGN_BASELINE_FILL);
   g_object_bind_property (self, "show-icon", self->image, "visible", G_BINDING_SYNC_CREATE);
   self->title = g_object_new (GTK_TYPE_LABEL,
-                              "valign", GTK_ALIGN_BASELINE,
+                              "valign", GTK_ALIGN_BASELINE_FILL,
                               "xalign", 0.0f,
                               "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
                               "width-chars", 5,
