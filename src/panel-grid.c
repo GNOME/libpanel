@@ -746,8 +746,9 @@ panel_grid_agree_to_close_cb (GObject      *object,
  * panel_grid_agree_to_close_async:
  * @self: a #PanelGrid
  * @cancellable:
- * @callback: (not nullable) (scope call): callback called when ready
- * @user_data: (closure callback): data to pass to @callback
+ * @callback: (not nullable) (scope call) (closure user_data):
+ *   callback called when ready
+ * @user_data: data to pass to @callback
  *
  * Request to close, asynchronously. This will display the save dialog.
  */

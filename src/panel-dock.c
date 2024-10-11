@@ -1594,8 +1594,8 @@ _panel_dock_remove_frame (PanelDock  *self,
 /**
  * panel_dock_foreach_frame:
  * @self: a #PanelDock
- * @callback: (not nullable) (scope call): a function to be called on each frame
- * @user_data: (closure callback): data to pass to @callback
+ * @callback: (not nullable) (scope call) (closure user_data): a function to be called on each frame
+ * @user_data: data to pass to @callback
  *
  * Invokes a callback for each frame in the dock.
  */
