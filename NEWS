@@ -1,3 +1,9 @@
+libpanel 1.8.1
+==============
+
+ * Fix DnD of widgets in cases where libadwaita holds reference
+   via AdwBin.
+
 libpanel 1.8.0
 ==============
 
