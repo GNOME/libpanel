@@ -90,6 +90,22 @@ on_notify_closeable_cb (PanelFrameTabBar *self,
 }
 
 static void
+setup_menu_cb (PanelFrameTabBar *self,
+               AdwTabPage       *page,
+               AdwTabView       *tab_view)
+{
+  g_assert (PANEL_IS_FRAME_TAB_BAR (self));
+  g_assert (!page || ADW_IS_TAB_PAGE (page));
+  g_assert (ADW_IS_TAB_VIEW (tab_view));
+
+  if (page == NULL)
+    return;
+
+  if (page != adw_tab_view_get_selected_page (tab_view))
+    adw_tab_view_set_selected_page (tab_view, page);
+}
+
+static void
 panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
                                PanelFrame       *frame)
 {
@@ -101,9 +117,15 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
 
   if (self->frame)
     {
+      AdwTabView *tab_view = _panel_frame_get_tab_view (self->frame);
+
       g_signal_handlers_disconnect_by_func (self->frame,
                                             G_CALLBACK (on_notify_closeable_cb),
                                             self);
+      g_signal_handlers_disconnect_by_func (tab_view,
+                                            G_CALLBACK (setup_menu_cb),
+                                            self);
+
       adw_tab_bar_set_view (self->tab_bar, NULL);
       gtk_menu_button_set_menu_model (self->menu_button, NULL);
       g_clear_object (&self->frame);
@@ -120,6 +142,12 @@ panel_frame_tab_bar_set_frame (PanelFrameTabBar *self,
       g_signal_connect_object (self->frame,
                                "notify::closeable",
                                G_CALLBACK (on_notify_closeable_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
+
+      g_signal_connect_object (tab_view,
+                               "setup-menu",
+                               G_CALLBACK (setup_menu_cb),
                                self,
                                G_CONNECT_SWAPPED);
 
