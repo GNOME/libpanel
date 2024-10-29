@@ -120,15 +120,15 @@ ensure_indicator (PanelFrameSwitcher *self)
   if (orientation == GTK_ORIENTATION_HORIZONTAL)
     {
       cairo_move_to (cr, INDICATOR_SIZE/2, 0);
-      cairo_line_to (cr, INDICATOR_SIZE/2, INDICATOR_SIZE-3);
+      cairo_line_to (cr, INDICATOR_SIZE/2, INDICATOR_SIZE/2);
       cairo_stroke (cr);
-      cairo_arc (cr, INDICATOR_SIZE/2-1, INDICATOR_SIZE-5, 4, 0, 2 * G_PI);
+      cairo_arc (cr, INDICATOR_SIZE/2, INDICATOR_SIZE-5, 4, 0, 2 * G_PI);
       cairo_fill (cr);
     }
   else
     {
       cairo_move_to (cr, 0, INDICATOR_SIZE/2);
-      cairo_line_to (cr, INDICATOR_SIZE-3, INDICATOR_SIZE/2);
+      cairo_line_to (cr, INDICATOR_SIZE/2, INDICATOR_SIZE/2);
       cairo_stroke (cr);
       cairo_arc (cr, INDICATOR_SIZE-5, INDICATOR_SIZE/2, 4, 0, 2 * G_PI);
       cairo_fill (cr);
@@ -733,19 +733,19 @@ panel_frame_switcher_snapshot (GtkWidget   *widget,
 
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
         {
-          x = alloc.origin.x - INDICATOR_SIZE/2;
-          y = alloc.origin.y + alloc.size.height - INDICATOR_SIZE;
+          x = - alloc.origin.x - INDICATOR_SIZE - 3;
+          y = alloc.size.height - INDICATOR_SIZE - 3;
 
           if (is_first)
-            x += 4;
+            x += 3;
         }
       else
         {
-          x = alloc.origin.x + alloc.size.width - INDICATOR_SIZE;
-          y = alloc.origin.y - INDICATOR_SIZE/2;
+          x = alloc.size.width - INDICATOR_SIZE - 2;
+          y = - alloc.origin.y - INDICATOR_SIZE - 3;
 
           if (is_first)
-            y += 4;
+            y += 3;
         }
 
       draw_indicator = TRUE;
@@ -761,13 +761,13 @@ panel_frame_switcher_snapshot (GtkWidget   *widget,
 
       if (orientation == GTK_ORIENTATION_HORIZONTAL)
         {
-          x = alloc.origin.x + alloc.size.width - INDICATOR_SIZE/2 - 4;
-          y = alloc.origin.y + alloc.size.height - INDICATOR_SIZE;
+          x = alloc.size.width - INDICATOR_SIZE;
+          y = alloc.size.height - INDICATOR_SIZE - 3;
         }
       else
         {
-          x = alloc.origin.x + alloc.size.width - INDICATOR_SIZE;
-          y = alloc.origin.y + alloc.size.height - INDICATOR_SIZE/2 - 4;
+          x = alloc.size.width - INDICATOR_SIZE - 2;
+          y = alloc.size.height - INDICATOR_SIZE;
         }
 
       draw_indicator = TRUE;
