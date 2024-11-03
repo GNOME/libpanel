@@ -4,14 +4,16 @@ paneltogglebutton.drag-active button:not(:checked) {
 
 panelframeheaderbar {
   min-height: 38px;
-  padding: 2px;
+  padding-top: 1px;
+  padding-bottom: 3px;
+  padding-left: 3px;
 }
 panelframe panelframeheaderbar,
 paneldockchild.center panelgrid > panelpaned > panelresizer:first-child:last-child > panelgridcolumn > panelpaned panelresizer:first-child:last-child panelframeheaderbar {
   border-top: 2px solid transparent;
   border-bottom: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
 }
-panelframe.has-focus panelframeheaderbar {
+panelframe.has-focus panelframeheaderbar{
   border-top: 2px solid var(--accent-bg-color);
 }
 panelframeheaderbar > box {
@@ -22,10 +24,9 @@ panelframeheaderbar button:not(:hover):not(:checked) {
   background: transparent;
 }
 panelframeheaderbar button {
-  padding: 2px 6px;
   margin: 1px;
   font-weight: normal;
-  border-radius: 7px;
+  border-radius: 9px;
 }
 panelgrid panelframeheaderbar .controls {
   margin-right: 4px;
@@ -71,7 +72,7 @@ panelpaned.horizontal panelframe panelframeswitcher button {
   background-clip: padding-box;
 }
 panelframe panelframeswitcher button {
-  border-radius: 10px;
+  border-radius: 13px;
   /* use border instead of margin so that there are no gaps
    * when dragging across buttons. This helps things feel a
    * bit more solid when doing DnD.
@@ -187,11 +188,13 @@ panelstatusbar:dir(rtl) {
 paneldock.start-revealed paneldockchild.bottom panelstatusbar:dir(ltr),
 paneldock.end-revealed paneldockchild.bottom panelstatusbar:dir(ltr) {
   --start-left-radius: 0;
+  --end-right-radius: 0;
 }
 
 paneldock.start-revealed paneldockchild.bottom panelstatusbar:dir(rtl),
 paneldock.end-revealed paneldockchild.bottom panelstatusbar:dir(rtl) {
   --start-right-radius: 0;
+  --end-left-radius: 0;
 }
 
 panelstatusbar > button:first-child,
@@ -309,7 +312,7 @@ panelframe panelframetabbar tabbox tabboxchild {
   margin-bottom: 5px;
 }
 panelframe panelframetabbar .end-action {
-  padding: 0;
+  padding: 5px;
 }
 
 splitbutton.omnibar > button {
@@ -400,7 +403,7 @@ panelframe:drop(active) {
 panelframe paneldropcontrols {
   transition-property: background, border;
   transition-duration: 300ms;
-  border-radius: 7px;
+  border-radius: 10px;
   margin: 1px;
 }
 panelframe paneldropcontrols {
