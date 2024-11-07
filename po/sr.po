@@ -8,17 +8,76 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-02-16 01:26+0000\n"
-"PO-Revision-Date: 2023-02-16 11:03+0100\n"
+"POT-Creation-Date: 2024-10-21 12:21+0000\n"
+"PO-Revision-Date: 2024-11-07 05:48+0100\n"
 "Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
 "Language-Team: Serbian <српски <gnome-sr@googlegroups.org>>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : n"
-"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Poedit 3.1.1\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "Нацрт „%s“ није сачуван. Може бити сачуван или одбачен."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "Да сачувам или одбацим нацрт?"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Одбаци"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "_Сачувај као…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "„%s“ садржи несачуване измене. Измене се могу сачувати или одбацити."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "Да сачувам или одбацим измене?"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Сачувај"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Отворени документи садрже несачуване измене. Измене се могу сачувати или "
+"одбацити."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "_Сачувај само изабрано"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "Сачувај све"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "Одбаци све"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Откажи"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
@@ -54,76 +113,36 @@ msgstr "Затвори кадар"
 
 #: src/panel-maximized-controls.c:73
 msgid "Restore panel to previous location"
-msgstr "Вратите панел на претходно место"
+msgstr "Врати траку на претходно место"
 
 #: src/panel-save-dialog-row.c:78
 msgid "(new)"
 msgstr "(ново)"
 
-#. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:402
-#, c-format
-msgid "The draft “%s” has not been saved. It can be saved or discarded."
-msgstr "Нацрт „%s“ није сачуван. Може бити сачуван или одбачен."
-
-#: src/panel-save-dialog.c:405
-msgid "Save or Discard Draft?"
-msgstr "Да сачувам или одбацим нацрт?"
-
-#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
-#: src/panel-save-dialog.ui:11
-msgid "_Discard"
-msgstr "_Одбаци"
-
-#: src/panel-save-dialog.c:413
-msgid "_Save As…"
-msgstr "_Сачувај као…"
-
-#. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:424
-#, c-format
-msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr "„%s“ садржи несачуване измене. Измене се могу сачувати или одбацити."
-
-#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
-msgid "Save or Discard Changes?"
-msgstr "Да сачувам или одбацим измене?"
-
-#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
-msgid "_Save"
-msgstr "_Сачувај"
-
-#: src/panel-save-dialog.c:462
-msgid ""
-"Open documents contain unsaved changes. Changes can be saved or discarded."
-msgstr ""
-"Отворени документи садрже несачуване измене. Измене се могу сачувати или "
-"одбацити."
-
-#: src/panel-save-dialog.c:467
-msgid "Only _Save Selected"
-msgstr "_Сачувај само изабрано"
-
-#: src/panel-save-dialog.c:475
-msgid "Save All"
-msgstr "Сачувај све"
-
-#: src/panel-save-dialog.c:484
-msgid "Discard All"
-msgstr "Одбаци све"
-
-#: src/panel-save-dialog.ui:10
-msgid "_Cancel"
-msgstr "_Откажи"
-
-#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
 msgid "Follow system style"
 msgstr "Прати стил система"
 
-#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
 msgid "Light style"
 msgstr "Светли стил"
 
-#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
 msgid "Dark style"
 msgstr "Тамни стил"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "Промени стање видљивости леве траке"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "Промени стање видљивости десне траке"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "Промени стање видљивости горње траке"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "Промени стање видљивости доње траке"
