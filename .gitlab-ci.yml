@@ -5,16 +5,12 @@ include:
     inputs:
       dist-job-name: "flatpak@x86_64"
       tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
+  - component: "gitlab.gnome.org/GNOME/citemplates/gnomeos-basic-ci@master"
+  - component: "gitlab.gnome.org/GNOME/citemplates/basic-deploy-docs@master"
 
 variables:
   FLATPAK_MODULE: "libpanel"
   TARBALL_ARTIFACT_PATH: ".flatpak-builder/build/${FLATPAK_MODULE}/_flatpak_build/meson-dist/${CI_PROJECT_NAME}-${CI_COMMIT_TAG}.tar.xz"
-
-stages:
-- build
-- test
-- deploy
-- pages
 
 .vars-devel:
   variables:
@@ -38,87 +34,3 @@ nightly@x86_64:
 nightly@aarch64:
   extends: '.publish_nightly'
   needs: ['flatpak@aarch64']
-
-fedora:
-  stage: build
-  image: 'registry.fedoraproject.org/fedora:41'
-  interruptible: true
-  needs: []
-  script:
-    - sudo dnf -y install
-            ccache
-            desktop-file-utils
-            editorconfig-devel
-            enchant2-devel
-            expat-devel
-            gcc
-            gcc-c++
-            gettext
-            gi-docgen
-            git
-            glib2-devel
-            gobject-introspection-devel
-            gtk4-devel
-            itstool
-            libadwaita-devel
-            libicu-devel
-            libjpeg-turbo-devel
-            libpng-devel
-            libxkbcommon-devel
-            libXrandr-devel
-            libXi-devel
-            libXcursor-devel
-            libXdamage-devel
-            libXinerama-devel
-            libdrm-devel
-            libglvnd-devel
-            glslc
-            meson
-            ninja-build
-            redhat-rpm-config
-            shared-mime-info
-            xorg-x11-server-Xvfb
-    - meson setup _build .
-            -Ddocs=enabled
-            -Dwerror=false
-            -Dglib:werror=false
-            -Dgtk:broadway-backend=false
-            -Dgtk:build-examples=false
-            -Dgtk:build-tests=false
-            -Dgtk:build-testsuite=false
-            -Dgtk:build-demos=false
-            -Dgtk:media-gstreamer=disabled
-            -Dgtk:werror=false
-            -Dicu:werror=false
-            -Dlibadwaita:examples=false
-            -Dlibadwaita:gtk_doc=false
-            -Dlibadwaita:introspection=disabled
-            -Dlibadwaita:tests=false
-            -Dlibadwaita:vapi=false
-            -Dlibadwaita:werror=false
-            -Dlibsass:werror=false
-            -Dpango:gtk_doc=false
-            -Dpango:introspection=disabled
-            -Dpango:werror=false
-            -Dsassc:werror=false
-            -Dwayland-protocols:tests=false
-            -Dwayland:documentation=false
-            -Dwayland:dtd_validation=false
-            -Dwayland:tests=false
-    - ninja -C _build test
-    - mv _build/docs/panel-1.0 docs
-  artifacts:
-    paths:
-    - docs
-
-pages:
-  stage: pages
-  needs:
-  - fedora
-  script:
-  - mv docs/panel-1.0 public
-  artifacts:
-    paths:
-    - public
-  only:
-  - main
