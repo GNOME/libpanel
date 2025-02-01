@@ -1,3 +1,13 @@
+libpanel 1.9.0
+==============
+
+This is a beta release for GNOME 48.beta
+
+ * Updated translations
+ * Various style improvements to match libadwaita
+ * Various drag-n-drop improvements
+ * Remove some deprecated API use
+
 libpanel 1.8.0
 ==============
 
