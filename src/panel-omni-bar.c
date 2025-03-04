@@ -40,6 +40,7 @@
  */
 typedef struct
 {
+  GtkBox         *top_box;
   GtkBox         *box;
   GtkButton      *button;
   GtkMenuButton  *menu_button;
@@ -166,8 +167,35 @@ panel_omni_bar_size_allocate (GtkWidget *widget,
 
   g_assert (PANEL_IS_OMNI_BAR (self));
 
+  gtk_widget_allocate (GTK_WIDGET (priv->top_box), width, height, baseline, NULL);
+
   if (priv->popover)
     gtk_popover_present (priv->popover);
+}
+
+static void
+panel_omni_bar_measure (GtkWidget      *widget,
+                        GtkOrientation  orientation,
+                        int             for_size,
+                        int            *minimum,
+                        int            *natural,
+                        int            *minimum_baseline,
+                        int            *natural_baseline)
+{
+  PanelOmniBar *self = PANEL_OMNI_BAR (widget);
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  gtk_widget_measure (GTK_WIDGET (priv->top_box), orientation, for_size, minimum, natural, minimum_baseline, natural_baseline);
+}
+
+static void
+panel_omni_bar_snapshot (GtkWidget   *widget,
+                         GtkSnapshot *snapshot)
+{
+  PanelOmniBar *self = PANEL_OMNI_BAR (widget);
+  PanelOmniBarPrivate *priv = panel_omni_bar_get_instance_private (self);
+
+  gtk_widget_snapshot_child (widget, GTK_WIDGET (priv->top_box), snapshot);
 }
 
 static void
@@ -287,6 +315,8 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
   object_class->set_property = panel_omni_bar_set_property;
 
   widget_class->size_allocate = panel_omni_bar_size_allocate;
+  widget_class->measure = panel_omni_bar_measure;
+  widget_class->snapshot = panel_omni_bar_snapshot;
 
   g_object_class_override_property (object_class, PROP_ACTION_NAME, "action-name");
   g_object_class_override_property (object_class, PROP_ACTION_TARGET, "action-target");
@@ -349,9 +379,6 @@ panel_omni_bar_class_init (PanelOmniBarClass *klass)
                          (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
-
-  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BOX_LAYOUT);
-  gtk_widget_class_set_css_name (widget_class, "splitbutton");
 }
 
 static void
@@ -364,23 +391,29 @@ panel_omni_bar_init (PanelOmniBar *self)
 
   gtk_widget_add_css_class (GTK_WIDGET (self), "omnibar");
 
+  priv->top_box = g_object_new (GTK_TYPE_BOX,
+                                "css-name", "splitbutton",
+                                "orientation", GTK_ORIENTATION_HORIZONTAL,
+                                NULL);
+  gtk_widget_set_parent (GTK_WIDGET (priv->top_box), GTK_WIDGET (self));
+
   priv->box = g_object_new (GTK_TYPE_BOX,
                             "css-name", "button",
                             "orientation", GTK_ORIENTATION_HORIZONTAL,
                             NULL);
-  gtk_widget_set_parent (GTK_WIDGET (priv->box), GTK_WIDGET (self));
+  gtk_box_append (priv->top_box, GTK_WIDGET (priv->box));
 
   priv->button = g_object_new (GTK_TYPE_BUTTON, NULL);
-  gtk_widget_set_parent (GTK_WIDGET (priv->button), GTK_WIDGET (self));
+  gtk_box_append (priv->top_box, GTK_WIDGET (priv->button));
 
   separator = g_object_new (GTK_TYPE_SEPARATOR,
                             "orientation", GTK_ORIENTATION_VERTICAL,
                             NULL);
-  gtk_widget_set_parent (separator, GTK_WIDGET (self));
+  gtk_box_append (priv->top_box, separator);
 
   priv->menu_button = g_object_new (GTK_TYPE_MENU_BUTTON,
                                     NULL);
-  gtk_widget_set_parent (GTK_WIDGET (priv->menu_button), GTK_WIDGET (self));
+  gtk_box_append (priv->top_box, GTK_WIDGET (priv->menu_button));
 
   priv->prefix = g_object_new (GTK_TYPE_BOX, NULL);
   priv->center = g_object_new (GTK_TYPE_BOX,
