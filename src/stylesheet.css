@@ -315,7 +315,7 @@ panelframe panelframetabbar .end-action {
   padding: 5px;
 }
 
-splitbutton.omnibar > button {
+.omnibar > splitbutton > button {
   margin-bottom: 0;
   margin-top: 0;
   padding-bottom: 0;
@@ -392,7 +392,7 @@ panelthemeselector checkbutton radio:checked {
 }
 
 
-splitbutton.omnibar {
+.omnibar > splitbutton {
   background: color-mix(in srgb, currentColor 7.5%, transparent);
 }
 
