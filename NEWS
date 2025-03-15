@@ -1,3 +1,10 @@
+libpanel 1.10.0
+===============
+
+This is a stable release for GNOME 48.0
+
+ * OmniBar has received a fix for changes to AdwClamp
+
 libpanel 1.9.0
 ==============
 
