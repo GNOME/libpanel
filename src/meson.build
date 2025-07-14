@@ -204,6 +204,12 @@ install_headers(libpanel_headers,
                 subdir: 'libpanel-@0@'.format(ABI_MAJOR))
 
 if generate_gir
+  libpanel_gir_extra_args = []
+  if gir.version().version_compare('>=1.83.2')
+    libpanel_gir_extra_args += [
+      '--doc-format=gi-docgen',
+    ]
+  endif
   libpanel_gir = gnome.generate_gir(libpanel,
                 sources: libpanel_generated_headers +
                          libpanel_generated_sources +
@@ -219,6 +225,7 @@ if generate_gir
     include_directories: [include_directories('.')],
                includes: ['Gtk-4.0', 'Adw-1'],
                 install: true,
+             extra_args: libpanel_gir_extra_args,
   )
 
   if generate_vapi
