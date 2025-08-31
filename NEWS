@@ -1,3 +1,9 @@
+libpanel 1.10.1
+===============
+
+ * Documentation fixes
+ * UI fix for using GtkStackPage
+
 libpanel 1.10.0
 ===============
 
