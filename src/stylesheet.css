@@ -188,13 +188,11 @@ panelstatusbar:dir(rtl) {
 paneldock.start-revealed paneldockchild.bottom panelstatusbar:dir(ltr),
 paneldock.end-revealed paneldockchild.bottom panelstatusbar:dir(ltr) {
   --start-left-radius: 0;
-  --end-right-radius: 0;
 }
 
 paneldock.start-revealed paneldockchild.bottom panelstatusbar:dir(rtl),
 paneldock.end-revealed paneldockchild.bottom panelstatusbar:dir(rtl) {
   --start-right-radius: 0;
-  --end-left-radius: 0;
 }
 
 panelstatusbar > button:first-child,
