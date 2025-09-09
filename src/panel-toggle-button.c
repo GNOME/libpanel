@@ -56,6 +56,8 @@ struct _PanelToggleButton
   GtkToggleButton *button;
   GtkRevealer     *revealer;
   GBinding        *binding;
+
+  guint            dock_found_on_root : 1;
 };
 
 G_DEFINE_TYPE (PanelToggleButton, panel_toggle_button, GTK_TYPE_WIDGET)
@@ -296,6 +298,43 @@ panel_toggle_button_set_dock (PanelToggleButton *self,
 }
 
 static void
+panel_toggle_button_root (GtkWidget *widget)
+{
+  PanelToggleButton *self = (PanelToggleButton *)widget;
+
+  g_assert (PANEL_IS_TOGGLE_BUTTON (self));
+
+  GTK_WIDGET_CLASS (panel_toggle_button_parent_class)->root (widget);
+
+  if (self->dock == NULL)
+    {
+      PanelDock *dock = PANEL_DOCK (gtk_widget_get_ancestor (GTK_WIDGET (self), PANEL_TYPE_DOCK));
+
+      if (dock != NULL)
+        {
+          panel_toggle_button_set_dock (self, dock);
+          self->dock_found_on_root = TRUE;
+        }
+    }
+}
+
+static void
+panel_toggle_button_unroot (GtkWidget *widget)
+{
+  PanelToggleButton *self = (PanelToggleButton *)widget;
+
+  g_assert (PANEL_IS_TOGGLE_BUTTON (self));
+
+  GTK_WIDGET_CLASS (panel_toggle_button_parent_class)->unroot (widget);
+
+  if (self->dock_found_on_root)
+    {
+      panel_toggle_button_set_dock (self, NULL);
+      self->dock_found_on_root = FALSE;
+    }
+}
+
+static void
 panel_toggle_button_constructed (GObject *object)
 {
   PanelToggleButton *self = (PanelToggleButton *)object;
@@ -404,6 +443,9 @@ panel_toggle_button_class_init (PanelToggleButtonClass *klass)
   object_class->dispose = panel_toggle_button_dispose;
   object_class->get_property = panel_toggle_button_get_property;
   object_class->set_property = panel_toggle_button_set_property;
+
+  widget_class->root = panel_toggle_button_root;
+  widget_class->unroot = panel_toggle_button_unroot;
 
   /**
    * PanelToggleButton:dock:
