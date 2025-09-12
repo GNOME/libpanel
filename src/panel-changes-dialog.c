@@ -335,11 +335,6 @@ panel_changes_dialog_update (PanelChangesDialog *self)
 {
   g_assert (PANEL_IS_CHANGES_DIALOG (self));
 
-  if (adw_alert_dialog_has_response (ADW_ALERT_DIALOG (self), "discard"))
-    adw_alert_dialog_remove_response (ADW_ALERT_DIALOG (self), "discard");
-  if (adw_alert_dialog_has_response (ADW_ALERT_DIALOG (self), "save"))
-    adw_alert_dialog_remove_response (ADW_ALERT_DIALOG (self), "save");
-
   if (self->rows->len == 1)
     {
       PanelSaveDialogRow *row = g_ptr_array_index (self->rows, 0);
@@ -359,10 +354,10 @@ panel_changes_dialog_update (PanelChangesDialog *self)
                                         _("Save or Discard Draft?"));
           adw_alert_dialog_set_body (ADW_ALERT_DIALOG (self), body);
 
-          adw_alert_dialog_add_response (ADW_ALERT_DIALOG (self), "discard", _("_Discard"));
+          adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "discard", _("_Discard"));
           adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
 
-          adw_alert_dialog_add_response (ADW_ALERT_DIALOG (self), "save", _("_Save As…"));
+          adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "save", _("_Save As…"));
           adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
 
           g_free (body);
@@ -379,17 +374,16 @@ panel_changes_dialog_update (PanelChangesDialog *self)
                                         _("Save or Discard Changes?"));
           adw_alert_dialog_set_body (ADW_ALERT_DIALOG (self), body);
 
-          adw_alert_dialog_add_response (ADW_ALERT_DIALOG (self), "discard", _("_Discard"));
+          adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "discard", _("_Discard"));
           adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
 
-          adw_alert_dialog_add_response (ADW_ALERT_DIALOG (self), "save", _("_Save"));
+          adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "save", _("_Save"));
           adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
 
           g_free (body);
         }
 
       gtk_widget_set_visible (GTK_WIDGET (self->group), FALSE);
-      adw_alert_dialog_set_prefer_wide_layout (ADW_ALERT_DIALOG (self), FALSE);
     }
   else
     {
@@ -411,25 +405,26 @@ panel_changes_dialog_update (PanelChangesDialog *self)
                                     _("Save or Discard Changes?"));
       adw_alert_dialog_set_body (ADW_ALERT_DIALOG (self),
                                  _("Open documents contain unsaved changes. Changes can be saved or discarded."));
+      adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "discard", _("Discard All"));
 
       if (has_selected && has_unselected)
         {
-          adw_alert_dialog_add_response (ADW_ALERT_DIALOG (self), "save", _("Only _Save Selected"));
+          adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "save", _("Only _Save Selected"));
           adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "save", ADW_RESPONSE_DESTRUCTIVE);
+          adw_alert_dialog_set_response_enabled (ADW_ALERT_DIALOG (self), "save", TRUE);
         }
       else if (has_selected)
         {
-          adw_alert_dialog_add_response (ADW_ALERT_DIALOG (self), "save", _("Save All"));
+          adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "save", _("Save All"));
           adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "save", ADW_RESPONSE_SUGGESTED);
+          adw_alert_dialog_set_response_enabled (ADW_ALERT_DIALOG (self), "save", TRUE);
         }
       else
         {
-          adw_alert_dialog_add_response (ADW_ALERT_DIALOG (self), "discard", _("Discard All"));
-          adw_alert_dialog_set_response_appearance (ADW_ALERT_DIALOG (self), "discard", ADW_RESPONSE_DESTRUCTIVE);
+          adw_alert_dialog_set_response_enabled (ADW_ALERT_DIALOG (self), "save", FALSE);
         }
 
       gtk_widget_set_visible (GTK_WIDGET (self->group), TRUE);
-      adw_alert_dialog_set_prefer_wide_layout (ADW_ALERT_DIALOG (self), TRUE);
     }
 }
 
