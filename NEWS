@@ -1,3 +1,9 @@
+libpanel 1.10.2
+===============
+
+ * Allow toggle buttons to autodiscover PanelDock
+ * Fix incorrect CSS styling of bottom corner buttons
+
 libpanel 1.10.1
 ===============
 
