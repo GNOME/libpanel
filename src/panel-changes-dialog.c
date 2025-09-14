@@ -399,7 +399,7 @@ panel_changes_dialog_update (PanelChangesDialog *self)
                                     _("Save or Discard Changes?"));
       adw_alert_dialog_set_body (ADW_ALERT_DIALOG (self),
                                  _("Open documents contain unsaved changes. Changes can be saved or discarded."));
-      adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "discard", _("Discard All"));
+      adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "discard", _("_Discard All"));
 
       adw_alert_dialog_set_response_label (ADW_ALERT_DIALOG (self), "save", _("_Save"));
       adw_alert_dialog_set_response_enabled (ADW_ALERT_DIALOG (self), "save", has_selected);
