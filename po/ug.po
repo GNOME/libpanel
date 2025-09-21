@@ -1,0 +1,141 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr "Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2025-09-10 21:21+0000\n"
+"PO-Revision-Date: 2025-09-11 00:39-0400\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
+"Language-Team: \n"
+"Language: ug\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.7\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "دەسلەپكى نۇسخا «%s» ساقلانمىغان. ئۇنى ساقلىغىلى ياكى تاشلىۋەتكىلى بولىدۇ."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "دەسلەپكى نۇسخىنى ساقلامدۇ ياكى تاشلىۋېتەمدۇ؟"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "تاشلىۋەت(_D)"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "باشقا ئاتتا ساقلا(_S)…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "«%s» دا ساقلانمىغان ئۆزگىرىش بار. ئۆزگىرىشنى ساقلىغىلى ياكى تاشلىۋەتكىلى بولىدۇ."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "ئۆزگىرىشنى ساقلامدۇ ياكى تاشلىۋېتەمدۇ؟"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "ساقلا(_S)"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "ئېچىلغان پۈتۈكتە ساقلانمىغان ئۆزگىرىش بار. ئۆزگىرىشنى ساقلىغىلى ياكى تاشلىۋەتكىلى بولىدۇ."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "تاللانغاننىلا ساقلا(_S)"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "ھەممىنى ساقلا"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "ھەممىنى تاشلىۋەت"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "ۋاز كەچ(_C)"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "بەت ئاچ"
+
+#: src/panel-frame.ui:62
+msgid "Frame"
+msgstr "كاندۇك"
+
+#: src/panel-frame.ui:64
+msgid "Move Page _Left"
+msgstr "بەتنى سولغا يۆتكە(_L)"
+
+#: src/panel-frame.ui:69
+msgid "Move Page _Right"
+msgstr "بەتنى ئوڭغا يۆتكە(_R)"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Up"
+msgstr "بەتنى ئۈستىگە يۆتكە(_U)"
+
+#: src/panel-frame.ui:78
+msgid "Move Page _Down"
+msgstr "بەتنى ئاستىغا يۆتكە(_D)"
+
+#: src/panel-frame.ui:84
+msgid "Close All Pages"
+msgstr "ھەممە بەتنى ياپ"
+
+#: src/panel-frame.ui:88
+msgid "Close Frame"
+msgstr "كاندۇكنى ياپ"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "كۆزنەكچىنى ئالدىنقى ئورۇنغا ئەسلىگە قايتۇر"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(يېڭى)"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "سىستېما ئۇسلۇبىغا ئەگىشىدۇ"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "يورۇق ئۇسلۇب"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "قاراڭغۇ ئۇسلۇب"
+
+#: src/panel-toggle-button.c:351
+msgid "Toggle visibility of left panel"
+msgstr "سول كۆزنەكچىنىڭ كۆرۈنۈشچانلىقىنى ئالماشتۇر"
+
+#: src/panel-toggle-button.c:356
+msgid "Toggle visibility of right panel"
+msgstr "ئوڭ كۆزنەكچىنىڭ كۆرۈنۈشچانلىقىنى ئالماشتۇر"
+
+#: src/panel-toggle-button.c:361
+msgid "Toggle visibility of top panel"
+msgstr "چوققا كۆزنەكچىنىڭ كۆرۈنۈشچانلىقىنى ئالماشتۇر"
+
+#: src/panel-toggle-button.c:366
+msgid "Toggle visibility of bottom panel"
+msgstr "ئاستى كۆزنەكچىنىڭ كۆرۈنۈشچانلىقىنى ئالماشتۇر"
