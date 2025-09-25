@@ -2,6 +2,7 @@
 <interface domain="libpanel">
   <template class="PanelChangesDialog" parent="AdwAlertDialog">
     <property name="can-close">False</property>
+    <property name="prefer-wide-layout">True</property>
     <property name="default-response">save</property>
     <property name="close-response">cancel</property>
     <signal name="response::cancel" handler="panel_changes_dialog_response_cancel_cb"/>
