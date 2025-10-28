@@ -1,3 +1,9 @@
+libpanel 1.10.3
+===============
+
+ * Improve save-changes dialog to always show discard all option
+ * Translation updates
+
 libpanel 1.10.2
 ===============
 
