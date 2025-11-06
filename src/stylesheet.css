@@ -347,7 +347,7 @@ panelframeswitcher button.needs-attention image {
   background-image: radial-gradient(farthest-side, var(--accent-color) 96%, transparent);
   background-size: 6px 6px;
   background-repeat: no-repeat;
-  background-position: right top;
+  background-position: right calc(50% - 9px);
 }
 
 
