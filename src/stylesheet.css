@@ -342,6 +342,13 @@ panelframeswitcher button:active:hover {
  background-color: color-mix(in srgb, currentColor 25%, transparent);
 }
 
+panelframeswitcher button.needs-attention image {
+  animation: needs_attention 150ms ease-in;
+  background-image: radial-gradient(farthest-side, var(--accent-color) 96%, transparent);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  background-position: right top;
+}
 
 
 panelthemeselector {
