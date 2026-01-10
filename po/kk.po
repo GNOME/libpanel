@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2025-09-21 20:49+0000\n"
-"PO-Revision-Date: 2026-01-10 22:47+0500\n"
+"POT-Creation-Date: 2025-09-22 23:10+0000\n"
+"PO-Revision-Date: 2026-01-10 22:50+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <Kazakh>\n"
 "Language: kk\n"
@@ -18,63 +18,56 @@ msgstr ""
 "X-Generator: Poedit 3.8\n"
 
 #. translators: %s is replaced with the document title
-#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#: src/panel-changes-dialog.c:351 src/panel-save-dialog.c:368
 #, c-format
 msgid "The draft “%s” has not been saved. It can be saved or discarded."
 msgstr "“%s” нобайы сақталмады. Оны сақтауға немесе елемеуге болады."
 
-#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+#: src/panel-changes-dialog.c:354 src/panel-save-dialog.c:371
 msgid "Save or Discard Draft?"
 msgstr "Нобайды сақтау ма, әлде елемеу керек пе?"
 
-#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
-#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-changes-dialog.c:357 src/panel-changes-dialog.c:375
+#: src/panel-changes-dialog.ui:13 src/panel-save-dialog.c:374
 #: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
 msgid "_Discard"
 msgstr "_Елемеу"
 
-#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:377
 msgid "_Save As…"
 msgstr "_Басқаша сақтау…"
 
 #. translators: %s is replaced with the document title
-#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#: src/panel-changes-dialog.c:369 src/panel-save-dialog.c:388
 #, c-format
 msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "“%s” ішінде сақталмаған өзгерістер бар. Өзгерістерді сақтауға немесе "
 "елемеуге болады."
 
-#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-changes-dialog.c:372 src/panel-changes-dialog.c:399
 #: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
 msgid "Save or Discard Changes?"
 msgstr "Өзгерістерді сақтау ма, әлде елемеу керек пе?"
 
-#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
-#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+#: src/panel-changes-dialog.c:377 src/panel-changes-dialog.c:404
+#: src/panel-changes-dialog.ui:14 src/panel-save-dialog.c:397
+#: src/panel-save-dialog.ui:12
 msgid "_Save"
 msgstr "_Сақтау"
 
-#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+#: src/panel-changes-dialog.c:401 src/panel-save-dialog.c:424
 msgid ""
 "Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
 "Ашық құжаттарда сақталмаған өзгерістер бар. Өзгерістерді сақтауға немесе "
 "елемеуге болады."
 
-#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
-msgid "Only _Save Selected"
-msgstr "Тек таңдалғандарды _сақтау"
+#: src/panel-changes-dialog.c:402
+msgid "_Discard All"
+msgstr "Б_арлығын елемеу"
 
-#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
-msgid "Save All"
-msgstr "Барлығын сақтау"
-
-#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
-msgid "Discard All"
-msgstr "Барлығын елемеу"
-
-#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.ui:10
 msgid "_Cancel"
 msgstr "_Бас тарту"
 
@@ -117,6 +110,18 @@ msgstr "Панельді алдыңғы орнына қайтару"
 #: src/panel-save-dialog-row.c:78
 msgid "(new)"
 msgstr "(жаңа)"
+
+#: src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "Тек таңдалғандарды _сақтау"
+
+#: src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "Барлығын сақтау"
+
+#: src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "Барлығын елемеу"
 
 #: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
 msgid "Follow system style"
