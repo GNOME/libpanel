@@ -1,0 +1,147 @@
+# Kazakh translation for libpanel.
+# Copyright (C) 2026 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Baurzhan Muftakhidinov <baurthefirst@gmail.com>,  2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2025-09-21 20:49+0000\n"
+"PO-Revision-Date: 2026-01-10 22:47+0500\n"
+"Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
+"Language-Team: Kazakh <Kazakh>\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "“%s” нобайы сақталмады. Оны сақтауға немесе елемеуге болады."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "Нобайды сақтау ма, әлде елемеу керек пе?"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Елемеу"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "_Басқаша сақтау…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"“%s” ішінде сақталмаған өзгерістер бар. Өзгерістерді сақтауға немесе "
+"елемеуге болады."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "Өзгерістерді сақтау ма, әлде елемеу керек пе?"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Сақтау"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Ашық құжаттарда сақталмаған өзгерістер бар. Өзгерістерді сақтауға немесе "
+"елемеуге болады."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "Тек таңдалғандарды _сақтау"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "Барлығын сақтау"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "Барлығын елемеу"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Бас тарту"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Ашық беттер"
+
+#: src/panel-frame.ui:62
+msgid "Frame"
+msgstr "Фрейм"
+
+#: src/panel-frame.ui:64
+msgid "Move Page _Left"
+msgstr "Бетті _солға жылжыту"
+
+#: src/panel-frame.ui:69
+msgid "Move Page _Right"
+msgstr "Бетті _оңға жылжыту"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Up"
+msgstr "Бетті _жоғары жылжыту"
+
+#: src/panel-frame.ui:78
+msgid "Move Page _Down"
+msgstr "Бетті _төмен жылжыту"
+
+#: src/panel-frame.ui:84
+msgid "Close All Pages"
+msgstr "Барлық беттерді жабу"
+
+#: src/panel-frame.ui:88
+msgid "Close Frame"
+msgstr "Фреймді жабу"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Панельді алдыңғы орнына қайтару"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(жаңа)"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "Жүйелік стильді қолдану"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "Ашық стиль"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "Күңгірт стиль"
+
+#: src/panel-toggle-button.c:351
+msgid "Toggle visibility of left panel"
+msgstr "Сол жақ панельдің көрінуін ауыстыру"
+
+#: src/panel-toggle-button.c:356
+msgid "Toggle visibility of right panel"
+msgstr "Оң жақ панельдің көрінуін ауыстыру"
+
+#: src/panel-toggle-button.c:361
+msgid "Toggle visibility of top panel"
+msgstr "Жоғарғы панельдің көрінуін ауыстыру"
+
+#: src/panel-toggle-button.c:366
+msgid "Toggle visibility of bottom panel"
+msgstr "Төменгі панельдің көрінуін ауыстыру"
