@@ -1,52 +1,106 @@
 # Portuguese translation for libpanel.
 # Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libpanel package.
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2020, 2021, 2022, 2023.
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2020, 2021, 2022, 2023, 2024, 2025, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libpanel main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
-"POT-Creation-Date: 2023-08-22 18:32+0000\n"
-"PO-Revision-Date: 2023-10-26 23:10+0100\n"
-"Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"POT-Creation-Date: 2025-09-22 23:10+0000\n"
+"PO-Revision-Date: 2026-01-12 11:32+0000\n"
+"Last-Translator: hugokarvalho@hotmail.com <Hugo Carvalho>\n"
+"Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.8\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:351 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "O rascunho \"%s\" não foi guardado. Pode ser guardado ou descartado."
+
+#: src/panel-changes-dialog.c:354 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "Guardar ou descartar rascunho?"
+
+#: src/panel-changes-dialog.c:357 src/panel-changes-dialog.c:375
+#: src/panel-changes-dialog.ui:13 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Descartar"
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "_Guardar como…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:369 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"\"%s\" contém alterações não guardadas. As alterações podem ser guardadas ou "
+"descartadas."
+
+#: src/panel-changes-dialog.c:372 src/panel-changes-dialog.c:399
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "Guardar ou descartar alterações?"
+
+#: src/panel-changes-dialog.c:377 src/panel-changes-dialog.c:404
+#: src/panel-changes-dialog.ui:14 src/panel-save-dialog.c:397
+#: src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Guardar"
+
+#: src/panel-changes-dialog.c:401 src/panel-save-dialog.c:424
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Os documentos abertos contêm alterações não guardadas. As alterações podem "
+"ser guardadas ou descartadas."
+
+#: src/panel-changes-dialog.c:402
+msgid "_Discard All"
+msgstr "_Descartar tudo"
+
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Cancelar"
 
 #: src/panel-frame-header-bar.ui:52
 msgid "Open Pages"
 msgstr "Abrir páginas"
 
-#: src/panel-frame.ui:60
+#: src/panel-frame.ui:62
 msgid "Frame"
 msgstr "Moldura"
 
-#: src/panel-frame.ui:62
+#: src/panel-frame.ui:64
 msgid "Move Page _Left"
 msgstr "Mover página para a _esquerda"
 
-#: src/panel-frame.ui:67
+#: src/panel-frame.ui:69
 msgid "Move Page _Right"
 msgstr "Mover página para a _direita"
 
-#: src/panel-frame.ui:72
+#: src/panel-frame.ui:74
 msgid "Move Page _Up"
 msgstr "Mover página para _cima"
 
-#: src/panel-frame.ui:76
+#: src/panel-frame.ui:78
 msgid "Move Page _Down"
 msgstr "Mover página para _baixo"
 
-#: src/panel-frame.ui:82
+#: src/panel-frame.ui:84
 msgid "Close All Pages"
 msgstr "Fechar todas as páginas"
 
-#: src/panel-frame.ui:86
+#: src/panel-frame.ui:88
 msgid "Close Frame"
 msgstr "Fechar moldura"
 
@@ -58,88 +112,42 @@ msgstr "Restaurar o painel para a localização anterior"
 msgid "(new)"
 msgstr "(novo)"
 
-#. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:402
-#, c-format
-msgid "The draft “%s” has not been saved. It can be saved or discarded."
-msgstr "O rascunho \"%s\" não foi guardado. Pode ser guardado ou descartado."
-
-#: src/panel-save-dialog.c:405
-msgid "Save or Discard Draft?"
-msgstr "Guardar ou descartar rascunho?"
-
-#: src/panel-save-dialog.c:409 src/panel-save-dialog.c:431
-#: src/panel-save-dialog.ui:11
-msgid "_Discard"
-msgstr "_Descartar"
-
-#: src/panel-save-dialog.c:413
-msgid "_Save As…"
-msgstr "_Guardar como…"
-
-#. translators: %s is replaced with the document title
-#: src/panel-save-dialog.c:424
-#, c-format
-msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
-msgstr ""
-"\"%s\" contém alterações não guardadas. As alterações podem ser guardadas ou "
-"descartadas."
-
-#: src/panel-save-dialog.c:427 src/panel-save-dialog.c:460
-msgid "Save or Discard Changes?"
-msgstr "Guardar ou descartar alterações?"
-
-#: src/panel-save-dialog.c:435 src/panel-save-dialog.ui:12
-msgid "_Save"
-msgstr "_Guardar"
-
-#: src/panel-save-dialog.c:462
-msgid ""
-"Open documents contain unsaved changes. Changes can be saved or discarded."
-msgstr ""
-"Os documentos abertos contêm alterações não guardadas. As alterações podem "
-"ser guardadas ou descartadas."
-
-#: src/panel-save-dialog.c:467
+#: src/panel-save-dialog.c:428
 msgid "Only _Save Selected"
 msgstr "Guardar apenas os selecionados"
 
-#: src/panel-save-dialog.c:475
+#: src/panel-save-dialog.c:433
 msgid "Save All"
 msgstr "Guardar tudo"
 
-#: src/panel-save-dialog.c:484
+#: src/panel-save-dialog.c:438
 msgid "Discard All"
 msgstr "Descartar tudo"
 
-#: src/panel-save-dialog.ui:10
-msgid "_Cancel"
-msgstr "_Cancelar"
-
-#: src/panel-theme-selector.ui:21 src/panel-theme-selector.ui:23
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
 msgid "Follow system style"
 msgstr "Seguir o estilo do sistema"
 
-#: src/panel-theme-selector.ui:37 src/panel-theme-selector.ui:39
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
 msgid "Light style"
 msgstr "Estilo claro"
 
-#: src/panel-theme-selector.ui:54 src/panel-theme-selector.ui:56
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
 msgid "Dark style"
 msgstr "Estilo escuro"
 
-#: src/panel-toggle-button.c:312
+#: src/panel-toggle-button.c:351
 msgid "Toggle visibility of left panel"
 msgstr "Alternar a visibilidade do painel esquerdo"
 
-#: src/panel-toggle-button.c:317
+#: src/panel-toggle-button.c:356
 msgid "Toggle visibility of right panel"
 msgstr "Alternar a visibilidade do painel direito"
 
-#: src/panel-toggle-button.c:322
+#: src/panel-toggle-button.c:361
 msgid "Toggle visibility of top panel"
 msgstr "Alternar a visibilidade do painel superior"
 
-#: src/panel-toggle-button.c:327
+#: src/panel-toggle-button.c:366
 msgid "Toggle visibility of bottom panel"
 msgstr "Alternar a visibilidade do painel inferior"
