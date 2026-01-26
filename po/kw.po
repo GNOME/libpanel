@@ -1,0 +1,157 @@
+# Cornish translation for libpanel.
+# Copyright (C) 2026 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Flynn Peck <cirilla@tuta.io>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2025-09-22 23:10+0000\n"
+"PO-Revision-Date: 2026-01-26 14:48+0000\n"
+"Last-Translator: Flynn Peck <cirilla@tuta.io>\n"
+"Language-Team: kw\n"
+"Language: kw\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-DL-VCS-Web: https://gitlab.gnome.org/GNOME/libpanel\n"
+"X-DL-Lang: kw\n"
+"X-DL-Module: libpanel\n"
+"X-DL-Branch: main\n"
+"X-DL-Domain: po\n"
+"X-DL-State: Translating\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 49.0\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:351 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "An kyns-skrif “%s” na sawys. Y'n gallos sawys po dileys."
+
+#: src/panel-changes-dialog.c:354 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "Sawya po Dilea Kyns-Skrif?"
+
+#: src/panel-changes-dialog.c:357 src/panel-changes-dialog.c:375
+#: src/panel-changes-dialog.ui:13 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_Dilea"
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "_Sawya Avel…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:369 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "“%s” kontaynya chanjyow ansawys. Chanjyow gallos bos sawys po dileys."
+
+#: src/panel-changes-dialog.c:372 src/panel-changes-dialog.c:399
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "Sawya po Dilea Chanjyow?"
+
+#: src/panel-changes-dialog.c:377 src/panel-changes-dialog.c:404
+#: src/panel-changes-dialog.ui:14 src/panel-save-dialog.c:397
+#: src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_Sawya"
+
+#: src/panel-changes-dialog.c:401 src/panel-save-dialog.c:424
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr ""
+"Skrifow ygor kontaynya chanjyow ansawys. Chanjyow gallos bos sawys po dileys."
+
+#: src/panel-changes-dialog.c:402
+msgid "_Discard All"
+msgstr "_Dilea Oll"
+
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_Hedhi"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "Folennow Ygor"
+
+#: src/panel-frame.ui:62
+msgid "Frame"
+msgstr "Fram"
+
+#: src/panel-frame.ui:64
+msgid "Move Page _Left"
+msgstr "Gwaya Folen _Kledh"
+
+#: src/panel-frame.ui:69
+msgid "Move Page _Right"
+msgstr "Gwaya Folen _Dyghow"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Up"
+msgstr "Gwaya Folen War-_Vann"
+
+#: src/panel-frame.ui:78
+msgid "Move Page _Down"
+msgstr "Gwaya Folen War-_Woles"
+
+#: src/panel-frame.ui:84
+msgid "Close All Pages"
+msgstr "Degea Oll Folennow"
+
+#: src/panel-frame.ui:88
+msgid "Close Frame"
+msgstr "Degea Fram"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "Daslea panel dhe le kyns"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(nowydh)"
+
+#: src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "_Sawya Dewisys Hepken"
+
+#: src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "Sawya Oll"
+
+#: src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "Dilea Oll"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "Obaya gis system"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "Gis gwynn"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "Gis du"
+
+#: src/panel-toggle-button.c:351
+msgid "Toggle visibility of left panel"
+msgstr "Dewis gweladewder panel kledh"
+
+#: src/panel-toggle-button.c:356
+msgid "Toggle visibility of right panel"
+msgstr "Dewis gweladewder panel dyghow"
+
+#: src/panel-toggle-button.c:361
+msgid "Toggle visibility of top panel"
+msgstr "Dewis gweladewder panel a-warta"
+
+#: src/panel-toggle-button.c:366
+msgid "Toggle visibility of bottom panel"
+msgstr "Dewis gweladewder panel a-woles"
