@@ -1,245 +1,152 @@
-# Hebrew translation for Manuals.
-# Copyright (C) 2025 Manuals's COPYRIGHT HOLDER
-# This file is distributed under the same license as the Manuals package.
-# Yaron Shahrabani <sh.yaron@gmail.com>,  2025.
+# Hebrew translation for libpanel.
+# Copyright (C) 2022 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Yosef Or Boczko <yoseforb@gmail.com>, 2022-2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Manuals main\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/manuals/-/issues\n"
-"POT-Creation-Date: 2026-01-23 20:27+0000\n"
-"PO-Revision-Date: 2026-02-01 08:32+0200\n"
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2025-09-22 23:10+0000\n"
+"PO-Revision-Date: 2026-02-01 08:31+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
-"Language-Team: Hebrew <he@li.org>\n"
+"Language-Team: Hebrew <yoseforb@gmail.com>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
+"2 : 3);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 "X-Generator: Poedit 3.8\n"
 
-#: data/org.gnome.Manuals.desktop.in.in:2
-#: data/org.gnome.Manuals.metainfo.xml.in.in:6 src/manuals-application.c:238
-#: src/manuals-window.c:916 src/manuals-window.ui:6 src/manuals-window.ui:472
-#: src/manuals-window.ui:508
-msgid "Manuals"
-msgstr "מדריכים"
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:351 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "הטיוטה „%s” לא נשמרה. ניתן לשמור או לסלק אותה."
 
-#: data/org.gnome.Manuals.desktop.in.in:3
-msgid "Install, Browse, and Search Documentation"
-msgstr "התקנה, עיון וחיפוש בתיעוד"
+#: src/panel-changes-dialog.c:354 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "לשמור או לסלק את הטיוטה?"
 
-#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Manuals.desktop.in.in:13
-msgid "documentation;manuals;api;reference;docs;developer;"
-msgstr "תיעוד;מדריכים;סימוכין;api;מסמכים;מסמכולוגיה;מפתחים;פיתוח;"
+#: src/panel-changes-dialog.c:357 src/panel-changes-dialog.c:375
+#: src/panel-changes-dialog.ui:13 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "ל_סלק"
 
-#: data/org.gnome.Manuals.desktop.in.in:18
-msgid "New Window"
-msgstr "חלון חדש"
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "שמירה _בשם…"
 
-#: data/org.gnome.Manuals.gschema.xml:6
-msgid "Width of sidebar in application pixels"
-msgstr "רוחב סרגל הצד בפיקסלים של יישום"
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:369 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "„‏%s” מכיל שינויים שלא נשמרו. ניתן לשמור או לסלק את השינויים."
 
-#: data/org.gnome.Manuals.gschema.xml:10
-msgid "Window dimensions"
-msgstr "ממדי חלון"
+#: src/panel-changes-dialog.c:372 src/panel-changes-dialog.c:399
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "לשמור או לסלק את השינויים?"
 
-#: data/org.gnome.Manuals.gschema.xml:14
-msgid "Window is Maximized"
-msgstr "החלון מוגדל"
+#: src/panel-changes-dialog.c:377 src/panel-changes-dialog.c:404
+#: src/panel-changes-dialog.ui:14 src/panel-save-dialog.c:397
+#: src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "ל_שמור"
 
-#: data/org.gnome.Manuals.metainfo.xml.in.in:7
-msgid "Read developer documentation"
-msgstr "הצגת תיעוד למפתחים"
-
-#: data/org.gnome.Manuals.metainfo.xml.in.in:9
+#: src/panel-changes-dialog.c:401 src/panel-save-dialog.c:424
 msgid ""
-"Manuals indexes your developer manuals and provides robust browsing and "
-"searching capabilities."
+"Open documents contain unsaved changes. Changes can be saved or discarded."
 msgstr ""
-"„מדריכים” מסדר את מדריכי הפיתוח שלך במפתח ומספק יכולות עיון וחיפוש איתנות."
+"מסמכים פתוחים מכילים שינויים שלא נשמרו. ניתן לשמור או לסלק את השינויים."
 
-#: data/org.gnome.Manuals.metainfo.xml.in.in:13
-msgid ""
-"It supports the devhelp documentation format used by many libraries "
-"integrating with the GTK platform."
-msgstr "תומך בתיעוד בתסדיר devhelp שמשמש תיקיות רבות שמשתלבות עם פלטפורמת GTK."
+#: src/panel-changes-dialog.c:402
+msgid "_Discard All"
+msgstr "ל_סלק הכול"
 
-#: data/org.gnome.Manuals.metainfo.xml.in.in:36
-msgid "Browse Documentation by SDK"
-msgstr "עיון בתיעוד לפי SDK (ערכת פיתוח)"
-
-#: data/org.gnome.Manuals.metainfo.xml.in.in:40
-msgid "Free Form Search"
-msgstr "חיפוש חופשי"
-
-#: data/org.gnome.Manuals.metainfo.xml.in.in:44
-msgid "Install SDK Documentation"
-msgstr "התקנת תיעוד SDK (ערכת פיתוח)"
-
-#: data/org.gnome.Manuals.metainfo.xml.in.in:48
-msgid "Integrated Dark Mode"
-msgstr "מצב כהה מוטמע"
-
-#: data/org.gnome.Manuals.metainfo.xml.in.in:52
-msgid "Mobile Search"
-msgstr "חיפוש מהנייד"
-
-#: data/org.gnome.Manuals.metainfo.xml.in.in:56
-msgid "Adaptable Documentation"
-msgstr "תיעוד מסתגל"
-
-#: src/manuals-application.c:248
-msgid "translator-credits"
-msgstr "ירון שהרבני <sh.yaron@gmail.com>"
-
-#: src/manuals-application.c:253
-msgid "Builder"
-msgstr "Builder (בונה)"
-
-#: src/manuals-application.c:254
-msgid "Create GNOME Applications"
-msgstr "יצירת יישומי GNOME"
-
-#: src/manuals-application.c:290
-msgid "Open a new Manuals window"
-msgstr "פתיחת חלון מדריכים חדש"
-
-#: src/manuals-bundle-dialog.c:161
-msgid "End of Life"
-msgstr "סוף החיים"
-
-#: src/manuals-bundle-dialog.c:171
-msgid "Install"
-msgstr "התקנה"
-
-#: src/manuals-bundle-dialog.ui:4
-msgid "Documentation"
-msgstr "תיעוד"
-
-#: src/manuals-bundle-dialog.ui:28
-msgid "Loading SDKs…"
-msgstr "ערכות הפיתוח (SDK) נטענות…"
-
-#: src/manuals-bundle-dialog.ui:29
-msgid "Please wait while we locate the SDKs on your system"
-msgstr "נא להמתין לאיתור ערכות הפיתוח (SDK) במערכת שלך"
-
-#: src/manuals-bundle-dialog.ui:41
-msgid "No SDKs Available"
-msgstr "אין ערכות פיתוח (SDK) זמינות"
-
-#: src/manuals-bundle-dialog.ui:42
-msgid "Your system is not configured to access any SDKs."
-msgstr "המערכת שלך לא מוגדרת לגשת לערכות פיתוח (SDK) כלשהן."
-
-#: src/manuals-bundle-dialog.ui:54
-msgid "Installed SDKs"
-msgstr "ערכות פיתוח (SDK) מותקנות"
-
-#: src/manuals-bundle-dialog.ui:67
-msgid "Available SDKs"
-msgstr "ערכות פיתוח (SDK) זמינות"
-
-#: src/manuals-bundle-dialog.ui:83
-msgid "Hide Legacy SDKs"
-msgstr "הסתרת ערכות פיתוח (SDK) מיושנות"
-
-#: src/manuals-bundle-dialog.ui:95
-msgid "View Legacy SDKs"
-msgstr "הצגת ערכות פיתוח (SDK) מיושנות"
-
-#: src/manuals-install-button.c:110
-msgid "Installing Documentation"
-msgstr "התקנת תיעוד"
-
-#: src/manuals-install-button.ui:16
-msgid "_Install"
-msgstr "ה_תקנה"
-
-#: src/manuals-install-button.ui:31
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.ui:10
 msgid "_Cancel"
 msgstr "_ביטול"
 
-#. translators: the first %u is replaced with the current position, the second with the number of search results
-#: src/manuals-search-entry.c:182
-#, c-format
-msgid "%u of %u"
-msgstr "%u מתוך %u"
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "דפים פתוחים"
 
-#: src/manuals-search-entry.ui:14 src/manuals-window.ui:433
-msgid "Search"
-msgstr "חיפוש"
+#: src/panel-frame.ui:62
+msgid "Frame"
+msgstr "מסגרת"
 
-#: src/manuals-tab.c:143
-msgid "Open Link in New Tab"
-msgstr "פתיחת קישור בלשונית חדשה"
+#: src/panel-frame.ui:64
+msgid "Move Page _Left"
+msgstr "העברת עמוד _שמאלה"
 
-#: src/manuals-tab.c:149
-msgid "Open Link in New Window"
-msgstr "פתיחת קישור בחלון חדש"
+#: src/panel-frame.ui:69
+msgid "Move Page _Right"
+msgstr "העברת עמוד _ימינה"
 
-#: src/manuals-tab.c:765
-msgid "Empty Page"
-msgstr "עמוד ריק"
+#: src/panel-frame.ui:74
+msgid "Move Page _Up"
+msgstr "העברת עמוד _מעלה"
 
-#: src/manuals-window.ui:104
-msgid "Loading…"
-msgstr "בטעינה…"
+#: src/panel-frame.ui:78
+msgid "Move Page _Down"
+msgstr "העברת עמוד _מטה"
 
-#: src/manuals-window.ui:105
-msgid "One moment please while we locate your documentation"
-msgstr "נא להמתין רגע קט בזמן איתור התיעוד שלך"
+#: src/panel-frame.ui:84
+msgid "Close All Pages"
+msgstr "סגירת כל הדפים"
 
-#: src/manuals-window.ui:123
-msgid "Browse Documentation"
-msgstr "עיון בתיעוד"
+#: src/panel-frame.ui:88
+msgid "Close Frame"
+msgstr "סגירת מסגרת"
 
-#: src/manuals-window.ui:130
-msgid ""
-"• Press Ctrl+K to search for classes and more\n"
-"• Press Ctrl+T to open a new tab\n"
-"\n"
-"Or, press Ctrl+W to close the window"
-msgstr ""
-"• לחיצה על Ctrl+K תאפשר לחפש מחלקות ועוד\n"
-"• לחיצה על Ctrl+T תפתח לשונית חדשה\n"
-"\n"
-"או, לחיצה על Ctrl+W תסגור את החלון"
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "שחזור לוח למקום הקודם"
 
-#: src/manuals-window.ui:139
-msgid "Install Documentation…"
-msgstr "התקנת תיעוד…"
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(חדש)"
 
-#. Translators: This is a verb, not a noun
-#: src/manuals-window.ui:175
-msgid "Filter…"
-msgstr "סינון…"
+#: src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "_שמירת הנבחרים בלבד"
 
-#. Translators: This is a verb, not a noun
-#: src/manuals-window.ui:400
-msgid "Toggle Sidebar"
-msgstr "הצגת/הסתרת סרגל צד"
+#: src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "שמירה של הכול"
 
-#: src/manuals-window.ui:425 src/manuals-window.ui:478
-#: src/manuals-window.ui:516 src/manuals-window.ui:545
-msgid "Main Menu"
-msgstr "תפריט ראשי"
+#: src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "סילוק של הכול"
 
-#: src/manuals-window.ui:610 src/manuals-window.ui:639
-msgid "New _Tab"
-msgstr "חלונית _חדשה"
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "כמו סגנון המערכת"
 
-#: src/manuals-window.ui:615 src/manuals-window.ui:644
-msgid "New _Window"
-msgstr "ח_לון חדש"
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "סגנון בהיר"
 
-#: src/manuals-window.ui:621 src/manuals-window.ui:650
-msgid "_Install Documentation…"
-msgstr "ה_תקנת תיעוד…"
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "סגנון כהה"
 
-#: src/manuals-window.ui:627 src/manuals-window.ui:656
-msgid "_About Manuals"
-msgstr "_על „מדריכים”"
+#: src/panel-toggle-button.c:351
+msgid "Toggle visibility of left panel"
+msgstr "הצגת/הסתרת החלונית שמשמאל"
+
+#: src/panel-toggle-button.c:356
+msgid "Toggle visibility of right panel"
+msgstr "הצגת/הסתרת החלונית שמימין"
+
+#: src/panel-toggle-button.c:361
+msgid "Toggle visibility of top panel"
+msgstr "הצגת/הסתרת החלונית העליונה"
+
+#: src/panel-toggle-button.c:366
+msgid "Toggle visibility of bottom panel"
+msgstr "הצגת/הסתרת החלונית התחתונה"
