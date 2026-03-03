@@ -1,0 +1,143 @@
+# Arabic translation for libpanel.
+# Copyright (C) 2023, 2025 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# Ali Aljishi <ahj696@hotmail.com>, 2023.
+# Ahmed Najmawi <iramosu@protonmail.com>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2025-04-10 18:37+0000\n"
+"PO-Revision-Date: 2025-08-01 08:33+0300\n"
+"Last-Translator: Ahmed Najmawi <iramosu@protonmail.com>\n"
+"Language-Team: Arabic <doc@arabeyes.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "لم تُحفظ المسودة «%s». يمكن حفظها أو إهمالها."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "أأحفظ أم أهمل المسودة؟"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "أ_همل"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "احفظ _باسم…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "في ‌«%s» تغييرات غير محفوظة. يمكن حفظ أو إهمال التغييرات."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "أأحفظ أم أهمل التغييرات؟"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "ا_حفظ"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid "Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "هناك تغييرات غير محفوظة في المستندات المفتوحة. يمكن حفظ أو إهمال التغييرات."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "ا_حفظ ما حُدِّد فقط"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "احفظ الكلَّ"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "أهمل الكلَّ"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "أ_لغِ"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "افتح صفحات"
+
+#: src/panel-frame.ui:62
+msgid "Frame"
+msgstr "إطار"
+
+#: src/panel-frame.ui:64
+msgid "Move Page _Left"
+msgstr "حرِّك الصفحة ي_سارًا"
+
+#: src/panel-frame.ui:69
+msgid "Move Page _Right"
+msgstr "حرِّك الصفحة ي_مينًا"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Up"
+msgstr "حرَّك الصفحة أ_على"
+
+#: src/panel-frame.ui:78
+msgid "Move Page _Down"
+msgstr "حرِّك الصفحة أس_فلًا"
+
+#: src/panel-frame.ui:84
+msgid "Close All Pages"
+msgstr "أغلق كلَّ الصفحات"
+
+#: src/panel-frame.ui:88
+msgid "Close Frame"
+msgstr "أغلق الإطار"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "أعد اللوحة للموقع السابق"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(جديد)"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "اتَّبع نمط النظام"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "النمط الفاتح"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "النمط الداكن"
+
+#: src/panel-toggle-button.c:312
+msgid "Toggle visibility of left panel"
+msgstr "بدِّل رؤية اللوحة اليسرى"
+
+#: src/panel-toggle-button.c:317
+msgid "Toggle visibility of right panel"
+msgstr "بدِّل رؤية اللوحة اليمنى"
+
+#: src/panel-toggle-button.c:322
+msgid "Toggle visibility of top panel"
+msgstr "بدِّل رؤية اللوحة العلوية"
+
+#: src/panel-toggle-button.c:327
+msgid "Toggle visibility of bottom panel"
+msgstr "بدِّل رؤية اللوحة السفلية"
