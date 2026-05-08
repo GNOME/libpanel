@@ -23,6 +23,37 @@
 #include <glib/gi18n-lib.h>
 #include <adwaita.h>
 
+#ifdef G_OS_WIN32
+#include <windows.h>
+
+static const char *
+panel_get_localedir (void)
+{
+  static gchar *localedir = NULL;
+
+  if (localedir == NULL)
+    {
+      extern IMAGE_DOS_HEADER __ImageBase;
+      const char *suffix = LOCALEDIR;
+      gchar *basedir, *utf8_path;
+
+      suffix += strlen (LOCALEDIR);
+      while (*--suffix != '/')
+        ;
+      while (*--suffix != '/')
+        ;
+
+      basedir = g_win32_get_package_installation_directory_of_module ((HMODULE) &__ImageBase);
+      utf8_path = g_build_filename (basedir, suffix, NULL);
+      localedir = g_win32_locale_filename_from_utf8 (utf8_path);
+      g_free (utf8_path);
+      g_free (basedir);
+    }
+
+  return localedir;
+}
+#endif
+
 #include "panel-dock.h"
 #include "panel-dock-child-private.h"
 #include "panel-enums.h"
@@ -51,7 +82,11 @@ panel_init (void)
   adw_init ();
 
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+#ifdef G_OS_WIN32
+  bindtextdomain (GETTEXT_PACKAGE, panel_get_localedir ());
+#else
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+#endif
 
   g_resources_register (panel_get_resource ());
 
