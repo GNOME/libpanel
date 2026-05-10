@@ -1,0 +1,142 @@
+# Lao translation for libpanel.
+# Copyright (C) 2025 libpanel's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libpanel package.
+# bone NI <bounkirdni@gmail.com>,  2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libpanel main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libpanel/issues\n"
+"POT-Creation-Date: 2025-09-13 00:48+0000\n"
+"PO-Revision-Date: 2025-09-13 00:48+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lao <lo@li.org>\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:356 src/panel-save-dialog.c:368
+#, c-format
+msgid "The draft “%s” has not been saved. It can be saved or discarded."
+msgstr "ສະບັບຮ່າງ “%s” ຍັງບໍ່ໄດ້ບັນທຶກ. ສາມາດບັນທຶກ ຫຼື ບໍ່ບັນທຶກໄດ້."
+
+#: src/panel-changes-dialog.c:359 src/panel-save-dialog.c:371
+msgid "Save or Discard Draft?"
+msgstr "ບັນທຶກ ຫຼື ບໍ່ບັນທຶກສະບັບຮ່າງ?"
+
+#: src/panel-changes-dialog.c:362 src/panel-changes-dialog.c:382
+#: src/panel-changes-dialog.ui:12 src/panel-save-dialog.c:374
+#: src/panel-save-dialog.c:394 src/panel-save-dialog.ui:11
+msgid "_Discard"
+msgstr "_ບໍ່ບັນທຶກ"
+
+#: src/panel-changes-dialog.c:365 src/panel-save-dialog.c:377
+msgid "_Save As…"
+msgstr "ບັນທຶກ_ເປັນ…"
+
+#. translators: %s is replaced with the document title
+#: src/panel-changes-dialog.c:376 src/panel-save-dialog.c:388
+#, c-format
+msgid "“%s” contains unsaved changes. Changes can be saved or discarded."
+msgstr "“%s” ມີການປ່ຽນແປງທີ່ຍັງບໍ່ທັນໄດ້ບັນທຶກ. ສາມາດບັນທຶກ ຫຼື ບໍ່ບັນທຶກການປ່ຽນແປງໄດ້."
+
+#: src/panel-changes-dialog.c:379 src/panel-changes-dialog.c:411
+#: src/panel-save-dialog.c:391 src/panel-save-dialog.c:422
+msgid "Save or Discard Changes?"
+msgstr "ບັນທຶກ ຫຼື ບໍ່ບັນທຶກການປ່ຽນແປງ?"
+
+#: src/panel-changes-dialog.c:385 src/panel-changes-dialog.ui:13
+#: src/panel-save-dialog.c:397 src/panel-save-dialog.ui:12
+msgid "_Save"
+msgstr "_ບັນທຶກ"
+
+#: src/panel-changes-dialog.c:413 src/panel-save-dialog.c:424
+msgid ""
+"Open documents contain unsaved changes. Changes can be saved or discarded."
+msgstr "ເອກະສານທີ່ເປີດຢູ່ມີການປ່ຽນແປງທີ່ຍັງບໍ່ໄດ້ບັນທຶກ. ສາມາດບັນທຶກ ຫຼື ບໍ່ບັນທຶກການປ່ຽນແປງໄດ້."
+
+#: src/panel-changes-dialog.c:417 src/panel-save-dialog.c:428
+msgid "Only _Save Selected"
+msgstr "ບັນທຶກ_ສະເພາະອັນທີ່ເລືອກ"
+
+#: src/panel-changes-dialog.c:422 src/panel-save-dialog.c:433
+msgid "Save All"
+msgstr "ບັນທຶກທັງໝົດ"
+
+#: src/panel-changes-dialog.c:427 src/panel-save-dialog.c:438
+msgid "Discard All"
+msgstr "ບໍ່ບັນທຶກທັງໝົດ"
+
+#: src/panel-changes-dialog.ui:11 src/panel-save-dialog.ui:10
+msgid "_Cancel"
+msgstr "_ຍົກເລີກ"
+
+#: src/panel-frame-header-bar.ui:52
+msgid "Open Pages"
+msgstr "ໜ້າທີ່ເປີດຢູ່"
+
+#: src/panel-frame.ui:62
+msgid "Frame"
+msgstr "ຂອບ"
+
+#: src/panel-frame.ui:64
+msgid "Move Page _Left"
+msgstr "ຍ້າຍໜ້າໄປທາງ_ຊ້າຍ"
+
+#: src/panel-frame.ui:69
+msgid "Move Page _Right"
+msgstr "ຍ້າຍໜ້າໄປທາງ_ຂວາ"
+
+#: src/panel-frame.ui:74
+msgid "Move Page _Up"
+msgstr "ຍ້າຍໜ້າຂຶ້ນ_ເທິງ"
+
+#: src/panel-frame.ui:78
+msgid "Move Page _Down"
+msgstr "ຍ້າຍໜ້າລົງ_ລຸ່ມ"
+
+#: src/panel-frame.ui:84
+msgid "Close All Pages"
+msgstr "ປິດທຸກໜ້າ"
+
+#: src/panel-frame.ui:88
+msgid "Close Frame"
+msgstr "ປິດຂອບ"
+
+#: src/panel-maximized-controls.c:73
+msgid "Restore panel to previous location"
+msgstr "ຟື້ນຟູແຜງກັບໄປທີ່ຕຳແໜ່ງເດີມ"
+
+#: src/panel-save-dialog-row.c:78
+msgid "(new)"
+msgstr "(ໃໝ່)"
+
+#: src/panel-theme-selector.ui:22 src/panel-theme-selector.ui:24
+msgid "Follow system style"
+msgstr "ໃຊ້ຮູບແບບຕາມລະບົບ"
+
+#: src/panel-theme-selector.ui:38 src/panel-theme-selector.ui:40
+msgid "Light style"
+msgstr "ຮູບແບບແຈ້ງ"
+
+#: src/panel-theme-selector.ui:55 src/panel-theme-selector.ui:57
+msgid "Dark style"
+msgstr "ຮູບແບບມືດ"
+
+#: src/panel-toggle-button.c:351
+msgid "Toggle visibility of left panel"
+msgstr "ສະຫຼັບການມອງເຫັນແຜງດ້ານຊ້າຍ"
+
+#: src/panel-toggle-button.c:356
+msgid "Toggle visibility of right panel"
+msgstr "ສະຫຼັບການມອງເຫັນແຜງດ້ານຂວາ"
+
+#: src/panel-toggle-button.c:361
+msgid "Toggle visibility of top panel"
+msgstr "ສະຫຼັບການມອງເຫັນແຜງດ້ານເທິງ"
+
+#: src/panel-toggle-button.c:366
+msgid "Toggle visibility of bottom panel"
+msgstr "ສະຫຼັບການມອງເຫັນແຜງດ້ານລຸ່ມ"
